@@ -1,6 +1,5 @@
 # 기린 (GIRIN)
 
----
 ## Develop Rules
 
 #### branch
