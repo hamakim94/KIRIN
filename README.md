@@ -41,7 +41,16 @@ FE/BE/BC/DOCS_날짜_개발한(중인)기능: 개발 내용 (진행중/ 완료/ 
 
 | Domain | Frontend                                                     | Backend |
 | ------ | ------------------------------------------------------------ | ------- |
-|        | 1. Component 파일명: Pascal case<br />2. Non-component 파일명: Camel case <br />3. 속성명: Camel case<br />4. 변수명: Camel case, 숫자/ 특수문자 사용 가능<br />5. CSS 파일명: component 이름과 동일하게<br />6. jsx, js을 js로 통일 |         |
+|        | 1. Component 파일명: Pascal case<br />2. Non-component 파일명: Camel case <br />3. 속성명: Camel case<br />4. 변수명: Camel case, 숫자/ 특수문자 사용 가능<br />5. CSS 파일명: component 이름과 동일하게<br />6. jsx, js을 js로 통일 | **db** <br />1. db table, 속성명: snake case <br /><br /> **back server** <br />1. class, interface명(파일명): Pascal case <br />2. 디렉토리명: Camel case <br />3. 변수명: Camel case <br />|
+
+- Boolean 타입의 변수 작명규칙 
+  : is 접두사 사용 -> (ex) isExist 
+
+- 들여쓰기 (indent)  
+  : 4 space 방식  
+
+- 작은따옴표(')를 사용할 건지, 큰따옴표(")를 사용할 건지 
+  : 큰따옴표(") 사용
 
 이외 https://naver.github.io/hackday-conventions-java/ 참고
 
