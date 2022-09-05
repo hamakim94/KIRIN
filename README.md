@@ -35,6 +35,17 @@ FE/BE/BC/DOCS_날짜_개발한(중인)기능: 개발 내용 (진행중/ 완료/ 
 - 관련 있는 코드들끼리만 commit (commit 메세지 잘 쓰기)
 ```
 
+이 외 
+
+## Code style
+
+#### 이름규칙
+
+| Domain | Frontend                                                     | Backend |
+| ------ | ------------------------------------------------------------ | ------- |
+|        | 1. Component 파일명: Pascal case<br />2. Non-component 파일명: Camel case <br />3. 속성명: Camel case<br />4. 변수명: Camel case, 숫자/ 특수문자 사용 가능<br />5. CSS 파일명: component 이름과 동일하게<br />6. jsx, js을 js로 통일 |         |
+
+이외 https://naver.github.io/hackday-conventions-java/ 참고
 
 ## Git Branch Command
 
