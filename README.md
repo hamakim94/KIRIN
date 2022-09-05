@@ -7,14 +7,14 @@
 ```
 master -> develop -> FE_develop -> feat-frontend/기능명
 	          -> BE_develop -> feat-backend/기능명
-                  -> DOMAIN_develop -> feat-domain/기능명
+                  -> BC_develop -> feat-domain/기능명
 ```
 
 - master
     - develop
         - BE_develop
         - FE_develop
-        - DOMAIN_develop
+        - BC_develop
 
 #### merge
 
@@ -24,7 +24,7 @@ master -> develop -> FE_develop -> feat-frontend/기능명
 #### commit 메시지
 
 ```
-FE/BE/DOMAIN/DOCS_날짜_개발한(중인)기능: 개발 내용 (진행중/ 완료/ 수정 완료/ 수정 진행중) 
+FE/BE/BC/DOCS_날짜_개발한(중인)기능: 개발 내용 (진행중/ 완료/ 수정 완료/ 수정 진행중) 
 ```
 
 #### commit 주의사항 및 규칙
