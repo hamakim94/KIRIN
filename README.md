@@ -19,10 +19,16 @@ master -> develop -> FE_develop -> feat-frontend/기능명
 #### merge
 
 - 각 파트 maintainer들만 각 파트에 대한 merge 권한을 가짐. 
-- maintainer가 아닌 개발자들은 mr
 
 ```
 FE/BE/BC/DOCS_날짜_merge : Merge branch "시작 브랜치" into "도착 브랜치"  
+
+```
+
+- maintainer가 아닌 개발자들은 mr
+
+```
+FE/BE/BC/DOCS_날짜_mr : Merge branch "시작 브랜치" into "도착 브랜치"  
 ```
 
 #### commit 메시지
