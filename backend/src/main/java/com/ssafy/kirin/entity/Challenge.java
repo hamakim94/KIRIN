@@ -33,4 +33,8 @@ public class Challenge {
     @ManyToOne
     @JoinColumn(name = "user_id")
     User user;
+
+    @OneToOne
+    @JoinColumn(name = "celeb_challenge_info_id")
+    CelebChallengeInfo celebChallengeInfo;
 }

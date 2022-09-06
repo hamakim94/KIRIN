@@ -40,4 +40,8 @@ public class User {
 
     @Column(name = "is_celeb")
     boolean isCeleb;
+
+    @OneToOne
+    @JoinColumn(name = "celeb_info_id")
+    CelebInfo celebInfo;
 }

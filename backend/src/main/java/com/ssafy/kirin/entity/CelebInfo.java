@@ -22,8 +22,4 @@ public class CelebInfo {
 
     @Column(name = "cover_img")
     String coverImg;
-
-    @OneToOne
-    @JoinColumn(name = "user_id")
-    User user;
 }

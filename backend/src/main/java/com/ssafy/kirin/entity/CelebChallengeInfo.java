@@ -44,8 +44,4 @@ public class CelebChallengeInfo {
     @ManyToOne
     @JoinColumn(name = "donation_organization_id")
     DonationOrganization donationOrganization;
-
-    @OneToOne
-    @JoinColumn(name = "challenge_id")
-    Challenge challenge;
 }
