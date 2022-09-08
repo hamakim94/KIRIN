@@ -66,6 +66,7 @@ FE/BE/BC/DOCS_날짜_개발한(중인)기능: 개발 내용 (진행중/ 완료/ 
 
 - Repository return type은 Optional로 
   - orElseThrow 예외처리하기 
+  - ifPresentOrElse, ifPresent
 
 이외 https://naver.github.io/hackday-conventions-java/ 참고
 
