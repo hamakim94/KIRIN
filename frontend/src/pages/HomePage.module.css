@@ -1,0 +1,41 @@
+.logo {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.hScroll {
+  overflow: auto;
+  white-space: nowrap;
+  -ms-overflow-style: none; /* IE, Edge */
+  scrollbar-width: none; /* Firefox */
+  margin-bottom: 10px;
+}
+
+.hScroll::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+.starImg {
+  width: 75px;
+  height: 75px;
+  object-fit: cover;
+  border-radius: 100%;
+  margin-right: 10px;
+}
+
+.category {
+  font-family: "SCD500";
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.challengeContainer {
+  height: 250px;
+  border-width: 1px;
+  border-style: solid;
+}
+
+.img {
+  width: 100%;
+  object-fit: cover;
+}
