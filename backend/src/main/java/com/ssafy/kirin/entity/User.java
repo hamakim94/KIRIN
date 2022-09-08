@@ -24,8 +24,7 @@ public class User {
     @Column(name = "profile_img")
     String profileImg;
 
-    @Column(name = "user_id")
-    String userId;
+    String email;
 
     String password;
 
