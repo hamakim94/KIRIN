@@ -62,6 +62,11 @@ FE/BE/BC/DOCS_날짜_개발한(중인)기능: 개발 내용 (진행중/ 완료/ 
 - 작은따옴표(')를 사용할 건지, 큰따옴표(")를 사용할 건지 
   : 큰따옴표(") 사용
 
+**Backend**
+
+- Repository return type은 Optional로 
+  - orElseThrow 예외처리하기 
+
 이외 https://naver.github.io/hackday-conventions-java/ 참고
 
 ## Git Branch Command
