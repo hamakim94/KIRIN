@@ -34,6 +34,12 @@ public class Challenge {
     @JoinColumn(name = "user_id")
     User user;
 
+    @Column(name = "view_cnt")
+    int viewCnt;
+
+    @Column(name = "is_dummy")
+    boolean isDummy;
+
     @OneToOne
     @JoinColumn(name = "celeb_challenge_info_id")
     CelebChallengeInfo celebChallengeInfo;
