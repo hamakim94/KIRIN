@@ -41,6 +41,12 @@ public class Challenge {
     @Formula("(SELECT COUNT(*) FROM challenge_comment c WHERE c.challenge_id = id)")
     int commentCnt;
 
+    @Column(name = "view_cnt")
+    int viewCnt;
+
+    @Column(name = "is_dummy")
+    boolean isDummy;
+
     @OneToOne
     @JoinColumn(name = "celeb_challenge_info_id")
     CelebChallengeInfo celebChallengeInfo;

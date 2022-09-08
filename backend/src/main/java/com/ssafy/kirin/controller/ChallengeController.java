@@ -6,10 +6,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +20,7 @@ public class ChallengeController {
     private final ChallengeService challengeService;
 
     @GetMapping("")
-    @ApiOperation(value = "")
+    @ApiOperation(value = "챌린지 리스트")
     public ResponseEntity<List<Challenge>> challengeList(@RequestParam(name = "scope",required = false, defaultValue = "") String scope,@RequestParam(name = "order",required = false, defaultValue = "") String order,
                                                          @RequestParam(name = "userid", required = false, defaultValue = "0") int userId, @RequestParam(name = "challengeid", required = false,defaultValue = "0") int challengeId){
         List<Challenge> list = switch (scope){
@@ -51,6 +48,14 @@ public class ChallengeController {
 
         return ResponseEntity.ok(list);
         }
+
+    @GetMapping("/user/{userId}")
+    @ApiOperation(value = "내가 좋아요한 챌린지 리스트")
+    public ResponseEntity<List<Challenge>> likeChallengeList(@PathVariable("userId") int userId){
+
+        return ResponseEntity.ok(challengeService.listUserLike(userId));
+
+    }
 
 
 }

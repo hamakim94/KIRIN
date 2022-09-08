@@ -13,5 +13,5 @@ public interface ChallengeService {
     List<Challenge> listAllRandom();
     List<Challenge> listAllChallenge(long challengeId);
     List<Challenge> listAllUser(long userId);
-    List<Challenge>  listUserLike();
+    List<Challenge> listUserLike(long userId);
 }

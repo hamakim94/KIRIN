@@ -13,6 +13,7 @@ import java.util.List;
 public class ChallengeServiceImpl implements ChallengeService {
 
     private final ChallengeRepository challengeRepository;
+    private final ChallengeRepository challengeLikeRepository;
 
     @Override
     public List<Challenge> listStarsPopularity() {
@@ -54,7 +55,7 @@ public class ChallengeServiceImpl implements ChallengeService {
     }
 
     @Override
-    public List<Challenge> listUserLike() {
-        return null;
+    public List<Challenge> listUserLike(long userId) {
+        return challengeLikeRepository.findByUserId(userId);
     }
 }
