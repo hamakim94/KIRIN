@@ -7,13 +7,11 @@ import io.jsonwebtoken.security.Keys;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -31,11 +29,11 @@ public class JwtTokenProvider {
     private Key key;
 
     // test용
-    private long accessExpirationInMs = 60 * 3 * 1000L;
-    private long refreshExpirationInMs = 60 * 10 * 1000L;
+//    private long accessExpirationInMs = 60 * 3 * 1000L;
+//    private long refreshExpirationInMs = 60 * 10 * 1000L;
 
-//    private long accessExpirationInMs = 60 * 30 * 1000L;
-//    private long refreshExpirationInMs = 60 * 60 * 24 * 7 * 1000L;
+    private long accessExpirationInMs = 60 * 30 * 1000L;
+    private long refreshExpirationInMs = 60 * 60 * 24 * 7 * 1000L;
 
     private final UserService userService;
     private final RedisTemplate redisTemplate;
