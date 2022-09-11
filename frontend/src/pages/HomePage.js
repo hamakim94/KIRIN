@@ -5,12 +5,12 @@ import HomeCategory from "../components/home/HomeCategory";
 import ChallengeList from "../components/home/ChallengeList";
 function HomePage() {
   return (
-    <div>
+    <div className={styles.wrapper}>
       <div className={styles.logo}>로고</div>
       <SubscribeList styles={styles}></SubscribeList>
       <HomeCategory title={"인기순"} styles={styles}></HomeCategory>
       <ChallengeList styles={styles}></ChallengeList>
-      <img className={styles.img} alt="함께" src={require("../assets/img/together.png")}></img>
+      <img className={styles.img} alt='함께' src={require("../assets/img/together.png")}></img>
       <HomeCategory title={"최신순"} styles={styles}></HomeCategory>
       <ChallengeList styles={styles}></ChallengeList>
     </div>

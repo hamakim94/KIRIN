@@ -2,10 +2,9 @@
 
 .App {
   font-family: "SCD400";
-  height: 100vh;
   padding: 15px;
+  padding-bottom: 50px;
 }
-
 /* font */
 
 @font-face {
