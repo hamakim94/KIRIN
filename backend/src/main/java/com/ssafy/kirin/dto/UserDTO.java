@@ -2,8 +2,11 @@ package com.ssafy.kirin.dto;
 
 import com.ssafy.kirin.entity.CelebInfo;
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.util.Collection;
 
 @Getter
 @Setter
@@ -12,7 +15,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Builder
 @ToString
-public class UserDTO {
+public class UserDTO implements UserDetails {
     private long id;
     private String name;
     private String nickname;
@@ -26,4 +29,40 @@ public class UserDTO {
     // star
     private String info;
     private String coverImg;
+
+    // Security가 관리하는 UserDetails의 methods
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return null;
+    }
+
+    @Override
+    public String getPassword() {
+        return null;
+    }
+
+    @Override
+    public String getUsername() {
+        return Long.toString(id);
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 }

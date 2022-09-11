@@ -4,6 +4,7 @@ package com.ssafy.kirin.controller;
 import com.ssafy.kirin.config.security.JwtTokenProvider;
 import com.ssafy.kirin.dto.UserDTO;
 import com.ssafy.kirin.dto.request.LoginRequestDTO;
+import com.ssafy.kirin.entity.User;
 import com.ssafy.kirin.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -48,14 +50,13 @@ public class UserController {
     }
 
     @GetMapping("/logout")
-    public ResponseEntity logout(HttpServletRequest request){
-        String accessToken = jwtTokenProvider.getTokenFromRequest(request, "ACCESSTOKEN");
-        Authentication auth = jwtTokenProvider.getAuthentication(accessToken);
-
+    public ResponseEntity logout(HttpServletRequest request, @AuthenticationPrincipal UserDTO userDTO){
         // Redis에 해당 user id로 저장된 refresh token이 있을 경우 삭제
-        if (redisTemplate.opsForValue().get(auth.getName()) != null) {
-            redisTemplate.delete(auth.getName());
+        if (redisTemplate.opsForValue().get(userDTO.getId()) != null) {
+            redisTemplate.delete(userDTO.getId());
         }
+
+        String accessToken = jwtTokenProvider.getTokenFromRequest(request, "ACCESSTOKEN");
 
         // 해당 access token의 유효시간 가지고 와서 logout된 access token 저장
         Long expiration = jwtTokenProvider.getExpiration(accessToken);

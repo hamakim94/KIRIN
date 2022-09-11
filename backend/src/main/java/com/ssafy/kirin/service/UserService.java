@@ -8,6 +8,8 @@ import com.ssafy.kirin.repository.CelebInfoRepository;
 import com.ssafy.kirin.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -17,7 +19,7 @@ import java.time.LocalDateTime;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class UserService {
+public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final CelebInfoRepository celebInfoRepository;
 
@@ -69,5 +71,37 @@ public class UserService {
             log.error("login 오류");
             return null;
         }
+    }
+
+    @Override
+    public UserDTO loadUserByUsername(String userId) throws UsernameNotFoundException {
+        User user = userRepository.findById(Long.parseLong(userId))
+                .orElseThrow(() -> new UsernameNotFoundException("loadUserByUsername User : " + userId + " was not found"));
+
+        if(user.isCeleb()){ // 스타인 경우
+            CelebInfo celebInfo = celebInfoRepository.findById(user.getCelebInfoId())
+                    .orElseThrow(() -> new UsernameNotFoundException("Login Celeb info : " + user.getCelebInfoId() + " was not found"));
+
+            return UserDTO.builder()
+                    .id(user.getId())
+                    .name(user.getName())
+                    .nickname(user.getNickname())
+                    .profileImg(user.getProfileImg())
+                    .accountType(user.getAccountType())
+                    .isCeleb(user.isCeleb())
+                    .info(celebInfo.getInfo())
+                    .coverImg(celebInfo.getCoverImg())
+                    .build();
+        }
+
+        // 일반인인 경우
+        return UserDTO.builder()
+                .id(user.getId())
+                .name(user.getName())
+                .nickname(user.getNickname())
+                .profileImg(user.getProfileImg())
+                .accountType(user.getAccountType())
+                .isCeleb(user.isCeleb())
+                .build();
     }
 }

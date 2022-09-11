@@ -1,8 +1,11 @@
 package com.ssafy.kirin.config.security;
 
+import com.ssafy.kirin.dto.UserDTO;
+import com.ssafy.kirin.service.UserService;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,7 +14,6 @@ import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -21,6 +23,7 @@ import java.time.Duration;
 import java.util.Date;
 
 @Slf4j
+@RequiredArgsConstructor
 @Component
 public class JwtTokenProvider {
     @Value("${jwt.secret}")
@@ -30,15 +33,9 @@ public class JwtTokenProvider {
     private long accessExpirationInMs = 60 * 30 * 1000L;
     private long refreshExpirationInMs = 60 * 60 * 24 * 7 * 1000L;
 
-    private UserDetailsService userDetailsService;
+    private UserService userService;
     private final RedisTemplate redisTemplate;
 
-
-    @Autowired
-    public JwtTokenProvider(UserDetailsService userDetailsService, RedisTemplate redisTemplate) {
-        this.userDetailsService = userDetailsService;
-        this.redisTemplate = redisTemplate;
-    }
 
     @PostConstruct
     protected void init() {
@@ -135,10 +132,11 @@ public class JwtTokenProvider {
 
     // Jwt 토큰으로 인증 정보를 조회
     public Authentication getAuthentication(String token) {
-        UserDetails userDetails = userDetailsService.loadUserByUsername(getUserPk(token));
+        UserDTO userDTO = userService.loadUserByUsername(getUserPk(token));
 
-        return new UsernamePasswordAuthenticationToken(userDetails, token, userDetails.getAuthorities()); // 인증용 객체
-        //        return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
+        log.info("getAuthentication user: " + userDTO);
+
+        return new UsernamePasswordAuthenticationToken(userDTO, null, userDTO.getAuthorities()); // 우리는 jwt 사용 -> credentials: null
     }
 
     // access token의 남은 유효시간 조회
