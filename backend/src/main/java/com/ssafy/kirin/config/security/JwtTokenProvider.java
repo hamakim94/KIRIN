@@ -30,10 +30,14 @@ public class JwtTokenProvider {
     private String JWT_SECRET;
     private Key key;
 
-    private long accessExpirationInMs = 60 * 30 * 1000L;
-    private long refreshExpirationInMs = 60 * 60 * 24 * 7 * 1000L;
+    // test용
+    private long accessExpirationInMs = 60 * 3 * 1000L;
+    private long refreshExpirationInMs = 60 * 10 * 1000L;
 
-    private UserService userService;
+//    private long accessExpirationInMs = 60 * 30 * 1000L;
+//    private long refreshExpirationInMs = 60 * 60 * 24 * 7 * 1000L;
+
+    private final UserService userService;
     private final RedisTemplate redisTemplate;
 
 
@@ -147,16 +151,4 @@ public class JwtTokenProvider {
         Long now = new Date().getTime();
         return (expiration.getTime() - now);
     }
-
-    // 로그아웃
-//    public void logout(String accessToken, String email) {
-//        try {
-//            Jws<Claims> claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(accessToken);
-//            long expiredAccessTokenTime = claims.getBody().getExpiration().getTime() - new Date().getTime();
-//            redisService.setValues(accessToken, email, Duration.ofMillis(expiredAccessTokenTime));
-//        }
-//        catch (Exception e){}
-//
-//        redisService.deleteValues(email); //
-//    }
 }
