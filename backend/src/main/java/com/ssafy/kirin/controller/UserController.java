@@ -33,6 +33,7 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody LoginRequestDTO loginRequestDTO){
+        log.info("login 함수 실행");
         UserDTO userDTO = userService.login(loginRequestDTO, passwordEncoder);
 
         if (userDTO != null) {
@@ -51,7 +52,7 @@ public class UserController {
         String accessToken = jwtTokenProvider.getTokenFromRequest(request, "ACCESSTOKEN");
         Authentication auth = jwtTokenProvider.getAuthentication(accessToken);
 
-        // Redis에 해당 user email로 저장된 refresh token이 있을 경우 삭제
+        // Redis에 해당 user id로 저장된 refresh token이 있을 경우 삭제
         if (redisTemplate.opsForValue().get(auth.getName()) != null) {
             redisTemplate.delete(auth.getName());
         }

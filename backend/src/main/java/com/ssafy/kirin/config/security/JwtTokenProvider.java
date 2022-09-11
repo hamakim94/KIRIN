@@ -6,6 +6,8 @@ import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,7 +17,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import java.security.Key;
-import java.security.SignatureException;
+import java.time.Duration;
 import java.util.Date;
 
 @Slf4j
@@ -26,14 +28,16 @@ public class JwtTokenProvider {
     private Key key;
 
     private long accessExpirationInMs = 60 * 30 * 1000L;
-
     private long refreshExpirationInMs = 60 * 60 * 24 * 7 * 1000L;
 
     private UserDetailsService userDetailsService;
+    private final RedisTemplate redisTemplate;
+
 
     @Autowired
-    public JwtTokenProvider(UserDetailsService userDetailsService) {
+    public JwtTokenProvider(UserDetailsService userDetailsService, RedisTemplate redisTemplate) {
         this.userDetailsService = userDetailsService;
+        this.redisTemplate = redisTemplate;
     }
 
     @PostConstruct
@@ -68,6 +72,10 @@ public class JwtTokenProvider {
                 .compact();
 
         // redis에 저장
+        ValueOperations<String, String> values = redisTemplate.opsForValue();
+        values.set(auth.getName(), refreshToken, Duration.ofMillis(refreshExpirationInMs));
+//        redisTemplate.setValues(userId.toString(), refreshToken, Duration.ofMillis(refreshTokenValidMilisecond));
+
 
         return refreshToken;
     }
@@ -82,6 +90,12 @@ public class JwtTokenProvider {
         // Redis 사용시 수정해야될듯
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
+
+            if (redisTemplate.opsForValue().get(token) != null){
+                log.error("access token 만료 (logout된 token)");
+                return false;
+            }
+
             return true;
         } catch (MalformedJwtException e) {
             log.error("Invalid JWT token: {}", e.getMessage());

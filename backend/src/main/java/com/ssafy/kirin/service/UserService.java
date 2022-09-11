@@ -21,7 +21,6 @@ public class UserService {
     private final UserRepository userRepository;
     private final CelebInfoRepository celebInfoRepository;
 
-
     public UserDTO login(LoginRequestDTO loginRequestDTO, PasswordEncoder passwordEncoder) {
         try {
             User user = userRepository.findByEmail(loginRequestDTO.getEmail())
@@ -31,15 +30,18 @@ public class UserService {
                 log.error("login 오류: 이메일 인증 안됨");
                 return null;
             }
-            else if(!passwordEncoder.matches(loginRequestDTO.getPassword(), user.getPassword())){ // 비밀번호가 일치하지 않는 경우
+            else if(!loginRequestDTO.getPassword().equals(user.getPassword())){ // test용
                 log.error("login 오류: 비밀번호 틀림");
                 return null;
             }
+//            else if(!passwordEncoder.matches(loginRequestDTO.getPassword(), user.getPassword())){ // 비밀번호가 일치하지 않는 경우
+//                log.error("login 오류: 비밀번호 틀림");
+//                return null;
+//            }
 
             if(user.isCeleb()){ // 스타인 경우
                 CelebInfo celebInfo = celebInfoRepository.findById(user.getCelebInfoId())
                         .orElseThrow(() -> new UsernameNotFoundException("Login Celeb info : " + user.getCelebInfoId() + " was not found"));
-
 
                 return UserDTO.builder()
                         .id(user.getId())
