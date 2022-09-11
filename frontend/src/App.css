@@ -1,0 +1,62 @@
+/* App.css에서 폰트도 관리 */
+
+.App {
+  font-family: "SCD400";
+  padding: 15px;
+  padding-bottom: 50px;
+}
+/* font */
+
+@font-face {
+  font-family: "SCD100";
+  font-weight: 100;
+  src: url("./assets/fonts/SCDream1.otf") format("opentype");
+}
+
+@font-face {
+  font-family: "SCD200";
+  font-weight: 200;
+  src: url("./assets/fonts/SCDream2.otf") format("opentype");
+}
+
+@font-face {
+  font-family: "SCD300";
+  font-weight: 300;
+  src: url("./assets/fonts/SCDream3.otf") format("opentype");
+}
+
+@font-face {
+  font-family: "SCD400";
+  font-weight: 400;
+  src: url("./assets/fonts/SCDream4.otf") format("opentype");
+}
+
+@font-face {
+  font-family: "SCD500";
+  font-weight: 500;
+  src: url("./assets/fonts/SCDream5.otf") format("opentype");
+}
+
+@font-face {
+  font-family: "SCD600";
+  font-weight: 600;
+  src: url("./assets/fonts/SCDream6.otf") format("opentype");
+}
+
+@font-face {
+  font-family: "SCD700";
+  font-weight: 700;
+  src: url("./assets/fonts/SCDream7.otf") format("opentype");
+}
+
+@font-face {
+  font-family: "SCD800";
+  font-weight: 800;
+  src: url("./assets/fonts/SCDream8.otf") format("opentype");
+}
+
+@font-face {
+  font-family: "SCD900";
+  font-weight: 900;
+  src: url("./assets/fonts/SCDream9.otf") format("opentype");
+}
