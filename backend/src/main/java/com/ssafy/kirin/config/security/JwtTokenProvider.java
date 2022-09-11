@@ -29,11 +29,11 @@ public class JwtTokenProvider {
     private Key key;
 
     // test용
-//    private long accessExpirationInMs = 60 * 3 * 1000L;
-//    private long refreshExpirationInMs = 60 * 10 * 1000L;
+    private long accessExpirationInMs = 60 * 3 * 1000L;
+    private long refreshExpirationInMs = 60 * 10 * 1000L;
 
-    private long accessExpirationInMs = 60 * 30 * 1000L;
-    private long refreshExpirationInMs = 60 * 60 * 24 * 7 * 1000L;
+//    private long accessExpirationInMs = 60 * 30 * 1000L;
+//    private long refreshExpirationInMs = 60 * 60 * 24 * 7 * 1000L;
 
     private final UserService userService;
     private final RedisTemplate redisTemplate;
@@ -86,11 +86,10 @@ public class JwtTokenProvider {
 
     // Jwt 토큰 유효성 검사
     public boolean validateToken(String token) {
-        // Redis 사용시 수정해야될듯
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
 
-            if (redisTemplate.opsForValue().get(token) != null){
+            if (redisTemplate.opsForValue().get(token) != null && redisTemplate.opsForValue().get(token).equals("logout")){
                 log.error("access token 만료 (logout된 token)");
                 return false;
             }
@@ -123,13 +122,13 @@ public class JwtTokenProvider {
 
     // Jwt 토큰에서 회원 구별 정보 추출
     public String getUserPk(String token) {
-        Claims claims = Jwts.parserBuilder()
-                .setSigningKey(key)
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
-
-        return claims.getSubject();
+        JwtParser jwtParser = Jwts.parserBuilder().setSigningKey(key).build();
+        try{
+            return jwtParser.parseClaimsJws(token).getBody().getSubject();
+        }
+        catch (ExpiredJwtException e){
+            return e.getClaims().getSubject();
+        }
     }
 
     // Jwt 토큰으로 인증 정보를 조회
@@ -143,10 +142,24 @@ public class JwtTokenProvider {
 
     // access token의 남은 유효시간 조회
     public Long getExpiration(String accessToken) {
-        // accessToken 남은 유효시간
-        Date expiration = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(accessToken).getBody().getExpiration();
-        // 현재 시간
-        Long now = new Date().getTime();
-        return (expiration.getTime() - now);
+        try {
+            Jws<Claims> claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(accessToken);
+            // accessToken 남은 유효시간
+            Date expiration = claims.getBody().getExpiration();
+            // 현재 시간
+            Long now = new Date().getTime();
+
+            return (expiration.getTime() - now);
+        } catch (MalformedJwtException e) {
+            log.error("Invalid JWT token: {}", e.getMessage());
+        } catch (ExpiredJwtException e) {
+            log.error("Expired JWT token: {}", e.getMessage());
+        } catch (UnsupportedJwtException e) {
+            log.error("Unsupported JWT token: {}", e.getMessage());
+        } catch (IllegalArgumentException e) {
+            log.error("JWT claims string is empty.: {}", e.getMessage());
+        }
+
+        return -1L;
     }
 }
