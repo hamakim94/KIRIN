@@ -1,5 +1,6 @@
 package com.ssafy.kirin.controller;
 
+import com.ssafy.kirin.dto.UserDTO;
 import com.ssafy.kirin.dto.request.CommunityCommentWriteDTO;
 import com.ssafy.kirin.dto.request.CommunityWriteDTO;
 import com.ssafy.kirin.dto.response.CommunityDetailDTO;
@@ -26,9 +27,9 @@ public class CommunityController {
 
     @GetMapping("/stars/{starId}")
     @ApiOperation(value = "커뮤니티 목록 최신순 나열")
-    public ResponseEntity<List<Community>> communityList(@PathVariable(name = "starId") int starId){
+    public ResponseEntity<List<Community>> communityList(@PathVariable(name = "starId") long starId){
 
-        return null;
+        return ResponseEntity.ok(communityService.getCommunityList(starId));
     }
 
     @PostMapping("/stars/{starId}/boards")
@@ -54,45 +55,45 @@ public class CommunityController {
 
     @PostMapping("/stars/{starId}/boards/{boardId}")
     @ApiOperation(value = "커뮤니티 좋아요")
-    public ResponseEntity<?> communityLike(@PathVariable long starId, @PathVariable long boardId){
+    public ResponseEntity<?> communityLike(@AuthenticationPrincipal UserDTO userDTO, @PathVariable long starId, @PathVariable long boardId){
         
-        //TODO : Authentication Pricipal 받아서 채우기
+        communityService.likeCommunity(userDTO.getId(), boardId);
 
         return ResponseEntity.ok(null);
     }
 
     @DeleteMapping("/stars/{starId}/boards/{boardId}")
-    @ApiOperation(value = "커뮤니티 좋아요")
-    public ResponseEntity<?> communityUnlike(@PathVariable long starId, @PathVariable long boardId){
+    @ApiOperation(value = "커뮤니티 좋아요 취소")
+    public ResponseEntity<?> communityUnlike(@AuthenticationPrincipal UserDTO userDTO, @PathVariable long starId, @PathVariable long boardId){
 
-        //TODO : Authentication Pricipal 받아서 채우기
+        communityService.unlikeCommunity(userDTO.getId(), boardId);
 
         return ResponseEntity.ok(null);
     }
 
     @PostMapping("/stars/{starId}/boards/{boardId}/comments")
     @ApiOperation(value = "커뮤니티 댓글 작성")
-    public ResponseEntity<?> communityCommentWrite(CommunityCommentWriteDTO dto){
+    public ResponseEntity<?> communityCommentWrite(@AuthenticationPrincipal UserDTO userDTO, @PathVariable long boardId, CommunityCommentWriteDTO dto){
 
-        //TODO : Authentication Pricipal 받아서 채우기
+        communityService.writeComment(userDTO.getId(), boardId, dto);
 
         return ResponseEntity.ok(null);
     }
 
     @PostMapping("/stars/{starId}/boards/{boardId}/comments/{commentId}")
     @ApiOperation(value = "커뮤니티 댓글 좋아요")
-    public ResponseEntity<?> communityCommentLike(@PathVariable long commentId){
+    public ResponseEntity<?> communityCommentLike(@AuthenticationPrincipal UserDTO userDTO, @PathVariable long commentId){
 
-        //TODO : Authentication Pricipal 받아서 채우기
+        communityService.likeCommunityComment(userDTO.getId(), commentId);
 
         return ResponseEntity.ok(null);
     }
 
     @DeleteMapping("/stars/{starId}/boards/{boardId}/comments/{commentId}")
-    @ApiOperation(value = "커뮤니티 댓글 좋아요")
-    public ResponseEntity<?> communityCommentUnlike(@PathVariable long commentId){
+    @ApiOperation(value = "커뮤니티 댓글 좋아요 취소")
+    public ResponseEntity<?> communityCommentUnlike(@AuthenticationPrincipal UserDTO userDTO, @PathVariable long commentId){
 
-        //TODO : Authentication Pricipal 받아서 채우기
+        communityService.unlikeCommunityComment(userDTO.getId(), commentId);
 
         return ResponseEntity.ok(null);
     }

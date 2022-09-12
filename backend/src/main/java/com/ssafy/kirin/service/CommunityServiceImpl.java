@@ -4,19 +4,18 @@ import com.ssafy.kirin.dto.request.CommunityCommentWriteDTO;
 import com.ssafy.kirin.dto.request.CommunityWriteDTO;
 import com.ssafy.kirin.dto.response.CommunityDetailDTO;
 import com.ssafy.kirin.entity.*;
-import com.ssafy.kirin.repository.CommunityCommentRepository;
-import com.ssafy.kirin.repository.CommunityCommnetLikeRepository;
-import com.ssafy.kirin.repository.CommunityLikeRepository;
-import com.ssafy.kirin.repository.CommunityRepository;
+import com.ssafy.kirin.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.lang.model.UnknownEntityException;
 import java.io.*;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -26,7 +25,8 @@ public class CommunityServiceImpl implements CommunityService {
     private final CommunityCommentRepository communityCommentRepository;
     private final CommunityLikeRepository communityLikeRepository;
     private final CommunityCommnetLikeRepository communityCommentLikeRepository;
-    @Value("#{community.image.directory}")
+    private final UserRepository userRepository;
+    @Value("${image.dir}")
     private String communityImageDirectory;
 
     @Override
@@ -67,7 +67,7 @@ public class CommunityServiceImpl implements CommunityService {
     public CommunityDetailDTO getCommunity(long boardId) {
 
         Community community = communityRepository.findById(boardId);
-        List<CommunityComment> commentList = communityCommentRepository.findByBoardId(boardId);
+        List<CommunityComment> commentList = communityCommentRepository.findByCommunityId(boardId);
 
         return new CommunityDetailDTO(community, commentList);
     }
@@ -75,7 +75,7 @@ public class CommunityServiceImpl implements CommunityService {
     @Override
     public boolean likeCommunity(long userId, long boardId) {
 
-        CommunityLike communityLike = CommunityLike.builder()
+        CommunityLike communityLike = CommunityLike.builder().id(0)
                 .userId(userId).communityId(boardId).build();
         communityLikeRepository.save(communityLike);
 
@@ -93,14 +93,17 @@ public class CommunityServiceImpl implements CommunityService {
     @Transactional
     public void writeComment(long userId, long communityId, CommunityCommentWriteDTO dto) {
 
-        //TODO : user 넣기
+        User user = userRepository.getReferenceById(userId);
 
         CommunityComment communityComment = CommunityComment.builder()
                 .content(dto.content()).reg(LocalDateTime.now())
-                .isComment(dto.isComment()).parentId(dto.parentId())
+                .communityId(communityId).user(user).parentId(null)
+                .isComment(dto.isComment())
                 .build();
-        communityCommentRepository.save(communityComment);
 
+        if(dto.parentId()>0) communityComment.setParentId(dto.parentId());
+
+        communityCommentRepository.save(communityComment);
     }
 
     @Override

@@ -1,9 +1,6 @@
 package com.ssafy.kirin.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.Formula;
 
 import javax.persistence.*;
@@ -11,6 +8,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -27,11 +25,10 @@ public class CommunityComment {
     boolean isComment;
 
     @Column(name = "parent_id")
-    long parentId;
+    Long parentId;
 
-    @ManyToOne
-    @JoinColumn(name = "community_id")
-    Community community;
+    @Column(name = "community_id")
+    long communityId;
 
     @Formula("(SELECT COUNT(*) FROM community_comment c WHERE c.community_id = id)")
     int reCommentCnt;

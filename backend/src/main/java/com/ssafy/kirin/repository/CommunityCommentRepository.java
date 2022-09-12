@@ -8,6 +8,6 @@ import java.util.List;
 public interface CommunityCommentRepository extends JpaRepository<CommunityComment, Long> {
 
     CommunityComment save(CommunityComment communityComment);
-    List<CommunityComment> findByBoardId(long boardId);
+    List<CommunityComment> findByCommunityId(long boardId);
 
 }
