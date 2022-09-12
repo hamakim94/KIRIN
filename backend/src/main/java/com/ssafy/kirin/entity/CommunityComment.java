@@ -39,4 +39,7 @@ public class CommunityComment {
     @ManyToOne
     @JoinColumn(name = "user_id")
     User user;
+
+    @Column(name = "user_id")
+    long userId;
 }

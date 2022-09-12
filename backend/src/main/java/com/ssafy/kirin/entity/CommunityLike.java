@@ -22,7 +22,13 @@ public class CommunityLike {
     @JoinColumn(name = "community_id")
     Community community;
 
+    @Column(name = "community_id")
+    long communityId;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     User user;
+
+    @Column(name = "user_id")
+    long userId;
 }

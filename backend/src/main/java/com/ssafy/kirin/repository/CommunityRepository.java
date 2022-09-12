@@ -9,6 +9,9 @@ import java.util.List;
 @Repository
 public interface CommunityRepository extends JpaRepository<Community,Long> {
 
+    List<Community> findAllByUserId(long userId);
+    Community save(Community community);
 
+    Community findById(long id);
 
 }
