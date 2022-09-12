@@ -14,9 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.InputStream;
+import java.io.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -38,30 +36,31 @@ public class CommunityServiceImpl implements CommunityService {
 
     @Override
     @Transactional
-    public boolean writeCommunity(long starId, CommunityWriteDTO dto) {
-
-        User user = User.builder().id(starId).build();
+    public void writeCommunity(long starId, CommunityWriteDTO dto) throws IOException {
+        
+        //TODO : user 넣기
 
         Community community = Community.builder()
                 .title(dto.title())
                 .content(dto.content())
                 .reg(LocalDateTime.now())
-                .user(user)
                 .build();
 
         communityRepository.save(community);
 
         long boardId = community.getId();
 
-        if(dto.image()!=null)try {
-            MultipartFile file = dto.image();
-            FileOutputStream fos = new FileOutputStream(communityImageDirectory+file.getOriginalFilename());
-            InputStream is;
-
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
+        if(!dto.image().isEmpty()) {
+                MultipartFile file = dto.image();
+                String fileName = file.getOriginalFilename();
+                //확장자 가져오기
+                String fileExt = fileName.substring(fileName.lastIndexOf(".") + 1);
+                // 시간+커뮤니티ID+확장자로 파일 저장
+                String storeName = communityImageDirectory+  community.getReg().toString() + boardId + fileExt;
+                //지정된 디렉토리에 저장
+                file.transferTo(new File(storeName));
+                community.setImg(storeName);
         }
-        return true;
     }
 
     @Override
@@ -92,17 +91,16 @@ public class CommunityServiceImpl implements CommunityService {
     }
     @Override
     @Transactional
-    public boolean writeComment(long userId, long communityId, CommunityCommentWriteDTO dto) {
+    public void writeComment(long userId, long communityId, CommunityCommentWriteDTO dto) {
 
-
+        //TODO : user 넣기
 
         CommunityComment communityComment = CommunityComment.builder()
                 .content(dto.content()).reg(LocalDateTime.now())
                 .isComment(dto.isComment()).parentId(dto.parentId())
-                .userId(userId).build();
+                .build();
         communityCommentRepository.save(communityComment);
 
-        return true;
     }
 
     @Override

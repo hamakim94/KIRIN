@@ -36,10 +36,11 @@ public class CommunityComment {
     @Formula("(SELECT COUNT(*) FROM community_comment c WHERE c.community_id = id)")
     int reCommentCnt;
 
+    @Formula("(SELECT COUNT(*) FROM community_comment_like l WHERE l.community_comment_id = id)")
+    int commentLikeCnt;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     User user;
 
-    @Column(name = "user_id")
-    long userId;
 }
