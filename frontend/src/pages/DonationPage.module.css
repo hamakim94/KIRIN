@@ -1,0 +1,129 @@
+.pageTitle {
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+  margin-top: 20px;
+  margin-bottom: 50px;
+}
+
+.donationBox {
+  display: flex;
+  flex-direction: row;
+}
+
+.profileImgName {
+  margin-left: 10px;
+  margin-right: 20px;
+}
+
+.starImg {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  margin-top: 5px;
+}
+
+.starName {
+  text-align: center;
+  font-size: small;
+}
+
+.participateBox {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 5px;
+}
+
+.participateChallenge {
+  margin-right: 10px;
+  padding-left: 5px;
+  padding-right: 5px;
+  padding-top: 1.5px;
+  padding-bottom: 1.5px;
+  font-size: x-small;
+  border-width: 5;
+  background-color: #ffffcc;
+  border-radius: 5%;
+}
+
+.participateDonation {
+  padding-left: 5px;
+  padding-right: 5px;
+  padding-top: 1.5px;
+  padding-bottom: 1.5px;
+  font-size: x-small;
+  border-width: 5;
+  background-color: #ffe5cc;
+  border-radius: 5%;
+}
+
+.challengeTitle {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.donateAmount {
+  font-size: small;
+}
+
+.donateAmountZero {
+  font-size: small;
+  color: #ffffff;
+}
+
+.progressDiv {
+  height: 15px;
+  background-color: white;
+  border-bottom-left-radius: 0.1rem;
+  border-top-left-radius: 0.1rem;
+  border-bottom-right-radius: 0.1rem;
+  border-top-right-radius: 0.1rem;
+  border-width: 1px;
+  border-color: black;
+  border-style: solid;
+}
+
+.progressBox {
+  display: flex;
+  flex-direction: row;
+  margin-top: 5px;
+}
+
+.progress {
+  background-color: #ffc947;
+  height: 15px;
+  border-bottom-left-radius: 0.1rem;
+  border-top-left-radius: 0.1rem;
+  border-bottom-right-radius: 0.1rem;
+  border-top-right-radius: 0.1rem;
+  transition: 1s ease;
+  transition-delay: 0.5s;
+  margin-right: 5px;
+  border-right-width: 1px;
+  border-right-color: black;
+  border-right-style: solid;
+}
+
+.donateIng {
+  font-size: x-small;
+  margin-left: 5px;
+  margin-right: 7.5px;
+}
+
+.donateEnd {
+  font-size: x-small;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.infoBot {
+  font-size: x-small;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-top: 2px;
+}
+
+.donatePercent {
+  margin-right: 40px;
+}
