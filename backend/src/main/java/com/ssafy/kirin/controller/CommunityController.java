@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @Api(value = "커뮤니티 API",tags = {"커뮤니티 API"})
@@ -34,8 +35,12 @@ public class CommunityController {
     @ApiOperation(value = "커뮤니티 작성")
     public ResponseEntity<?> communityWrite(@PathVariable long starId,CommunityWriteDTO communityWriteDTO){
 
-        communityService.writeCommunity(starId,communityWriteDTO);
-        return ResponseEntity.ok(null);
+        try {
+            communityService.writeCommunity(starId,communityWriteDTO);
+            return ResponseEntity.ok(null);
+        } catch (IOException e) {
+            return ResponseEntity.internalServerError().build();
+        }
     }
 
     @GetMapping("/stars/{starId}/boards/{boardId}")
@@ -68,6 +73,24 @@ public class CommunityController {
     @PostMapping("/stars/{starId}/boards/{boardId}/comments")
     @ApiOperation(value = "커뮤니티 댓글 작성")
     public ResponseEntity<?> communityCommentWrite(CommunityCommentWriteDTO dto){
+
+        //TODO : Authentication Pricipal 받아서 채우기
+
+        return ResponseEntity.ok(null);
+    }
+
+    @PostMapping("/stars/{starId}/boards/{boardId}/comments/{commentId}")
+    @ApiOperation(value = "커뮤니티 댓글 좋아요")
+    public ResponseEntity<?> communityCommentLike(@PathVariable long commentId){
+
+        //TODO : Authentication Pricipal 받아서 채우기
+
+        return ResponseEntity.ok(null);
+    }
+
+    @DeleteMapping("/stars/{starId}/boards/{boardId}/comments/{commentId}")
+    @ApiOperation(value = "커뮤니티 댓글 좋아요")
+    public ResponseEntity<?> communityCommentUnlike(@PathVariable long commentId){
 
         //TODO : Authentication Pricipal 받아서 채우기
 
