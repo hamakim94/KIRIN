@@ -5,6 +5,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Collection;
 
 @Entity
@@ -35,7 +36,7 @@ public class User implements UserDetails {
     String walletHash;
 
     @Column(name = "account_type")
-    String accountType;
+    int accountType;
 
     @Column(name = "social_id")
     String socialId;
@@ -43,10 +44,22 @@ public class User implements UserDetails {
     @Column(name = "is_celeb")
     boolean isCeleb;
 
+    LocalDateTime reg;
+
     @OneToOne
     @JoinColumn(name = "celeb_info_id")
-    CelebInfo celebInfoId;
+    CelebInfo celebInfo;
 
+    @Column(name = "is_celeb_verified")
+    boolean isCelebVerified;
+
+    public void setCelebInfo(CelebInfo celebInfo) {
+        this.celebInfo = celebInfo;
+    }
+
+    public void emailVerifiedSuccess() {
+        this.isEmailVerified = true;
+    }
 
     // Security가 관리하는 UserDetails의 methods
     @Override
