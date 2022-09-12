@@ -25,4 +25,10 @@ public class CommunityCommentLike {
     @ManyToOne
     @JoinColumn(name = "user_id")
     User user;
+
+    @Column(name = "user_id")
+    long userId;
+
+    @Column(name = "community_comment_id")
+    long communityCommentId;
 }

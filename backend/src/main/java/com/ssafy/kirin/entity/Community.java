@@ -35,6 +35,10 @@ public class Community {
     int commentCnt;
 
     @ManyToOne
+    @MapsId
     @JoinColumn(name = "user_id")
     User user;
+
+    @Column(name = "user_id")
+    long userId;
 }
