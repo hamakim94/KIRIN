@@ -1,9 +1,22 @@
-import React from "react";
-import { AiOutlineLeft } from "react-icons/ai";
+import React, { useState } from "react";
+import styles from "./SearchPage.module.css";
+import BackButton from "../components/common/BackButton";
+import SearchList from "../components/search/SearchList";
 function SearchPage() {
+  const [starName, setStarName] = useState("");
   return (
     <div>
-      <AiOutlineLeft></AiOutlineLeft>SearchPage
+      <div className={styles.topContainer}>
+        <BackButton></BackButton>
+        <input
+          className={styles.searchBox}
+          value={starName}
+          onChange={(e) => setStarName(e.target.value)}
+          type={"text"}
+          placeholder={"검색"}
+        ></input>
+      </div>
+      <SearchList styles={styles}></SearchList>
     </div>
   );
 }
