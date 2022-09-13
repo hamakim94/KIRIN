@@ -3,7 +3,6 @@ package com.ssafy.kirin.controller;
 
 import com.ssafy.kirin.config.security.JwtTokenProvider;
 import com.ssafy.kirin.dto.UserDTO;
-import com.ssafy.kirin.dto.request.EmailAuthRequestDTO;
 import com.ssafy.kirin.dto.request.UserLoginRequestDTO;
 import com.ssafy.kirin.dto.request.UserSignupRequestDTO;
 import com.ssafy.kirin.service.UserService;

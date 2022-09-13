@@ -1,9 +1,7 @@
 package com.ssafy.kirin.dto.request;
 
-import com.ssafy.kirin.entity.CelebInfo;
 import lombok.*;
 
-import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
