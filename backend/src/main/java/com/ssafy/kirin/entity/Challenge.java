@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Formula;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -33,6 +34,12 @@ public class Challenge {
     @ManyToOne
     @JoinColumn(name = "user_id")
     User user;
+
+    @Formula("(SELECT COUNT(*) FROM challenge_like l WHERE l.challenge_id = id)")
+    int likeCnt;
+
+    @Formula("(SELECT COUNT(*) FROM challenge_comment c WHERE c.challenge_id = id)")
+    int commentCnt;
 
     @Column(name = "view_cnt")
     int viewCnt;
