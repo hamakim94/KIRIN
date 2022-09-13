@@ -17,12 +17,12 @@ import java.time.LocalDateTime;
 public class Report {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    long id;
+    Long id;
 
     LocalDateTime reg;
 
     @Column(name = "is_completed")
-    boolean isCompleted;
+    Boolean isCompleted;
 
     @ManyToOne
     @JoinColumn(name = "challenge_id")

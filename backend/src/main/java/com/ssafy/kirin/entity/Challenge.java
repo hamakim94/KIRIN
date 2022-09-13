@@ -1,5 +1,6 @@
 package com.ssafy.kirin.entity;
 
+import io.swagger.models.auth.In;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,7 +18,7 @@ import java.time.LocalDateTime;
 public class Challenge {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    long id;
+    Long id;
 
     String title;
     String video;
@@ -25,17 +26,17 @@ public class Challenge {
     LocalDateTime reg;
 
     @Column(name = "is_original")
-    boolean isOriginal;
+    Boolean isOriginal;
 
     @Column(name = "challenge_id")
-    long challengeId;
+    Long challengeId;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     User user;
 
     @Column(name = "view_cnt")
-    int viewCnt;
+    Integer viewCnt;
 
     @Column(name = "is_dummy")
     boolean isDummy;

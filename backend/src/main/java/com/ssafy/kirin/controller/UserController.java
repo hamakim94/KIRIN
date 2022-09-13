@@ -3,9 +3,10 @@ package com.ssafy.kirin.controller;
 
 import com.ssafy.kirin.config.security.JwtTokenProvider;
 import com.ssafy.kirin.dto.UserDTO;
+import com.ssafy.kirin.dto.request.EmailAuthRequestDTO;
 import com.ssafy.kirin.dto.request.UserLoginRequestDTO;
 import com.ssafy.kirin.dto.request.UserSignupRequestDTO;
-import com.ssafy.kirin.service.UserServiceImpl;
+import com.ssafy.kirin.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -30,15 +31,15 @@ import java.util.concurrent.TimeUnit;
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
-    private final UserServiceImpl userServiceImpl;
+    private final UserService userService;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
     private final RedisTemplate redisTemplate;
 
     @PostMapping("/signup")
-    public ResponseEntity signup(@Valid UserSignupRequestDTO userSignupRequestDTO, Errors errors){
+    public ResponseEntity signup(@Valid @RequestBody UserSignupRequestDTO userSignupRequestDTO, Errors errors){
         if(errors.hasErrors()){ // 유효성 검사 실패
-            Map<String, String> validatorResult = userServiceImpl.validateHandling(errors);
+            Map<String, String> validatorResult = userService.validateHandling(errors);
             for (String key : validatorResult.keySet()) {
                 log.error(key + ": " + validatorResult.get(key));
             }
@@ -46,7 +47,11 @@ public class UserController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        userServiceImpl.signup(userSignupRequestDTO, passwordEncoder);
+        try{
+            userService.signup(userSignupRequestDTO, passwordEncoder);
+        } catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -54,7 +59,7 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody UserLoginRequestDTO userLoginRequestDTO){
         log.info("login 함수 실행");
-        UserDTO userDTO = userServiceImpl.login(userLoginRequestDTO, passwordEncoder);
+        UserDTO userDTO = userService.login(userLoginRequestDTO, passwordEncoder);
 
         if (userDTO != null) {
             Authentication auth = new UsernamePasswordAuthenticationToken(userDTO.getId(), userLoginRequestDTO.getPassword());
@@ -119,5 +124,16 @@ public class UserController {
         }
         log.error("token 재발급 실패");
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+    @GetMapping("/confirm-email")
+    public ResponseEntity confirmEmail(@RequestParam(value = "email") String email, @RequestParam(value = "authToken") String authToken) {
+        try {
+            userService.confirmEmail(email, authToken);
+            //            response.sendRedirect("https://i7a202.p.ssafy.io/signup/success.html");
+        } catch (Exception e){
+            //                response.sendRedirect("https://i7a202.p.ssafy.io/signup/error.html");
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

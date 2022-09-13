@@ -24,22 +24,19 @@ public class UserSignupRequestDTO { // 회원가입
 
     private String profileImg;
 
-    @NotBlank(message = "이메일은 필수 입력값입니다.")
     @Pattern(regexp = "^(?:\\w+\\.?)*\\w+@(?:\\w+\\.)+\\w+$", message = "이메일 형식이 올바르지 않습니다.")
     private String email;
 
 //    boolean isEmailVerified;
 
-    @NotBlank(message = "비밀번호는 필수 입력값입니다.")
     @Pattern(regexp = "(?=.*[0-9])(?=.*[a-zA-Z])(?=.*\\W)(?=\\S+$).{8,20}", message = "비밀번호는 8~20자 영문 대소문자, 숫자, 특수문자를 사용하세요.")
     private String password;
 
-//    String walletHash;
-//    String accountType;
-
+    private Long walletId; // 나중엔 없애야함
+    private Integer accountType;
     private String socialId;
-
-//    private boolean isCeleb;
-
-    private CelebInfo celebInfoId;
+    private Boolean isCeleb;
+//    private CelebInfo celebInfoId;
+    private String info;
+    private String coverImg;
 }

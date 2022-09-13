@@ -16,7 +16,7 @@ import javax.persistence.*;
 public class ChallengeLike {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    long id;
+    Long id;
 
     @ManyToOne
     @JoinColumn(name = "challenge_id")

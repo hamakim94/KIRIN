@@ -1,6 +1,7 @@
 package com.ssafy.kirin.entity;
 
 import lombok.*;
+import org.hibernate.annotations.DynamicInsert;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -13,6 +14,8 @@ import java.util.Collection;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@ToString
+@DynamicInsert
 @Table(name = "user")
 public class User implements UserDetails {
     @Id
@@ -28,21 +31,21 @@ public class User implements UserDetails {
     String email;
 
     @Column(name = "is_email_verified")
-    boolean isEmailVerified;
+    Boolean isEmailVerified;
 
     String password;
 
-    @Column(name = "wallet_hash")
-    String walletHash;
+    @Column(name = "wallet_id")
+    Long walletId;
 
     @Column(name = "account_type")
-    int accountType;
+    Integer accountType;
 
     @Column(name = "social_id")
     String socialId;
 
     @Column(name = "is_celeb")
-    boolean isCeleb;
+    Boolean isCeleb;
 
     LocalDateTime reg;
 
@@ -51,7 +54,7 @@ public class User implements UserDetails {
     CelebInfo celebInfo;
 
     @Column(name = "is_celeb_verified")
-    boolean isCelebVerified;
+    Boolean isCelebVerified;
 
     public void setCelebInfo(CelebInfo celebInfo) {
         this.celebInfo = celebInfo;
@@ -69,7 +72,7 @@ public class User implements UserDetails {
 
     @Override
     public String getPassword() {
-        return null;
+        return password;
     }
 
     @Override

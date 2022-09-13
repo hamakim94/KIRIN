@@ -1,6 +1,7 @@
 package com.ssafy.kirin.dto;
 
 import com.ssafy.kirin.entity.CelebInfo;
+import io.swagger.models.auth.In;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,16 +17,16 @@ import java.util.Collection;
 @Builder
 @ToString
 public class UserDTO {
-    private long id;
+    private Long id;
     private String name;
     private String nickname;
     private String profileImg;
 //    private String email;
 //    private String password;
 //    private String walletHash;
-    private String accountType; // 있어야 되나?
+    private Integer accountType; // 있어야 되나?
 //    private String socialId;
-    private boolean isCeleb;
+    private Boolean isCeleb;
     // star
     private String info;
     private String coverImg;

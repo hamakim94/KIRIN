@@ -16,7 +16,7 @@ import javax.persistence.*;
 public class CommunityLike {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    long id;
+    Long id;
 
     @ManyToOne
     @JoinColumn(name = "community_id")

@@ -17,10 +17,10 @@ import java.time.LocalDateTime;
 public class CelebChallengeInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    long id;
+    Long id;
 
     String sound;
-    int length;
+    Integer length;
 
     @Column(name = "stamp_img")
     String stampImg;
@@ -34,9 +34,9 @@ public class CelebChallengeInfo {
     LocalDateTime endDate;
 
     @Column(name = "target_num")
-    int targetNum;
+    Integer targetNum;
 
-    int amount;
+    Integer amount;
 
     @Column(name = "contract_hash")
     String contractHash;
