@@ -1,11 +1,11 @@
 package com.ssafy.kirin.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.util.Collection;
 
 @Entity
 @Getter
@@ -13,7 +13,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Builder
 @Table(name = "user")
-public class User {
+public class User{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // 기본키 생성을 데이터베이스에 위임하는 전략 (MySQL의 AI)
     long id;
@@ -25,6 +25,9 @@ public class User {
     String profileImg;
 
     String email;
+
+    @Column(name = "is_email_verified")
+    boolean isEmailVerified;
 
     String password;
 
@@ -42,5 +45,5 @@ public class User {
 
     @OneToOne
     @JoinColumn(name = "celeb_info_id")
-    CelebInfo celebInfo;
+    CelebInfo celebInfoId;
 }

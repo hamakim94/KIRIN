@@ -18,11 +18,9 @@ public class CommunityCommentLike {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
 
-    @ManyToOne
-    @JoinColumn(name = "community_comment_id")
-    CommunityComment communityComment;
+    @Column(name = "user_id")
+    long userId;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    User user;
+    @Column(name = "community_comment_id")
+    long communityCommentId;
 }
