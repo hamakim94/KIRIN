@@ -5,7 +5,6 @@ import com.ssafy.kirin.entity.Challenge;
 import java.util.List;
 
 public interface ChallengeService {
-
     List<Challenge> listStarsByPopularity();
     List<Challenge> listStarsByLatest();
     List<Challenge> listGeneralByPopularity();

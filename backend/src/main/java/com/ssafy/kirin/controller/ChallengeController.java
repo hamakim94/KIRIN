@@ -16,7 +16,6 @@ import java.util.List;
 @RequestMapping("/api/challenges")
 @RequiredArgsConstructor
 public class ChallengeController {
-
     private final ChallengeService challengeService;
 
     @GetMapping("")

@@ -1,8 +1,8 @@
 package com.ssafy.kirin.service;
 
-import com.ssafy.kirin.dto.request.CommunityCommentWriteDTO;
-import com.ssafy.kirin.dto.request.CommunityWriteDTO;
-import com.ssafy.kirin.dto.response.CommunityDetailDTO;
+import com.ssafy.kirin.dto.request.CommunityCommentRequestDTO;
+import com.ssafy.kirin.dto.request.CommunityRequestDTO;
+import com.ssafy.kirin.dto.response.CommunityResponseDTO;
 import com.ssafy.kirin.entity.*;
 import com.ssafy.kirin.repository.*;
 import lombok.RequiredArgsConstructor;
@@ -11,16 +11,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.lang.model.UnknownEntityException;
 import java.io.*;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class CommunityServiceImpl implements CommunityService {
-
     private final CommunityRepository communityRepository;
     private final CommunityCommentRepository communityCommentRepository;
     private final CommunityLikeRepository communityLikeRepository;
@@ -36,7 +33,7 @@ public class CommunityServiceImpl implements CommunityService {
 
     @Override
     @Transactional
-    public void writeCommunity(long starId, CommunityWriteDTO dto) throws IOException {
+    public void writeCommunity(long starId, CommunityRequestDTO dto) throws IOException {
         
         //TODO : user 넣기
 
@@ -64,18 +61,17 @@ public class CommunityServiceImpl implements CommunityService {
     }
 
     @Override
-    public CommunityDetailDTO getCommunity(long boardId) {
+    public CommunityResponseDTO getCommunity(long boardId) {
 
         Community community = communityRepository.findById(boardId);
         List<CommunityComment> commentList = communityCommentRepository.findByCommunityId(boardId);
 
-        return new CommunityDetailDTO(community, commentList);
+        return new CommunityResponseDTO(community, commentList);
     }
 
     @Override
     public boolean likeCommunity(long userId, long boardId) {
-
-        CommunityLike communityLike = CommunityLike.builder().id(0)
+        CommunityLike communityLike = CommunityLike.builder()
                 .userId(userId).communityId(boardId).build();
         communityLikeRepository.save(communityLike);
 
@@ -91,7 +87,7 @@ public class CommunityServiceImpl implements CommunityService {
     }
     @Override
     @Transactional
-    public void writeComment(long userId, long communityId, CommunityCommentWriteDTO dto) {
+    public void writeComment(long userId, long communityId, CommunityCommentRequestDTO dto) {
 
         User user = userRepository.getReferenceById(userId);
 
