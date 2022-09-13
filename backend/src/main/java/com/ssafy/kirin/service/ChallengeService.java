@@ -6,12 +6,13 @@ import java.util.List;
 
 public interface ChallengeService {
 
-    List<Challenge> listStarsPopularity();
-    List<Challenge> listStarsLatest();
-    List<Challenge> listGeneralPopularity();
-    List<Challenge> listGeneralRandom();
-    List<Challenge> listAllRandom();
-    List<Challenge> listAllChallenge(long challengeId);
-    List<Challenge> listAllUser(long userId);
+    List<Challenge> listStarsByPopularity();
+    List<Challenge> listStarsByLatest();
+    List<Challenge> listGeneralByPopularity();
+    List<Challenge> listGeneralByRandom();
+    List<Challenge> listAllByRandom();
+    List<Challenge> listAllByAlphabet();
+    List<Challenge> listAllByChallenge(long challengeId);
+    List<Challenge> listAllByUser(long userId);
     List<Challenge> listUserLike(long userId);
 }

@@ -25,22 +25,23 @@ public class ChallengeController {
                                                          @RequestParam(name = "userid", required = false, defaultValue = "0") int userId, @RequestParam(name = "challengeid", required = false,defaultValue = "0") int challengeId){
         List<Challenge> list = switch (scope){
             case "stars" -> switch (order){
-                case "popularity" -> challengeService.listStarsPopularity();
-                case "latest" -> challengeService.listStarsLatest();
+                case "popularity" -> challengeService.listStarsByPopularity();
+                case "latest" -> challengeService.listStarsByLatest();
                 default -> new ArrayList<>();
                 };
             case "general" -> switch (order){
-                case "popularity" -> challengeService.listGeneralPopularity();
-                case "random" -> challengeService.listGeneralRandom();
+                case "popularity" -> challengeService.listGeneralByPopularity();
+                case "random" -> challengeService.listGeneralByRandom();
                 default -> new ArrayList<>();
                 };
             case "all" -> switch (order){
                 case "latest" -> {
-                    if(challengeId>0) challengeService.listAllChallenge(challengeId);
-                    else if(userId>0) challengeService.listAllUser(userId);
-                    yield new ArrayList<>();
+                    if(challengeId>0) yield challengeService.listAllByChallenge(challengeId);
+                    else if(userId>0) yield challengeService.listAllByUser(userId);
+                    else yield new ArrayList<>();
                 }
-                case "random" -> challengeService.listAllRandom();
+                case "random" -> challengeService.listAllByRandom();
+                case "alphabet" -> challengeService.listAllByAlphabet();
                 default -> new ArrayList<>();
                 };
             default -> new ArrayList<>();

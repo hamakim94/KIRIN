@@ -8,5 +8,5 @@ import java.util.List;
 
 public interface ChallengeLikeRepository extends JpaRepository<ChallengeLike, Long> {
 
-    List<Challenge> findByUserId(long userId);
+    List<ChallengeLike> findByUserId(long userId);
 }
