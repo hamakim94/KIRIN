@@ -167,10 +167,6 @@ public class UserServiceImpl implements UserDetailsService, UserService {
                 log.error("login 오류: 스타 인증 안됨");
                 return null;
             }
-//            else if(!userLoginRequestDTO.getPassword().equals(user.getPassword())){ // sign up 개발 전 test용
-//                log.error("login 오류: 비밀번호 틀림");
-//                return null;
-//            }
 
             if(!passwordEncoder.matches(userLoginRequestDTO.getPassword(), user.getPassword())){ // 비밀번호가 일치하지 않는 경우
                 log.error("login 오류: 비밀번호 틀림");
