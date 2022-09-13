@@ -15,7 +15,6 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class ChallengeServiceImpl implements ChallengeService {
-
     private final ChallengeRepository challengeRepository;
     private final ChallengeLikeRepository challengeLikeRepository;
 

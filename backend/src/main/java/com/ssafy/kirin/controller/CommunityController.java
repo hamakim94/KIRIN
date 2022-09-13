@@ -1,15 +1,14 @@
 package com.ssafy.kirin.controller;
 
 import com.ssafy.kirin.dto.UserDTO;
-import com.ssafy.kirin.dto.request.CommunityCommentWriteDTO;
-import com.ssafy.kirin.dto.request.CommunityWriteDTO;
-import com.ssafy.kirin.dto.response.CommunityDetailDTO;
+import com.ssafy.kirin.dto.request.CommunityCommentRequestDTO;
+import com.ssafy.kirin.dto.request.CommunityRequestDTO;
+import com.ssafy.kirin.dto.response.CommunityResponseDTO;
 import com.ssafy.kirin.entity.Community;
 import com.ssafy.kirin.service.CommunityService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -34,10 +33,10 @@ public class CommunityController {
 
     @PostMapping("/stars/{starId}/boards")
     @ApiOperation(value = "커뮤니티 작성")
-    public ResponseEntity<?> communityWrite(@PathVariable long starId,CommunityWriteDTO communityWriteDTO){
+    public ResponseEntity<?> communityWrite(@PathVariable long starId, CommunityRequestDTO communityRequestDTO){
 
         try {
-            communityService.writeCommunity(starId,communityWriteDTO);
+            communityService.writeCommunity(starId, communityRequestDTO);
             return ResponseEntity.ok(null);
         } catch (IOException e) {
             return ResponseEntity.internalServerError().build();
@@ -46,9 +45,9 @@ public class CommunityController {
 
     @GetMapping("/stars/{starId}/boards/{boardId}")
     @ApiOperation(value = "커뮤니티 상세 조회")
-    public ResponseEntity<CommunityDetailDTO> communityDetail(@PathVariable int starId, @PathVariable int boardId){
+    public ResponseEntity<CommunityResponseDTO> communityDetail(@PathVariable int starId, @PathVariable int boardId){
 
-        CommunityDetailDTO response = communityService.getCommunity(boardId);
+        CommunityResponseDTO response = communityService.getCommunity(boardId);
 
         return ResponseEntity.ok(response);
     }
@@ -73,7 +72,7 @@ public class CommunityController {
 
     @PostMapping("/stars/{starId}/boards/{boardId}/comments")
     @ApiOperation(value = "커뮤니티 댓글 작성")
-    public ResponseEntity<?> communityCommentWrite(@AuthenticationPrincipal UserDTO userDTO, @PathVariable long boardId, CommunityCommentWriteDTO dto){
+    public ResponseEntity<?> communityCommentWrite(@AuthenticationPrincipal UserDTO userDTO, @PathVariable long boardId, CommunityCommentRequestDTO dto){
 
         communityService.writeComment(userDTO.getId(), boardId, dto);
 

@@ -12,7 +12,6 @@ import java.util.Map;
 public interface UserService {
     void signup(UserSignupRequestDTO userSignupRequestDTO, PasswordEncoder passwordEncoder) throws Exception;
 
-//    void confirmEmail(EmailAuthRequestDTO emailAuthRequestDto);
     void confirmEmail(String email, String authToken);
 
     UserDTO login(UserLoginRequestDTO userLoginRequestDTO, PasswordEncoder passwordEncoder);

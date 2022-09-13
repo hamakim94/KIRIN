@@ -7,9 +7,8 @@ import org.springframework.context.annotation.Configuration;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-/**
- * Spring Data JPA 관련 추가 설정 정의.
- */
+
+// Spring Data JPA 관련 추가 설정 정의.
 @Configuration
 public class JpaConfig {
     @PersistenceContext
