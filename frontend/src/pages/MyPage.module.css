@@ -1,0 +1,94 @@
+.topBox {
+  display: flex;
+  flex-direction: row;
+  margin-top: 20px;
+  margin-bottom: 40px;
+  justify-content: space-between;
+}
+
+.back {
+  height: 25px;
+  width: 25px;
+  color: black;
+}
+.pageTitle {
+  font-size: 20px;
+  font-weight: bold;
+  justify-content: center;
+}
+
+.setting {
+  height: 25px;
+  width: 25px;
+  color: grey;
+}
+
+.profileBox {
+  text-align: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.userImg {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 100%;
+  justify-items: center;
+}
+
+.userName {
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.myWallet {
+  margin-top: 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: #ffc947;
+  height: 25px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.myTitle {
+  font-weight: bold;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  margin-left: 10px;
+}
+
+.hScroll {
+  overflow: auto;
+  white-space: nowrap;
+  -ms-overflow-style: none; /* IE, Edge */
+  scrollbar-width: none; /* Firefox */
+  margin-bottom: 10px;
+}
+
+.hScroll::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+.starList {
+  display: flex;
+  flex-direction: row;
+}
+
+.profileImgName {
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.starImg {
+  width: 75px;
+  height: 75px;
+  object-fit: cover;
+  border-radius: 100%;
+}
+
+.starName {
+  text-align: center;
+  font-size: small;
+}
