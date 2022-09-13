@@ -5,6 +5,7 @@ import SearchPage from "./pages/SearchPage";
 import FlowPage from "./pages/FlowPage";
 import DonationPage from "./pages/DonationPage";
 import PlusPage from "./pages/PlusPage";
+import StarPage from "./pages/StarPage";
 import NotFoundPage from "./pages/NotFoundPage";
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Route path='/flow' element={<FlowPage></FlowPage>}></Route>
         <Route path='/plus' element={<PlusPage></PlusPage>}></Route>
         <Route path='/donation' element={<DonationPage></DonationPage>}></Route>
+        <Route path='/star/:starId' element={<StarPage></StarPage>}></Route>
         <Route path='*' element={<NotFoundPage></NotFoundPage>}></Route>
         {/* <Route path='/mypage' element={<SearchPage></SearchPage>}></Route> */}
       </Routes>
