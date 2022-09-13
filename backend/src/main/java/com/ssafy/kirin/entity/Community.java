@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 public class Community {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    long id;
+    Long id;
 
     String title;
 

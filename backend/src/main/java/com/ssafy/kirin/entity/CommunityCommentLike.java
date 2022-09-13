@@ -16,7 +16,7 @@ import javax.persistence.*;
 public class CommunityCommentLike {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    long id;
+    Long id;
 
     @Column(name = "user_id")
     long userId;

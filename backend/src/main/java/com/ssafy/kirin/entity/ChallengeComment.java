@@ -18,16 +18,16 @@ import java.time.LocalDateTime;
 public class ChallengeComment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    long id;
+    Long id;
 
     String content;
     LocalDateTime reg;
 
     @Column(name = "is_comment")
-    boolean isComment;
+    Boolean isComment;
 
     @Column(name = "parent_id")
-    long parentId;
+    Long parentId;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

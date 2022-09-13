@@ -12,6 +12,8 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -35,6 +37,7 @@ public class JwtTokenProvider {
 //    private long accessExpirationInMs = 60 * 30 * 1000L;
 //    private long refreshExpirationInMs = 60 * 60 * 24 * 7 * 1000L;
 
+    private final UserDetailsService userDetailsService;
     private final UserService userService;
     private final RedisTemplate redisTemplate;
 
@@ -133,11 +136,11 @@ public class JwtTokenProvider {
 
     // Jwt 토큰으로 인증 정보를 조회
     public Authentication getAuthentication(String token) {
-        UserDTO userDTO = userService.loadUserByUsername(getUserPk(token));
-
+        UserDetails userDetails = userDetailsService.loadUserByUsername(getUserPk(token));
+        UserDTO userDTO = userService.getUserById(Long.parseLong(userDetails.getUsername()));
         log.info("getAuthentication user: " + userDTO);
 
-        return new UsernamePasswordAuthenticationToken(userDTO, null, userDTO.getAuthorities()); // 우리는 jwt 사용 -> credentials: null
+        return new UsernamePasswordAuthenticationToken(userDTO, null, userDetails.getAuthorities()); // 우리는 jwt 사용 -> credentials: null
     }
 
     // access token의 남은 유효시간 조회

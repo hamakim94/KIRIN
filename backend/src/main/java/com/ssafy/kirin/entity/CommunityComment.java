@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 public class CommunityComment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    long id;
+    Long id;
 
     String content;
     LocalDateTime reg;

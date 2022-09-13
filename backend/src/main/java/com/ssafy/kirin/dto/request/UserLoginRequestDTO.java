@@ -9,7 +9,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 @ToString
-public class LoginRequestDTO {
+public class UserLoginRequestDTO {
     private String email;
     private String password;
 //    private String accessToken;

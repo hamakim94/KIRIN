@@ -4,10 +4,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -19,12 +21,12 @@ public class SecurityConfig {
     private final JwtTokenProvider jwtTokenProvider;
 
     private static final String[] PUBLIC_API_URI = {
-            "/api/users/signup", "/api/users/login", "/api/users/reissue", "/api/users/duplications/check"
+            "/api/users/signup", "/api/users/login", "/api/users/reissue", "/api/users/duplications/check", "/api/users/confirm-email"
     };
 
     private static final String[] PUBLIC_WEB_URI = {
             "/swagger-ui/**", "/swagger-resources/**",
-            "/swagger-ui.html", "/webjars/**", "/swagger/**", "/v2/api-docs"
+            "/swagger-ui.html", "/webjars/**", "/swagger/**", "/v3/api-docs"
 //            "/js/**","/css/**","/images/**","/font/**","/html/**"
     };
 
@@ -55,4 +57,5 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
 }

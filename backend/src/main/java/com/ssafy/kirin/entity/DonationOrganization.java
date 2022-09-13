@@ -16,7 +16,7 @@ import javax.persistence.*;
 public class DonationOrganization {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    long id;
+    Long id;
 
     String name;
 }

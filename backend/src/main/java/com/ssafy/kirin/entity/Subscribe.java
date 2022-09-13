@@ -16,11 +16,11 @@ import javax.persistence.*;
 public class Subscribe {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    long id;
+    Long id;
 
     @Column(name = "celeb_id")
-    long celebId;
+    Long celebId;
 
     @Column(name = "user_id")
-    long userId;
+    Long userId;
 }

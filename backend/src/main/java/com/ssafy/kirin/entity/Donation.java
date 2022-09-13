@@ -17,9 +17,9 @@ import java.time.LocalDateTime;
 public class Donation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    long id;
+    Long id;
 
-    int amount;
+    Integer amount;
     LocalDateTime reg;
 
     @ManyToOne
