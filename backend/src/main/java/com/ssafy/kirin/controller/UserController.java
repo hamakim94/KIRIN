@@ -36,7 +36,7 @@ public class UserController {
     private final RedisTemplate redisTemplate;
 
     @PostMapping("/signup")
-    public ResponseEntity signup(@Valid @RequestBody UserSignupRequestDTO userSignupRequestDTO, Errors errors){
+    public ResponseEntity userSignup(@Valid @RequestBody UserSignupRequestDTO userSignupRequestDTO, Errors errors){
         if(errors.hasErrors()){ // 유효성 검사 실패
             Map<String, String> validatorResult = userService.validateHandling(errors);
             for (String key : validatorResult.keySet()) {
@@ -56,7 +56,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity login(@RequestBody UserLoginRequestDTO userLoginRequestDTO){
+    public ResponseEntity userLogin(@RequestBody UserLoginRequestDTO userLoginRequestDTO){
         log.info("login 함수 실행");
         UserDTO userDTO = userService.login(userLoginRequestDTO, passwordEncoder);
 
@@ -72,7 +72,7 @@ public class UserController {
     }
 
     @GetMapping("/logout")
-    public ResponseEntity logout(HttpServletRequest request, @AuthenticationPrincipal UserDTO userDTO){
+    public ResponseEntity userLogout(HttpServletRequest request, @AuthenticationPrincipal UserDTO userDTO){
         // Redis에 해당 user id로 저장된 refresh token이 있을 경우 삭제
         if (redisTemplate.opsForValue().get(userDTO.getId()) != null) {
             redisTemplate.delete(userDTO.getId());
@@ -88,7 +88,7 @@ public class UserController {
     }
 
     @PostMapping("/reissue")
-    public ResponseEntity reissue(HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity tokenReissue(HttpServletRequest request, HttpServletResponse response) {
         String accessToken = jwtTokenProvider.getTokenFromRequest(request, "ACCESSTOKEN");
         String refreshToken = jwtTokenProvider.getTokenFromRequest(request, "REFRESHTOKEN");
         String userId = jwtTokenProvider.getUserPk(accessToken);
@@ -107,7 +107,7 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
     @GetMapping("/confirm-email")
-    public ResponseEntity confirmEmail(@RequestParam(value = "email") String email, @RequestParam(value = "authToken") String authToken) {
+    public ResponseEntity emailConfirm(@RequestParam(value = "email") String email, @RequestParam(value = "authToken") String authToken) {
         try {
             userService.confirmEmail(email, authToken);
             //            response.sendRedirect("https://i7a202.p.ssafy.io/signup/success.html");
