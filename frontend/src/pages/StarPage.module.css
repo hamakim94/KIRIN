@@ -1,0 +1,28 @@
+.wrapper {
+  padding-top: 15px;
+  padding-bottom: 55px;
+}
+.coverImg {
+  height: 150px;
+  background-image: url(https://cdn.pixabay.com/photo/2015/01/27/19/34/giraffe-614141_960_720.jpg);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+}
+
+.starImg {
+  position: absolute;
+  left: 15px;
+  bottom: 0;
+  background-image: url(https://cdn.pixabay.com/photo/2022/05/06/17/15/cartoon-giraffe-7178753_960_720.jpg);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  border-radius: 100%;
+  width: 100px;
+  height: 100px;
+}
+.topWrapper {
+  position: relative;
+  height: 200px;
+}

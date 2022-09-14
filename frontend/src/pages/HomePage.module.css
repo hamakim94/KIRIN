@@ -1,9 +1,15 @@
+.wrapper {
+  padding-top: 15px;
+  padding-bottom: 55px;
+}
 .logo {
+  margin-left: 15px;
   font-size: 24px;
   margin-bottom: 10px;
 }
 
 .hScroll {
+  margin-left: 15px;
   overflow: auto;
   white-space: nowrap;
   -ms-overflow-style: none; /* IE, Edge */
@@ -47,6 +53,7 @@
   font-size: 30px;
 }
 .category {
+  margin-left: 15px;
   font-family: "SCD500";
   font-size: 20px;
   margin-bottom: 10px;
