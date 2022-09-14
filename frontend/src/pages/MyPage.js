@@ -4,6 +4,7 @@ import MyTop from '../components/my/MyTop';
 import Profile from '../components/my/Profile';
 import MyStar from '../components/my/MyStar';
 import MyChallenge from '../components/my/MyChallenge';
+import ChallengeList from '../components/my/ChallengeList';
 
 function MyPage() {
   return (
@@ -13,7 +14,7 @@ function MyPage() {
       <hr></hr>
       <MyStar styles={styles}></MyStar>
       <hr></hr>
-      <MyChallenge styles={styles}></MyChallenge>
+      <ChallengeList styles={styles}></ChallengeList>
     </div>
   );
 }
