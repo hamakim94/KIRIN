@@ -64,7 +64,7 @@ FE/BE/BC/DOCS_날짜_개발한(중인)기능: 개발 내용 (진행중/ 완료/ 
 
 **Backend**
 
-- Repository return type은 Optional로 
+- Repository return type(Collection API 제외)은 Optional로 
   - orElseThrow 예외처리하기 
   - ifPresentOrElse, ifPresent
 
