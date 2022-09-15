@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import DonationList from '../components/donation/DonationList';
+import DontaionTop from '../components/donation/DonationTop';
 import styles from './DonationPage.module.css';
 
 function DonationPage() {
   return (
     <div>
-      <div className={styles.pageTitle}>나의 기부</div>
+      <DontaionTop styles={styles}></DontaionTop>
       <DonationList styles={styles}></DonationList>
-      <hr></hr>
     </div>
   );
 }
