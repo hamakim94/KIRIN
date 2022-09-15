@@ -10,7 +10,7 @@ function AboutWallet() {
   // 페이지가 실행되면, web3 이용 네트워크 연결)
   useEffect(() => {
     var Web3 = require("web3");
-    var web3 = new Web3("http://j7a708.p.ssafy.io:8545");
+    var web3 = new Web3(process.env.REACT_APP_BCURL);
     setWeb3(web3);
   }, []);
 
@@ -42,7 +42,7 @@ function AboutWallet() {
       to: "0x031afd400b47748d1554a89e617917fabb19a809",
       value: 100000000000000000, // 0.1 ether
       gas: 2000000,
-      chainId: 921,
+      chainId: 97889218,
     };
     web3.eth.accounts.signTransaction(tx, privateKey, (a, b) => {
       if (a) {
@@ -63,26 +63,56 @@ function AboutWallet() {
    * 만든 계정에 1 이더리움을 보내는 함수
    */
   const chargeBalance = (event) => {
+    setLoading("Loading");
     event.preventDefault();
-    web3.eth.personal
-      .unlockAccount("0x031afd400b47748d1554a89e617917fabb19a809", "girin6")
-      .then(() => {
-        web3.eth.sendTransaction(
-          {
-            from: "0x031afd400b47748d1554a89e617917fabb19a809",
-            to: address,
-            value: web3.utils.toWei("1", "ether"),
-          },
-          (err, transactionHash) => {
+    var tx = {
+      from: process.env.REACT_APP_ADMINID,
+      to: address,
+      value: 100000000000000000, // 0.1 ether
+      gas: 2000000,
+      chainId: 97889218,
+    };
+    web3.eth.accounts.signTransaction(tx, process.env.REACT_APP_ADMINKEY, (a, b) => {
+      if (a) {
+        console.log(a);
+      } else {
+        web3.eth
+          .sendSignedTransaction(b.rawTransaction, (err, transactionHash) => {
             if (!err) {
               console.log(transactionHash + " success");
             } else {
               console.log(err);
             }
-          }
-        );
-      });
+          })
+          .then(() => {
+            setLoading("");
+            alert("잔액 다시 보기 클릭하세용");
+          });
+      }
+    });
   };
+
+  // const chargeBalance = (event) => {
+  //   event.preventDefault();
+  //   web3.eth.personal
+  //     .unlockAccount("0x031afd400b47748d1554a89e617917fabb19a809", "girin6")
+  //     .then(() => {
+  //       web3.eth.sendTransaction(
+  //         {
+  //           from: "0x031afd400b47748d1554a89e617917fabb19a809",
+  //           to: address,
+  //           value: web3.utils.toWei("1", "ether"),
+  //         },
+  // (err, transactionHash) => {
+  //   if (!err) {
+  //     console.log(transactionHash + " success");
+  //   } else {
+  //     console.log(err);
+  //   }
+  // }
+  //       );
+  //     });
+  // };
 
   return (
     <div>
