@@ -68,7 +68,10 @@ function DonationList(props) {
                   </div>
                   <div>
                     <div className={props.styles.participateBox}>
-                      <div className={props.styles.participateChallenge}> 챌린지 참여 </div>
+                      <div className={props.styles.participateChallenge}>
+                        {' '}
+                        <span>챌린지 참여</span>
+                      </div>
                       {donationList.didDonate === 1 ? (
                         <div className={props.styles.participateDonation}>기부참여</div>
                       ) : null}
@@ -91,7 +94,9 @@ function DonationList(props) {
                     </div>
                     <div>
                       <div className={props.styles.infoBot}>
-                        <span>{donationList.donateNum}명</span>
+                        <span className={props.styles.donateNumber}>
+                          {donationList.donateNum}명
+                        </span>
                         <span className={props.styles.donatePercent}>
                           {donationList.donateNum}/{donationList.targetNum}%
                         </span>
