@@ -60,8 +60,8 @@ public class User {
         this.celebInfo = celebInfo;
     }
 
-    public void setEmailAndNickname(String email, String nickname){
-        this.email = email;
+    public void setProfileImgAndNickname(String profileImg, String nickname){
+        this.profileImg = profileImg;
         this.nickname = nickname;
     }
 

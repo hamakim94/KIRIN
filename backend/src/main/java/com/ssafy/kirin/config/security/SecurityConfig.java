@@ -18,7 +18,7 @@ public class SecurityConfig {
     private final JwtTokenProvider jwtTokenProvider;
 
     private static final String[] PUBLIC_API_URI = {
-            "/api/users/signup", "/api/users/login", "/api/users/reissue", "/api/users/duplications/check", "/api/users/confirm-email"
+            "/api/users/signup", "/api/users/login", "/api/users/reissue", "/api/users/duplications/check", "/api/users/confirm-email", "/api/users/check-duplicate/**"
     };
 
     private static final String[] PUBLIC_WEB_URI = {
