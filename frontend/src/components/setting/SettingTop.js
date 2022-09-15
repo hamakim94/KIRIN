@@ -5,12 +5,12 @@ import { BiArrowBack } from 'react-icons/bi';
 function MyTop(props) {
   return (
     <div className={props.styles.topBox}>
-      <a>
+      <a href="/mypage">
         <BiArrowBack className={props.styles.back}></BiArrowBack>
       </a>
-      <div className={props.styles.pageTitle}>마이페이지</div>
-      <a href="/mypage/setting">
-        <AiFillSetting className={props.styles.setting}></AiFillSetting>
+      <div className={props.styles.pageTitle}>설정</div>
+      <a>
+        <AiFillSetting className={props.styles.fakeSetting}></AiFillSetting>
       </a>
     </div>
   );

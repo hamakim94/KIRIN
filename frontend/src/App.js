@@ -6,7 +6,14 @@ import FlowPage from './pages/FlowPage';
 import DonationPage from './pages/DonationPage';
 import PlusPage from './pages/PlusPage';
 import MyPage from './pages/MyPage';
+import SettingPage from './pages/SettingPage';
+import EditProfilePage from './pages/settings/EditProfilePage';
+import AskPage from './pages/settings/AskPage';
+import ChangePasswordPage from './pages/settings/ChangePasswordPage';
+import TermsOfServicePage from './pages/settings/TermsOfServicePage';
+import PrivacyPolicyPage from './pages/settings/PrivacyPolicyPage';
 import NotFoundPage from './pages/NotFoundPage';
+
 function App() {
   return (
     <div className="App">
@@ -17,6 +24,24 @@ function App() {
         <Route path="/plus" element={<PlusPage></PlusPage>}></Route>
         <Route path="/donation" element={<DonationPage></DonationPage>}></Route>
         <Route path="/mypage" element={<MyPage></MyPage>}></Route>
+        <Route path="/mypage/setting" element={<SettingPage></SettingPage>}></Route>
+        <Route
+          path="/mypage/setting/editprofile"
+          element={<EditProfilePage></EditProfilePage>}
+        ></Route>
+        <Route
+          path="/mypage/setting/changepassword"
+          element={<ChangePasswordPage></ChangePasswordPage>}
+        ></Route>
+        <Route path="/mypage/setting/ask" element={<AskPage></AskPage>}></Route>
+        <Route
+          path="/mypage/setting/termsofservice"
+          element={<TermsOfServicePage></TermsOfServicePage>}
+        ></Route>
+        <Route
+          path="/mypage/setting/privacypolicy"
+          element={<PrivacyPolicyPage></PrivacyPolicyPage>}
+        ></Route>
         <Route path="*" element={<NotFoundPage></NotFoundPage>}></Route>
         {/* <Route path='/mypage' element={<SearchPage></SearchPage>}></Route> */}
       </Routes>
