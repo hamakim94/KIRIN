@@ -29,7 +29,7 @@ public class UserSignupRequestDTO { // 회원가입
     private String password;
 
     private Long walletId; // 나중엔 없애야함
-    private Integer accountType;
+    private Integer accountType; // 0: 일반, 1: 소셜
     private String socialId;
     private Boolean isCeleb;
     private String info;

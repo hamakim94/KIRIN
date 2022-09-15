@@ -22,4 +22,13 @@ public class CelebInfo {
 
     @Column(name = "cover_img")
     String coverImg;
+
+//    public void setInfoAndCoverImg(String info, String coverImg){
+//        this.info = info;
+//        this.coverImg = coverImg;
+//    }
+
+    public void setInfo(String info){
+        this.info = info;
+    }
 }
