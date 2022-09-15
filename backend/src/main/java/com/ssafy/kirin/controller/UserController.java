@@ -6,6 +6,8 @@ import com.ssafy.kirin.dto.UserDTO;
 import com.ssafy.kirin.dto.request.UserLoginRequestDTO;
 import com.ssafy.kirin.dto.request.UserSignupRequestDTO;
 import com.ssafy.kirin.service.UserService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -22,10 +24,12 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
+@Api(value = "사용자 API",tags = {"사용자 API"})
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/users")
@@ -36,6 +40,7 @@ public class UserController {
     private final RedisTemplate redisTemplate;
 
     @PostMapping("/signup")
+    @ApiOperation(value = "사용자 회원가입") // 요청 URL에 매핑된 API에 대한 설명
     public ResponseEntity userSignup(@Valid @RequestBody UserSignupRequestDTO userSignupRequestDTO, Errors errors){
         if(errors.hasErrors()){ // 유효성 검사 실패
             Map<String, String> validatorResult = userService.validateHandling(errors);
@@ -56,26 +61,29 @@ public class UserController {
     }
 
     @PostMapping("/login")
+    @ApiOperation(value = "사용자 로그인")
     public ResponseEntity userLogin(@RequestBody UserLoginRequestDTO userLoginRequestDTO){
         log.info("login 함수 실행");
-        UserDTO userDTO = userService.login(userLoginRequestDTO, passwordEncoder);
+        try{
+            UserDTO userDTO = userService.login(userLoginRequestDTO, passwordEncoder);
 
-        if (userDTO != null) {
             Authentication auth = new UsernamePasswordAuthenticationToken(userDTO.getId(), userLoginRequestDTO.getPassword());
             String accessToken = jwtTokenProvider.createAccessToken(auth); // access token 발급
             String refreshToken = jwtTokenProvider.createRefreshToken(auth); // refresh token 발급
 
             return ResponseEntity.ok().header("ACCESSTOKEN", accessToken).header("REFRESHTOKEN", refreshToken).body(userDTO);
+        } catch (Exception e){
+            log.error("로그인 에러: " + e);
+            return new ResponseEntity<>("invalid ID", HttpStatus.UNAUTHORIZED);
         }
-
-        return new ResponseEntity<>("invalid ID", HttpStatus.UNAUTHORIZED);
     }
 
     @GetMapping("/logout")
-    public ResponseEntity userLogout(HttpServletRequest request, @AuthenticationPrincipal UserDTO userDTO){
+    @ApiOperation(value = "사용자 로그아웃")
+    public ResponseEntity userLogout(HttpServletRequest request, @AuthenticationPrincipal UserDTO user){
         // Redis에 해당 user id로 저장된 refresh token이 있을 경우 삭제
-        if (redisTemplate.opsForValue().get(userDTO.getId()) != null) {
-            redisTemplate.delete(userDTO.getId());
+        if (redisTemplate.opsForValue().get(user.getId()) != null) {
+            redisTemplate.delete(user.getId());
         }
 
         String accessToken = jwtTokenProvider.getTokenFromRequest(request, "ACCESSTOKEN");
@@ -88,6 +96,7 @@ public class UserController {
     }
 
     @PostMapping("/reissue")
+    @ApiOperation(value = "토큰 재발행")
     public ResponseEntity tokenReissue(HttpServletRequest request, HttpServletResponse response) {
         String accessToken = jwtTokenProvider.getTokenFromRequest(request, "ACCESSTOKEN");
         String refreshToken = jwtTokenProvider.getTokenFromRequest(request, "REFRESHTOKEN");
@@ -106,15 +115,76 @@ public class UserController {
         log.error("token 재발급 실패");
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
+
     @GetMapping("/confirm-email")
+    @ApiOperation(value = "이메일 확인(계정 활성화)")
     public ResponseEntity emailConfirm(@RequestParam(value = "email") String email, @RequestParam(value = "authToken") String authToken) {
         try {
             userService.confirmEmail(email, authToken);
             //            response.sendRedirect("https://i7a202.p.ssafy.io/signup/success.html");
         } catch (Exception e){
             //                response.sendRedirect("https://i7a202.p.ssafy.io/signup/error.html");
+            log.error("email auth token 만료");
+            // email 만료되면 해당 계정의 이메일, 닉네임은 다시 못 쓰게 할건지? 아니면 해당 user 내역을 삭제해야될지?
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/profiles")
+    @ApiOperation(value = "사용자 프로필 정보 조회")
+    public ResponseEntity userProfile(@AuthenticationPrincipal UserDTO user){
+        return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+
+    @PutMapping("/profiles")
+    @ApiOperation(value = "사용자 프로필 수정")
+    public ResponseEntity userProfileEdit(@AuthenticationPrincipal UserDTO user, @RequestBody UserDTO userDTO){
+        // id, 닉네임, 프로필 사진 (스타일 경우, info, cover_img도)
+        userDTO.setId(user.getId());
+        UserDTO changedUserDTO;
+
+        try {
+            changedUserDTO = userService.modifyUser(userDTO);
+        } catch (Exception e){
+            log.error("userProfileEdit user 조회 실패");
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>(changedUserDTO, HttpStatus.OK);
+    }
+
+    @PostMapping("/subscribes")
+    @ApiOperation(value = "스타 구독")
+    public ResponseEntity subscribe(@AuthenticationPrincipal UserDTO user, @RequestParam long celebId){
+        userService.subscribe(user.getId(), celebId);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/subscribes")
+    @ApiOperation(value = "구독한 스타 목록 조회")
+    public ResponseEntity subscribeStarList(@AuthenticationPrincipal UserDTO user){
+        List<UserDTO> stars = userService.getCelebListById(user.getId());
+
+        return new ResponseEntity<>(stars, HttpStatus.OK);
+    }
+
+    @GetMapping("/check-duplicate/email")
+    @ApiOperation(value = "이메일 중복 확인")
+    public ResponseEntity emailDuplicateCheck(@RequestParam String email){
+        if(userService.checkEmailDuplicate(email)) return new ResponseEntity<>(HttpStatus.OK);
+
+        log.error("email 중복");
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    @GetMapping("/check-duplicate/nickname")
+    @ApiOperation(value = "닉네임 중복 확인")
+    public ResponseEntity nicknameDuplicateCheck(@RequestParam String nickname){
+        if(userService.checkNicknameDuplicate(nickname)) return new ResponseEntity<>(HttpStatus.OK);
+
+        log.error("nickname 중복");
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 }

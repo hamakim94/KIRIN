@@ -1,12 +1,12 @@
 package com.ssafy.kirin.service;
 
 import com.ssafy.kirin.dto.UserDTO;
-import com.ssafy.kirin.dto.request.EmailAuthRequestDTO;
 import com.ssafy.kirin.dto.request.UserLoginRequestDTO;
 import com.ssafy.kirin.dto.request.UserSignupRequestDTO;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.Errors;
 
+import java.util.List;
 import java.util.Map;
 
 public interface UserService {
@@ -16,7 +16,17 @@ public interface UserService {
 
     UserDTO login(UserLoginRequestDTO userLoginRequestDTO, PasswordEncoder passwordEncoder);
 
+    UserDTO modifyUser(UserDTO userDTO);
+
     UserDTO getUserById(long userId);
+
+    void subscribe(long userId, long celebId);
+
+    List<UserDTO> getCelebListById(long userId);
+
+    boolean checkEmailDuplicate(String email);
+
+    boolean checkNicknameDuplicate(String nickname);
 
     Map<String, String> validateHandling(Errors errors);
 }

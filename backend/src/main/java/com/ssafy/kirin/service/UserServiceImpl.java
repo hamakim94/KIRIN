@@ -6,11 +6,9 @@ import com.ssafy.kirin.dto.request.UserLoginRequestDTO;
 import com.ssafy.kirin.dto.request.UserSignupRequestDTO;
 import com.ssafy.kirin.entity.CelebInfo;
 import com.ssafy.kirin.entity.EmailAuth;
+import com.ssafy.kirin.entity.Subscribe;
 import com.ssafy.kirin.entity.User;
-import com.ssafy.kirin.repository.CelebInfoRepository;
-import com.ssafy.kirin.repository.EmailAuthRepository;
-import com.ssafy.kirin.repository.EmailAuthRepositoryCustom;
-import com.ssafy.kirin.repository.UserRepository;
+import com.ssafy.kirin.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -23,9 +21,7 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.FieldError;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -36,6 +32,8 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     private final EmailAuthRepository emailAuthRepository;
     private final EmailAuthRepositoryCustom emailAuthRepositoryCustom;
     private final EmailService emailService;
+    private final SubscribeRepository subscribeRepository;
+
 
     @Override
     public void signup(UserSignupRequestDTO userSignupRequestDTO, PasswordEncoder passwordEncoder) throws Exception {
@@ -137,7 +135,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     @Override
     public void confirmEmail(String email, String authToken) {
         EmailAuth emailAuth = emailAuthRepositoryCustom.findValidAuthByEmail(email, authToken, LocalDateTime.now())
-                .orElseThrow(() -> new UsernameNotFoundException("EmailAuth : " + email + " was not found"));
+                .orElseThrow(() -> new NoSuchElementException("EmailAuth : " + email + " was not found"));
         User user = userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("User : " + email + " was not found"));
         emailAuth.useToken();
         user.emailVerifiedSuccess();
@@ -149,95 +147,115 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     public UserDTO login(UserLoginRequestDTO userLoginRequestDTO, PasswordEncoder passwordEncoder) {
         System.out.println("login service: " + userLoginRequestDTO);
 
-        try {
-            User user = userRepository.findByEmail(userLoginRequestDTO.getEmail())
-                    .orElseThrow(() -> new UsernameNotFoundException("User : " + userLoginRequestDTO.getEmail() + " was not found"));
+        User user = userRepository.findByEmail(userLoginRequestDTO.getEmail())
+                .orElseThrow(() -> new NoSuchElementException("User : " + userLoginRequestDTO.getEmail() + " was not found"));
 
-            if(!user.getIsEmailVerified()){ // 이메일 인증이 안된 경우
-                log.error("login 오류: 이메일 인증 안됨");
-                return null;
-            }
-
-            if(user.getIsCeleb() && !user.getIsCelebVerified()){ // 스타 계정이지만 스타 인증이 안된 경우
-                log.error("login 오류: 스타 인증 안됨");
-                return null;
-            }
-
-            if(!passwordEncoder.matches(userLoginRequestDTO.getPassword(), user.getPassword())){ // 비밀번호가 일치하지 않는 경우
-                log.error("login 오류: 비밀번호 틀림");
-                return null;
-            }
-
-            if(user.getIsCeleb()){ // 스타인 경우
-                CelebInfo celebInfo = celebInfoRepository.findById(user.getCelebInfo().getId())
-                        .orElseThrow(() -> new UsernameNotFoundException("Login Celeb info : " + user.getCelebInfo().getId() + " was not found"));
-
-                return UserDTO.builder()
-                        .id(user.getId())
-                        .name(user.getName())
-                        .nickname(user.getNickname())
-                        .profileImg(user.getProfileImg())
-                        .accountType(user.getAccountType())
-                        .isCeleb(user.getIsCeleb())
-                        .info(celebInfo.getInfo())
-                        .coverImg(celebInfo.getCoverImg())
-                        .build();
-            }
-
-            // 일반인인 경우
-            return UserDTO.builder()
-                    .id(user.getId())
-                    .name(user.getName())
-                    .nickname(user.getNickname())
-                    .profileImg(user.getProfileImg())
-                    .accountType(user.getAccountType())
-                    .isCeleb(user.getIsCeleb())
-                    .build();
-        }
-        catch (Exception e){
-            log.error("login 오류");
+        if(!user.getIsEmailVerified()){ // 이메일 인증이 안된 경우
+            log.error("login 오류: 이메일 인증 안됨");
             return null;
         }
+
+        if(user.getIsCeleb() && !user.getIsCelebVerified()){ // 스타 계정이지만 스타 인증이 안된 경우
+            log.error("login 오류: 스타 인증 안됨");
+            return null;
+        }
+
+        if(!passwordEncoder.matches(userLoginRequestDTO.getPassword(), user.getPassword())){ // 비밀번호가 일치하지 않는 경우
+            log.error("login 오류: 비밀번호 틀림");
+            return null;
+        }
+
+//        if(user.getIsCeleb()){ // 스타인 경우
+////            CelebInfo celebInfo = celebInfoRepository.findById(user.getCelebInfo().getId())
+////                    .orElseThrow(() -> new NoSuchElementException("Login Celeb info : " + user.getCelebInfo().getId() + " was not found"));
+//
+//            return userToCelebDto(user);
+//        }
+//
+//        // 일반인인 경우
+        return userToUserDto(user); // 일반인인 경우, 스타인 경우 모두 포함
+    }
+
+    @Override
+    public UserDTO modifyUser(UserDTO userDTO) {
+        User user = userRepository.findById(userDTO.getId())
+                .orElseThrow(() -> new NoSuchElementException("User : " + userDTO.getId() + " was not found"));
+
+        user.setProfileImgAndNickname(userDTO.getProfileImg(), userDTO.getNickname());
+
+        if(user.getIsCeleb()){ // 스타인 경우, celebInfo update
+            user.getCelebInfo().setInfo(userDTO.getInfo());
+            celebInfoRepository.save(user.getCelebInfo());
+        }
+
+        userRepository.save(user); // user update
+
+        return userToUserDto(user);
     }
 
     @Override
     public UserDTO getUserById(long userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new UsernameNotFoundException("User : " + userId + " was not found"));
+                .orElseThrow(() -> new NoSuchElementException("User : " + userId + " was not found"));
 
-        if(user.getIsCeleb()){ // 스타인 경우
-            CelebInfo celebInfo = celebInfoRepository.findById(user.getCelebInfo().getId())
-                    .orElseThrow(() -> new UsernameNotFoundException("Login Celeb info : " + user.getCelebInfo().getId() + " was not found"));
-
-            return UserDTO.builder()
-                    .id(user.getId())
-                    .name(user.getName())
-                    .nickname(user.getNickname())
-                    .profileImg(user.getProfileImg())
-                    .accountType(user.getAccountType())
-                    .isCeleb(user.getIsCeleb())
-                    .info(celebInfo.getInfo())
-                    .coverImg(celebInfo.getCoverImg())
-                    .build();
-        }
-
-        // 일반인인 경우
-        return UserDTO.builder()
-                .id(user.getId())
-                .name(user.getName())
-                .nickname(user.getNickname())
-                .profileImg(user.getProfileImg())
-                .accountType(user.getAccountType())
-                .isCeleb(user.getIsCeleb())
-                .build();
+//        if(user.getIsCeleb()){ // 스타인 경우
+//            return userToCelebDto(user);
+//        }
+//
+//        // 일반인인 경우
+        return userToUserDto(user);
     }
 
     @Override
-    public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
-        User user = userRepository.findById(Long.parseLong(userId))
-                .orElseThrow(() -> new UsernameNotFoundException("loadUserByUsername User : " + userId + " was not found"));
+    public void subscribe(long userId, long celebId) {
+        // user가 스타가 아니고, celeb이 스타인지 확인을 해야 할까?
+        User celeb = userRepository.getReferenceById(celebId);
 
-        return user;
+        Subscribe subscribe = Subscribe.builder()
+                .userId(userId)
+                .celeb(celeb)
+                .build();
+
+        subscribeRepository.save(subscribe);
+    }
+
+    @Override
+    public List<UserDTO> getCelebListById(long userId) {
+        List<Subscribe> subscribes = subscribeRepository.findByUserId(userId);
+        List<UserDTO> result = new ArrayList<>();
+
+        for(Subscribe subscribe: subscribes){
+            UserDTO userDTO = userToUserDto(subscribe.getCeleb());
+            result.add(userDTO);
+        }
+
+        return result;
+    }
+
+    @Override
+    public boolean checkEmailDuplicate(String email) {
+        boolean isEmailDupliated = userRepository.existsByEmail(email);
+
+        if(isEmailDupliated) return false;
+
+        return true;
+    }
+
+    @Override
+    public boolean checkNicknameDuplicate(String nickname) {
+        boolean isNicknameDupliated = userRepository.existsByNickname(nickname);
+
+        if(isNicknameDupliated) return false;
+
+        return true;
+    }
+
+    @Override
+    public UserDTO loadUserByUsername(String userId) throws UsernameNotFoundException {
+        UserDTO userDTO = getUserById(Long.parseLong(userId));
+        // 일반인, 스타 role 지정
+
+        return userDTO;
     }
 
     @Transactional(readOnly = true)
@@ -252,4 +270,46 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
         return validatorResult;
     }
+
+    private UserDTO userToUserDto(User user){
+        return UserDTO.builder()
+                .id(user.getId())
+                .email(user.getEmail())
+                .name(user.getName())
+                .nickname(user.getNickname())
+                .profileImg(user.getProfileImg())
+                .accountType(user.getAccountType())
+                .isCeleb(user.getIsCeleb())
+                .info(user.getCelebInfo() != null ? user.getCelebInfo().getInfo() : null)
+                .coverImg(user.getCelebInfo() != null ? user.getCelebInfo().getCoverImg() : null)
+                .build();
+    }
+
+//    private UserDTO userToCelebDto(CelebInfo celebInfo, User user){
+//        return UserDTO.builder()
+//                .id(user.getId())
+//                .email(user.getEmail())
+//                .name(user.getName())
+//                .nickname(user.getNickname())
+//                .profileImg(user.getProfileImg())
+//                .accountType(user.getAccountType())
+//                .isCeleb(user.getIsCeleb())
+//                .info(celebInfo.getInfo())
+//                .coverImg(celebInfo.getCoverImg())
+//                .build();
+//    }
+
+//    private UserDTO userToCelebDto(User user){
+//        return UserDTO.builder()
+//                .id(user.getId())
+//                .email(user.getEmail())
+//                .name(user.getName())
+//                .nickname(user.getNickname())
+//                .profileImg(user.getProfileImg())
+//                .accountType(user.getAccountType())
+//                .isCeleb(user.getIsCeleb())
+//                .info(user.getCelebInfo().getInfo())
+//                .coverImg(user.getCelebInfo().getCoverImg())
+//                .build();
+//    }
 }

@@ -18,8 +18,9 @@ public class Subscribe {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @Column(name = "celeb_id")
-    Long celebId;
+    @ManyToOne
+    @JoinColumn(name = "celeb_id")
+    User celeb;
 
     @Column(name = "user_id")
     Long userId;

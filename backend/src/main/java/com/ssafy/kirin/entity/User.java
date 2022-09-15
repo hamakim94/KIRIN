@@ -17,7 +17,7 @@ import java.util.Collection;
 @ToString
 @DynamicInsert
 @Table(name = "user")
-public class User implements UserDetails {
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // 기본키 생성을 데이터베이스에 위임하는 전략 (MySQL의 AI)
     long id;
@@ -60,43 +60,12 @@ public class User implements UserDetails {
         this.celebInfo = celebInfo;
     }
 
+    public void setProfileImgAndNickname(String profileImg, String nickname){
+        this.profileImg = profileImg;
+        this.nickname = nickname;
+    }
+
     public void emailVerifiedSuccess() {
         this.isEmailVerified = true;
-    }
-
-    // Security가 관리하는 UserDetails의 methods
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
-    }
-
-    @Override
-    public String getPassword() {
-        return password;
-    }
-
-    @Override
-    public String getUsername() {
-        return Long.toString(id);
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
     }
 }

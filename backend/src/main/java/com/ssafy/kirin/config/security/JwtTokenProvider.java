@@ -2,6 +2,7 @@ package com.ssafy.kirin.config.security;
 
 import com.ssafy.kirin.dto.UserDTO;
 import com.ssafy.kirin.service.UserService;
+import com.ssafy.kirin.service.UserServiceImpl;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 
@@ -31,14 +32,13 @@ public class JwtTokenProvider {
     private Key key;
 
     // test용
-    private long accessExpirationInMs = 60 * 3 * 1000L;
-    private long refreshExpirationInMs = 60 * 10 * 1000L;
+//    private long accessExpirationInMs = 60 * 3 * 1000L;
+//    private long refreshExpirationInMs = 60 * 10 * 1000L;
 
-//    private long accessExpirationInMs = 60 * 30 * 1000L;
-//    private long refreshExpirationInMs = 60 * 60 * 24 * 7 * 1000L;
+    private long accessExpirationInMs = 60 * 30 * 1000L;
+    private long refreshExpirationInMs = 60 * 60 * 24 * 7 * 1000L;
 
-    private final UserDetailsService userDetailsService;
-    private final UserService userService;
+    private final UserServiceImpl userServiceImpl;
     private final RedisTemplate redisTemplate;
 
 
@@ -136,11 +136,16 @@ public class JwtTokenProvider {
 
     // Jwt 토큰으로 인증 정보를 조회
     public Authentication getAuthentication(String token) {
-        UserDetails userDetails = userDetailsService.loadUserByUsername(getUserPk(token));
-        UserDTO userDTO = userService.getUserById(Long.parseLong(userDetails.getUsername()));
-        log.info("getAuthentication user: " + userDTO);
+        try{
+            UserDTO userDTO = userServiceImpl.loadUserByUsername(getUserPk(token));
+            log.info("getAuthentication user: " + userDTO);
 
-        return new UsernamePasswordAuthenticationToken(userDTO, null, userDetails.getAuthorities()); // 우리는 jwt 사용 -> credentials: null
+            return new UsernamePasswordAuthenticationToken(userDTO, null, userDTO.getAuthorities()); // 우리는 jwt 사용 -> credentials: null
+        } catch (Exception e){
+            log.error("getAuthentication user 못 가져옴");
+
+            return null;
+        }
     }
 
     // access token의 남은 유효시간 조회
