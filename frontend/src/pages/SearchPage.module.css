@@ -1,6 +1,7 @@
 .topContainer {
   display: flex;
   align-items: center;
+  padding: 15px;
 }
 .starContainer {
   width: 28%;
@@ -23,6 +24,8 @@
   display: flex;
   flex-wrap: wrap;
   gap: 8%;
+  margin-left: 15px;
+  margin-right: 15px;
 }
 .starImg {
   width: 100px;

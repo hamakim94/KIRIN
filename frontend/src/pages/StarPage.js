@@ -1,37 +1,43 @@
 import React from "react";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import Button from "@mui/material/Button";
+import ChallengeList from "../components/home/ChallengeList";
+import HomeCategory from "../components/home/HomeCategory";
+import CommunityItem from "../components/star/CommunityItem";
 import styles from "./StarPage.module.css";
 
 function StarPage() {
-  const theme = createTheme({
-    palette: {
-      secondary: {
-        main: "#FFB200",
-      },
-    },
-  });
   return (
-    <ThemeProvider theme={theme}>
-      <div className={styles.wrapper}>
-        <div className={styles.topWrapper}>
-          <div className={styles.coverImg}></div> {/* 커버사진 */}
-          <div className={styles.starImg}></div> {/* 프로필사진 */}
-        </div>
-        <div style={styles}>
-          <span>기린기린</span>
-          <Button variant='contained' color='secondary'>
-            구독
-          </Button>
-        </div>{" "}
-        {/* 설명 */}
-        <div style={styles}></div> {/* 타이틀 */}
-        <div style={styles}></div> {/* 오른쪽 */}
-        <div style={styles}></div> {/* 챌린지카드 */}
-        <div style={styles}></div> {/* 타이틀 */}
-        <div style={styles}></div> {/* 커뮤니티 */}
+    <div className={styles.wrapper}>
+      <div className={styles.topWrapper}>
+        <div className={styles.coverImg}></div> {/* 커버사진 */}
+        <div className={styles.starImg}></div> {/* 프로필사진 */}
       </div>
-    </ThemeProvider>
+      <div className={styles.topTitle}>
+        <div className={styles.starName}>
+          <span>기린기린</span>
+        </div>
+        <div className={styles.btnWrapper}>
+          <button className={styles.subBtn}>구독</button>
+        </div>
+      </div>
+      <div className={styles.contentBox}>안녕하세요 새콤달콤입니다. 함께 기부해요~!!</div>
+      <div className={styles.titleBox}>
+        <HomeCategory title={"챌린지"} styles={styles}></HomeCategory>
+        <div className={styles.sortTab}>
+          <span>최신순</span>
+          <span>인기순</span>
+        </div>
+      </div>
+      <ChallengeList styles={styles}></ChallengeList>
+      <div className={styles.titleBox}>
+        <HomeCategory title={"커뮤니티"} styles={styles}></HomeCategory>
+      </div>
+      <div className={styles.hScroll}>
+        <CommunityItem styles={styles}></CommunityItem>
+        <CommunityItem styles={styles}></CommunityItem>
+        <CommunityItem styles={styles}></CommunityItem>
+        <CommunityItem styles={styles}></CommunityItem>
+      </div>
+    </div>
   );
 }
 

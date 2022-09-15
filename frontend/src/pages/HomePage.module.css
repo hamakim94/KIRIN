@@ -7,20 +7,6 @@
   font-size: 24px;
   margin-bottom: 10px;
 }
-
-.hScroll {
-  margin-left: 15px;
-  overflow: auto;
-  white-space: nowrap;
-  -ms-overflow-style: none; /* IE, Edge */
-  scrollbar-width: none; /* Firefox */
-  margin-bottom: 10px;
-}
-
-.hScroll::-webkit-scrollbar {
-  display: none; /* Chrome, Safari, Opera */
-}
-
 .starImg {
   width: 75px;
   height: 75px;
@@ -59,16 +45,28 @@
   margin-bottom: 10px;
 }
 
-.challengeContainer {
-  overflow: auto;
-  white-space: nowrap;
-}
-
 .img {
   width: 100%;
   object-fit: cover;
 }
 
+/* 챌린지 영상들 css */
+
+.hScroll {
+  padding-left: 15px;
+  overflow: auto;
+  white-space: nowrap;
+  -ms-overflow-style: none; /* IE, Edge */
+  scrollbar-width: none; /* Firefox */
+  margin-bottom: 10px;
+}
+.hScroll::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+.challengeContainer {
+  overflow: auto;
+  white-space: nowrap;
+}
 .coverBox {
   display: flex;
   flex-direction: column;

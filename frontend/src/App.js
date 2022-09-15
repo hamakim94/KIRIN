@@ -10,25 +10,27 @@ import StarPage from "./pages/StarPage";
 import PcPage from "./pages/PcPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import SimpleBottomNavigation from "./components/common/SimpleBottomNavigation";
+import CommunityPage from "./pages/CommunityPage";
 function App() {
   return (
     <>
       {isMobile ? (
-        <div className='App'>
+        <div className="App">
           <Routes>
-            <Route path='/' element={<HomePage></HomePage>}></Route>
-            <Route path='/search' element={<SearchPage></SearchPage>}></Route>
-            <Route path='/flow' element={<FlowPage></FlowPage>}></Route>
-            <Route path='/plus' element={<PlusPage></PlusPage>}></Route>
-            <Route path='/donation' element={<DonationPage></DonationPage>}></Route>
-            <Route path='/star/:starId' element={<StarPage></StarPage>}></Route>
-            <Route path='*' element={<NotFoundPage></NotFoundPage>}></Route>
+            <Route path="/" element={<HomePage></HomePage>}></Route>
+            <Route path="/search" element={<SearchPage></SearchPage>}></Route>
+            <Route path="/flow" element={<FlowPage></FlowPage>}></Route>
+            <Route path="/plus" element={<PlusPage></PlusPage>}></Route>
+            <Route path="/donation" element={<DonationPage></DonationPage>}></Route>
+            <Route path="/star/:starId" element={<StarPage></StarPage>}></Route>
+            <Route path="/star/:starId/community" element={<CommunityPage></CommunityPage>}></Route>
+            <Route path="*" element={<NotFoundPage></NotFoundPage>}></Route>
             {/* <Route path='/mypage' element={<SearchPage></SearchPage>}></Route> */}
           </Routes>
           <SimpleBottomNavigation></SimpleBottomNavigation>
         </div>
       ) : (
-        <div className='Pc'>
+        <div className="Pc">
           <PcPage></PcPage>
         </div>
       )}

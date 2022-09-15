@@ -26,3 +26,159 @@
   position: relative;
   height: 200px;
 }
+.topTitle {
+  display: flex;
+}
+.starName {
+  display: inline-block;
+  font-family: "SCD600";
+  margin-left: 15px;
+  width: 100px;
+  text-align: center;
+}
+.btnWrapper {
+  display: flex;
+  flex: 1;
+  justify-content: flex-end;
+  padding-right: 15px;
+}
+.subBtn {
+  background-color: #ffc947;
+  padding: 2px;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 4.5px;
+  border: 0;
+  font-family: "SCD800";
+  color: #7e370c;
+  border-radius: 10%;
+}
+.subBtn:hover {
+  background-color: #cd9105;
+}
+
+.contentBox {
+  margin-left: 15px;
+  width: 50%;
+  margin-bottom: 25px;
+}
+
+.titleBox {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+
+.category {
+  display: inline-block;
+  margin-left: 15px;
+  font-family: "SCD500";
+  font-size: 20px;
+}
+
+.sortTab {
+  display: flex;
+  align-items: flex-end;
+  font-size: 12px;
+  margin-right: 15px;
+  gap: 8px;
+}
+
+.communityItem {
+  display: inline-block;
+  overflow: hidden;
+  padding: 15px;
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 5%;
+  margin-right: 16px;
+  height: 400px;
+  width: calc(100vw - 60px);
+}
+
+.communityImg {
+  background-image: url("../assets/img/together.png");
+  background-repeat: no-repeat;
+  background-position-x: center;
+  background-size: cover 100%;
+  height: 250px;
+}
+/* 챌린지 영상들 css */
+
+.hScroll {
+  padding-left: 15px;
+  overflow: scroll;
+  white-space: nowrap;
+  -ms-overflow-style: none; /* IE, Edge */
+  scrollbar-width: none; /* Firefox */
+  margin-bottom: 10px;
+}
+.hScroll::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+.challengeContainer {
+  overflow: auto;
+  white-space: nowrap;
+}
+.coverBox {
+  display: flex;
+  flex-direction: column;
+  background-color: rgba(0, 0, 0, 0.3);
+  position: absolute;
+  width: 144px;
+  height: 256px;
+  opacity: 1;
+}
+.blankBox {
+  flex: 3;
+}
+.infoBox {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding-left: 5px;
+  padding-right: 5px;
+  padding-bottom: 5px;
+}
+.cardWrapper {
+  position: relative;
+  display: inline-block;
+  margin-right: 10px;
+  border-radius: 5%;
+  width: 144px;
+  height: 256px;
+  border-width: 1px;
+  border-style: solid;
+  overflow: hidden;
+}
+.reactPlayer {
+  pointer-events: none;
+}
+
+.infoTop {
+  display: flex;
+  flex-direction: column;
+}
+.infoBot {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.infoText {
+  color: #ffffff;
+  font-size: 10px;
+  margin-bottom: 2px;
+}
+
+.progressDiv {
+  background-color: #ffffff;
+  border-radius: 0.5rem;
+}
+.progress {
+  background-color: rgba(41, 47, 51, 0.68);
+  height: 15px;
+  border-bottom-left-radius: 0.5rem;
+  border-top-left-radius: 0.5rem;
+  transition: 1s ease;
+  transition-delay: 0.5s;
+}
