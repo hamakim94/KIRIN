@@ -1,22 +1,37 @@
 package com.ssafy.kirin.service;
 
+import com.ssafy.kirin.dto.UserDTO;
+import com.ssafy.kirin.dto.request.ChallengeRequestDTO;
+import com.ssafy.kirin.entity.CelebChallengeInfo;
 import com.ssafy.kirin.entity.Challenge;
 import com.ssafy.kirin.entity.ChallengeLike;
+import com.ssafy.kirin.entity.User;
+import com.ssafy.kirin.repository.CelebChallengeInfoRepository;
 import com.ssafy.kirin.repository.ChallengeLikeRepository;
 import com.ssafy.kirin.repository.ChallengeRepository;
+import com.ssafy.kirin.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
-
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ChallengeServiceImpl implements ChallengeService {
     private final ChallengeRepository challengeRepository;
     private final ChallengeLikeRepository challengeLikeRepository;
+    private final CelebChallengeInfoRepository celebChallengeInfoRepository;
+    private final UserRepository userRepository;
+    private static final Logger logger = LoggerFactory.getLogger(ChallengeServiceImpl.class);
 
     @Override
     public List<Challenge> listStarsByPopularity() {
@@ -66,5 +81,57 @@ public class ChallengeServiceImpl implements ChallengeService {
     public List<Challenge> listUserLike(long userId) {
         return challengeLikeRepository.findByUserId(userId).stream()
                 .map(ChallengeLike::getChallenge).collect(Collectors.toList());
+    }
+    @Transactional
+    @Override
+    public boolean createChallenge(UserDTO userDTO, ChallengeRequestDTO challengeRequestDTO) throws IOException {
+
+        User user = userRepository.getReferenceById(userDTO.getId());
+
+        if (challengeRequestDTO.isOriginal()) {
+
+
+
+        } else if (!challengeRequestDTO.isOriginal()) {
+
+            CelebChallengeInfo celebChallengeInfo = celebChallengeInfoRepository.findByChallengeId(challengeRequestDTO.challengeId());
+
+        }
+
+
+
+
+//        Challenge challenge = challengeRepository.save(Challenge.builder().title(challengeRequestDTO.title()).user(user)
+//                .isOriginal(challengeRequestDTO.isOriginal()).reg(LocalDateTime.now()).build());
+
+        String musicAbsolutePath = "C:\\07_Seoul_07_A708_PJT02\\videoTest\\audio\\1.m4a";
+        String imgAbsolutePath = "C:\\07_Seoul_07_A708_PJT02\\videoTest\\img.jpg";
+        String tmpPath = "C:\\07_Seoul_07_A708_PJT02\\videoTest\\tmp.mp4";
+        String outputNamePath = "C:\\07_Seoul_07_A708_PJT02\\videoTest\\"+ userDTO.getName() + "challengegetId()11" + ".mp4";
+
+        RandomAccessFile file = new RandomAccessFile(tmpPath, "rw");
+        file.write(challengeRequestDTO.video().getBytes());
+
+        String command = String.format("ffmpeg -y -i %s -i %s -i %s -filter_complex [1][0]scale2ref=w=oh*mdar:h=ih*0.1[logo][video];[video][logo]overlay=W-w-15:15 -map \"v\" -map 2:a -c:v libx264 -crf 17 -c:a copy -shortest %s"
+            ,tmpPath,imgAbsolutePath,musicAbsolutePath,outputNamePath);
+
+
+        System.out.println("Command Will Be :\n" + command);
+
+        Process p = Runtime.getRuntime().exec(command);
+        try {
+            p.waitFor();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+
+        System.out.println(p.toString());
+
+
+        System.out.println("Editing Finished");
+
+
+        return false;
     }
 }

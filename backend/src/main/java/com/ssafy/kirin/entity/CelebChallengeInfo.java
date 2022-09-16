@@ -19,6 +19,10 @@ public class CelebChallengeInfo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
+    @ManyToOne
+    @JoinColumn(name = "challenge_id")
+    Challenge challenge;
+
     String sound;
     Integer length;
 
