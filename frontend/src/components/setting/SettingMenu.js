@@ -24,6 +24,14 @@ function SettingMenu(props) {
         <div className={props.styles.menuName}>개인정보 처리방침</div>
       </a>
       <hr></hr>
+      <a href="">
+        <div className={props.styles.menuName}>로그아웃</div>
+      </a>
+      <hr></hr>
+      <a href="">
+        <div className={props.styles.menuName}>회원 탈퇴</div>
+      </a>
+      <hr></hr>
     </div>
   );
 }
