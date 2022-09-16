@@ -11,6 +11,10 @@
 # production
 /build
 
+#important
+.env
+compile.js
+
 # misc
 .DS_Store
 .env.local
