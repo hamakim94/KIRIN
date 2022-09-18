@@ -14,12 +14,18 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.RandomAccessFile;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -31,7 +37,8 @@ public class ChallengeServiceImpl implements ChallengeService {
     private final ChallengeLikeRepository challengeLikeRepository;
     private final CelebChallengeInfoRepository celebChallengeInfoRepository;
     private final UserRepository userRepository;
-    private static final Logger logger = LoggerFactory.getLogger(ChallengeServiceImpl.class);
+    @Value("${challenge.dir}")
+    private final String challengeDir;
 
     @Override
     public List<Challenge> listStarsByPopularity() {
@@ -85,53 +92,33 @@ public class ChallengeServiceImpl implements ChallengeService {
     @Transactional
     @Override
     public boolean createChallenge(UserDTO userDTO, ChallengeRequestDTO challengeRequestDTO) throws IOException {
-
+        try {
         User user = userRepository.getReferenceById(userDTO.getId());
+        Challenge forChallenge = challengeRepository.getReferenceById(challengeRequestDTO.challengeId());
+        String musicPath = forChallenge.getCelebChallengeInfo().getSound();
+        String imgPath = forChallenge.getCelebChallengeInfo().getStampImg();
 
-        if (challengeRequestDTO.isOriginal()) {
+        // 비디오 외 정보 저장
+        Challenge challenge = challengeRepository.save(Challenge.builder().user(user).isDummy(false).reg(LocalDateTime.now())
+                .title(challengeRequestDTO.title()).isOriginal(challengeRequestDTO.isOriginal())
+                .build());
 
-
-
-        } else if (!challengeRequestDTO.isOriginal()) {
-
-            CelebChallengeInfo celebChallengeInfo = celebChallengeInfoRepository.findByChallengeId(challengeRequestDTO.challengeId());
-
-        }
-
-
-
-
-//        Challenge challenge = challengeRepository.save(Challenge.builder().title(challengeRequestDTO.title()).user(user)
-//                .isOriginal(challengeRequestDTO.isOriginal()).reg(LocalDateTime.now()).build());
-
-        String musicAbsolutePath = "C:\\07_Seoul_07_A708_PJT02\\videoTest\\audio\\1.m4a";
-        String imgAbsolutePath = "C:\\07_Seoul_07_A708_PJT02\\videoTest\\img.jpg";
-        String tmpPath = "C:\\07_Seoul_07_A708_PJT02\\videoTest\\tmp.mp4";
-        String outputNamePath = "C:\\07_Seoul_07_A708_PJT02\\videoTest\\"+ userDTO.getName() + "challengegetId()11" + ".mp4";
-
-        RandomAccessFile file = new RandomAccessFile(tmpPath, "rw");
-        file.write(challengeRequestDTO.video().getBytes());
+        Path outputTmp = Paths.get((challengeDir+challenge.getId()+"Tmp.mp4"));
+        Files.copy(challengeRequestDTO.video().getInputStream(),outputTmp);
+        String outputPath = challengeDir+challenge.getId()+".mp4";
 
         String command = String.format("ffmpeg -y -i %s -i %s -i %s -filter_complex [1][0]scale2ref=w=oh*mdar:h=ih*0.1[logo][video];[video][logo]overlay=W-w-15:15 -map \"v\" -map 2:a -c:v libx264 -crf 17 -c:a copy -shortest %s"
-            ,tmpPath,imgAbsolutePath,musicAbsolutePath,outputNamePath);
+            ,outputPath,imgPath,musicPath,outputPath);
 
-
-        System.out.println("Command Will Be :\n" + command);
 
         Process p = Runtime.getRuntime().exec(command);
-        try {
-            p.waitFor();
+        p.waitFor();
+        challenge.setVideo(outputPath);
+
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
 
-
-        System.out.println(p.toString());
-
-
-        System.out.println("Editing Finished");
-
-
-        return false;
+        return true;
     }
 }
