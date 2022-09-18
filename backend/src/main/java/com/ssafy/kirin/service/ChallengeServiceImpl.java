@@ -108,7 +108,7 @@ public class ChallengeServiceImpl implements ChallengeService {
         String outputPath = challengeDir+challenge.getId()+".mp4";
 
         String command = String.format("ffmpeg -y -i %s -i %s -i %s -filter_complex [1][0]scale2ref=w=oh*mdar:h=ih*0.1[logo][video];[video][logo]overlay=W-w-15:15 -map \"v\" -map 2:a -c:v libx264 -crf 17 -c:a copy -shortest %s"
-            ,outputPath,imgPath,musicPath,outputPath);
+            ,outputTmp,imgPath,musicPath,outputPath);
 
 
         Process p = Runtime.getRuntime().exec(command);
