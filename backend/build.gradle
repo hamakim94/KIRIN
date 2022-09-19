@@ -62,6 +62,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-websocket'
 //	implementation 'org.springframework.session:spring-session-data-redis'
 //	implementation 'org.springframework.shell:spring-shell-starter'
+	implementation 'com.google.firebase:firebase-admin:6.8.1'
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
