@@ -1,17 +1,18 @@
 import React from "react";
-import BackButton from "../components/common/BackButton";
+import CommunityComment from "../components/community/CommunityComment";
+import CommunityContent from "../components/community/CommunityContent";
+import CommunityHeader from "../components/community/CommunityHeader";
+import CommunityWriter from "../components/community/CommunityWriter";
+import CoummnityFooter from "../components/community/CoummnityFooter";
 import styles from "./CommunityPage.module.css";
 function CommunityPage() {
   return (
     <div className={styles.wrapper}>
-      <div className={styles.topWrapper}>
-        <div>
-          <BackButton></BackButton>
-        </div>
-        <div>
-          <span>새콤달콤</span>
-        </div>
-      </div>
+      <CommunityHeader styles={styles}></CommunityHeader>
+      <CommunityWriter styles={styles}></CommunityWriter>
+      <CommunityContent styles={styles}></CommunityContent>
+      <CoummnityFooter styles={styles}></CoummnityFooter>
+      <CommunityComment styles={styles}></CommunityComment>
     </div>
   );
 }
