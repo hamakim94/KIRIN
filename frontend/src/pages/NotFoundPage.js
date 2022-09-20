@@ -1,10 +1,10 @@
 import React from "react";
-import AboutWallet from "../components/wallets/AboutWallet";
+import WalletPage from "./WalletPage";
 
 function NotFoundPage() {
   return (
     <div>
-      <AboutWallet></AboutWallet>
+      <WalletPage></WalletPage>
     </div>
   );
 }

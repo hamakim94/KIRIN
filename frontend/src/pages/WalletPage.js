@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import ABI from "../../TokenABI.json";
-import CA from "../../TokenCA.json";
-import compileFund from "../../compileFund.js";
 
-function TokenWallet() {
+import ABI from "../TokenABI.json";
+import CA from "../TokenCA.json";
+
+function WalletPage() {
   const [web3, setWeb3] = useState(""); // web3 연결하는 부분, useEffect를 통해 초반에 생성된다.
   const [address, setAddress] = useState(process.env.REACT_APP_USERID); // 내 주소를 저장하는 부분, 추후에 상태관리 해야할 부분
   const [privateKey, setprivateKey] = useState(process.env.REACT_APP_USERKEY); // 내 비밀번호, 추후에 상태관리 해야할 부분 or db
@@ -129,14 +129,6 @@ function TokenWallet() {
     });
   };
 
-  // 계정의 토큰 잔액 확인하는 함수. eth는 wei단위기때문에 10^18로 나눠서 이더리움 단위로 환산
-  const compileAndDeploy = (event) => {
-    event.preventDefault();
-    setLoading("로딩중");
-    compileFund().then(() => {
-      setLoading("");
-    });
-  };
   return (
     <div>
       <button onClick={makeWallet}>지갑 생성하기</button>
@@ -162,11 +154,8 @@ function TokenWallet() {
       <div>잔액 : {tokenBalance}</div>
       <hr></hr>
       {loading}
-      <div>
-        <button onClick={compileAndDeploy}>배포하기</button>
-      </div>
     </div>
   );
 }
 
-export default TokenWallet;
+export default WalletPage;

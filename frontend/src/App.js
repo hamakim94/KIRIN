@@ -7,6 +7,7 @@ import FlowPage from "./pages/FlowPage";
 import DonationPage from "./pages/DonationPage";
 import PlusPage from "./pages/PlusPage";
 import NotFoundPage from "./pages/NotFoundPage";
+import WalletPage from "./pages/WalletPage";
 function App() {
   return (
     <div className="App">
@@ -16,6 +17,7 @@ function App() {
         <Route path="/flow" element={<FlowPage></FlowPage>}></Route>
         <Route path="/plus" element={<PlusPage></PlusPage>}></Route>
         <Route path="/donation" element={<DonationPage></DonationPage>}></Route>
+        <Route path="/wallet" element={<WalletPage></WalletPage>}></Route>
         <Route path="*" element={<NotFoundPage></NotFoundPage>}></Route>
         {/* <Route path='/mypage' element={<SearchPage></SearchPage>}></Route> */}
       </Routes>

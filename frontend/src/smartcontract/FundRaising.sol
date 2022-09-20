@@ -25,7 +25,7 @@ contract FundRaising {
     ) {
         fundRaisingCloses = block.timestamp + _duration; // duration을 통해 끝나는 시간
         beneficiary = _beneficiary; // address를 받아서 수혜자 등록
-        token = _token;
+        token = _token; // token의 contract address
     } // 생성자
 
     // constructor (uint _duration, address _beneficiary, address _token, uint _allowAmount) {
@@ -47,13 +47,9 @@ contract FundRaising {
     function fundToken(uint256 _amount) external payable {
         //uint _minAmount = 1*(10**16);
         //require(_amount >= _minAmount, "Minimum 0.01 MGK tokens");
-        IERC20(token).transferFrom(
-            msg.sender,
-            address(this),
-            _amount * (10**18)
-        );
+        IERC20(token).transferFrom(msg.sender, address(this), _amount);
         addFunder(msg.sender);
-        funderToAmount[msg.sender] += _amount * (10**18);
+        funderToAmount[msg.sender] += _amount;
     }
 
     /**
@@ -80,16 +76,6 @@ contract FundRaising {
     modifier onlyAfterFundCloses() {
         require(block.timestamp > fundRaisingCloses, "only after Fund closes");
         _;
-    }
-
-    function selectRandomFunder() public view returns (address, uint256) {
-        // block.number : current block number
-        // blockhash(uint blocknumber) : hash of the given block when blocknumber is 256개 최신 블록 중 하나일 때
-        bytes32 rand = keccak256(abi.encodePacked(blockhash(block.number)));
-        address selected = funders[uint256(rand) % funders.length];
-        // uint fundersAmount = amount[uint(rand) % amount.length];
-
-        return (selected, funderToAmount[selected]);
     }
 
     /**
