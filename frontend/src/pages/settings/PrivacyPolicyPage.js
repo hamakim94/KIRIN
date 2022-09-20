@@ -1,7 +1,7 @@
 import React from 'react';
 import { AiFillSetting } from 'react-icons/ai';
 import { BiArrowBack } from 'react-icons/bi';
-import styles from './PrivacyPolicyPage.module.css';
+import styles from './SettingsPage.module.css';
 
 function PrivacyPolicyPage() {
   return (
@@ -15,8 +15,8 @@ function PrivacyPolicyPage() {
           <AiFillSetting className={styles.fakeSetting}></AiFillSetting>
         </div>
       </div>
-      <div className={styles.privacyContent}>
-        <div className={styles.content}>
+      <div className={styles.contentBox}>
+        <div style={{ padding: 10 }}>
           1 개인정보의 처리 목적 ① 기린은(는) 다음의 목적을 위하여 개인정보를 처리하고 있으며,
           다음의 목적 이외의 용도로는 이용하지 않습니다. 고객 가입의사 확인, 고객에 대한 서비스
           제공에 따른 본인 이메일 인증, 회원자격 유지·관리, 마케팅 및 광고에의 활용 2 개인정보의
