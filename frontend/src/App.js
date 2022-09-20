@@ -14,6 +14,9 @@ import TermsOfServicePage from './pages/settings/TermsOfServicePage';
 import PrivacyPolicyPage from './pages/settings/PrivacyPolicyPage';
 import NotFoundPage from './pages/NotFoundPage';
 import WalletPage from './pages/WalletPage';
+import FindPasswordPage from './pages/FindPasswordPage';
+import LoginPage from './pages/LoginPage';
+import SignupPage from './pages/SignupPage';
 
 function App() {
   return (
@@ -44,6 +47,9 @@ function App() {
           element={<PrivacyPolicyPage></PrivacyPolicyPage>}
         ></Route>
         <Route path="/mypage/wallet" element={<WalletPage></WalletPage>}></Route>
+        <Route path="/signup" element={<SignupPage></SignupPage>}></Route>
+        <Route path="/login" element={<LoginPage></LoginPage>}></Route>
+        <Route path="/findpassword" element={<FindPasswordPage></FindPasswordPage>}></Route>
         <Route path="*" element={<NotFoundPage></NotFoundPage>}></Route>
         {/* <Route path='/mypage' element={<SearchPage></SearchPage>}></Route> */}
       </Routes>
