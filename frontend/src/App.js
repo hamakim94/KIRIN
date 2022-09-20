@@ -13,6 +13,7 @@ import ChangePasswordPage from './pages/settings/ChangePasswordPage';
 import TermsOfServicePage from './pages/settings/TermsOfServicePage';
 import PrivacyPolicyPage from './pages/settings/PrivacyPolicyPage';
 import NotFoundPage from './pages/NotFoundPage';
+import WalletPage from './pages/WalletPage';
 
 function App() {
   return (
@@ -42,6 +43,7 @@ function App() {
           path="/mypage/setting/privacypolicy"
           element={<PrivacyPolicyPage></PrivacyPolicyPage>}
         ></Route>
+        <Route path="/wallet" element={<WalletPage></WalletPage>}></Route>
         <Route path="*" element={<NotFoundPage></NotFoundPage>}></Route>
         {/* <Route path='/mypage' element={<SearchPage></SearchPage>}></Route> */}
       </Routes>

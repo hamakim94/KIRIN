@@ -1,7 +1,12 @@
 import React from "react";
+import WalletPage from "./WalletPage";
 
 function NotFoundPage() {
-  return <div>NotFoundPage</div>;
+  return (
+    <div>
+      <WalletPage></WalletPage>
+    </div>
+  );
 }
 
 export default NotFoundPage;
