@@ -1,4 +1,4 @@
-# 기린 (GIRIN)
+# 기린 (GIRIN) 
 
 ## Develop Rules
 
