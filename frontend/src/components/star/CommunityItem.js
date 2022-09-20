@@ -23,7 +23,13 @@ function CommunityItem(props) {
           여러분 안녕하세요 새콤달콤의 키위 현수입니다. 오늘부로 함께하게 되어 정말 신나요! 저소득
           유치원 아이들을 위해 춤추고 기부해요 :)
         </span>
-        <div className={props.styles.communityImg}></div>
+        <div>
+          <img
+            alt='star'
+            className={props.styles.communityImg}
+            src='https://cdn.pixabay.com/photo/2022/05/06/17/15/cartoon-giraffe-7178753_960_720.jpg'
+          ></img>
+        </div>
         <div>
           <CommentIcon></CommentIcon>
           <LikeIcon></LikeIcon>
