@@ -43,7 +43,7 @@ function App() {
           path="/mypage/setting/privacypolicy"
           element={<PrivacyPolicyPage></PrivacyPolicyPage>}
         ></Route>
-        <Route path="/wallet" element={<WalletPage></WalletPage>}></Route>
+        <Route path="/mypage/wallet" element={<WalletPage></WalletPage>}></Route>
         <Route path="*" element={<NotFoundPage></NotFoundPage>}></Route>
         {/* <Route path='/mypage' element={<SearchPage></SearchPage>}></Route> */}
       </Routes>
