@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import ABI from "../../TokenABI.json";
 import CA from "../../TokenCA.json";
+import compileFund from "../../compileFund.js";
 
 function TokenWallet() {
   const [web3, setWeb3] = useState(""); // web3 연결하는 부분, useEffect를 통해 초반에 생성된다.
@@ -14,7 +15,7 @@ function TokenWallet() {
   useEffect(() => {
     var Web3 = require("web3");
     var web3 = new Web3(process.env.REACT_APP_BCURL);
-    var contract = new web3.eth.Contract(ABI, CA);
+    var contract = new web3.eth.Contract(ABI, CA); // ABI, CA를 통해 contract 객체를 만들어서 보관한다. 나중에 활용함
     setWeb3(web3);
     setTokenContract(contract);
     console.log(contract);
@@ -74,12 +75,12 @@ function TokenWallet() {
     });
   };
 
-  // 계정의 토큰 잔액 확인하는 함수. eth는 wei단위기때문에 10^18로 나눠서 이더리움 단위로 환산
+  // 계정의 토큰 잔액 확인하는 함수.
   const viewTokenBalance = (event) => {
     event.preventDefault();
     setLoading(true);
-    // ABI, CA를 이용해 함수 접근
-    tokenContract.methods
+
+    tokenContract.methods // ABI, CA를 이용해 함수 접근
       .balanceOf(address)
       .call()
       .then((balance) => {
@@ -89,82 +90,25 @@ function TokenWallet() {
     // web3.eth.getBalance(address).then((e) => setBalance(e / Math.pow(10, 18)));
   };
 
-  const buyToken = (event) => {
-    event.preventDefault();
-    setLoading(true);
-    // ABI, CA를 이용해 함수 접근
-    web3.eth.accounts.wallet.add(process.env.REACT_APP_USERKEY);
-    tokenContract.methods
-      .buy()
-      .estimateGas({ from: address })
-      .then(function(gasAmount) {
-        tokenContract.methods.buy().send(
-          {
-            from: address,
-            value: 1000000000000000000,
-            gas: gasAmount,
-          },
-          (transactionHash, err) => {
-            if (err) {
-              console.log(err);
-            } else {
-              alert("wow!");
-              console.log(transactionHash);
-              web3.eth.accounts.wallet.clear();
-              setLoading(false);
-            }
-          }
-        );
-      })
-      .catch(function(error) {
-        console.log(error);
-      });
-  };
-
-  // web3.eth.getBalance(address).then((e) => setBalance(e / Math.pow(10, 18)));
-  // };
-  // admin ID로부터 토큰을 옮겨받는다
-  const getToken = (event) => {
+  // 1000 토큰 충전하는 함수, 추후에 form으로 받아서 얼마 충전할지 나타내야함
+  // encodeIBI를 통해, ABI,CA를 활용한 Contract 자체를 transaction의 data에 넣어서 실행이 가능
+  const getToken = async (event) => {
     event.preventDefault();
     setLoading("기다리세요");
-    // ABI, CA를 이용해 함수 접근
-    // web3.eth.accounts.wallet.add(process.env.REACT_APP_ADMINKEY);
-    tokenContract.methods
-      .transferFrom(process.env.REACT_APP_ADMINID, process.env.REACT_APP_USERID, 1000)
-      .send({ from: process.env.REACT_APP_ADMINID, gas: 2000000, chainId: 97889218 })
-      .then((transactionHash, err) => {
-        if (err) {
-          web3.eth.accounts.wallet.clear();
-          console.log(err);
-        } else {
-          alert("토큰 잔액 보기 클릭!");
-          console.log(transactionHash);
-          setLoading("");
-          // web3.eth.accounts.wallet.clear();
-        }
-      });
-  };
-
-  const getToken2 = async (event) => {
-    event.preventDefault();
-    await setLoading("기다리세요");
-    // ABI, CA를 이용해 함수 접근
-    // signTransaction을 객체로 만들어서, b.rawTransaction 하듯이 넣어서 보내보자
+    // Contract Method를 ABI로 만들기
     var test = tokenContract.methods
-      .transferFrom(process.env.REACT_APP_ADMINID, process.env.REACT_APP_USERID, 1000)
+      .transferFrom(process.env.REACT_APP_ADMINID, process.env.REACT_APP_USERID, 1000) // 1000개 충전
       .encodeABI();
-
+    // 트랜잭션 객체 생성
     var tx = {
       data: test,
-      from: process.env.REACT_APP_ADMINID,
+      from: process.env.REACT_APP_ADMINID, // 관리자 계정에서
       to: tokenContract.options.address, // CA로 보내겠다.
       value: 0,
       gas: 2000000,
       chainId: 97889218,
     };
-    // var signedTx = await web3.eth.accounts.signTransaction(tx, process.env.REACT_APP_ADMINKEY);
-    // await web3.eth.sendSignedTransaction(signedTx.rawTransaction);
-
+    // 인증을 위해 signTransaction 사용
     web3.eth.accounts.signTransaction(tx, process.env.REACT_APP_ADMINKEY, (err, b) => {
       if (err) {
         console.log(err);
@@ -185,33 +129,12 @@ function TokenWallet() {
     });
   };
 
-  /** 특정 계정으로 이더리움을 보내는 트랜잭션을 만드는 함수,
-   *  tx : 트랜잭션 객체를 먼저 만든다.
-   *  privateKey로 해당 트랜잭션을 인증한다
-   *  signedTransaction을 통해 트랜잭션 전송
-   *  mining이 되면 loading 사라지고
-   *  잔액을 다시 확인할 수 있다.
-   * */
-
-  const send = (event) => {
-    setLoading("Loading");
+  // 계정의 토큰 잔액 확인하는 함수. eth는 wei단위기때문에 10^18로 나눠서 이더리움 단위로 환산
+  const compileAndDeploy = (event) => {
     event.preventDefault();
-    var tx = {
-      from: address,
-      to: "0x031afd400b47748d1554a89e617917fabb19a809",
-      value: 100000000000000000, // 0.1 ether
-      gas: 2000000,
-      chainId: 97889218,
-    };
-    web3.eth.accounts.signTransaction(tx, privateKey, (a, b) => {
-      if (a) {
-        console.log(a);
-      } else {
-        web3.eth.sendSignedTransaction(b.rawTransaction).then(() => {
-          setLoading("");
-          alert("잔액 다시 보기 클릭하세용");
-        });
-      }
+    setLoading("로딩중");
+    compileFund().then(() => {
+      setLoading("");
     });
   };
   return (
@@ -233,12 +156,15 @@ function TokenWallet() {
       <hr></hr>
       <div style={{ display: "flex", justifyContent: "space-between" }}>
         <button onClick={viewTokenBalance}>토큰잔액 보기</button>
-        <button onClick={getToken2}>1000 토큰 받기</button>
+        <button onClick={getToken}>1000 토큰 받기</button>
       </div>
 
       <div>잔액 : {tokenBalance}</div>
       <hr></hr>
       {loading}
+      <div>
+        <button onClick={compileAndDeploy}>배포하기</button>
+      </div>
     </div>
   );
 }
