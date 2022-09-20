@@ -38,7 +38,7 @@ function ChangePasswordPage() {
           </a>
           <div className={styles.pageTitle}>비밀번호 변경</div>
           <div className={styles.fakeSetting}>
-            <AiFillSetting></AiFillSetting>
+            <AiFillSetting className={styles.fakeSetting}></AiFillSetting>
           </div>
         </div>
         <div>
