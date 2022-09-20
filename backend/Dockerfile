@@ -11,5 +11,7 @@ FROM openjdk:17-jdk
 ARG JAR_FILE=target/*.jar
 # 이를 카피하여 app.jar 로 복사
 COPY ${JAR_FILE} app.jar
+# 이 컨테이너가 어떤 포트를 사용하는지
+EXPOSE 8080
 # 기존 jar 파일을 단순 실행
 ENTRYPOINT ["java","-jar","/app.jar"]
