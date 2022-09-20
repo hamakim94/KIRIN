@@ -19,7 +19,17 @@ master -> develop -> FE_develop -> feat-frontend/기능명
 #### merge
 
 - 각 파트 maintainer들만 각 파트에 대한 merge 권한을 가짐. 
-- maintainer가 아닌 개발자들은 mr 
+
+```
+FE/BE/BC/DOCS_날짜_merge : Merge branch "시작 브랜치" into "도착 브랜치"  
+
+```
+
+- maintainer가 아닌 개발자들은 mr
+
+```
+FE/BE/BC/DOCS_날짜_mr : Merge branch "시작 브랜치" into "도착 브랜치"  
+```
 
 #### commit 메시지
 
@@ -35,6 +45,30 @@ FE/BE/BC/DOCS_날짜_개발한(중인)기능: 개발 내용 (진행중/ 완료/ 
 - 관련 있는 코드들끼리만 commit (commit 메세지 잘 쓰기)
 ```
 
+## Code style
+
+#### 이름규칙
+
+| Domain | Frontend                                                     | Backend |
+| ------ | ------------------------------------------------------------ | ------- |
+|        | 1. Component 파일명: Pascal case<br />2. Non-component 파일명: Camel case <br />3. 속성명: Camel case<br />4. 변수명: Camel case, 숫자/ 특수문자 사용 가능<br />5. CSS 파일명: component 이름과 동일하게<br />6. jsx, js을 js로 통일 | **db** <br />1. db table, 속성명: snake case <br /><br /> **back server** <br />1. class, interface명(파일명): Pascal case <br />2. 디렉토리명: Camel case <br />3. 변수명: Camel case <br />4. controller단 메소드명: 도메인+접미사(동사) <br />5. 나머지 메소드명: 동사+도메인|
+
+- Boolean 타입의 변수 작명규칙 
+  : is 접두사 사용 -> (ex) isExist 
+
+- 들여쓰기 (indent)  
+  : 4 space 방식  
+
+- 작은따옴표(')를 사용할 건지, 큰따옴표(")를 사용할 건지 
+  : 큰따옴표(") 사용
+
+**Backend**
+
+- Repository return type(Collection API 제외)은 Optional로 
+  - orElseThrow 예외처리하기 
+  - ifPresentOrElse, ifPresent
+
+이외 https://naver.github.io/hackday-conventions-java/ 참고
 
 ## Git Branch Command
 
