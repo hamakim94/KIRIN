@@ -2,7 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 
 function MyStar(props) {
-  const num = 1;
+  const num = 2;
   const navigate = useNavigate();
   return (
     <img
