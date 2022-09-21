@@ -1,8 +1,8 @@
 .wrapper {
   box-sizing: border-box;
   padding: 15px;
+  padding-bottom: 55px;
   width: 100%;
-  height: 100%;
 }
 
 .topWrapper {
@@ -50,4 +50,20 @@
   width: 100%;
   object-fit: cover;
   margin-top: 10px;
+}
+
+.inputBox {
+  width: 100%;
+  border-width: 0px;
+  background-color: #ffffff;
+}
+.inputBox:focus {
+  outline: 0;
+}
+
+.commentImg {
+  width: 40x;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 100%;
 }
