@@ -33,8 +33,9 @@ public class ChallengeComment {
     @JoinColumn(name = "user_id")
     User user;
 
-    @Column(name = "challenge_id")
-    Long challengeId;
+    @ManyToOne
+    @JoinColumn(name = "challenge_id")
+    Challenge challenge;
 
     @Formula("(SELECT COUNT(*) FROM challenge_comment_like l WHERE l.challenge_comment_id = id")
     int likeCnt;

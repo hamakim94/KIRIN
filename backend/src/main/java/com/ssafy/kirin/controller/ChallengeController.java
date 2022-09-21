@@ -1,11 +1,15 @@
 package com.ssafy.kirin.controller;
 
+import com.ssafy.kirin.dto.UserDTO;
+import com.ssafy.kirin.dto.request.ChallengeCommentRequestDTO;
 import com.ssafy.kirin.entity.Challenge;
+import com.ssafy.kirin.entity.ChallengeComment;
 import com.ssafy.kirin.service.ChallengeService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -51,11 +55,30 @@ public class ChallengeController {
 
     @GetMapping("/user/{userId}")
     @ApiOperation(value = "내가 좋아요한 챌린지 리스트")
-    public ResponseEntity<List<Challenge>> likeChallengeList(@PathVariable("userId") int userId){
+    public ResponseEntity<List<Challenge>> likeChallengeList(@PathVariable("userId") Long userId){
 
         return ResponseEntity.ok(challengeService.listUserLike(userId));
 
     }
+
+    @PostMapping("/comment/{challengeId}")
+    @ApiOperation(value = "챌린지 댓글 등록")
+    public ResponseEntity<?> challengeCommentWrite(@PathVariable("challengeId") Long challengeId,
+                                                   @AuthenticationPrincipal UserDTO userDTO,
+                                                   ChallengeCommentRequestDTO challengeCommentRequestDTO){
+
+        challengeService.writeChallengeComment(userDTO.getId(), challengeId, challengeCommentRequestDTO);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/comment/{challengeId}")
+    @ApiOperation(value = "챌린지 댓글")
+    public ResponseEntity<List<ChallengeComment>> challengeCommentList(@PathVariable("challengeId") Long challengeId){
+
+        return ResponseEntity.ok(challengeService.getChallengeComment(challengeId));
+    }
+
 
 
 }

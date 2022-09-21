@@ -1,9 +1,14 @@
 package com.ssafy.kirin.service;
 
+import com.ssafy.kirin.dto.request.ChallengeCommentRequestDTO;
 import com.ssafy.kirin.entity.Challenge;
+import com.ssafy.kirin.entity.ChallengeComment;
 import com.ssafy.kirin.entity.ChallengeLike;
+import com.ssafy.kirin.entity.User;
+import com.ssafy.kirin.repository.ChallengeCommentRepository;
 import com.ssafy.kirin.repository.ChallengeLikeRepository;
 import com.ssafy.kirin.repository.ChallengeRepository;
+import com.ssafy.kirin.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -17,6 +22,8 @@ import java.util.stream.Collectors;
 public class ChallengeServiceImpl implements ChallengeService {
     private final ChallengeRepository challengeRepository;
     private final ChallengeLikeRepository challengeLikeRepository;
+    private final ChallengeCommentRepository challengeCommentRepository;
+    private final UserRepository userRepository;
 
     @Override
     public List<Challenge> listStarsByPopularity() {
@@ -66,5 +73,22 @@ public class ChallengeServiceImpl implements ChallengeService {
     public List<Challenge> listUserLike(long userId) {
         return challengeLikeRepository.findByUserId(userId).stream()
                 .map(ChallengeLike::getChallenge).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ChallengeComment> getChallengeComment(long challengeId) {
+
+        return challengeCommentRepository.findByChallengeId(challengeId);
+    }
+
+    @Override
+    public void writeChallengeComment(long userId, long challengeId, ChallengeCommentRequestDTO dto) {
+            User user = userRepository.getReferenceById(userId);
+            Challenge challenge = challengeRepository.getReferenceById(challengeId);
+            challengeCommentRepository.save(
+                    ChallengeComment.builder()
+                    .challenge(challenge).user(user).isComment(dto.isComment())
+                    .content(dto.content()).parentId(dto.parentId())
+                    .build());
     }
 }
