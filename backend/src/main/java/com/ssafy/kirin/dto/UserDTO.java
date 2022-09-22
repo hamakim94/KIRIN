@@ -22,7 +22,7 @@ public class UserDTO implements UserDetails {
     private String email;
     private String password;
     private Long walletId;
-    private Integer accountType; // 있어야 되나?
+//    private Integer accountType; // 있어야 되나?
 //    private String socialId;
     private Boolean isCeleb;
 

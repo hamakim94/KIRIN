@@ -41,7 +41,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
         // 일반 회원가입인 경우 : email, password null check && email, nickname 중복 check -> 스타, 일반인
         // 소셜 회원가입인 경우 : socialId null check && nickname 중복 check -> 일반인
-        if(userSignupRequestDTO.getAccountType() == 0){ // 일반 회원가입 accountType:0
+//        if(userSignupRequestDTO.getAccountType() == 0){ // 일반 회원가입 accountType:0
             log.info("일반 회원가입");
             if(userSignupRequestDTO.getEmail() == null || userSignupRequestDTO.getPassword() == null){ // email, password null check
                 log.info("email, password null");
@@ -70,7 +70,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
                         .profileImg(userSignupRequestDTO.getProfileImg()) // null일수도
                         .email(userSignupRequestDTO.getEmail())
                         .password(userSignupRequestDTO.getPassword())
-                        .accountType(userSignupRequestDTO.getAccountType())
+//                        .accountType(userSignupRequestDTO.getAccountType())
                         .isCeleb(userSignupRequestDTO.getIsCeleb())
                         .walletId(userSignupRequestDTO.getWalletId())
                         .reg(LocalDateTime.now())
@@ -87,7 +87,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
                         .profileImg(userSignupRequestDTO.getProfileImg()) // null일수도
                         .email(userSignupRequestDTO.getEmail())
                         .password(userSignupRequestDTO.getPassword())
-                        .accountType(userSignupRequestDTO.getAccountType())
+//                        .accountType(userSignupRequestDTO.getAccountType())
                         .walletId(userSignupRequestDTO.getWalletId())
                         .isCeleb(userSignupRequestDTO.getIsCeleb())
                         .reg(LocalDateTime.now())
@@ -101,35 +101,36 @@ public class UserServiceImpl implements UserDetailsService, UserService {
             );
 
             emailService.sendVerifyMail(emailAuth.getEmail(), emailAuth.getAuthToken()); // 이메일 인증 메일 보내기
-        } else if(userSignupRequestDTO.getAccountType() == 1){ // 카카오 소셜 회원가입 accountType:1
-            log.info("카카오 소셜 회원가입");
-            if(userSignupRequestDTO.getSocialId() == null){ // socialId null check
-                System.out.println("socialId null");
-                throw new Exception();
-            }
-
-            if(userRepository.existsByNickname(userSignupRequestDTO.getNickname())){ // nickname 중복 check
-                log.info("nickname 중복");
-                throw new Exception();
-            }
-
-            if(!userSignupRequestDTO.getIsCeleb()){ // 일반인만
-                log.info("일반인 회원가입");
-                user = User.builder()
-                        .name(userSignupRequestDTO.getName())
-                        .nickname(userSignupRequestDTO.getNickname())
-                        .profileImg(userSignupRequestDTO.getProfileImg()) // null일수도
-                        .socialId(userSignupRequestDTO.getSocialId())
-                        .accountType(userSignupRequestDTO.getAccountType())
-                        .isCeleb(userSignupRequestDTO.getIsCeleb())
-                        .reg(LocalDateTime.now())
-                        .build();
-
-                userRepository.save(user);
-            } else { // 스타는 소셜 회원가입 X
-                throw new Exception();
-            }
-        }
+//        }
+//        else if(userSignupRequestDTO.getAccountType() == 1){ // 카카오 소셜 회원가입 accountType:1
+//            log.info("카카오 소셜 회원가입");
+//            if(userSignupRequestDTO.getSocialId() == null){ // socialId null check
+//                System.out.println("socialId null");
+//                throw new Exception();
+//            }
+//
+//            if(userRepository.existsByNickname(userSignupRequestDTO.getNickname())){ // nickname 중복 check
+//                log.info("nickname 중복");
+//                throw new Exception();
+//            }
+//
+//            if(!userSignupRequestDTO.getIsCeleb()){ // 일반인만
+//                log.info("일반인 회원가입");
+//                user = User.builder()
+//                        .name(userSignupRequestDTO.getName())
+//                        .nickname(userSignupRequestDTO.getNickname())
+//                        .profileImg(userSignupRequestDTO.getProfileImg()) // null일수도
+//                        .socialId(userSignupRequestDTO.getSocialId())
+//                        .accountType(userSignupRequestDTO.getAccountType())
+//                        .isCeleb(userSignupRequestDTO.getIsCeleb())
+//                        .reg(LocalDateTime.now())
+//                        .build();
+//
+//                userRepository.save(user);
+//            } else { // 스타는 소셜 회원가입 X
+//                throw new Exception();
+//            }
+//        }
     }
 
     @Override
@@ -278,38 +279,10 @@ public class UserServiceImpl implements UserDetailsService, UserService {
                 .name(user.getName())
                 .nickname(user.getNickname())
                 .profileImg(user.getProfileImg())
-                .accountType(user.getAccountType())
+//                .accountType(user.getAccountType())
                 .isCeleb(user.getIsCeleb())
                 .info(user.getCelebInfo() != null ? user.getCelebInfo().getInfo() : null)
                 .coverImg(user.getCelebInfo() != null ? user.getCelebInfo().getCoverImg() : null)
                 .build();
     }
-
-//    private UserDTO userToCelebDto(CelebInfo celebInfo, User user){
-//        return UserDTO.builder()
-//                .id(user.getId())
-//                .email(user.getEmail())
-//                .name(user.getName())
-//                .nickname(user.getNickname())
-//                .profileImg(user.getProfileImg())
-//                .accountType(user.getAccountType())
-//                .isCeleb(user.getIsCeleb())
-//                .info(celebInfo.getInfo())
-//                .coverImg(celebInfo.getCoverImg())
-//                .build();
-//    }
-
-//    private UserDTO userToCelebDto(User user){
-//        return UserDTO.builder()
-//                .id(user.getId())
-//                .email(user.getEmail())
-//                .name(user.getName())
-//                .nickname(user.getNickname())
-//                .profileImg(user.getProfileImg())
-//                .accountType(user.getAccountType())
-//                .isCeleb(user.getIsCeleb())
-//                .info(user.getCelebInfo().getInfo())
-//                .coverImg(user.getCelebInfo().getCoverImg())
-//                .build();
-//    }
 }
