@@ -23,9 +23,11 @@ function DashboardPage() {
       let txTotal = 0;
       for (let i = 0; i < blockNum; i++) {
         block = await web3.eth.getBlock(blockNum - i);
-        block.transactions.forEach((tx) => {
-          txTotal++;
-        });
+        if (block) {
+          block.transactions.forEach((tx) => {
+            txTotal++;
+          });
+        }
       }
       setTransactionNum(txTotal); // 좀 많이 느림
     };
