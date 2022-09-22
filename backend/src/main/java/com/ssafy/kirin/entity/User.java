@@ -38,11 +38,11 @@ public class User {
     @Column(name = "wallet_id")
     Long walletId;
 
-    @Column(name = "account_type")
-    Integer accountType;
-
-    @Column(name = "social_id")
-    String socialId;
+//    @Column(name = "account_type")
+//    Integer accountType;
+//
+//    @Column(name = "social_id")
+//    String socialId;
 
     @Column(name = "is_celeb")
     Boolean isCeleb;
