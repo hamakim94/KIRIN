@@ -1,5 +1,6 @@
 package com.ssafy.kirin.service;
 
+import com.ssafy.kirin.dto.UserDTO;
 import com.ssafy.kirin.dto.request.CommunityCommentRequestDTO;
 import com.ssafy.kirin.dto.request.CommunityRequestDTO;
 import com.ssafy.kirin.dto.response.CommunityResponseDTO;
@@ -10,7 +11,7 @@ import java.util.List;
 
 public interface CommunityService {
     List<Community> getCommunityList(long starId);
-    void writeCommunity(long starId, CommunityRequestDTO dto) throws IOException;
+    void writeCommunity(long starId,UserDTO userDTO, CommunityRequestDTO dto) throws IOException;
     CommunityResponseDTO getCommunity(long boardId);
     boolean likeCommunity(long userId, long boardId);
     boolean unlikeCommunity(long userId, long boardId);

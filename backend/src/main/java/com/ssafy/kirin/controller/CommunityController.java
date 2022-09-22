@@ -18,7 +18,7 @@ import java.util.List;
 
 @Api(value = "커뮤니티 API",tags = {"커뮤니티 API"})
 @RestController
-@RequestMapping("/api/challenges")
+@RequestMapping("/api/communities")
 @RequiredArgsConstructor
 public class CommunityController {
 
@@ -33,10 +33,10 @@ public class CommunityController {
 
     @PostMapping("/stars/{starId}/boards")
     @ApiOperation(value = "커뮤니티 작성")
-    public ResponseEntity<?> communityWrite(@PathVariable long starId, CommunityRequestDTO communityRequestDTO){
+    public ResponseEntity<?> communityWrite(@AuthenticationPrincipal UserDTO userDTO, @PathVariable long starId, CommunityRequestDTO communityRequestDTO){
 
         try {
-            communityService.writeCommunity(starId, communityRequestDTO);
+            communityService.writeCommunity(starId,userDTO, communityRequestDTO);
             return ResponseEntity.ok(null);
         } catch (IOException e) {
             return ResponseEntity.internalServerError().build();

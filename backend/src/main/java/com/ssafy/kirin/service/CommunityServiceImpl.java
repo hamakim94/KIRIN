@@ -1,5 +1,6 @@
 package com.ssafy.kirin.service;
 
+import com.ssafy.kirin.dto.UserDTO;
 import com.ssafy.kirin.dto.request.CommunityCommentRequestDTO;
 import com.ssafy.kirin.dto.request.CommunityRequestDTO;
 import com.ssafy.kirin.dto.response.CommunityResponseDTO;
@@ -12,8 +13,12 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -33,11 +38,11 @@ public class CommunityServiceImpl implements CommunityService {
 
     @Override
     @Transactional
-    public void writeCommunity(long starId, CommunityRequestDTO dto) throws IOException {
+    public void writeCommunity(long starId, UserDTO userDTO, CommunityRequestDTO dto) throws IOException {
         
-        //TODO : user 넣기
-
+        User user = userRepository.getReferenceById(userDTO.getId());
         Community community = Community.builder()
+                .user(user)
                 .title(dto.title())
                 .content(dto.content())
                 .reg(LocalDateTime.now())
@@ -45,18 +50,14 @@ public class CommunityServiceImpl implements CommunityService {
 
         communityRepository.save(community);
 
-        long boardId = community.getId();
-
         if(!dto.image().isEmpty()) {
-                MultipartFile file = dto.image();
-                String fileName = file.getOriginalFilename();
-                //확장자 가져오기
-                String fileExt = fileName.substring(fileName.lastIndexOf(".") + 1);
-                // 시간+커뮤니티ID+확장자로 파일 저장
-                String storeName = communityImageDirectory+  community.getReg().toString() + boardId + fileExt;
-                //지정된 디렉토리에 저장
-                file.transferTo(new File(storeName));
-                community.setImg(storeName);
+            MultipartFile file = dto.image();
+            // 파일 디렉토리 + UUID + 확장자로 Path 설정
+            String storeName = communityImageDirectory+ UUID.randomUUID() + file.getOriginalFilename();
+            Path dir = Paths.get(storeName);
+            //지정된 디렉토리에 저장
+            Files.copy(file.getInputStream(),dir);
+            community.setImg(storeName);
         }
     }
 
