@@ -5,7 +5,7 @@ import { BiArrowBack } from 'react-icons/bi';
 function FindPasswordTop(props) {
   return (
     <div className={props.styles.topBox}>
-      <a>
+      <a href="/login">
         <BiArrowBack className={props.styles.back}></BiArrowBack>
       </a>
       <div className={props.styles.pageTitle}>비밀번호 찾기</div>
