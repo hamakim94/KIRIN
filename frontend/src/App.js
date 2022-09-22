@@ -22,6 +22,9 @@ import CommunityPage from "./pages/CommunityPage";
 import BlockchainPage from "./pages/BlockchainPage";
 import TransactionPage from "./pages/TransactionPage";
 import DashboardPage from "./pages/DashboardPage";
+import FindPasswordPage from './pages/FindPasswordPage';
+import LoginPage from './pages/LoginPage';
+import SignupPage from './pages/SignupPage';
 function App() {
   return (
     <>
@@ -62,6 +65,9 @@ function App() {
               element={<PrivacyPolicyPage></PrivacyPolicyPage>}
             ></Route>
             <Route path="/mypage/wallet" element={<WalletPage></WalletPage>}></Route>
+            <Route path="/signup" element={<SignupPage></SignupPage>}></Route>
+        <Route path="/login" element={<LoginPage></LoginPage>}></Route>
+        <Route path="/findpassword" element={<FindPasswordPage></FindPasswordPage>}></Route>
           </Routes>
           <SimpleBottomNavigation></SimpleBottomNavigation>
         </div>
