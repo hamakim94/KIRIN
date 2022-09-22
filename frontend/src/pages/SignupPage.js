@@ -1,4 +1,4 @@
-import React, { useState, useRef, setFile } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   Avatar,
   Button,
@@ -30,7 +30,7 @@ const theme = createTheme({
 
 function SignupPage() {
   const [checked, setChecked] = useState(false);
-
+  const [file, setFile] = useState('');
   // 동의 체크
   const handleAgree = (event) => {
     setChecked(event.target.checked);

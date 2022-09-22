@@ -5,7 +5,7 @@ const apiadr = process.env.REACT_APP_BEURL;
 const cookies = new Cookies();
 
 const UseAxios = axios.create({
-  baseURL: `${apiadr}`,
+  baseURL: `/api`,
 });
 
 UseAxios.interceptors.request.use(
@@ -39,7 +39,7 @@ UseAxios.interceptors.response.use(
       const refreshtoken = cookies.get('refreshtoken');
       // token refresh 요청
       const response = await axios.post(
-        `${apiadr}/users/reissue`, // token refresh api
+        `${apiadr}/api/users/reissue`, // token refresh api
         {},
         {
           headers: { ACCESSTOKEN: accesstoken, REFRESHTOKEN: refreshtoken },
