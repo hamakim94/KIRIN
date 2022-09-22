@@ -18,7 +18,7 @@ RUN npm run build
 FROM nginx
 
 # # nginx의 기본 설정을 삭제하고 앱에서 설정한 파일을 복사
-RUN rm -rf /etc/nginx/conf.d
+# RUN rm -rf /etc/nginx/conf.d
 # COPY conf /etc/nginx
 
 # 아까 빌드했던 파일들을 nginx의 서비스 폴더인 /usr/share/nginx/html으로 복사
