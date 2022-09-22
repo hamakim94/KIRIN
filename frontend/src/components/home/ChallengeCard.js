@@ -44,9 +44,9 @@ function ChallengeCard(props) {
             playerVars: { modestbranding: 1, mute: 1 },
           },
         }}
-        url='https://www.youtube.com/watch?v=fgaLAomg68c'
-        width='100%'
-        height='100%'
+        url="https://www.youtube.com/watch?v=fgaLAomg68c"
+        width="100%"
+        height="100%"
         playing={hover}
         controls={false}
         loop={true}
