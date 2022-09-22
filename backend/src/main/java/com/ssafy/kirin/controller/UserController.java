@@ -20,6 +20,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -41,7 +42,7 @@ public class UserController {
 
     @PostMapping("/signup")
     @ApiOperation(value = "사용자 회원가입") // 요청 URL에 매핑된 API에 대한 설명
-    public ResponseEntity userSignup(@Valid @RequestBody UserSignupRequestDTO userSignupRequestDTO, Errors errors){
+    public ResponseEntity userSignup(@RequestPart(value = "profileImg", required = false) MultipartFile profileImg, @RequestPart(value="coverImg", required = false) MultipartFile coverImg, @Valid @RequestPart(value="userDTO") UserSignupRequestDTO userSignupRequestDTO, Errors errors){
         if(errors.hasErrors()){ // 유효성 검사 실패
             Map<String, String> validatorResult = userService.validateHandling(errors);
             for (String key : validatorResult.keySet()) {
@@ -52,7 +53,7 @@ public class UserController {
         }
 
         try{
-            userService.signup(userSignupRequestDTO, passwordEncoder);
+            userService.signup(userSignupRequestDTO, profileImg, coverImg, passwordEncoder);
         } catch (Exception e){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -139,13 +140,13 @@ public class UserController {
 
     @PutMapping("/profiles")
     @ApiOperation(value = "사용자 프로필 수정")
-    public ResponseEntity userProfileEdit(@AuthenticationPrincipal UserDTO user, @RequestBody UserDTO userDTO){
+    public ResponseEntity userProfileEdit(@AuthenticationPrincipal UserDTO user, @RequestPart(value = "profileImg", required = false) MultipartFile profileImg, @RequestPart(value = "userDTO") UserDTO userDTO){
         // id, 닉네임, 프로필 사진 (스타일 경우, info, cover_img도)
         userDTO.setId(user.getId());
         UserDTO changedUserDTO;
 
         try {
-            changedUserDTO = userService.modifyUser(userDTO);
+            changedUserDTO = userService.modifyUser(userDTO, profileImg);
         } catch (Exception e){
             log.error("userProfileEdit user 조회 실패");
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
