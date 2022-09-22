@@ -1,16 +1,16 @@
-import Donation from './Donation.json';
-import { Stack, Pagination, Divider } from '@mui/material';
-import { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import Donation from "./Donation.json";
+import { Stack, Pagination, Divider } from "@mui/material";
+import { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#FFC947',
+      main: "#FFC947",
     },
     secondary: {
-      main: '#11cb5f',
+      main: "#11cb5f",
     },
   },
 });
@@ -56,11 +56,11 @@ function DonationList(props) {
   return (
     <ThemeProvider theme={theme}>
       <Stack alignItems="center">
-        <Stack direction="row" justifyContent="center" sx={{ flexWrap: 'wrap' }}>
+        <Stack direction="row" justifyContent="center" sx={{ flexWrap: "wrap" }}>
           {data.map((donationList) => {
             return (
               <Stack>
-                <hr style={{ width: '100%', marginBottom: 7.5, marginTop: 7.5 }}></hr>
+                <hr style={{ width: "100%", marginBottom: 7.5, marginTop: 7.5 }}></hr>
                 <div className={props.styles.donationBox}>
                   <div className={props.styles.profileImgName}>
                     <img src={donationList.img} className={props.styles.starImg}></img>
@@ -69,7 +69,7 @@ function DonationList(props) {
                   <div>
                     <div className={props.styles.participateBox}>
                       <div className={props.styles.participateChallenge}>
-                        {' '}
+                        {" "}
                         <span>챌린지 참여</span>
                       </div>
                       {donationList.didDonate === 1 ? (
@@ -108,7 +108,7 @@ function DonationList(props) {
             );
           })}
         </Stack>
-        <hr style={{ width: '94%', marginBottom: 7.5, marginTop: 7.5 }}></hr>
+        <hr style={{ width: "94%", marginBottom: 7.5, marginTop: 7.5 }}></hr>
         <Pagination
           count={LAST_PAGE}
           defaultPage={1}
