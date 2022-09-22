@@ -1,41 +1,17 @@
-# # nginx 이미지 사용
-# FROM nginx
-
-# # root에 app폴더 생성
-# RUN mkdir /app 
-
-# # work dir 고정 
-# WORKDIR /app
-
-# # work dir에 build 폴더 생성 /app/build
-# RUN mkdir ./build
-
-# # host pc의 현재 경로의 build 폴더를 workdir의 build폴더로 복사 
-# ADD ./build ./build 
-
-# # nginx의 default.conf를 삭제 
-# RUN rm /etc/nginx/conf.d/default.conf
-
-# # 80포트 오픈 
-# EXPOSE 80
-
-# CMD ["nginx", "-g", "daemon off;"]
-
 # node 이미지 사용 
-FROM node:16.15.0
+FROM node:16.15.0 as build-stage 
 
 # 명령어를 실행할 디렉터리
 WORKDIR /var/lib/jenkins/workspace/Kirin_front/frontend
 
-# 로컬 디텍터리에서 읽어들인 컨텍스트로부터 이미지에 파일을 복사
+# package*.json에 등록되어있는 라이브러리들을 npm install으로 설치
 COPY package*.json ./
-
-# 이미지를 만들기 위해서 컨테이너 내부에서 명령어 실행 
 RUN npm install 
 
+# 프로젝트 폴더를 이미지에 복사, npm run build를 통해 build폴더에 빌드한 프로젝트(static 파일)가 저장됩니다.
 COPY . . 
-
 RUN npm run build 
+
 
 
 # nginx 이미지 사용
@@ -45,9 +21,10 @@ FROM nginx
 # RUN rm -rf /etc/nginx/conf.d
 # COPY conf /etc/nginx
 
-# 위에서 생성한 앱의 빌드산출물을 nginx의 샘플 앱이 사용하던 폴더로 이동
-COPY --from=build-stage /var/lib/jenkins/workspace/Kirin_front/frontend/nginx.conf /etc/nginx/conf.d/default.conf
+# 아까 빌드했던 파일들을 nginx의 서비스 폴더인 /usr/share/nginx/html으로 복사
+COPY --from=build-stage /var/lib/jenkins/workspace/Kirin_front/frontend/nginx.conf /usr/share/nginx/html
 
 # 80포트 오픈하고 nginx 실행
 EXPOSE 80
+# nginx를 백그라운드에서 실행하는 컨테이너를 실행
 CMD ["nginx", "-g", "daemon off;"]
