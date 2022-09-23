@@ -388,7 +388,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
             }
         }
 
-        log.error("file이 존재하지 않음");
+//        log.error("file이 존재하지 않음");
         return null;
     }
 
