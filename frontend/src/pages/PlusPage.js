@@ -5,28 +5,39 @@ import RecordRTC, { invokeSaveAsDialog } from "recordrtc";
 function PlusPage() {
   const [stream, setStream] = useState(null);
   const [blob, setBlob] = useState(null);
+  const [toggleBtn, setToggleBtn] = useState(false);
   const refVideo = useRef(null);
   const recorderRef = useRef(null);
 
   const handleRecording = async () => {
     const mediaStream = await navigator.mediaDevices.getUserMedia({
       video: {
-        width: "100vw",
-        height: "100vh",
+        width: 720,
+        height: 1280,
         frameRate: 30,
       },
       audio: false,
     });
 
+    if (blob) {
+      setBlob(null);
+    }
+
     setStream(mediaStream);
-    recorderRef.current = new RecordRTC(mediaStream, { type: "video" });
+    recorderRef.current = new RecordRTC(mediaStream, {
+      type: "video",
+      mimeType: "video/webm;codecs=vp9",
+    });
     recorderRef.current.startRecording();
+    setToggleBtn(true);
   };
 
   const handleStop = () => {
     recorderRef.current.stopRecording(() => {
       setBlob(recorderRef.current.getBlob());
+      refVideo.current.srcObject = null;
     });
+    setToggleBtn(false);
   };
 
   const handleSave = () => {
@@ -37,45 +48,49 @@ function PlusPage() {
     if (!refVideo.current) {
       return;
     }
-    setBlob(recorderRef.current.getBlob());
-    // refVideo.current.srcObject = stream;
+    refVideo.current.srcObject = stream;
   }, [stream, refVideo]);
 
   useEffect(() => {
+    let mediaStream;
     const start = async () => {
-      const mediaStream = await navigator.mediaDevices.getUserMedia({
+      mediaStream = await navigator.mediaDevices.getUserMedia({
         video: {
-          width: "100vw",
-          height: "100vh",
+          width: 720,
+          height: 1280,
           frameRate: 30,
         },
         audio: false,
       });
-
       setStream(mediaStream);
-      recorderRef.current = new RecordRTC(mediaStream, { type: "video" });
-      console.log(mediaStream);
-      console.log("첫 미리보기");
     };
     start();
     return () => {
-      console.log("화면나갔어");
+      console.log("화면나갔어12");
     };
   }, []);
   return (
     <div className={styles.wrapper}>
-      <button onClick={handleRecording}>start</button>
-      <button onClick={handleStop}>stop</button>
-      <button onClick={handleSave}>save</button>
-      {blob && (
-        <video
-          src={URL.createObjectURL(blob)}
-          controls
-          autoPlay
-          style={{ width: "100%", height: "100%" }}
-        />
+      <div className={styles.coverBox}>
+        {toggleBtn ? (
+          <button className={styles.recordBtn} onClick={handleStop}>
+            stop
+          </button>
+        ) : (
+          <button className={styles.recordBtn} onClick={handleRecording}>
+            start
+          </button>
+        )}
+      </div>
+      {/*
+      <button className={styles.recordBtn} onClick={handleSave}>
+        save
+      </button> */}
+      {blob ? (
+        <video src={URL.createObjectURL(blob)} autoPlay style={{ width: "100%", height: "100%" }} />
+      ) : (
+        <video autoPlay ref={refVideo} style={{ width: "100%", height: "100%" }} />
       )}
-      {!blob && <video src={stream} controls autoPlay style={{ width: "100%", height: "100%" }} />}
     </div>
   );
 }
