@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react';
+import { Link } from 'react-router-dom';
 import {
   Avatar,
   Button,
@@ -13,9 +14,11 @@ import {
   Typography,
   Container,
 } from '@mui/material/';
+import swal from 'sweetalert';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import SignupTop from '../components/sign/SignupTop';
 import styles from './SignupPage.module.css';
+import UseAxios from '../utils/UseAxios';
 
 const theme = createTheme({
   palette: {
@@ -28,29 +31,88 @@ const theme = createTheme({
   },
 });
 
-function SignupPage() {
+interface User {
+  parentCallback: (nickname: string, email: string, password: string) => void;
+  emailCallback: (email: string) => void;
+  nicknameCallback: (nickname: string) => void;
+}
+
+function SignupPage({ parentCallback, emailCallback, nicknameCallback }: User) {
+  const [width] = useState(window.innerWidth);
+  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('');
+  const [nickname, setNickname] = useState('');
+  const [name, setName] = useState('');
+  const [passwordCheck, setPasswordCheck] = useState('');
+  const [agreement, setAgreement] = useState(false);
+  const [canSubmit, setCanSubmit] = useState(false);
   const [checked, setChecked] = useState(false);
   const [file, setFile] = useState('');
-  // 동의 체크
-  const handleAgree = (event) => {
-    setChecked(event.target.checked);
+  const [coverImg, setCoverImg] = useState('');
+  const [info, setInfo] = useState('');
+  const [isCeleb, setIsCelev] = useState('');
+  const [walletId, setWalletId] = useState('');
+
+  /* 닉네임 검사 */
+  const onChangeNickname = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setNickname(e.target.value);
+  };
+  const nicknameValidation = () => {
+    return nickname.length > 0 && nickname.length < 2;
+  };
+  /* 이메일 검사 */
+  const onChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(e.target.value);
+  };
+  const emailValidation = () => {
+    let check = /@/;
+    return !check.test(email) && email.length > 1;
+  };
+  /*비밀번호 유효 검사 */
+  const onChangePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPassword(e.target.value);
+  };
+  const passwordValidation = () => {
+    return password.length < 6 && password.length > 1;
+  };
+  /*비밀번호 확인 */
+  const onChangePasswordCheck = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPasswordCheck(e.target.value);
+  };
+  const passwordCheckValidation = () => {
+    return password !== passwordCheck && passwordCheck.length > 1;
+  };
+  /*약관 확인 */
+  const agreementCheck = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.checked) setAgreement(true);
+    else if (!e.target.checked) setAgreement(false);
   };
 
-  // form 전송
-  const handleSubmit = (e) => {
+  //e: React.FormEvent<HTMLFormElement>
+  const sendData = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (canSubmit) parentCallback(nickname, email, password); // 전달
+  };
+  /* 이메일 중복 확인 */
+  const emailDup = () => {
+    emailCallback(email);
+  };
+  /* 이메일 중복 확인 */
+  const nicknameDup = () => {
+    nicknameCallback(nickname);
   };
 
-  const [Image, setImage] = useState(
+  const [profileImg, setProfileImg] = useState(
     'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'
   );
   const fileInput = useRef(null);
+
   const onChange = (e) => {
     if (e.target.files[0]) {
       setFile(e.target.files[0]);
     } else {
       //업로드 취소할 시
-      setImage(
+      setProfileImg(
         'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'
       );
       return;
@@ -59,17 +121,52 @@ function SignupPage() {
     const reader = new FileReader();
     reader.onload = () => {
       if (reader.readyState === 2) {
-        setImage(reader.result);
+        setProfileImg(reader.result);
       }
     };
     reader.readAsDataURL(e.target.files[0]);
   };
 
+  let body = {
+    email,
+    password,
+    nickname,
+    name,
+    coverImg,
+    info,
+    isCeleb,
+    profileImg,
+    walletId,
+  };
+
+  const checkData = () => {
+    if (!email.includes('@')) {
+      swal('이메일을 확인해주세요');
+      setCanSubmit(false);
+    } else if (nickname.length < 2) {
+      swal('닉네임을 확인해주세요');
+      setCanSubmit(false);
+    } else if (agreement === false) {
+      swal('개인정보 약관에 동의해주세요');
+      setCanSubmit(false);
+    } else if (password.length < 6) {
+      swal('비밀번호는 6글자 이상이어야합니다.');
+      setCanSubmit(false);
+    } else if (password !== passwordCheck) {
+      swal('비밀번호 확인이 일치하지 않습니다');
+      setCanSubmit(false);
+    }
+    UseAxios.post(`/users/signup`, body).then((res) => {
+      console.log(res.data);
+      document.location.href = '/';
+    });
+  };
+
+  /*랜더링 */
   return (
     <ThemeProvider theme={theme}>
       <SignupTop styles={styles}></SignupTop>
-      <Container component="main" maxWidth="xs">
-        <CssBaseline />
+      <Container component="main" maxWidth="sm">
         <Box
           sx={{
             display: 'flex',
@@ -78,8 +175,15 @@ function SignupPage() {
           }}
         >
           <Avatar
-            src={Image}
-            style={{ marginBottom: '20px', height: '100px', width: '100px', borderStyle: 'solid' }}
+            src={profileImg}
+            style={{
+              marginBottom: '40px',
+              height: '100px',
+              width: '100px',
+              borderStyle: 'solid',
+              borderWidth: '2px',
+              borderColor: 'grey',
+            }}
             onClick={() => {
               fileInput.current.click();
             }}
@@ -92,92 +196,147 @@ function SignupPage() {
             onChange={onChange}
             ref={fileInput}
           ></input>
-          <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
-            <FormControl component="fieldset" variant="standard">
+
+          <div>
+            <form onSubmit={sendData}>
               <Grid container spacing={2}>
-                <Grid item xs={12}>
-                  <Typography sx={{ ml: 0.5, mb: 0.5 }}>이메일*</Typography>
+                <Grid item xs={9} sm={9}>
                   <TextField
+                    variant="outlined"
                     required
-                    autoFocus
                     fullWidth
-                    type="email"
                     id="email"
+                    type="email"
+                    onChange={onChangeEmail}
+                    value={email}
+                    error={emailValidation()}
+                    helperText={emailValidation() ? '올바른 이메일형식이 아닙니다' : ''}
+                    label="이메일 주소 입력"
                     name="email"
-                    placeholder="이메일"
+                    autoComplete="email"
+                    autoFocus
                     size="small"
                   />
                 </Grid>
-
-                <Grid item xs={12}>
-                  <Typography sx={{ ml: 0.5, mt: 1, mb: 0.5 }}>비밀번호*</Typography>
-
-                  <TextField
-                    required
+                <Grid item xs={3} sm={3}>
+                  <Button
+                    type="button"
                     fullWidth
-                    type="password"
-                    id="password"
-                    name="password"
-                    placeholder="비밀번호"
-                    size="small"
-                  />
+                    variant="contained"
+                    color="primary"
+                    onClick={emailDup}
+                    size={width < 600 ? 'small' : 'large'}
+                    sx={{ py: 1, mb: 1 }}
+                  >
+                    {width < 600 ? '확인' : '증복 확인'}
+                  </Button>
                 </Grid>
-                <Grid item xs={12}>
+                <Grid item xs={9} sm={9}>
                   <TextField
-                    required
-                    fullWidth
-                    type="password"
-                    id="rePassword"
-                    name="rePassword"
-                    placeholder="비밀번호 확인"
-                    size="small"
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <Typography sx={{ ml: 0.5, mb: 0.5, mt: 1 }}>이름*</Typography>
-                  <TextField
-                    required
-                    fullWidth
-                    id="name"
-                    name="name"
-                    placeholder="이름"
-                    size="small"
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <Typography sx={{ ml: 0.5, mb: 0.5, mt: 1 }}>닉네임*</Typography>
-                  <TextField
+                    variant="outlined"
                     required
                     fullWidth
                     id="nickname"
-                    name="nickname"
-                    placeholder="닉네임"
+                    onChange={onChangeNickname}
+                    value={nickname}
+                    error={nicknameValidation()}
+                    helperText={nicknameValidation() ? '닉네임은 두글자 이상이여야 합니다' : ''}
+                    label="닉네임 입력"
+                    size="small"
+                  />
+                </Grid>
+                <Grid item xs={3} sm={3}>
+                  <Button
+                    type="button"
+                    fullWidth
+                    variant="contained"
+                    color="primary"
+                    onClick={nicknameDup}
+                    size={width < 600 ? 'small' : 'large'}
+                    sx={{ py: 1, mb: 1 }}
+                  >
+                    {width < 600 ? '확인' : '증복 확인'}
+                  </Button>
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    sx={{ mb: 1 }}
+                    variant="outlined"
+                    required
+                    fullWidth
+                    id="name"
+                    // value={name}
+                    label="이름 입력"
+                    size="small"
+                  />
+                </Grid>
+
+                <Grid item xs={12}>
+                  <TextField
+                    variant="outlined"
+                    required
+                    fullWidth
+                    onChange={onChangePassword}
+                    value={password}
+                    error={passwordValidation()}
+                    helperText={passwordValidation() ? '최소 6글자 이상 입력하세요' : ''}
+                    name="password"
+                    label="비밀번호 입력"
+                    type="password"
+                    id="password"
+                    autoComplete="current-password"
+                    size="small"
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    variant="outlined"
+                    required
+                    fullWidth
+                    onChange={onChangePasswordCheck}
+                    value={passwordCheck}
+                    error={passwordCheckValidation()}
+                    helperText={passwordCheckValidation() ? '비밀번호가 일치하지 않습니다' : ''}
+                    name="passwordCheck"
+                    label="비밀번호 확인"
+                    type="password"
+                    id="passwordCheck"
                     size="small"
                   />
                 </Grid>
                 <Grid item xs={12}>
                   <FormControlLabel
-                    control={<Checkbox onChange={handleAgree} color="primary" />}
-                    label="회원가입에 동의합니다."
-                  />
+                    sx={{ mb: 1, mt: 2 }}
+                    control={
+                      <Checkbox
+                        value={agreement}
+                        color="primary"
+                        onChange={agreementCheck}
+                        sx={{ ml: 0.5 }}
+                      />
+                    }
+                    label="개인정보 수집 및 이용 동의"
+                  ></FormControlLabel>
                 </Grid>
               </Grid>
               <Button
                 type="submit"
                 fullWidth
                 variant="contained"
-                sx={{ mt: 3 }}
                 color="primary"
-                size="large"
+                sx={{ py: 1 }}
+                onClick={checkData}
+                size={width < 600 ? 'small' : 'large'}
+                // onClick={sendData}
+                // className={classes.submit}
               >
                 회원가입
               </Button>
-            </FormControl>
-          </Box>
+            </form>
+          </div>
         </Box>
       </Container>
     </ThemeProvider>
   );
 }
-
 export default SignupPage;

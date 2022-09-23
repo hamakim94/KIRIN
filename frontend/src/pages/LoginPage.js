@@ -18,11 +18,11 @@ const theme = createTheme({
 
 function LoginPage() {
   const [email, setEmail] = useState('');
-  const [pwd, setPwd] = useState('');
+  const [password, setPassword] = useState('');
 
   let body = {
     email,
-    password: pwd,
+    password,
   };
 
   const onSubmit = () => {
@@ -59,7 +59,7 @@ function LoginPage() {
             size="small"
           />
           <TextField
-            onChange={(e) => setPwd(e.target.value)}
+            onChange={(e) => setPassword(e.target.value)}
             margin="normal"
             required
             fullWidth
@@ -88,7 +88,7 @@ function LoginPage() {
             </Grid>
             <Grid item>
               <Link href="/signup" variant="body2">
-                {'회원가입'}
+                회원가입
               </Link>
             </Grid>
           </Grid>
