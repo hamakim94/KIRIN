@@ -6,6 +6,7 @@ function PlusPage() {
   const [stream, setStream] = useState(null);
   const [blob, setBlob] = useState(null);
   const [toggleBtn, setToggleBtn] = useState(false);
+  const [pause, setPause] = useState(false);
   const refVideo = useRef(null);
   const recorderRef = useRef(null);
 
@@ -22,7 +23,6 @@ function PlusPage() {
     if (blob) {
       setBlob(null);
     }
-
     setStream(mediaStream);
     recorderRef.current = new RecordRTC(mediaStream, {
       type: "video",
@@ -32,12 +32,22 @@ function PlusPage() {
     setToggleBtn(true);
   };
 
+  const handlePause = () => {
+    recorderRef.current.pauseRecording();
+    setToggleBtn(false);
+    setPause(true);
+  };
+
+  const handleResume = () => {
+    recorderRef.current.resumeRecording();
+    setToggleBtn(true);
+  };
+
   const handleStop = () => {
     recorderRef.current.stopRecording(() => {
       setBlob(recorderRef.current.getBlob());
       refVideo.current.srcObject = null;
     });
-    setToggleBtn(false);
   };
 
   const handleSave = () => {
@@ -73,11 +83,14 @@ function PlusPage() {
     <div className={styles.wrapper}>
       <div className={styles.coverBox}>
         {toggleBtn ? (
-          <button className={styles.recordBtn} onClick={handleStop}>
-            stop
-          </button>
+          <>
+            <button className={styles.recordBtn} onClick={handlePause}>
+              pause
+            </button>
+            <button onClick={handleStop}>체크체크</button>
+          </>
         ) : (
-          <button className={styles.recordBtn} onClick={handleRecording}>
+          <button className={styles.recordBtn} onClick={pause ? handleResume : handleRecording}>
             start
           </button>
         )}
@@ -87,9 +100,15 @@ function PlusPage() {
         save
       </button> */}
       {blob ? (
-        <video src={URL.createObjectURL(blob)} autoPlay style={{ width: "100%", height: "100%" }} />
+        <video
+          src={URL.createObjectURL(blob)}
+          controls
+          autoPlay
+          loop
+          style={{ width: "100%", height: "100%" }}
+        />
       ) : (
-        <video autoPlay ref={refVideo} style={{ width: "100%", height: "100%" }} />
+        <video controls autoPlay ref={refVideo} style={{ width: "100%", height: "100%" }} />
       )}
     </div>
   );
