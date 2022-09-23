@@ -221,6 +221,18 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     }
 
     @Override
+    public List<UserDTO> getCelebList() {
+        List<User> users = userRepository.findByIsCeleb(true);
+        List<UserDTO> result = new ArrayList<>();
+
+        for(User user: users){
+            result.add(userToUserDto(user));
+        }
+
+        return result;
+    }
+
+    @Override
     public List<UserDTO> getCelebListById(long userId) {
         List<Subscribe> subscribes = subscribeRepository.findByUserId(userId);
         List<UserDTO> result = new ArrayList<>();
@@ -231,6 +243,19 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         }
 
         return result;
+    }
+
+    @Override
+    public UserDTO getCelebInfo(long starId) {
+        User user = userRepository.findById(starId)
+                .orElseThrow(() -> new NoSuchElementException("Star : " + starId + " was not found"));
+
+        if(!user.getIsCeleb()){
+            log.error("스타가 아님");
+            return null;
+        }
+
+        return userToUserDto(user);
     }
 
     @Override

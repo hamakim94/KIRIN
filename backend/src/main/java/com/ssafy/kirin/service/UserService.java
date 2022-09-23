@@ -20,13 +20,18 @@ public interface UserService {
 
     UserDTO getUserById(long userId);
 
-    void subscribe(long userId, long celebId);
+    void subscribe(long userId, long starId);
+
+    List<UserDTO> getCelebList();
 
     List<UserDTO> getCelebListById(long userId);
+
+    UserDTO getCelebInfo(long starId);
 
     boolean checkEmailDuplicate(String email);
 
     boolean checkNicknameDuplicate(String nickname);
 
     Map<String, String> validateHandling(Errors errors);
+
 }
