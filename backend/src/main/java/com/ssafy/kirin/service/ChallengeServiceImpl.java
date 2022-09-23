@@ -38,7 +38,7 @@ public class ChallengeServiceImpl implements ChallengeService {
     private final CelebChallengeInfoRepository celebChallengeInfoRepository;
     private final UserRepository userRepository;
     @Value("${challenge.dir}")
-    private final String challengeDir;
+    private String challengeDir;
 
     @Override
     public List<Challenge> listStarsByPopularity() {
