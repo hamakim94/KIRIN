@@ -46,6 +46,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     @Override
     public void signup(UserSignupRequestDTO userSignupRequestDTO, MultipartFile profileImg, MultipartFile coverImg, PasswordEncoder passwordEncoder) throws Exception {
         User user = null;
+        System.out.println(1);
 
         // 일반 회원가입인 경우 : email, password null check && email, nickname 중복 check -> 스타, 일반인
         // 소셜 회원가입인 경우 : socialId null check && nickname 중복 check -> 일반인
@@ -61,7 +62,9 @@ public class UserServiceImpl implements UserDetailsService, UserService {
                 throw new Exception();
             }
 
+        System.out.println(2);
             userSignupRequestDTO.setPassword(passwordEncoder.encode(userSignupRequestDTO.getPassword()));
+        System.out.println(3);
 
             if(userSignupRequestDTO.getIsCeleb()){ // 스타일 경우
                 log.info("스타 회원가입");
@@ -85,6 +88,8 @@ public class UserServiceImpl implements UserDetailsService, UserService {
                         .build();
 
                 user.setCelebInfo(celebInfoRepository.save(celebInfo));
+
+                System.out.println(4);
             } else { // 일반인인 경우
                 log.info("일반인 회원가입");
                 System.out.println("회원가입 userSignupRequestDTO: " + userSignupRequestDTO);
@@ -100,8 +105,11 @@ public class UserServiceImpl implements UserDetailsService, UserService {
                         .isCeleb(userSignupRequestDTO.getIsCeleb())
                         .reg(LocalDateTime.now())
                         .build();
+
+                System.out.println(5);
             }
             userRepository.save(user);
+        System.out.println(6);
 
             // 이메일 verify 확인
             EmailAuth emailAuth = emailAuthRepository.save(
@@ -350,12 +358,14 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     }
 
     private UserDTO userToUserDto(User user){
+        System.out.println("userToUserDto");
+
         return UserDTO.builder()
                 .id(user.getId())
                 .email(user.getEmail())
                 .name(user.getName())
                 .nickname(user.getNickname())
-                .profileImg(user.getProfileImg() != null ? user.getProfileImg() : null)
+                .profileImg(user.getProfileImg())
 //                .accountType(user.getAccountType())
                 .isCeleb(user.getIsCeleb())
                 .info(user.getCelebInfo() != null ? user.getCelebInfo().getInfo() : null)
