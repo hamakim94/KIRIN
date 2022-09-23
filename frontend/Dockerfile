@@ -29,4 +29,4 @@ COPY --from=build-stage /usr/src/app/build /usr/share/nginx/html
 EXPOSE 80
 
 # nginx를 백그라운드에서 실행하는 컨테이너를 실행
-EMTRYPOINT ["nginx", "-g", "daemon off;"]
+ENTRYPOINT ["nginx", "-g", "daemon off;"]
