@@ -46,7 +46,6 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     @Override
     public void signup(UserSignupRequestDTO userSignupRequestDTO, MultipartFile profileImg, MultipartFile coverImg, PasswordEncoder passwordEncoder) throws Exception {
         User user = null;
-        System.out.println(1);
 
         // 일반 회원가입인 경우 : email, password null check && email, nickname 중복 check -> 스타, 일반인
         // 소셜 회원가입인 경우 : socialId null check && nickname 중복 check -> 일반인
@@ -62,9 +61,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
                 throw new Exception();
             }
 
-        System.out.println(2);
             userSignupRequestDTO.setPassword(passwordEncoder.encode(userSignupRequestDTO.getPassword()));
-        System.out.println(3);
 
             if(userSignupRequestDTO.getIsCeleb()){ // 스타일 경우
                 log.info("스타 회원가입");
@@ -106,10 +103,8 @@ public class UserServiceImpl implements UserDetailsService, UserService {
                         .reg(LocalDateTime.now())
                         .build();
 
-                System.out.println(5);
             }
             userRepository.save(user);
-        System.out.println(6);
 
             // 이메일 verify 확인
             EmailAuth emailAuth = emailAuthRepository.save(
@@ -374,27 +369,24 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     }
 
     private String getFilePath(MultipartFile file) { // file을 docker volume에 저장하고, 경로+파일명 return
-        System.out.println("getFilePath1");
         if(file != null && !file.isEmpty()) {
-            System.out.println("getFilePath2");
+            System.out.println("file 들어옴");
             try{
-                System.out.println("getFilePath3");
-
                 // 파일 디렉토리 + UUID + 확장자로 Path 설정
                 String storeName = uploadPath + UUID.randomUUID() + file.getOriginalFilename();
                 Path dir = Paths.get(storeName);
-                System.out.println("getFilePath4");
+
+                System.out.println(storeName);
 
                 // 지정된 디렉토리에 저장
                 Files.copy(file.getInputStream(), dir);
-                System.out.println("getFilePath5");
-
 
                 return storeName;
             } catch (Exception e){
                 log.error("getFilePath error: ", e);
             }
         }
+        System.out.println("file XXXX");
 
         log.error("file이 존재하지 않음");
         return null;
