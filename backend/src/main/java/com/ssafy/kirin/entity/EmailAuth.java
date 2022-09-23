@@ -17,7 +17,7 @@ public class EmailAuth {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String id;
+    private Long id;
     private String email; // 가입 이메일
     @Column(name = "auth_token")
     private String authToken; // UUID

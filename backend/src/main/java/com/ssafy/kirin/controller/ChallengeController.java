@@ -1,13 +1,17 @@
 package com.ssafy.kirin.controller;
 
+import com.ssafy.kirin.dto.UserDTO;
+import com.ssafy.kirin.dto.request.ChallengeRequestDTO;
 import com.ssafy.kirin.entity.Challenge;
 import com.ssafy.kirin.service.ChallengeService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,10 +56,20 @@ public class ChallengeController {
     @GetMapping("/user/{userId}")
     @ApiOperation(value = "내가 좋아요한 챌린지 리스트")
     public ResponseEntity<List<Challenge>> likeChallengeList(@PathVariable("userId") int userId){
-
         return ResponseEntity.ok(challengeService.listUserLike(userId));
-
     }
 
+    @PostMapping("")
+    @ApiOperation(value = "챌린지 등록")
+    public ResponseEntity<?> challengeUpload(@AuthenticationPrincipal UserDTO userDTO, ChallengeRequestDTO challengeRequestDTO){
 
+        System.out.println("I'M IN CHALLENGE CONTROLLER");
+        try {
+            challengeService.createChallenge(userDTO, challengeRequestDTO);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        return ResponseEntity.ok().build();
+    }
 }
