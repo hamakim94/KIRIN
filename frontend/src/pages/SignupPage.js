@@ -43,7 +43,7 @@ function SignupPage({ parentCallback, emailCallback, nicknameCallback }) {
   const [agreement, setAgreement] = useState(false);
   const [canSubmit, setCanSubmit] = useState(false);
   const [checked, setChecked] = useState(false);
-  const [file, setFile] = useState('');
+  const [file, setFile] = useState(null);
 
   /* 닉네임 검사 */
   const onChangeNickname = (e) => {
@@ -114,6 +114,7 @@ function SignupPage({ parentCallback, emailCallback, nicknameCallback }) {
       );
       return;
     }
+
     //화면에 프로필 사진 표시
     const reader = new FileReader();
     reader.onload = () => {
@@ -143,15 +144,25 @@ function SignupPage({ parentCallback, emailCallback, nicknameCallback }) {
     } else if (agreement === false) {
       swal('개인정보 약관에 동의해주세요');
       setCanSubmit(false);
-    } else if (password.length < 6) {
-      swal('비밀번호는 6글자 이상이어야합니다.');
+    } else if (password.length < 8) {
+      swal('비밀번호는 8글자 이상이어야합니다.');
       setCanSubmit(false);
     } else if (password !== passwordCheck) {
       swal('비밀번호 확인이 일치하지 않습니다');
       setCanSubmit(false);
     }
-    console.log(body);
-    UseAxios.post(`/users/signup`, body)
+
+    const data = new FormData();
+    data.append('profileImg', file);
+    // data.append('userDTO', new Blob([JSON.stringify(body)]), { type: 'application/json' });
+    const json = JSON.stringify(body);
+    const blob = new Blob([json], { type: 'application/json' });
+    data.append('userDTO', blob);
+
+    console.log(blob);
+    UseAxios.post(`/users/signup`, data, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    })
 
       .then((res) => {
         console.log(res.data);
@@ -188,16 +199,16 @@ function SignupPage({ parentCallback, emailCallback, nicknameCallback }) {
               fileInput.current.click();
             }}
           ></Avatar>
-
-          <input
-            type="file"
-            style={{ display: 'none' }}
-            accept="image/jpg,impge/png,image/jpeg"
-            name="profile_img"
-            onChange={onChange}
-            ref={fileInput}
-          ></input>
-
+          <form>
+            <input
+              type="file"
+              style={{ display: 'none' }}
+              accept="image/jpg,impge/png,image/jpeg"
+              name="profile_img"
+              onChange={onChange}
+              ref={fileInput}
+            ></input>
+          </form>
           <div>
             <form onSubmit={sendData}>
               <Grid container spacing={2}>
