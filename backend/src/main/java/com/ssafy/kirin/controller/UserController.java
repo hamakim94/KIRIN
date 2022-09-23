@@ -45,21 +45,30 @@ public class UserController {
     @PostMapping("/signup")
     @ApiOperation(value = "사용자 회원가입") // 요청 URL에 매핑된 API에 대한 설명
     public ResponseEntity<?> userSignup(@RequestPart(value = "profileImg", required = false) MultipartFile profileImg, @RequestPart(value="coverImg", required = false) MultipartFile coverImg, @Valid @RequestPart(value="userDTO") UserSignupRequestDTO userSignupRequestDTO, Errors errors){
+        System.out.println(profileImg);
+        System.out.println(coverImg);
+        System.out.println(userSignupRequestDTO);
+
         if(errors.hasErrors()){ // 유효성 검사 실패
             Map<String, String> validatorResult = userService.validateHandling(errors);
             for (String key : validatorResult.keySet()) {
                 log.error(key + ": " + validatorResult.get(key));
             }
 
+            System.out.println("유효성 검사 실패");
+
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
         try{
             userService.signup(userSignupRequestDTO, profileImg, coverImg, passwordEncoder);
+            System.out.println("회원가입 service 완료");
         } catch (Exception e){
+            System.out.println("회원가입 오류");
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
+        System.out.println("회원가입 완료");
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -84,7 +93,7 @@ public class UserController {
     @GetMapping("/logout")
     @ApiOperation(value = "사용자 로그아웃")
     public ResponseEntity<?> userLogout(HttpServletRequest request,
-                                     @ApiIgnore @AuthenticationPrincipal UserDTO user){
+                                        @ApiIgnore @AuthenticationPrincipal UserDTO user){
         // Redis에 해당 user id로 저장된 refresh token이 있을 경우 삭제
         if (redisTemplate.opsForValue().get(user.getId()) != null) {
             redisTemplate.delete(user.getId());
@@ -162,7 +171,7 @@ public class UserController {
     @PostMapping("/subscribes")
     @ApiOperation(value = "스타 구독")
     public ResponseEntity<?> subscribe(@ApiIgnore @AuthenticationPrincipal UserDTO user,
-                                    @RequestParam long celebId){
+                                       @RequestParam long celebId){
         userService.subscribe(user.getId(), celebId);
 
         return new ResponseEntity<>(HttpStatus.OK);
