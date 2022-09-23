@@ -35,7 +35,7 @@ public class EmailServiceImpl implements EmailService{
         msgg+= "<div align='center' style='border:1px solid black; font-family:verdana';>";
         msgg+= "<h3 style='color:black;'>회원가입 인증 링크</h3>";
         msgg+= "<div style='font-size:130%'>";
-        String link = String.format("<strong><a href='http://localhost:8080/api/users/confirm-email?email=%s&authToken=%s'>인증하기</a>", email, authToken);
+        String link = String.format("<strong><a href='http://j7a708.p.ssafy.io:8999/api/users/confirm-email?email=%s&authToken=%s'>인증하기</a>", email, authToken);
         msgg+= link;
         msgg+= "</strong><div><br/> ";
         msgg+= "</div>";
