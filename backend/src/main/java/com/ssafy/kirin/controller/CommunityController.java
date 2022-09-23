@@ -12,13 +12,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.io.IOException;
 import java.util.List;
 
 @Api(value = "커뮤니티 API",tags = {"커뮤니티 API"})
 @RestController
-@RequestMapping("/api/challenges")
+@RequestMapping("/api/communities")
 @RequiredArgsConstructor
 public class CommunityController {
 
@@ -33,10 +34,12 @@ public class CommunityController {
 
     @PostMapping("/stars/{starId}/boards")
     @ApiOperation(value = "커뮤니티 작성")
-    public ResponseEntity<?> communityWrite(@PathVariable long starId, CommunityRequestDTO communityRequestDTO){
+    public ResponseEntity<?> communityWrite(@ApiIgnore @AuthenticationPrincipal UserDTO userDTO,
+                                            @PathVariable long starId,
+                                            @ModelAttribute CommunityRequestDTO communityRequestDTO){
 
         try {
-            communityService.writeCommunity(starId, communityRequestDTO);
+            communityService.writeCommunity(starId,userDTO, communityRequestDTO);
             return ResponseEntity.ok(null);
         } catch (IOException e) {
             return ResponseEntity.internalServerError().build();
@@ -54,7 +57,9 @@ public class CommunityController {
 
     @PostMapping("/stars/{starId}/boards/{boardId}")
     @ApiOperation(value = "커뮤니티 좋아요")
-    public ResponseEntity<?> communityLike(@AuthenticationPrincipal UserDTO userDTO, @PathVariable long starId, @PathVariable long boardId){
+    public ResponseEntity<?> communityLike(@ApiIgnore @AuthenticationPrincipal UserDTO userDTO,
+                                           @PathVariable long starId,
+                                           @PathVariable long boardId){
         
         communityService.likeCommunity(userDTO.getId(), boardId);
 
@@ -63,7 +68,9 @@ public class CommunityController {
 
     @DeleteMapping("/stars/{starId}/boards/{boardId}")
     @ApiOperation(value = "커뮤니티 좋아요 취소")
-    public ResponseEntity<?> communityUnlike(@AuthenticationPrincipal UserDTO userDTO, @PathVariable long starId, @PathVariable long boardId){
+    public ResponseEntity<?> communityUnlike(@ApiIgnore @AuthenticationPrincipal UserDTO userDTO,
+                                             @PathVariable long starId,
+                                             @PathVariable long boardId){
 
         communityService.unlikeCommunity(userDTO.getId(), boardId);
 
@@ -72,7 +79,9 @@ public class CommunityController {
 
     @PostMapping("/stars/{starId}/boards/{boardId}/comments")
     @ApiOperation(value = "커뮤니티 댓글 작성")
-    public ResponseEntity<?> communityCommentWrite(@AuthenticationPrincipal UserDTO userDTO, @PathVariable long boardId, CommunityCommentRequestDTO dto){
+    public ResponseEntity<?> communityCommentWrite(@ApiIgnore @AuthenticationPrincipal UserDTO userDTO,
+                                                   @PathVariable long boardId,
+                                                   CommunityCommentRequestDTO dto){
 
         communityService.writeComment(userDTO.getId(), boardId, dto);
 
@@ -81,7 +90,8 @@ public class CommunityController {
 
     @PostMapping("/stars/{starId}/boards/{boardId}/comments/{commentId}")
     @ApiOperation(value = "커뮤니티 댓글 좋아요")
-    public ResponseEntity<?> communityCommentLike(@AuthenticationPrincipal UserDTO userDTO, @PathVariable long commentId){
+    public ResponseEntity<?> communityCommentLike(@ApiIgnore @AuthenticationPrincipal UserDTO userDTO,
+                                                  @PathVariable long commentId){
 
         communityService.likeCommunityComment(userDTO.getId(), commentId);
 
@@ -90,7 +100,8 @@ public class CommunityController {
 
     @DeleteMapping("/stars/{starId}/boards/{boardId}/comments/{commentId}")
     @ApiOperation(value = "커뮤니티 댓글 좋아요 취소")
-    public ResponseEntity<?> communityCommentUnlike(@AuthenticationPrincipal UserDTO userDTO, @PathVariable long commentId){
+    public ResponseEntity<?> communityCommentUnlike(@ApiIgnore @AuthenticationPrincipal UserDTO userDTO,
+                                                    @PathVariable long commentId){
 
         communityService.unlikeCommunityComment(userDTO.getId(), commentId);
 
