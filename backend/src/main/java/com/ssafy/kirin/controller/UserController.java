@@ -3,6 +3,7 @@ package com.ssafy.kirin.controller;
 
 import com.ssafy.kirin.config.security.JwtTokenProvider;
 import com.ssafy.kirin.dto.UserDTO;
+import com.ssafy.kirin.dto.request.UserFindPWRequestDTO;
 import com.ssafy.kirin.dto.request.UserLoginRequestDTO;
 import com.ssafy.kirin.dto.request.UserSignupRequestDTO;
 import com.ssafy.kirin.service.UserService;
@@ -20,6 +21,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
@@ -194,7 +196,7 @@ public class UserController {
 
     @GetMapping("/stars")
     @ApiOperation(value = "스타 목록 전체 조회")
-    public ResponseEntity<List<UserDTO>> getStarList(){
+    public ResponseEntity<List<UserDTO>> starListGet(){
         List<UserDTO> users = userService.getCelebList();
 
         return new ResponseEntity<>(users, HttpStatus.OK);
@@ -202,9 +204,40 @@ public class UserController {
 
     @GetMapping("/stars/{starId}")
     @ApiOperation(value = "스타 정보 조회")
-    public ResponseEntity<UserDTO> getStarInfo(@PathVariable long starId){
+    public ResponseEntity<UserDTO> starInfoGet(@PathVariable long starId){
         UserDTO user = userService.getCelebInfo(starId);
 
         return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+
+    @GetMapping("/find-password")
+    @ApiOperation(value = "비밀번호 찾기")
+    public ResponseEntity<?> passwordFind(@ApiIgnore @AuthenticationPrincipal UserDTO user, String email, String name){
+        if(user.getEmail().equals(email) && user.getName().equals(name)){
+            try {
+                userService.findPassword(email, name, passwordEncoder);
+                return new ResponseEntity<>(HttpStatus.OK);
+            } catch (Exception e){
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+        } else {
+            log.error("해당 유저의 이메일, 이름이 아닙니다.");
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PutMapping("/change-password")
+    @ApiOperation(value = "비밀번호 변경")
+    public ResponseEntity<?> passwordUpdate(@ApiIgnore @AuthenticationPrincipal UserDTO user, @RequestBody UserFindPWRequestDTO userFindPWRequestDTO){
+        if(user.getId() == userFindPWRequestDTO.getUserId()){
+            try {
+                userService.updatePassword(userFindPWRequestDTO, passwordEncoder);
+                return new ResponseEntity<>(HttpStatus.OK);
+            } catch (Exception e){
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+        }
+
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 }
