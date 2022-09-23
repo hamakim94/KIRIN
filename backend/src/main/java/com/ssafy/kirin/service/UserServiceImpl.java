@@ -1,7 +1,7 @@
 package com.ssafy.kirin.service;
 
 import com.ssafy.kirin.dto.UserDTO;
-import com.ssafy.kirin.dto.request.EmailAuthRequestDTO;
+import com.ssafy.kirin.dto.request.UserFindPWRequestDTO;
 import com.ssafy.kirin.dto.request.UserLoginRequestDTO;
 import com.ssafy.kirin.dto.request.UserSignupRequestDTO;
 import com.ssafy.kirin.entity.CelebInfo;
@@ -12,7 +12,6 @@ import com.ssafy.kirin.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -26,6 +25,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -188,7 +188,8 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         User user = userRepository.findById(userDTO.getId())
                 .orElseThrow(() -> new NoSuchElementException("User : " + userDTO.getId() + " was not found"));
 
-        // 원래 profile 사진은 지우기 -> userDTO.getProfileImg() 경로상에 있는 이미지는 지우기
+        // 원래 profile 사진은 지우기
+        deleteFile(userDTO.getProfileImg());
 
         user.setProfileImgAndNickname(getFilePath(profileImg), userDTO.getNickname());
 
@@ -229,6 +230,18 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     }
 
     @Override
+    public List<UserDTO> getCelebList() {
+        List<User> users = userRepository.findByIsCeleb(true);
+        List<UserDTO> result = new ArrayList<>();
+
+        for(User user: users){
+            result.add(userToUserDto(user));
+        }
+
+        return result;
+    }
+
+    @Override
     public List<UserDTO> getCelebListById(long userId) {
         List<Subscribe> subscribes = subscribeRepository.findByUserId(userId);
         List<UserDTO> result = new ArrayList<>();
@@ -239,6 +252,19 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         }
 
         return result;
+    }
+
+    @Override
+    public UserDTO getCelebInfo(long starId) {
+        User user = userRepository.findById(starId)
+                .orElseThrow(() -> new NoSuchElementException("Star : " + starId + " was not found"));
+
+        if(!user.getIsCeleb()){
+            log.error("스타가 아님");
+            return null;
+        }
+
+        return userToUserDto(user);
     }
 
     @Override
@@ -280,6 +306,49 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         return validatorResult;
     }
 
+    @Override
+    public void findPassword(String email, String name, PasswordEncoder passwordEncoder) throws Exception {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new NoSuchElementException("해당 이메일을 가진 사용자가 존재하지 않습니다."));
+
+        if(user.getName().equals(name)){
+            String newPassword = getRamdomPassword(10);
+            user.setPassword(passwordEncoder.encode(newPassword));
+            userRepository.save(user);
+            emailService.sendNewPasswordMail(email, newPassword);
+        } else {
+            throw new Exception("사용자 이름이 일치하지 않습니다.");
+        }
+    }
+
+    @Override
+    public void updatePassword(UserFindPWRequestDTO userFindPWRequestDTO, PasswordEncoder passwordEncoder) throws Exception {
+        User user = userRepository.findById(userFindPWRequestDTO.getUserId())
+                .orElseThrow(() -> new NoSuchElementException("User : " + userFindPWRequestDTO.getUserId() + " was not found"));;
+
+        if(passwordEncoder.matches(userFindPWRequestDTO.getPassword(), user.getPassword())){
+            user.setPassword(passwordEncoder.encode(userFindPWRequestDTO.getNewPassword()));
+            userRepository.save(user);
+        } else {
+            throw new Exception("비밀번호가 일치하지 않습니다.");
+        }
+    }
+
+    @Override
+    public void updateCoverImg(long starId, MultipartFile coverImg) {
+        User user = userRepository.findById(starId)
+                .orElseThrow(() -> new NoSuchElementException("Star : " + starId + " was not found"));;
+
+        CelebInfo celebInfo = user.getCelebInfo();
+
+        // 원래 파일 지워야
+        deleteFile(celebInfo.getCoverImg());
+
+        celebInfo.setCoverImg(getFilePath(coverImg));
+
+        celebInfoRepository.save(celebInfo);
+    }
+
     private UserDTO userToUserDto(User user){
         return UserDTO.builder()
                 .id(user.getId())
@@ -311,5 +380,55 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
         log.error("file이 존재하지 않음");
         return null;
+    }
+
+    private void deleteFile(String fileDir) {
+        if(fileDir != null){
+            try {
+                Path filePath = Paths.get(fileDir);
+                Files.delete(filePath);
+            } catch (Exception e){
+                log.error("파일 삭제 실패: ", e);
+            }
+        }
+    }
+
+    public static String getRamdomPassword(int size) {
+        char[] charSet1 = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
+        char[] charSet2 = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
+                'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
+        char[] charSet3 = {'!', '@', '#', '$', '%', '^', '&' };
+
+        StringBuffer sb = new StringBuffer();
+        SecureRandom sr = new SecureRandom();
+        sr.setSeed(new Date().getTime());
+
+        int idx = 0;
+        int len = charSet1.length;
+        int size1 = sr.nextInt(size-2)+1;
+        size-=size1;
+        for (int i=0; i<size1; i++) {
+            idx = sr.nextInt(len);
+            sb.append(charSet1[idx]);
+        }
+        len = charSet2.length;
+        size1 = sr.nextInt(size-1)+1;
+        size-=size1;
+        for (int i=0; i<size1; i++) {
+            idx = sr.nextInt(len);
+            sb.append(charSet2[idx]);
+        }
+        len = charSet3.length;
+        for (int i=0; i<size; i++) {
+            idx = sr.nextInt(len);
+            sb.append(charSet3[idx]);
+        }
+        List<String> list = Arrays.asList(sb.toString().split(""));
+        Collections.shuffle(list);
+        sb = new StringBuffer();
+        for (int i=0, n = list.size(); i<n; i++){
+            sb.append(list.get(i));
+        }
+        return sb.toString();
     }
 }

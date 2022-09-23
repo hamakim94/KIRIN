@@ -31,4 +31,8 @@ public class CelebInfo {
     public void setInfo(String info){
         this.info = info;
     }
+
+    public void setCoverImg(String coverImg){
+        this.coverImg = coverImg;
+    }
 }

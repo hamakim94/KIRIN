@@ -65,6 +65,10 @@ public class User {
         this.nickname = nickname;
     }
 
+    public void setPassword(String password){
+        this.password = password;
+    }
+
     public void emailVerifiedSuccess() {
         this.isEmailVerified = true;
     }
