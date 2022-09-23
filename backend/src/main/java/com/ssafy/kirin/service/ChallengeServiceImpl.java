@@ -100,7 +100,7 @@ public class ChallengeServiceImpl implements ChallengeService {
 
         // 비디오 외 정보 저장
         Challenge challenge = challengeRepository.save(Challenge.builder().user(user).isDummy(false).reg(LocalDateTime.now())
-                .title(challengeRequestDTO.title()).isOriginal(challengeRequestDTO.isOriginal())
+                .title(challengeRequestDTO.title()).isOriginal(challengeRequestDTO.isOriginal()).challengeId(challengeRequestDTO.challengeId())
                 .build());
 
         Path outputTmp = Paths.get((challengeDir+challenge.getId()+"Tmp.mp4"));
