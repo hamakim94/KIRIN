@@ -5,8 +5,10 @@ import CA from "../TokenCA.json";
 
 function WalletPage() {
   const [web3, setWeb3] = useState(""); // web3 연결하는 부분, useEffect를 통해 초반에 생성된다.
-  const [address, setAddress] = useState(process.env.REACT_APP_USERID); // 내 주소를 저장하는 부분, 추후에 상태관리 해야할 부분
-  const [privateKey, setprivateKey] = useState(process.env.REACT_APP_USERKEY); // 내 비밀번호, 추후에 상태관리 해야할 부분 or db
+  const [address, setAddress] = useState(process.env.REACT_APP_BENIFITID); // 내 주소를 저장하는 부분, 추후에 상태관리 해야할 부분
+  const [privateKey, setprivateKey] = useState(process.env.REACT_APP_OTHERUSERKEY); // 내 비밀번호, 추후에 상태관리 해야할 부분 or db
+  // const [address, setAddress] = useState(process.env.REACT_APP_USERID); // 내 주소를 저장하는 부분, 추후에 상태관리 해야할 부분
+  // const [privateKey, setprivateKey] = useState(process.env.REACT_APP_USERKEY); // 내 비밀번호, 추후에 상태관리 해야할 부분 or db
   const [balance, setBalance] = useState(""); // 잔액
   const [tokenBalance, setTokenBalance] = useState(""); // 토큰 잔액
   const [loading, setLoading] = useState(""); // 로딩창 관련
@@ -96,8 +98,9 @@ function WalletPage() {
     event.preventDefault();
     setLoading("기다리세요");
     // Contract Method를 ABI로 만들기
+    console.log("ADMINID" + process.env.REACT_APP_ADMINID);
     var test = tokenContract.methods
-      .transferFrom(process.env.REACT_APP_ADMINID, process.env.REACT_APP_USERID, 1000) // 1000개 충전
+      .transferFrom(process.env.REACT_APP_ADMINID, address, 1000) // 1000개 충전
       .encodeABI();
     // 트랜잭션 객체 생성
     var tx = {

@@ -44,10 +44,11 @@ contract FundRaising {
      * - _amount에 대한 설정은 따로 안 해놨다. 필요시
      * - 현재는 최소 1MGK 알아서 곱해지도록 설정
      */
-    function fundToken(uint256 _amount) external payable {
+    function fundToken(uint256 _amount) external {
         //uint _minAmount = 1*(10**16);
         //require(_amount >= _minAmount, "Minimum 0.01 MGK tokens");
         IERC20(token).transferFrom(msg.sender, address(this), _amount);
+        // IERC20(token).transfer(address(this), _amount);
         addFunder(msg.sender);
         funderToAmount[msg.sender] += _amount;
     }

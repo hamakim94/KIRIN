@@ -22,6 +22,7 @@ import CommunityPage from "./pages/CommunityPage";
 import BlockchainPage from "./pages/BlockchainPage";
 import TransactionPage from "./pages/TransactionPage";
 import DashboardPage from "./pages/DashboardPage";
+import ContractDeploy from "./pages/ContractDeploy";
 function App() {
   return (
     <>
@@ -44,6 +45,7 @@ function App() {
               path="/dashboard/transaction"
               element={<TransactionPage></TransactionPage>}
             ></Route>
+            <Route path="/create/deploy" element={<ContractDeploy></ContractDeploy>}></Route>
             <Route
               path="/mypage/setting/editprofile"
               element={<EditProfilePage></EditProfilePage>}

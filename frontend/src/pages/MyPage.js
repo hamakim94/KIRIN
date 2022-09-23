@@ -21,6 +21,9 @@ function MyPage() {
       <button onClick={() => navigate(`/dashboard`)} className={styles.myWallet}>
         블록체인 대시보드
       </button>
+      <button onClick={() => navigate(`/create/deploy`)} className={styles.myWallet}>
+        컨트랙트 배포하기
+      </button>
     </div>
   );
 }
