@@ -37,7 +37,7 @@ public class ChallengeServiceImpl implements ChallengeService {
     private final ChallengeLikeRepository challengeLikeRepository;
     private final CelebChallengeInfoRepository celebChallengeInfoRepository;
     private final UserRepository userRepository;
-    @Value("${challenge.dir}")
+    @Value("${property.app.upload-path}")
     private String challengeDir;
 
     @Override
