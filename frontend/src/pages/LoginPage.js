@@ -4,6 +4,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import LoginTop from '../components/sign/LoginTop';
 import styles from './LoginPage.module.css';
 import UseAxios from '../utils/UseAxios';
+import { useNavigate } from 'react-router-dom';
 
 const theme = createTheme({
   palette: {
@@ -17,6 +18,7 @@ const theme = createTheme({
 });
 
 function LoginPage() {
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -26,12 +28,13 @@ function LoginPage() {
   };
 
   const onSubmit = () => {
-    console.log('연결');
+    console.log(body);
     UseAxios.post(`/users/login`, body).then((res) => {
       console.log(res.data);
-      document.location.href = '/';
+      navigate('/');
     });
   };
+
   return (
     <ThemeProvider theme={theme}>
       <LoginTop styles={styles}></LoginTop>

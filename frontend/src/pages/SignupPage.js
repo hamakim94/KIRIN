@@ -19,6 +19,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import SignupTop from '../components/sign/SignupTop';
 import styles from './SignupPage.module.css';
 import UseAxios from '../utils/UseAxios';
+import { useNavigate } from 'react-router-dom';
 
 const theme = createTheme({
   palette: {
@@ -31,13 +32,8 @@ const theme = createTheme({
   },
 });
 
-interface User {
-  parentCallback: (nickname: string, email: string, password: string) => void;
-  emailCallback: (email: string) => void;
-  nicknameCallback: (nickname: string) => void;
-}
-
-function SignupPage({ parentCallback, emailCallback, nicknameCallback }: User) {
+function SignupPage({ parentCallback, emailCallback, nicknameCallback }) {
+  const navigate = useNavigate();
   const [width] = useState(window.innerWidth);
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
@@ -48,20 +44,21 @@ function SignupPage({ parentCallback, emailCallback, nicknameCallback }: User) {
   const [canSubmit, setCanSubmit] = useState(false);
   const [checked, setChecked] = useState(false);
   const [file, setFile] = useState('');
-  const [coverImg, setCoverImg] = useState('');
-  const [info, setInfo] = useState('');
-  const [isCeleb, setIsCelev] = useState('');
-  const [walletId, setWalletId] = useState('');
 
   /* 닉네임 검사 */
-  const onChangeNickname = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onChangeNickname = (e) => {
     setNickname(e.target.value);
   };
   const nicknameValidation = () => {
     return nickname.length > 0 && nickname.length < 2;
   };
+
+  const onChangeName = (e) => {
+    setName(e.target.value);
+  };
+
   /* 이메일 검사 */
-  const onChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onChangeEmail = (e) => {
     setEmail(e.target.value);
   };
   const emailValidation = () => {
@@ -69,29 +66,29 @@ function SignupPage({ parentCallback, emailCallback, nicknameCallback }: User) {
     return !check.test(email) && email.length > 1;
   };
   /*비밀번호 유효 검사 */
-  const onChangePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onChangePassword = (e) => {
     setPassword(e.target.value);
   };
   const passwordValidation = () => {
     return password.length < 6 && password.length > 1;
   };
   /*비밀번호 확인 */
-  const onChangePasswordCheck = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onChangePasswordCheck = (e) => {
     setPasswordCheck(e.target.value);
   };
   const passwordCheckValidation = () => {
     return password !== passwordCheck && passwordCheck.length > 1;
   };
   /*약관 확인 */
-  const agreementCheck = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const agreementCheck = (e) => {
     if (e.target.checked) setAgreement(true);
     else if (!e.target.checked) setAgreement(false);
   };
 
   //e: React.FormEvent<HTMLFormElement>
-  const sendData = (e: React.FormEvent<HTMLFormElement>) => {
+  const sendData = (e) => {
     e.preventDefault();
-    if (canSubmit) parentCallback(nickname, email, password); // 전달
+    if (canSubmit) parentCallback(nickname, email, password, name); // 전달
   };
   /* 이메일 중복 확인 */
   const emailDup = () => {
@@ -132,14 +129,11 @@ function SignupPage({ parentCallback, emailCallback, nicknameCallback }: User) {
     password,
     nickname,
     name,
-    coverImg,
-    info,
-    isCeleb,
-    profileImg,
-    walletId,
+    isCeleb: false,
+    walletId: 0,
   };
 
-  const checkData = () => {
+  const onSubmit = () => {
     if (!email.includes('@')) {
       swal('이메일을 확인해주세요');
       setCanSubmit(false);
@@ -156,10 +150,16 @@ function SignupPage({ parentCallback, emailCallback, nicknameCallback }: User) {
       swal('비밀번호 확인이 일치하지 않습니다');
       setCanSubmit(false);
     }
-    UseAxios.post(`/users/signup`, body).then((res) => {
-      console.log(res.data);
-      document.location.href = '/';
-    });
+    console.log(body);
+    UseAxios.post(`/users/signup`, body)
+
+      .then((res) => {
+        console.log(res.data);
+        navigate('/finishsignup');
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   /*랜더링 */
@@ -188,6 +188,7 @@ function SignupPage({ parentCallback, emailCallback, nicknameCallback }: User) {
               fileInput.current.click();
             }}
           ></Avatar>
+
           <input
             type="file"
             style={{ display: 'none' }}
@@ -263,9 +264,10 @@ function SignupPage({ parentCallback, emailCallback, nicknameCallback }: User) {
                     sx={{ mb: 1 }}
                     variant="outlined"
                     required
+                    onChange={onChangeName}
                     fullWidth
                     id="name"
-                    // value={name}
+                    value={name}
                     label="이름 입력"
                     size="small"
                   />
@@ -325,7 +327,7 @@ function SignupPage({ parentCallback, emailCallback, nicknameCallback }: User) {
                 variant="contained"
                 color="primary"
                 sx={{ py: 1 }}
-                onClick={checkData}
+                onClick={onSubmit}
                 size={width < 600 ? 'small' : 'large'}
                 // onClick={sendData}
                 // className={classes.submit}
