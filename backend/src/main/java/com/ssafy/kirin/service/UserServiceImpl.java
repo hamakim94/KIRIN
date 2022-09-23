@@ -355,7 +355,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
                 .email(user.getEmail())
                 .name(user.getName())
                 .nickname(user.getNickname())
-                .profileImg(user.getProfileImg())
+                .profileImg(user.getProfileImg() != null ? user.getProfileImg() : null)
 //                .accountType(user.getAccountType())
                 .isCeleb(user.getIsCeleb())
                 .info(user.getCelebInfo() != null ? user.getCelebInfo().getInfo() : null)
