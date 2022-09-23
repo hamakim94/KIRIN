@@ -20,6 +20,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -80,7 +81,8 @@ public class UserController {
 
     @GetMapping("/logout")
     @ApiOperation(value = "사용자 로그아웃")
-    public ResponseEntity userLogout(HttpServletRequest request, @AuthenticationPrincipal UserDTO user){
+    public ResponseEntity userLogout(HttpServletRequest request,
+                                     @ApiIgnore @AuthenticationPrincipal UserDTO user){
         // Redis에 해당 user id로 저장된 refresh token이 있을 경우 삭제
         if (redisTemplate.opsForValue().get(user.getId()) != null) {
             redisTemplate.delete(user.getId());
@@ -133,13 +135,14 @@ public class UserController {
 
     @GetMapping("/profiles")
     @ApiOperation(value = "사용자 프로필 정보 조회")
-    public ResponseEntity userProfile(@AuthenticationPrincipal UserDTO user){
+    public ResponseEntity userProfile(@ApiIgnore @AuthenticationPrincipal UserDTO user){
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     @PutMapping("/profiles")
     @ApiOperation(value = "사용자 프로필 수정")
-    public ResponseEntity userProfileEdit(@AuthenticationPrincipal UserDTO user, @RequestBody UserDTO userDTO){
+    public ResponseEntity userProfileEdit(@ApiIgnore @AuthenticationPrincipal UserDTO user,
+                                          @RequestBody UserDTO userDTO){
         // id, 닉네임, 프로필 사진 (스타일 경우, info, cover_img도)
         userDTO.setId(user.getId());
         UserDTO changedUserDTO;
@@ -156,7 +159,8 @@ public class UserController {
 
     @PostMapping("/subscribes")
     @ApiOperation(value = "스타 구독")
-    public ResponseEntity subscribe(@AuthenticationPrincipal UserDTO user, @RequestParam long celebId){
+    public ResponseEntity subscribe(@ApiIgnore @AuthenticationPrincipal UserDTO user,
+                                    @RequestParam long celebId){
         userService.subscribe(user.getId(), celebId);
 
         return new ResponseEntity<>(HttpStatus.OK);
@@ -164,7 +168,7 @@ public class UserController {
 
     @GetMapping("/subscribes")
     @ApiOperation(value = "구독한 스타 목록 조회")
-    public ResponseEntity subscribeStarList(@AuthenticationPrincipal UserDTO user){
+    public ResponseEntity subscribeStarList(@ApiIgnore @AuthenticationPrincipal UserDTO user){
         List<UserDTO> stars = userService.getCelebListById(user.getId());
 
         return new ResponseEntity<>(stars, HttpStatus.OK);
