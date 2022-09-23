@@ -374,13 +374,21 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     }
 
     private String getFilePath(MultipartFile file) { // file을 docker volume에 저장하고, 경로+파일명 return
-        if(!file.isEmpty()) {
+        System.out.println("getFilePath1");
+        if(file != null && !file.isEmpty()) {
+            System.out.println("getFilePath2");
             try{
+                System.out.println("getFilePath3");
+
                 // 파일 디렉토리 + UUID + 확장자로 Path 설정
                 String storeName = uploadPath + UUID.randomUUID() + file.getOriginalFilename();
                 Path dir = Paths.get(storeName);
+                System.out.println("getFilePath4");
+
                 // 지정된 디렉토리에 저장
                 Files.copy(file.getInputStream(), dir);
+                System.out.println("getFilePath5");
+
 
                 return storeName;
             } catch (Exception e){
@@ -388,7 +396,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
             }
         }
 
-//        log.error("file이 존재하지 않음");
+        log.error("file이 존재하지 않음");
         return null;
     }
 
