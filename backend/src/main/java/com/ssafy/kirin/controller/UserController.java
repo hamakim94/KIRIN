@@ -3,6 +3,7 @@ package com.ssafy.kirin.controller;
 
 import com.ssafy.kirin.config.security.JwtTokenProvider;
 import com.ssafy.kirin.dto.UserDTO;
+import com.ssafy.kirin.dto.request.UserFindPWRequestDTO;
 import com.ssafy.kirin.dto.request.UserLoginRequestDTO;
 import com.ssafy.kirin.dto.request.UserSignupRequestDTO;
 import com.ssafy.kirin.service.UserService;
@@ -20,6 +21,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
@@ -42,7 +44,7 @@ public class UserController {
 
     @PostMapping("/signup")
     @ApiOperation(value = "사용자 회원가입") // 요청 URL에 매핑된 API에 대한 설명
-    public ResponseEntity userSignup(@Valid @RequestBody UserSignupRequestDTO userSignupRequestDTO, Errors errors){
+    public ResponseEntity<?> userSignup(@RequestPart(value = "profileImg", required = false) MultipartFile profileImg, @RequestPart(value="coverImg", required = false) MultipartFile coverImg, @Valid @RequestPart(value="userDTO") UserSignupRequestDTO userSignupRequestDTO, Errors errors){
         if(errors.hasErrors()){ // 유효성 검사 실패
             Map<String, String> validatorResult = userService.validateHandling(errors);
             for (String key : validatorResult.keySet()) {
@@ -53,7 +55,7 @@ public class UserController {
         }
 
         try{
-            userService.signup(userSignupRequestDTO, passwordEncoder);
+            userService.signup(userSignupRequestDTO, profileImg, coverImg, passwordEncoder);
         } catch (Exception e){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -63,7 +65,7 @@ public class UserController {
 
     @PostMapping("/login")
     @ApiOperation(value = "사용자 로그인")
-    public ResponseEntity userLogin(@RequestBody UserLoginRequestDTO userLoginRequestDTO){
+    public ResponseEntity<?> userLogin(@RequestBody UserLoginRequestDTO userLoginRequestDTO){
         log.info("login 함수 실행");
         try{
             UserDTO userDTO = userService.login(userLoginRequestDTO, passwordEncoder);
@@ -81,7 +83,7 @@ public class UserController {
 
     @GetMapping("/logout")
     @ApiOperation(value = "사용자 로그아웃")
-    public ResponseEntity userLogout(HttpServletRequest request,
+    public ResponseEntity<?> userLogout(HttpServletRequest request,
                                      @ApiIgnore @AuthenticationPrincipal UserDTO user){
         // Redis에 해당 user id로 저장된 refresh token이 있을 경우 삭제
         if (redisTemplate.opsForValue().get(user.getId()) != null) {
@@ -99,7 +101,7 @@ public class UserController {
 
     @PostMapping("/reissue")
     @ApiOperation(value = "토큰 재발행")
-    public ResponseEntity tokenReissue(HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<?> tokenReissue(HttpServletRequest request, HttpServletResponse response) {
         String accessToken = jwtTokenProvider.getTokenFromRequest(request, "ACCESSTOKEN");
         String refreshToken = jwtTokenProvider.getTokenFromRequest(request, "REFRESHTOKEN");
         String userId = jwtTokenProvider.getUserPk(accessToken);
@@ -120,7 +122,7 @@ public class UserController {
 
     @GetMapping("/confirm-email")
     @ApiOperation(value = "이메일 확인(계정 활성화)")
-    public ResponseEntity emailConfirm(@RequestParam(value = "email") String email, @RequestParam(value = "authToken") String authToken) {
+    public ResponseEntity<?> emailConfirm(@RequestParam(value = "email") String email, @RequestParam(value = "authToken") String authToken) {
         try {
             userService.confirmEmail(email, authToken);
             //            response.sendRedirect("https://i7a202.p.ssafy.io/signup/success.html");
@@ -135,20 +137,20 @@ public class UserController {
 
     @GetMapping("/profiles")
     @ApiOperation(value = "사용자 프로필 정보 조회")
-    public ResponseEntity userProfile(@ApiIgnore @AuthenticationPrincipal UserDTO user){
+    public ResponseEntity<UserDTO> userProfile(@ApiIgnore @AuthenticationPrincipal UserDTO user){
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     @PutMapping("/profiles")
     @ApiOperation(value = "사용자 프로필 수정")
-    public ResponseEntity userProfileEdit(@ApiIgnore @AuthenticationPrincipal UserDTO user,
-                                          @RequestBody UserDTO userDTO){
+    public ResponseEntity<UserDTO> userProfileEdit(@ApiIgnore @AuthenticationPrincipal UserDTO user,
+                                                   @RequestPart(value = "profileImg", required = false) MultipartFile profileImg, @RequestPart(value = "userDTO") UserDTO userDTO){
         // id, 닉네임, 프로필 사진 (스타일 경우, info, cover_img도)
         userDTO.setId(user.getId());
         UserDTO changedUserDTO;
 
         try {
-            changedUserDTO = userService.modifyUser(userDTO);
+            changedUserDTO = userService.modifyUser(userDTO, profileImg);
         } catch (Exception e){
             log.error("userProfileEdit user 조회 실패");
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -159,7 +161,7 @@ public class UserController {
 
     @PostMapping("/subscribes")
     @ApiOperation(value = "스타 구독")
-    public ResponseEntity subscribe(@ApiIgnore @AuthenticationPrincipal UserDTO user,
+    public ResponseEntity<?> subscribe(@ApiIgnore @AuthenticationPrincipal UserDTO user,
                                     @RequestParam long celebId){
         userService.subscribe(user.getId(), celebId);
 
@@ -168,7 +170,7 @@ public class UserController {
 
     @GetMapping("/subscribes")
     @ApiOperation(value = "구독한 스타 목록 조회")
-    public ResponseEntity subscribeStarList(@ApiIgnore @AuthenticationPrincipal UserDTO user){
+    public ResponseEntity<List<UserDTO>> subscribeStarList(@ApiIgnore @AuthenticationPrincipal UserDTO user){
         List<UserDTO> stars = userService.getCelebListById(user.getId());
 
         return new ResponseEntity<>(stars, HttpStatus.OK);
@@ -176,7 +178,7 @@ public class UserController {
 
     @GetMapping("/check-duplicate/email")
     @ApiOperation(value = "이메일 중복 확인")
-    public ResponseEntity emailDuplicateCheck(@RequestParam String email){
+    public ResponseEntity<?> emailDuplicateCheck(@RequestParam String email){
         if(userService.checkEmailDuplicate(email)) return new ResponseEntity<>(HttpStatus.OK);
 
         log.error("email 중복");
@@ -185,10 +187,65 @@ public class UserController {
 
     @GetMapping("/check-duplicate/nickname")
     @ApiOperation(value = "닉네임 중복 확인")
-    public ResponseEntity nicknameDuplicateCheck(@RequestParam String nickname){
+    public ResponseEntity<?> nicknameDuplicateCheck(@RequestParam String nickname){
         if(userService.checkNicknameDuplicate(nickname)) return new ResponseEntity<>(HttpStatus.OK);
 
         log.error("nickname 중복");
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    @GetMapping("/stars")
+    @ApiOperation(value = "스타 목록 전체 조회")
+    public ResponseEntity<List<UserDTO>> starListGet(){
+        List<UserDTO> users = userService.getCelebList();
+
+        return new ResponseEntity<>(users, HttpStatus.OK);
+    }
+
+    @GetMapping("/stars/{starId}")
+    @ApiOperation(value = "스타 정보 조회")
+    public ResponseEntity<UserDTO> starInfoGet(@PathVariable long starId){
+        UserDTO user = userService.getCelebInfo(starId);
+
+        return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+
+    @GetMapping("/find-password")
+    @ApiOperation(value = "비밀번호 찾기")
+    public ResponseEntity<?> passwordFind(@ApiIgnore @AuthenticationPrincipal UserDTO user, String email, String name){
+        if(user.getEmail().equals(email) && user.getName().equals(name)){
+            try {
+                userService.findPassword(email, name, passwordEncoder);
+                return new ResponseEntity<>(HttpStatus.OK);
+            } catch (Exception e){
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+        } else {
+            log.error("해당 유저의 이메일, 이름이 아닙니다.");
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PutMapping("/change-password")
+    @ApiOperation(value = "비밀번호 변경")
+    public ResponseEntity<?> passwordUpdate(@ApiIgnore @AuthenticationPrincipal UserDTO user, @RequestBody UserFindPWRequestDTO userFindPWRequestDTO){
+        if(user.getId() == userFindPWRequestDTO.getUserId()){
+            try {
+                userService.updatePassword(userFindPWRequestDTO, passwordEncoder);
+                return new ResponseEntity<>(HttpStatus.OK);
+            } catch (Exception e){
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+        }
+
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    @PutMapping("/change-cover")
+    @ApiOperation(value = "커버이미지 변경")
+    public ResponseEntity<?> coverImgUpdate(@ApiIgnore @AuthenticationPrincipal UserDTO user, @RequestPart(value = "coverImg", required = false) MultipartFile coverImg){
+        userService.updateCoverImg(user.getId(), coverImg);
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

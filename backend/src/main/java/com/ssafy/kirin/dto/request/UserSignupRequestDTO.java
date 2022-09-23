@@ -1,7 +1,9 @@
 package com.ssafy.kirin.dto.request;
 
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.mail.Multipart;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
@@ -19,7 +21,7 @@ public class UserSignupRequestDTO { // 회원가입
     @NotBlank(message = "닉네임은 필수 입력값입니다.")
     private String nickname;
 
-    private String profileImg;
+//    private String profileImg; // 이미지 경로
 
     @Pattern(regexp = "^(?:\\w+\\.?)*\\w+@(?:\\w+\\.)+\\w+$", message = "이메일 형식이 올바르지 않습니다.")
     private String email;
@@ -32,5 +34,5 @@ public class UserSignupRequestDTO { // 회원가입
 //    private String socialId;
     private Boolean isCeleb;
     private String info;
-    private String coverImg;
+//    private String coverImg; // 이미지 경로
 }
