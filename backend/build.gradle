@@ -92,6 +92,8 @@ dependencies {
 	// queryDsl
 	implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
 	implementation "com.querydsl:querydsl-apt:${queryDslVersion}"
+	// gson (for mm webhook)
+	implementation 'com.google.code.gson:gson:2.9.0'
 }
 
 dependencyManagement {
