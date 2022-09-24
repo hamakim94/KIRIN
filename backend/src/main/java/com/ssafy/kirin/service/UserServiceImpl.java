@@ -373,15 +373,16 @@ public class UserServiceImpl implements UserDetailsService, UserService {
             System.out.println("file 들어옴");
             try{
                 // 파일 디렉토리 + UUID + 확장자로 Path 설정
-                String storeName = uploadPath + UUID.randomUUID() + file.getOriginalFilename();
-                Path dir = Paths.get(storeName);
+                String fileName = UUID.randomUUID() + file.getOriginalFilename();
+//                String storeName = uploadPath + UUID.randomUUID() + file.getOriginalFilename();
+                Path dir = Paths.get(uploadPath + fileName);
 
-                System.out.println(storeName);
+//                System.out.println(storeName);
 
                 // 지정된 디렉토리에 저장
                 Files.copy(file.getInputStream(), dir);
 
-                return storeName;
+                return fileName;
             } catch (Exception e){
                 log.error("getFilePath error: ", e);
             }
