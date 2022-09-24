@@ -377,8 +377,8 @@ public class UserServiceImpl implements UserDetailsService, UserService {
             try{
                 // 파일 디렉토리 + UUID + 확장자로 Path 설정
                 String fileName = UUID.randomUUID() + file.getOriginalFilename();
-                String storeName = imagePath + UUID.randomUUID() + file.getOriginalFilename();
-                Path dir = Paths.get(storeName + fileName);
+                String storeName = imagePath + fileName;
+                Path dir = Paths.get(uploadPath + storeName);
 
 //                System.out.println(storeName);
 
