@@ -6,7 +6,7 @@ function NotFoundPage() {
       <img
         width={500}
         height={500}
-        src='/data/e33c6d38-df5e-4859-942a-36214ecf5831KakaoTalk_20220924_220101828.jpg'
+        src={`${process.env.REACT_APP_FILEURL}/files/f139aa2c-024e-4b68-97a3-a695ee47d047KakaoTalk_20220826_143502646.jpg`}
       ></img>
     </div>
   );
