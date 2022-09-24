@@ -43,6 +43,9 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     @Value("${property.app.upload-path}")
     private String uploadPath;
 
+    @Value("${image.path}")
+    private String imagePath;
+
     @Override
     public void signup(UserSignupRequestDTO userSignupRequestDTO, MultipartFile profileImg, MultipartFile coverImg, PasswordEncoder passwordEncoder) throws Exception {
         User user = null;
@@ -374,15 +377,15 @@ public class UserServiceImpl implements UserDetailsService, UserService {
             try{
                 // 파일 디렉토리 + UUID + 확장자로 Path 설정
                 String fileName = UUID.randomUUID() + file.getOriginalFilename();
-//                String storeName = uploadPath + UUID.randomUUID() + file.getOriginalFilename();
-                Path dir = Paths.get(uploadPath + fileName);
+                String storeName = imagePath + UUID.randomUUID() + file.getOriginalFilename();
+                Path dir = Paths.get(storeName + fileName);
 
 //                System.out.println(storeName);
 
                 // 지정된 디렉토리에 저장
                 Files.copy(file.getInputStream(), dir);
 
-                return fileName;
+                return storeName;
             } catch (Exception e){
                 log.error("getFilePath error: ", e);
             }
