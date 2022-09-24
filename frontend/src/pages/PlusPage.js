@@ -9,6 +9,39 @@ function PlusPage() {
   const [pause, setPause] = useState(false);
   const refVideo = useRef(null);
   const recorderRef = useRef(null);
+  const [number, setNumber] = useState(null);
+  const [waitButton, setWaitButton] = useState(false);
+
+  useInterval(
+    () => {
+      if (waitButton) {
+        setNumber((number - 0.1).toFixed(1));
+      }
+    },
+    number < 0 ? null : 100
+  );
+
+  function useInterval(callback, delay) {
+    const savedCallback = useRef();
+
+    useEffect(() => {
+      savedCallback.current = callback;
+    }, [callback]);
+
+    useEffect(() => {
+      function tick() {
+        savedCallback.current();
+      }
+      if (delay !== null) {
+        let id = setInterval(tick, delay);
+        return () => {
+          setNumber(15);
+          setWaitButton(false);
+          clearInterval(id);
+        };
+      }
+    }, [delay]);
+  }
 
   const handleRecording = async () => {
     const mediaStream = await navigator.mediaDevices.getUserMedia({
@@ -75,6 +108,7 @@ function PlusPage() {
       setStream(mediaStream);
     };
     start();
+    setNumber(15);
     return () => {
       console.log("화면나갔어12");
     };
@@ -90,9 +124,12 @@ function PlusPage() {
             <button onClick={handleStop}>체크체크</button>
           </>
         ) : (
-          <button className={styles.recordBtn} onClick={pause ? handleResume : handleRecording}>
-            start
-          </button>
+          <>
+            <button className={styles.recordBtn} onClick={pause ? handleResume : handleRecording}>
+              start
+            </button>
+            <button onClick={() => setWaitButton(true)}>{number}</button>
+          </>
         )}
       </div>
       {/*
