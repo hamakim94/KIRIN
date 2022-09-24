@@ -11,6 +11,7 @@ function PlusPage() {
   const recorderRef = useRef(null);
   const [number, setNumber] = useState(null);
   const [waitButton, setWaitButton] = useState(false);
+  const [changeCam, setChangeCam] = useState("user");
 
   useInterval(
     () => {
@@ -49,6 +50,7 @@ function PlusPage() {
         width: 720,
         height: 1280,
         frameRate: 30,
+        facingMode: changeCam,
       },
       audio: false,
     });
@@ -87,6 +89,16 @@ function PlusPage() {
     invokeSaveAsDialog(blob);
   };
 
+  const handleDirection = () => {
+    if (changeCam === "user") {
+      console.log("방향전환");
+      setChangeCam({ exact: "environment" });
+    } else {
+      console.log("방향전환");
+      setChangeCam("user");
+    }
+  };
+
   useEffect(() => {
     if (!refVideo.current) {
       return;
@@ -102,6 +114,7 @@ function PlusPage() {
           width: 720,
           height: 1280,
           frameRate: 30,
+          facingMode: changeCam,
         },
         audio: false,
       });
@@ -129,6 +142,7 @@ function PlusPage() {
               start
             </button>
             <button onClick={() => setWaitButton(true)}>{number}</button>
+            <button onClick={handleDirection}>전환</button>
           </>
         )}
       </div>
