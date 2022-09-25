@@ -47,8 +47,8 @@ function PlusPage() {
   const handleRecording = async () => {
     const mediaStream = await navigator.mediaDevices.getUserMedia({
       video: {
-        width: 720,
-        height: 1280,
+        width: window.innerWidth,
+        height: window.innerHeight,
         frameRate: 30,
         facingMode: changeCam,
       },
@@ -108,11 +108,12 @@ function PlusPage() {
 
   useEffect(() => {
     let mediaStream;
+
     const start = async () => {
       mediaStream = await navigator.mediaDevices.getUserMedia({
         video: {
-          width: 720,
-          height: 1280,
+          width: window.innerWidth,
+          height: window.innerHeight,
           frameRate: 30,
           facingMode: changeCam,
         },
@@ -159,7 +160,7 @@ function PlusPage() {
           style={{ width: "100%", height: "100%" }}
         />
       ) : (
-        <video controls autoPlay ref={refVideo} style={{ width: "100%", height: "100%" }} />
+        <video controls autoPlay s ref={refVideo} style={{ width: "100%", height: "100%" }} />
       )}
     </div>
   );
