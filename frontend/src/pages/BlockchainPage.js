@@ -46,7 +46,7 @@ function BlockchainPage() {
   }
 
   useEffect(() => {
-    var web3 = new Web3(new Web3.providers.HttpProvider(`${process.env.REACT_APP_FILEURL}/bc`));
+    var web3 = new Web3(new Web3.providers.HttpProvider(`${process.env.REACT_APP_BASEURL}/bc`));
     // 1000 초만 실행
     const interval = setInterval(() => {
       const asyncCall = async () => {

@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { Cookies } from 'react-cookie';
 
-const apiadr = process.env.REACT_APP_FILEURL;
+const apiadr = process.env.REACT_APP_BASEURL;
 const cookies = new Cookies();
 
 const UseAxios = axios.create({
