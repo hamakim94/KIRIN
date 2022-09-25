@@ -2,7 +2,6 @@
 FROM node:16.15.0 as build-stage 
 
 # 명령어를 실행할 디렉터리
-# WORKDIR /var/lib/jenkins/workspace/Kirin_front/frontend
 WORKDIR /usr/src/app
 
 # package*.json에 등록되어있는 라이브러리들을 npm install으로 설치
