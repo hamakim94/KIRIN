@@ -41,7 +41,7 @@ public class CommunityServiceImpl implements CommunityService {
 
     @Override
     @Transactional
-    public void writeCommunity(long starId, UserDTO userDTO, CommunityRequestDTO dto) throws IOException {
+    public void writeCommunity(long starId, UserDTO userDTO, CommunityRequestDTO dto, MultipartFile image) throws IOException {
         
         User user = userRepository.getReferenceById(userDTO.getId());
         Community community = Community.builder()
@@ -53,13 +53,12 @@ public class CommunityServiceImpl implements CommunityService {
 
         communityRepository.save(community);
 
-        if(!dto.image().isEmpty()) {
-            MultipartFile file = dto.image();
+        if(!image.isEmpty()) {
             // 파일 디렉토리 + UUID + 확장자로 Path 설정
-            String storeName = communityImageDirectory+ UUID.randomUUID() + file.getOriginalFilename();
+            String storeName = communityImageDirectory+ UUID.randomUUID() + image.getOriginalFilename();
             Path dir = Paths.get(storeName);
             //지정된 디렉토리에 저장
-            Files.copy(file.getInputStream(),dir);
+            Files.copy(image.getInputStream(),dir);
             community.setImg(storeName);
         }
     }

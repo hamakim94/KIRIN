@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import springfox.documentation.annotations.ApiIgnore;
 
 import java.io.IOException;
@@ -36,10 +37,11 @@ public class CommunityController {
     @ApiOperation(value = "커뮤니티 작성")
     public ResponseEntity<?> communityWrite(@ApiIgnore @AuthenticationPrincipal UserDTO userDTO,
                                             @PathVariable long starId,
-                                            @ModelAttribute CommunityRequestDTO communityRequestDTO){
+                                            @RequestPart MultipartFile image,
+                                            @RequestPart CommunityRequestDTO communityRequestDTO){
 
         try {
-            communityService.writeCommunity(starId,userDTO, communityRequestDTO);
+            communityService.writeCommunity(starId,userDTO, communityRequestDTO, image);
             return ResponseEntity.ok(null);
         } catch (IOException e) {
             return ResponseEntity.internalServerError().build();
@@ -81,9 +83,9 @@ public class CommunityController {
     @ApiOperation(value = "커뮤니티 댓글 작성")
     public ResponseEntity<?> communityCommentWrite(@ApiIgnore @AuthenticationPrincipal UserDTO userDTO,
                                                    @PathVariable long boardId,
-                                                   CommunityCommentRequestDTO dto){
+                                                   CommunityCommentRequestDTO communityCommentRequestDTO){
 
-        communityService.writeComment(userDTO.getId(), boardId, dto);
+        communityService.writeComment(userDTO.getId(), boardId, communityCommentRequestDTO);
 
         return ResponseEntity.ok(null);
     }

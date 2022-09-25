@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import springfox.documentation.annotations.ApiIgnore;
 
 import java.io.IOException;
@@ -84,11 +85,13 @@ public class ChallengeController {
 
     @PostMapping("")
     @ApiOperation(value = "챌린지 등록")
-    public ResponseEntity<?> challengeUpload(@AuthenticationPrincipal UserDTO userDTO, ChallengeRequestDTO challengeRequestDTO){
+    public ResponseEntity<?> challengeUpload(@AuthenticationPrincipal UserDTO userDTO,
+                                             @RequestPart MultipartFile video,
+                                             @RequestPart ChallengeRequestDTO challengeRequestDTO){
 
         System.out.println("I'M IN CHALLENGE CONTROLLER");
         try {
-            challengeService.createChallenge(userDTO, challengeRequestDTO);
+            challengeService.createChallenge(userDTO, challengeRequestDTO, video);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

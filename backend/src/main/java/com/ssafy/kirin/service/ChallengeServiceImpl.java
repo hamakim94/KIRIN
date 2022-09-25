@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.io.IOException;
@@ -132,7 +133,7 @@ public class ChallengeServiceImpl implements ChallengeService {
     }
     @Transactional
     @Override
-    public boolean createChallenge(UserDTO userDTO, ChallengeRequestDTO challengeRequestDTO) throws IOException {
+    public boolean createChallenge(UserDTO userDTO, ChallengeRequestDTO challengeRequestDTO, MultipartFile video) throws IOException {
         try {
         User user = userRepository.getReferenceById(userDTO.getId());
         Challenge forChallenge = challengeRepository.getReferenceById(challengeRequestDTO.challengeId());
@@ -145,7 +146,7 @@ public class ChallengeServiceImpl implements ChallengeService {
                 .build());
 
         Path outputTmp = Paths.get((challengeDir+challenge.getId()+"Tmp.mp4"));
-        Files.copy(challengeRequestDTO.video().getInputStream(),outputTmp);
+        Files.copy(video.getInputStream(),outputTmp);
         String outputPath = challengeDir+challenge.getId()+".mp4";
 
         String command = String.format("ffmpeg -y -i %s -i %s -i %s -filter_complex [1][0]scale2ref=w=oh*mdar:h=ih*0.1[logo][video];[video][logo]overlay=W-w-15:15 -map \"v\" -map 2:a -c:v libx264 -crf 17 -c:a copy -shortest %s"

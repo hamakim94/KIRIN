@@ -5,13 +5,15 @@ import com.ssafy.kirin.dto.request.CommunityCommentRequestDTO;
 import com.ssafy.kirin.dto.request.CommunityRequestDTO;
 import com.ssafy.kirin.dto.response.CommunityResponseDTO;
 import com.ssafy.kirin.entity.Community;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.lang.management.MemoryUsage;
 import java.util.List;
 
 public interface CommunityService {
     List<Community> getCommunityList(long starId);
-    void writeCommunity(long starId,UserDTO userDTO, CommunityRequestDTO dto) throws IOException;
+    void writeCommunity(long starId,UserDTO userDTO, CommunityRequestDTO dto, MultipartFile image) throws IOException;
     CommunityResponseDTO getCommunity(long boardId);
     boolean likeCommunity(long userId, long boardId);
     boolean unlikeCommunity(long userId, long boardId);
