@@ -6,6 +6,7 @@ import SearchPage from "./pages/SearchPage";
 import SavanaPage from "./pages/SavanaPage";
 import DonationPage from "./pages/DonationPage";
 import StarPage from "./pages/StarPage";
+import PlusPage from "./pages/PlusPage";
 import PcPage from "./pages/PcPage";
 import MyPage from "./pages/MyPage";
 import SettingPage from "./pages/SettingPage";
@@ -36,6 +37,7 @@ function App() {
             <Route path='/search' element={<SearchPage></SearchPage>}></Route>
             <Route path='/savana' element={<SavanaPage></SavanaPage>}></Route>
             <Route path='/donation' element={<DonationPage></DonationPage>}></Route>
+            <Route path='/plus' element={<PlusPage></PlusPage>}></Route>
             <Route path='/star/:starId' element={<StarPage></StarPage>}></Route>
             <Route path='/star/:starId/community' element={<CommunityPage></CommunityPage>}></Route>
             <Route path='*' element={<NotFoundPage></NotFoundPage>}></Route>
