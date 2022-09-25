@@ -11,7 +11,7 @@ function PlusPage() {
   const recorderRef = useRef(null);
   const [number, setNumber] = useState(null);
   const [waitButton, setWaitButton] = useState(false);
-  const [changeCam, setChangeCam] = useState("user");
+  const [changeCam, setChangeCam] = useState({ exact: "environment" });
 
   useInterval(
     () => {
@@ -127,7 +127,7 @@ function PlusPage() {
   }, []);
   return (
     <div className={styles.wrapper}>
-      {/* <div className={styles.coverBox}>
+      <div className={styles.coverBox}>
         {toggleBtn ? (
           <>
             <button className={styles.recordBtn} onClick={handlePause}>
@@ -144,7 +144,7 @@ function PlusPage() {
             <button onClick={handleDirection}>전환</button>
           </>
         )}
-      </div> */}
+      </div>
       {/*
       <button className={styles.recordBtn} onClick={handleSave}>
         save
