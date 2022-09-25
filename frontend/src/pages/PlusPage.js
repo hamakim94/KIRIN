@@ -12,7 +12,6 @@ function PlusPage() {
   const [number, setNumber] = useState(null);
   const [waitButton, setWaitButton] = useState(false);
   const [changeCam, setChangeCam] = useState("user");
-  const [checkBtn, setCheckBtn] = useState(true);
 
   useInterval(
     () => {
@@ -141,7 +140,7 @@ function PlusPage() {
       mediaStream = await navigator.mediaDevices.getUserMedia({
         video: {
           frameRate: 30,
-          facingMode: changeCam,
+          facingMode: { exact: "environment" },
         },
         audio: false,
       });
