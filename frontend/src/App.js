@@ -3,11 +3,7 @@ import { isMobile } from 'react-device-detect';
 import HomePage from './pages/HomePage';
 import { Routes, Route } from 'react-router-dom';
 import SearchPage from './pages/SearchPage';
-<<<<<<< HEAD
 import FlowPage from './pages/FlowPage';
-=======
-import SavanaPage from './pages/SavanaPage';
->>>>>>> 2d36ce21b8b703c058b3d22e526b96a89be3a063
 import DonationPage from './pages/DonationPage';
 import PlusPage from './pages/PlusPage';
 import StarPage from './pages/StarPage';
@@ -71,11 +67,8 @@ function App() {
             ></Route>
             <Route path="/mypage/wallet" element={<WalletPage></WalletPage>}></Route>
             <Route path="/signup" element={<SignupPage></SignupPage>}></Route>
-<<<<<<< HEAD
-            <Route path="/finishSignup" element={<FinishSignupPage></FinishSignupPage>}></Route>
-=======
->>>>>>> 2d36ce21b8b703c058b3d22e526b96a89be3a063
             <Route path="/login" element={<LoginPage></LoginPage>}></Route>
+            <Route path="/finishsignup" element={<FinishSignupPage></FinishSignupPage>}></Route>
             <Route path="/findpassword" element={<FindPasswordPage></FindPasswordPage>}></Route>
           </Routes>
           <SimpleBottomNavigation></SimpleBottomNavigation>
