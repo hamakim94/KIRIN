@@ -28,7 +28,7 @@ public class CommunityServiceImpl implements CommunityService {
     private final CommunityLikeRepository communityLikeRepository;
     private final CommunityCommnetLikeRepository communityCommentLikeRepository;
     private final UserRepository userRepository;
-    @Value("${image.dir}")
+    @Value("${property.app.upload-path}")
     private String communityImageDirectory;
 
     @Override
