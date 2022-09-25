@@ -32,7 +32,7 @@ const theme = createTheme({
   },
 });
 
-function SignupPage({ parentCallback, emailCallback, nicknameCallback }) {
+function SignupPage({ parentCallback }) {
   const navigate = useNavigate();
   const [width] = useState(window.innerWidth);
   const [password, setPassword] = useState('');
@@ -92,12 +92,28 @@ function SignupPage({ parentCallback, emailCallback, nicknameCallback }) {
     if (canSubmit) parentCallback(nickname, email, password, name); // 전달
   };
   /* 이메일 중복 확인 */
-  const emailDup = () => {
-    emailCallback(email);
+  const emailDup = (e) => {
+    UseAxios.get(`/users/check-duplicate/email`, { params: { email: e.target.value } })
+      .then((res) => {
+        swal('', '확인되었습니다.');
+        setChecked(true);
+      })
+      .catch((err) => {
+        swal('', '사용 중인 이메일입니다.');
+        setChecked(false);
+      });
   };
-  /* 이메일 중복 확인 */
-  const nicknameDup = () => {
-    nicknameCallback(nickname);
+  /* 닉네임 중복 확인 */
+  const nicknameDup = (e) => {
+    UseAxios.get(`/users/check-duplicate/nickname`, { params: { nickname: e.target.value } })
+      .then((res) => {
+        swal('', '확인되었습니다.');
+        setChecked(true);
+      })
+      .catch((err) => {
+        swal('', '사용 중인 닉네임입니다.');
+        setChecked(false);
+      });
   };
 
   const [profileImg, setProfileImg] = useState(
@@ -147,30 +163,6 @@ function SignupPage({ parentCallback, emailCallback, nicknameCallback }) {
       setCanSubmit(false);
     } else if (password.length < 8) {
       swal('비밀번호는 8글자 이상이어야 합니다.');
-      setCanSubmit(false);
-    } else if (
-      !password.includes(
-        '`' ||
-          '~' ||
-          '!' ||
-          '@' ||
-          '#' ||
-          '$' ||
-          '%' ||
-          '^' ||
-          '&' ||
-          '*' ||
-          '|' ||
-          '₩' ||
-          '"' ||
-          ';' ||
-          ':' ||
-          '₩' ||
-          '/' ||
-          '?'
-      )
-    ) {
-      swal('비밀번호는 영문, 숫자, 특수문자를 포함해야 합니다..');
       setCanSubmit(false);
     } else if (password !== passwordCheck) {
       swal('비밀번호 확인이 일치하지 않습니다');
@@ -262,6 +254,7 @@ function SignupPage({ parentCallback, emailCallback, nicknameCallback }) {
                     variant="contained"
                     color="primary"
                     onClick={emailDup}
+                    value={email}
                     size={width < 600 ? 'small' : 'large'}
                     sx={{ py: 1, mb: 1 }}
                   >
@@ -289,6 +282,7 @@ function SignupPage({ parentCallback, emailCallback, nicknameCallback }) {
                     variant="contained"
                     color="primary"
                     onClick={nicknameDup}
+                    value={nickname}
                     size={width < 600 ? 'small' : 'large'}
                     sx={{ py: 1, mb: 1 }}
                   >
