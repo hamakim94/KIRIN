@@ -37,7 +37,7 @@ function SimpleBottomNavigation() {
         >
           <BottomNavigationAction label='홈' LinkComponent={Link} to='/' />
           <BottomNavigationAction label='사바나' LinkComponent={Link} to='/savana' />
-          <BottomNavigationAction label='플러스' LinkComponent={Link} to='/plus' />
+          <BottomNavigationAction label='플러스' LinkComponent={Link} to='/5555' />
           <BottomNavigationAction label='기부' LinkComponent={Link} to='/donation' />
           <BottomNavigationAction label='마이' LinkComponent={Link} to='/mypage' />
         </BottomNavigation>
