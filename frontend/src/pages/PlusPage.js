@@ -11,7 +11,7 @@ function PlusPage() {
   const recorderRef = useRef(null);
   const [number, setNumber] = useState(null);
   const [waitButton, setWaitButton] = useState(false);
-  const [changeCam, setChangeCam] = useState({ exact: "environment" });
+  const [changeCam, setChangeCam] = useState("user");
 
   useInterval(
     () => {
@@ -47,8 +47,6 @@ function PlusPage() {
   const handleRecording = async () => {
     const mediaStream = await navigator.mediaDevices.getUserMedia({
       video: {
-        width: window.innerWidth,
-        height: window.innerHeight,
         frameRate: 30,
         facingMode: changeCam,
       },
@@ -93,9 +91,33 @@ function PlusPage() {
     if (changeCam === "user") {
       console.log("방향전환");
       setChangeCam({ exact: "environment" });
+      let mediaStream;
+      const start = async () => {
+        mediaStream = await navigator.mediaDevices.getUserMedia({
+          video: {
+            frameRate: 30,
+            facingMode: { exact: "environment" },
+          },
+          audio: false,
+        });
+        setStream(mediaStream);
+      };
+      start();
     } else {
       console.log("방향전환");
       setChangeCam("user");
+      let mediaStream;
+      const start = async () => {
+        mediaStream = await navigator.mediaDevices.getUserMedia({
+          video: {
+            frameRate: 30,
+            facingMode: "user",
+          },
+          audio: false,
+        });
+        setStream(mediaStream);
+      };
+      start();
     }
   };
 
@@ -125,6 +147,7 @@ function PlusPage() {
       console.log("화면나갔어12");
     };
   }, []);
+
   return (
     <div className={styles.wrapper}>
       <div className={styles.coverBox}>
