@@ -13,6 +13,7 @@ function PlusPage() {
   const [waitButton, setWaitButton] = useState(false);
   const [changeCam, setChangeCam] = useState('user');
 
+  let dummysound = new Audio('../assets/sound/dummy.mp3');
   useInterval(
     () => {
       if (waitButton) {
@@ -62,32 +63,26 @@ function PlusPage() {
       mimeType: 'video/webm;codecs=vp9',
     });
     recorderRef.current.startRecording();
+    dummysound.currentTime = 0;
+    dummysound.play();
     setToggleBtn(true);
-    setWaitButton(true);
   };
 
   const handlePause = () => {
     recorderRef.current.pauseRecording();
     setToggleBtn(false);
     setPause(true);
-    setWaitButton(false);
   };
 
   const handleResume = () => {
     recorderRef.current.resumeRecording();
     setToggleBtn(true);
-    setPause(false);
-    setWaitButton(true);
   };
 
   const handleStop = () => {
     recorderRef.current.stopRecording(() => {
       setBlob(recorderRef.current.getBlob());
       refVideo.current.srcObject = null;
-      setNumber(15);
-      setPause(false);
-      setWaitButton(false);
-      setToggleBtn(false);
     });
   };
 
@@ -112,9 +107,8 @@ function PlusPage() {
           audio: false,
         });
         setStream(mediaStream);
-        if (mediaStream) {
-          refVideo.current.srcObject = mediaStream;
-        }
+        refVideo.current.srcObject = mediaStream;
+        console.log('망했다');
       };
       start();
     } else {
@@ -130,9 +124,8 @@ function PlusPage() {
           audio: false,
         });
         setStream(mediaStream);
-        if (mediaStream) {
-          refVideo.current.srcObject = mediaStream;
-        }
+        refVideo.current.srcObject = mediaStream;
+        console.log(refVideo.current.srcObject);
       };
       start();
     }
@@ -152,7 +145,7 @@ function PlusPage() {
       mediaStream = await navigator.mediaDevices.getUserMedia({
         video: {
           frameRate: 30,
-          facingMode: 'user',
+          facingMode: { exact: 'environment' },
         },
         audio: false,
       });
@@ -161,18 +154,13 @@ function PlusPage() {
     start();
     setNumber(15);
     return () => {
-      if (stream) {
-        stream.getTracks().forEach(function (track) {
-          track.stop();
-        });
-      }
+      console.log('화면나갔어12');
     };
   }, []);
 
   return (
     <div className={styles.wrapper}>
       <div className={styles.coverBox}>
-        <button>{number}</button>
         {toggleBtn ? (
           <>
             <button className={styles.recordBtn} onClick={handlePause}>
@@ -185,7 +173,7 @@ function PlusPage() {
             <button className={styles.recordBtn} onClick={pause ? handleResume : handleRecording}>
               start
             </button>
-            {number < 15 ? <button onClick={handleStop}>체크체크</button> : ''}
+            <button onClick={() => setWaitButton(true)}>{number}</button>
             <button onClick={handleDirection}>전환</button>
           </>
         )}
@@ -194,17 +182,18 @@ function PlusPage() {
       <button className={styles.recordBtn} onClick={handleSave}>
         save
       </button> */}
-      {blob ? (
+      {/* {blob ? (
         <video
           src={URL.createObjectURL(blob)}
           controls
           autoPlay
           loop
-          style={{ width: '100%', height: '100%' }}
+          style={{ width: "100%", height: "100%" }}
         />
       ) : (
-        <video controls autoPlay ref={refVideo} style={{ width: '100%', height: '100%' }} />
-      )}
+        <video controls autoPlay ref={refVideo} style={{ width: "100%", height: "100%" }} />
+      )} */}
+      <video controls autoPlay ref={refVideo} style={{ width: '100%', height: '100%' }} />
     </div>
   );
 }
