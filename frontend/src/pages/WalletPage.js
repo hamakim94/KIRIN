@@ -6,7 +6,9 @@ import CA from "../TokenCA.json";
 function WalletPage() {
   const [web3, setWeb3] = useState(""); // web3 연결하는 부분, useEffect를 통해 초반에 생성된다.
   const [address, setAddress] = useState(process.env.REACT_APP_USERID); // 내 주소를 저장하는 부분, 추후에 상태관리 해야할 부분
-  const [privateKey, setprivateKey] = useState(process.env.REACT_APP_USERKEY); // 내 비밀번호, 추후에 상태관리 해야할 부분 or db
+  const [privateKey, setprivateKey] = useState(process.env.REACT_APP_BENIFITID); // 내 비밀번호, 추후에 상태관리 해야할 부분 or db
+  // const [address, setAddress] = useState(process.env.REACT_APP_USERID); // 내 주소를 저장하는 부분, 추후에 상태관리 해야할 부분
+  // const [privateKey, setprivateKey] = useState(process.env.REACT_APP_USERKEY); // 내 비밀번호, 추후에 상태관리 해야할 부분 or db
   const [balance, setBalance] = useState(""); // 잔액
   const [tokenBalance, setTokenBalance] = useState(""); // 토큰 잔액
   const [loading, setLoading] = useState(""); // 로딩창 관련
@@ -29,7 +31,11 @@ function WalletPage() {
     setprivateKey(account.privateKey);
   };
 
-  // 계정의 토큰 잔액 확인하는 함수. eth는 wei단위기때문에 10^18로 나눠서 이더리움 단위로 환산
+  /**
+   * 계정의 토큰 잔액 확인하는 함수.
+   * eth는 wei단위기때문에 10^18로 나눠서 이더리움 단위로 환산
+   * 준비물 : 조회하려는 계정 주소
+   */
   const ethBalance = (event) => {
     event.preventDefault();
     setLoading(true);
@@ -40,8 +46,9 @@ function WalletPage() {
   };
 
   /**
-   * 임의로 설정한(이더리움 많은 계정, geth keystore에 파일이 있는 경우)
-   * 비밀번호를 통해 계정을 unLock한다
+   * Admin계정(대충 이더리움 많음)
+   * Admin Private Key로 트랜잭션을 sign
+   * 준비물 : Admin Address, 받는 사람 address
    * 그다음 sendTransaction(계정을 unlock했기 때문에 sign이 필요 없다)을 통해,
    * 만든 계정에 1 이더리움을 보내는 함수
    */
@@ -75,7 +82,11 @@ function WalletPage() {
     });
   };
 
-  // 계정의 토큰 잔액 확인하는 함수.
+  /**
+   * 계정의 토큰 잔액 확인하는 함수.
+   * tokenCA, tokenABI 필요하다(해당 함수는, 이미 데이터를 가지고있음)
+   */
+  //
   const viewTokenBalance = (event) => {
     event.preventDefault();
     setLoading(true);
@@ -87,19 +98,21 @@ function WalletPage() {
         setTokenBalance(balance);
         setLoading(false);
       });
-    // web3.eth.getBalance(address).then((e) => setBalance(e / Math.pow(10, 18)));
   };
 
-  // 1000 토큰 충전하는 함수, 추후에 form으로 받아서 얼마 충전할지 나타내야함
-  // encodeIBI를 통해, ABI,CA를 활용한 Contract 자체를 transaction의 data에 넣어서 실행이 가능
+  /**
+   * contract를 배포한 admin 계정으로부터 1000 토큰을 받아오는 함수
+   * 1000을 나중에 폼으로 수정해, 얼마 충전할지 정할 수 있음
+   * encodeIBI를 통해, ABI,CA를 활용한 Contract 자체를 transaction의 data에 넣어서 실행이 가능
+   * 준비물 : AdminAddress, Admin AdminPrivateKey, tokenContractCA
+   */
   const getToken = async (event) => {
     event.preventDefault();
     setLoading("기다리세요");
-    // Contract Method를 ABI로 만들기
+
     var test = tokenContract.methods
-      .transferFrom(process.env.REACT_APP_ADMINID, process.env.REACT_APP_USERID, 1000) // 1000개 충전
-      .encodeABI();
-    // 트랜잭션 객체 생성
+      .transferFrom(process.env.REACT_APP_ADMINID, address, 1000) // 1000개 충전
+      .encodeABI(); // Contract Method를 ABI로 만들기
     var tx = {
       data: test,
       from: process.env.REACT_APP_ADMINID, // 관리자 계정에서

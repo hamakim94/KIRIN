@@ -54,8 +54,8 @@ contract ERC20 is Context, IERC20, IERC20Metadata {
      * construction.
      */
     constructor() {
-        _name = "TEST2";
-        _symbol = "TEST2";
+        _name = "MGK";
+        _symbol = "MGK";
         admin = payable(msg.sender);
         // 추가된 코드. 초기 설정!
         _mint(msg.sender, 1000000000);
