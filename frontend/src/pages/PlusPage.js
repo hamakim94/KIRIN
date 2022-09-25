@@ -1,6 +1,6 @@
-import React, { useEffect, useRef, useState } from "react";
-import styles from "./PlusPage.module.css";
-import RecordRTC, { invokeSaveAsDialog } from "recordrtc";
+import React, { useEffect, useRef, useState } from 'react';
+import styles from './PlusPage.module.css';
+import RecordRTC, { invokeSaveAsDialog } from 'recordrtc';
 
 function PlusPage() {
   const [stream, setStream] = useState(null);
@@ -11,7 +11,7 @@ function PlusPage() {
   const recorderRef = useRef(null);
   const [number, setNumber] = useState(null);
   const [waitButton, setWaitButton] = useState(false);
-  const [changeCam, setChangeCam] = useState("user");
+  const [changeCam, setChangeCam] = useState('user');
 
   useInterval(
     () => {
@@ -58,28 +58,36 @@ function PlusPage() {
     }
     setStream(mediaStream);
     recorderRef.current = new RecordRTC(mediaStream, {
-      type: "video",
-      mimeType: "video/webm;codecs=vp9",
+      type: 'video',
+      mimeType: 'video/webm;codecs=vp9',
     });
     recorderRef.current.startRecording();
     setToggleBtn(true);
+    setWaitButton(true);
   };
 
   const handlePause = () => {
     recorderRef.current.pauseRecording();
     setToggleBtn(false);
     setPause(true);
+    setWaitButton(false);
   };
 
   const handleResume = () => {
     recorderRef.current.resumeRecording();
     setToggleBtn(true);
+    setPause(false);
+    setWaitButton(true);
   };
 
   const handleStop = () => {
     recorderRef.current.stopRecording(() => {
       setBlob(recorderRef.current.getBlob());
       refVideo.current.srcObject = null;
+      setNumber(15);
+      setPause(false);
+      setWaitButton(false);
+      setToggleBtn(false);
     });
   };
 
@@ -91,38 +99,40 @@ function PlusPage() {
     stream.getTracks().forEach(function (track) {
       track.stop();
     });
-    if (changeCam === "user") {
-      console.log("유저유저");
-      setChangeCam({ exact: "environment" });
+    if (changeCam === 'user') {
+      console.log('유저유저');
+      setChangeCam({ exact: 'environment' });
       let mediaStream;
       const start = async () => {
         mediaStream = await navigator.mediaDevices.getUserMedia({
           video: {
             frameRate: 30,
-            facingMode: { exact: "environment" },
+            facingMode: { exact: 'environment' },
           },
           audio: false,
         });
         setStream(mediaStream);
-        refVideo.current.srcObject = mediaStream;
-        console.log("망했다");
+        if (mediaStream) {
+          refVideo.current.srcObject = mediaStream;
+        }
       };
       start();
     } else {
-      console.log("후면후면");
-      setChangeCam("user");
+      console.log('후면후면');
+      setChangeCam('user');
       let mediaStream;
       const start = async () => {
         mediaStream = await navigator.mediaDevices.getUserMedia({
           video: {
             frameRate: 30,
-            facingMode: "user",
+            facingMode: 'user',
           },
           audio: false,
         });
         setStream(mediaStream);
-        refVideo.current.srcObject = mediaStream;
-        console.log(refVideo.current.srcObject);
+        if (mediaStream) {
+          refVideo.current.srcObject = mediaStream;
+        }
       };
       start();
     }
@@ -142,7 +152,7 @@ function PlusPage() {
       mediaStream = await navigator.mediaDevices.getUserMedia({
         video: {
           frameRate: 30,
-          facingMode: { exact: "environment" },
+          facingMode: 'user',
         },
         audio: false,
       });
@@ -151,13 +161,18 @@ function PlusPage() {
     start();
     setNumber(15);
     return () => {
-      console.log("화면나갔어12");
+      if (stream) {
+        stream.getTracks().forEach(function (track) {
+          track.stop();
+        });
+      }
     };
   }, []);
 
   return (
     <div className={styles.wrapper}>
       <div className={styles.coverBox}>
+        <button>{number}</button>
         {toggleBtn ? (
           <>
             <button className={styles.recordBtn} onClick={handlePause}>
@@ -170,7 +185,7 @@ function PlusPage() {
             <button className={styles.recordBtn} onClick={pause ? handleResume : handleRecording}>
               start
             </button>
-            <button onClick={() => setWaitButton(true)}>{number}</button>
+            {number < 15 ? <button onClick={handleStop}>체크체크</button> : ''}
             <button onClick={handleDirection}>전환</button>
           </>
         )}
@@ -179,18 +194,17 @@ function PlusPage() {
       <button className={styles.recordBtn} onClick={handleSave}>
         save
       </button> */}
-      {/* {blob ? (
+      {blob ? (
         <video
           src={URL.createObjectURL(blob)}
           controls
           autoPlay
           loop
-          style={{ width: "100%", height: "100%" }}
+          style={{ width: '100%', height: '100%' }}
         />
       ) : (
-        <video controls autoPlay ref={refVideo} style={{ width: "100%", height: "100%" }} />
-      )} */}
-      <video controls autoPlay ref={refVideo} style={{ width: "100%", height: "100%" }} />
+        <video controls autoPlay ref={refVideo} style={{ width: '100%', height: '100%' }} />
+      )}
     </div>
   );
 }
