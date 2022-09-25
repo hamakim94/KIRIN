@@ -4,6 +4,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import LoginTop from '../components/sign/LoginTop';
 import styles from './LoginPage.module.css';
 import UseAxios from '../utils/UseAxios';
+import { useNavigate } from 'react-router-dom';
 
 const theme = createTheme({
   palette: {
@@ -17,21 +18,23 @@ const theme = createTheme({
 });
 
 function LoginPage() {
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
-  const [pwd, setPwd] = useState('');
+  const [password, setPassword] = useState('');
 
   let body = {
     email,
-    password: pwd,
+    password,
   };
 
   const onSubmit = () => {
-    console.log('연결');
+    console.log(body);
     UseAxios.post(`/users/login`, body).then((res) => {
       console.log(res.data);
-      document.location.href = '/';
+      navigate('/');
     });
   };
+
   return (
     <ThemeProvider theme={theme}>
       <LoginTop styles={styles}></LoginTop>
@@ -59,7 +62,7 @@ function LoginPage() {
             size="small"
           />
           <TextField
-            onChange={(e) => setPwd(e.target.value)}
+            onChange={(e) => setPassword(e.target.value)}
             margin="normal"
             required
             fullWidth
@@ -88,7 +91,7 @@ function LoginPage() {
             </Grid>
             <Grid item>
               <Link href="/signup" variant="body2">
-                {'회원가입'}
+                회원가입
               </Link>
             </Grid>
           </Grid>
