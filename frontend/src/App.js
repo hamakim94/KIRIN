@@ -3,7 +3,7 @@ import { isMobile } from "react-device-detect";
 import HomePage from "./pages/HomePage";
 import { Routes, Route } from "react-router-dom";
 import SearchPage from "./pages/SearchPage";
-import FlowPage from "./pages/FlowPage";
+import SavanaPage from "./pages/SavanaPage";
 import DonationPage from "./pages/DonationPage";
 import PlusPage from "./pages/PlusPage";
 import StarPage from "./pages/StarPage";
@@ -34,7 +34,7 @@ function App() {
           <Routes>
             <Route path="/" element={<HomePage></HomePage>}></Route>
             <Route path="/search" element={<SearchPage></SearchPage>}></Route>
-            <Route path="/flow" element={<FlowPage></FlowPage>}></Route>
+            <Route path="/savana" element={<SavanaPage></SavanaPage>}></Route>
             <Route path="/plus" element={<PlusPage></PlusPage>}></Route>
             <Route path="/donation" element={<DonationPage></DonationPage>}></Route>
             <Route path="/star/:starId" element={<StarPage></StarPage>}></Route>
