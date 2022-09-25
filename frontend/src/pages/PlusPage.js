@@ -88,7 +88,7 @@ function PlusPage() {
   };
 
   const handleDirection = () => {
-    refVideo.current.srcObject = null;
+    FE_220925_challenge: 모바일 환경 화면 테스트 진행중
     if (changeCam === "user") {
       console.log("유저유저");
       setChangeCam({ exact: "environment" });
