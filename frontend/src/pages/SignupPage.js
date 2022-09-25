@@ -70,7 +70,8 @@ function SignupPage({ parentCallback, emailCallback, nicknameCallback }) {
     setPassword(e.target.value);
   };
   const passwordValidation = () => {
-    return password.length < 6 && password.length > 1;
+    let space = /[~!@#$%";'^,&*()_+|</>=>`?:{[\}]/;
+    return !space.test(password) && password.length > 1;
   };
   /*비밀번호 확인 */
   const onChangePasswordCheck = (e) => {
@@ -145,7 +146,31 @@ function SignupPage({ parentCallback, emailCallback, nicknameCallback }) {
       swal('개인정보 약관에 동의해주세요');
       setCanSubmit(false);
     } else if (password.length < 8) {
-      swal('비밀번호는 8글자 이상이어야합니다.');
+      swal('비밀번호는 8글자 이상이어야 합니다.');
+      setCanSubmit(false);
+    } else if (
+      !password.includes(
+        '`' ||
+          '~' ||
+          '!' ||
+          '@' ||
+          '#' ||
+          '$' ||
+          '%' ||
+          '^' ||
+          '&' ||
+          '*' ||
+          '|' ||
+          '₩' ||
+          '"' ||
+          ';' ||
+          ':' ||
+          '₩' ||
+          '/' ||
+          '?'
+      )
+    ) {
+      swal('비밀번호는 영문, 숫자, 특수문자를 포함해야 합니다..');
       setCanSubmit(false);
     } else if (password !== passwordCheck) {
       swal('비밀번호 확인이 일치하지 않습니다');
@@ -292,7 +317,11 @@ function SignupPage({ parentCallback, emailCallback, nicknameCallback }) {
                     onChange={onChangePassword}
                     value={password}
                     error={passwordValidation()}
-                    helperText={passwordValidation() ? '최소 6글자 이상 입력하세요' : ''}
+                    helperText={
+                      passwordValidation()
+                        ? '영문, 숫자, 특수문자를 조합해 8글자 이상 입력하세요'
+                        : ''
+                    }
                     name="password"
                     label="비밀번호 입력"
                     type="password"
