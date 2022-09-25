@@ -129,7 +129,7 @@ function PlusPage() {
       return;
     }
     refVideo.current.srcObject = stream;
-  }, [stream, refVideo]);
+  }, [stream, refVideo, checkBtn]);
 
   useEffect(() => {
     let mediaStream;
