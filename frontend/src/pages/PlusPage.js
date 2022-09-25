@@ -102,9 +102,9 @@ function PlusPage() {
           audio: false,
         });
         setStream(mediaStream);
+        refVideo.current.srcObject = mediaStream;
       };
       start();
-      setCheckBtn(!checkBtn);
     } else {
       console.log("방향전환");
       setChangeCam("user");
@@ -118,9 +118,9 @@ function PlusPage() {
           audio: false,
         });
         setStream(mediaStream);
+        refVideo.current.srcObject = mediaStream;
       };
       start();
-      setCheckBtn(!checkBtn);
     }
   };
 
@@ -129,7 +129,7 @@ function PlusPage() {
       return;
     }
     refVideo.current.srcObject = stream;
-  }, [stream, refVideo, checkBtn]);
+  }, [stream, refVideo]);
 
   useEffect(() => {
     let mediaStream;
@@ -186,11 +186,7 @@ function PlusPage() {
       ) : (
         <video controls autoPlay ref={refVideo} style={{ width: "100%", height: "100%" }} />
       )} */}
-      {checkBtn ? (
-        <video controls autoPlay ref={refVideo} style={{ width: "100%", height: "100%" }} />
-      ) : (
-        <video controls autoPlay ref={refVideo} style={{ width: "100%", height: "100%" }} />
-      )}
+      <video controls autoPlay ref={refVideo} style={{ width: "100%", height: "100%" }} />
     </div>
   );
 }
