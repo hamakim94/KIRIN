@@ -89,8 +89,9 @@ function PlusPage() {
   };
 
   const handleDirection = () => {
+    refVideo.current.srcObject = null;
     if (changeCam === "user") {
-      console.log("방향전환");
+      console.log("유저유저");
       setChangeCam({ exact: "environment" });
       let mediaStream;
       const start = async () => {
@@ -103,10 +104,11 @@ function PlusPage() {
         });
         setStream(mediaStream);
         refVideo.current.srcObject = mediaStream;
+        console.log("망했다");
       };
       start();
     } else {
-      console.log("방향전환");
+      console.log("후면후면");
       setChangeCam("user");
       let mediaStream;
       const start = async () => {
@@ -119,6 +121,7 @@ function PlusPage() {
         });
         setStream(mediaStream);
         refVideo.current.srcObject = mediaStream;
+        console.log(refVideo.current.srcObject);
       };
       start();
     }
