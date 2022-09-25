@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,8 +65,8 @@ public class ChallengeController {
     @PostMapping("/comment/{challengeId}")
     @ApiOperation(value = "챌린지 댓글 등록")
     public ResponseEntity<?> challengeCommentWrite(@PathVariable("challengeId") Long challengeId,
-                                                   @AuthenticationPrincipal UserDTO userDTO,
-                                                   ChallengeCommentRequestDTO challengeCommentRequestDTO){
+                                                   @ApiIgnore @AuthenticationPrincipal UserDTO userDTO,
+                                                   @RequestBody ChallengeCommentRequestDTO challengeCommentRequestDTO){
 
         challengeService.writeChallengeComment(userDTO.getId(), challengeId, challengeCommentRequestDTO);
 

@@ -1,14 +1,12 @@
 package com.ssafy.kirin.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -19,9 +17,11 @@ public class Notification {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    User user;
+    @Column(name = "is_read")
+    Boolean isRead;
+
+    @Column(name = "user_id")
+    Long userId;
 
     @Column(name = "event")
     String event;
@@ -31,15 +31,14 @@ public class Notification {
     Challenge challenge;
 
     @ManyToOne
+    @JoinColumn(name = "challenge_comment_id")
+    ChallengeComment challengeComment;
+
+    @ManyToOne
     @JoinColumn(name = "community_id")
     Community community;
 
-   @ManyToOne
-   @JoinColumn(name = "community_comment_id")
-   CommunityComment communityComment;
-
-   @ManyToOne
-   @JoinColumn(name = "challenge_comment_id")
-   ChallengeComment challengeComment;
-
+    @ManyToOne
+    @Column(name = "community_comment_id")
+    CommunityComment communityComment;
 }

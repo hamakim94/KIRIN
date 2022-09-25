@@ -8,5 +8,6 @@ import java.util.List;
 
 @Repository
 public interface ChallengeCommentRepository extends JpaRepository<ChallengeComment, Long> {
-    List<ChallengeComment> findByChallengeId(long challengeId);
+    List<ChallengeComment> findByChallengeId(Long challengeId);
+    List<ChallengeComment> findByParentId(Long parentId);
 }

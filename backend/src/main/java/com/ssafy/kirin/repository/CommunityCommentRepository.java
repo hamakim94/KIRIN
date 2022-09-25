@@ -8,7 +8,8 @@ import java.util.List;
 
 @Repository
 public interface CommunityCommentRepository extends JpaRepository<CommunityComment, Long> {
-    CommunityComment save(CommunityComment communityComment);
-    List<CommunityComment> findByCommunityId(long boardId);
+    List<CommunityComment> findByCommunityId(Long boardId);
+
+    List<CommunityComment> findByParentId(Long parentId);
 
 }
