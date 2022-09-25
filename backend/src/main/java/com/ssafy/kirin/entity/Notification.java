@@ -39,6 +39,6 @@ public class Notification {
     Community community;
 
     @ManyToOne
-    @Column(name = "community_comment_id")
+    @JoinColumn(name = "community_comment_id")
     CommunityComment communityComment;
 }
