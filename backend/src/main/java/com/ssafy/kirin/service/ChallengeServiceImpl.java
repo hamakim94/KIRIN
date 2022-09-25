@@ -2,32 +2,30 @@ package com.ssafy.kirin.service;
 
 import com.ssafy.kirin.dto.UserDTO;
 import com.ssafy.kirin.dto.request.ChallengeRequestDTO;
-import com.ssafy.kirin.entity.CelebChallengeInfo;
-import com.ssafy.kirin.entity.Challenge;
-import com.ssafy.kirin.entity.ChallengeLike;
+import com.ssafy.kirin.dto.request.ChallengeCommentRequestDTO;
+import com.ssafy.kirin.entity.*;
+import com.ssafy.kirin.repository.ChallengeCommentRepository;
 import com.ssafy.kirin.entity.User;
 import com.ssafy.kirin.repository.CelebChallengeInfoRepository;
 import com.ssafy.kirin.repository.ChallengeLikeRepository;
 import com.ssafy.kirin.repository.ChallengeRepository;
 import com.ssafy.kirin.repository.UserRepository;
+import com.ssafy.kirin.util.NotificationEnum;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.RandomAccessFile;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 @Slf4j
 @Service
@@ -35,8 +33,10 @@ import java.util.stream.Collectors;
 public class ChallengeServiceImpl implements ChallengeService {
     private final ChallengeRepository challengeRepository;
     private final ChallengeLikeRepository challengeLikeRepository;
-    private final CelebChallengeInfoRepository celebChallengeInfoRepository;
+    private final ChallengeCommentRepository challengeCommentRepository;
     private final UserRepository userRepository;
+    private final NotificationService notificationService;
+    private final CelebChallengeInfoRepository celebChallengeInfoRepository;
     @Value("${property.app.upload-path}")
     private String challengeDir;
 
@@ -88,6 +88,47 @@ public class ChallengeServiceImpl implements ChallengeService {
     public List<Challenge> listUserLike(long userId) {
         return challengeLikeRepository.findByUserId(userId).stream()
                 .map(ChallengeLike::getChallenge).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ChallengeComment> getChallengeComment(long challengeId) {
+
+        return challengeCommentRepository.findByChallengeId(challengeId);
+    }
+
+    @Override
+    public void writeChallengeComment(long userId, long challengeId, ChallengeCommentRequestDTO dto) {
+            User user = userRepository.getReferenceById(userId);
+            Challenge challenge = challengeRepository.getReferenceById(challengeId);
+            ChallengeComment challengeComment = ChallengeComment.builder()
+                    .challenge(challenge).user(user).isComment(dto.isComment())
+                    .content(dto.content()).reg(LocalDateTime.now())
+                    .build();
+            challengeCommentRepository.save(challengeComment);
+        // 챌린지 게시자에게 알림
+        notificationService.addNotification(Notification.builder().userId(challenge.getUser().getId())
+                .event(String.format(NotificationEnum.CommentAdded.getContent(),challenge.getTitle(), user.getNickname()))
+                .challenge(challenge).challengeComment(challengeComment).build());
+
+        if(dto.parentId()!=null&&dto.parentId()>0){
+            //부모댓글 설정
+            challengeComment.setParentId(dto.parentId());
+            // 챌린지 내 댓글 게시자에게 알림
+            Optional<ChallengeComment> tmp = challengeCommentRepository.findById(dto.parentId());
+            tmp.ifPresent(comment -> notificationService.addNotification(Notification.builder().userId(comment.getUser().getId())
+                    .event(String.format(NotificationEnum.CommentReplied.getContent(), user.getNickname()))
+                    .challengeComment(challengeComment).challenge(challenge).build()));
+            //해당 댓굴의 대댓글 게시자 모두에게 알림
+            List<Long> list = challengeCommentRepository.findByParentId(dto.parentId()).stream()
+                    .map(o-> o.getUser().getId()).collect(Collectors.toSet()).stream().toList();
+
+            for(Long id: list){
+                notificationService.addNotification(Notification.builder()
+                        .event(String.format(NotificationEnum.CommentReplied.getContent(), user.getNickname()))
+                                .challenge(challenge).challengeComment(challengeComment)
+                        .build());
+            }
+        }
     }
     @Transactional
     @Override

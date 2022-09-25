@@ -22,7 +22,7 @@ public class SecurityConfig {
     };
 
     private static final String[] PUBLIC_WEB_URI = {
-            "/swagger-ui/**", "/swagger-resources/**",
+            "/swagger-ui/**", "/swagger-resources/**", "/notify/**",
             "/swagger-ui.html", "/webjars/**", "/swagger/**", "/v3/api-docs"
 //            "/js/**","/css/**","/images/**","/font/**","/html/**"
     };

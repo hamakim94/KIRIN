@@ -6,6 +6,7 @@ import com.ssafy.kirin.dto.request.CommunityRequestDTO;
 import com.ssafy.kirin.dto.response.CommunityResponseDTO;
 import com.ssafy.kirin.entity.*;
 import com.ssafy.kirin.repository.*;
+import com.ssafy.kirin.util.NotificationEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -28,6 +30,7 @@ public class CommunityServiceImpl implements CommunityService {
     private final CommunityLikeRepository communityLikeRepository;
     private final CommunityCommnetLikeRepository communityCommentLikeRepository;
     private final UserRepository userRepository;
+    private final NotificationService notificationService;
     @Value("${property.app.upload-path}")
     private String communityImageDirectory;
 
@@ -97,8 +100,29 @@ public class CommunityServiceImpl implements CommunityService {
                 .communityId(communityId).user(user).parentId(null)
                 .isComment(dto.isComment())
                 .build();
+        // 댓글 게시자에게 알림
+        if(dto.parentId()!=null&&dto.parentId()>0){
+            communityComment.setParentId(dto.parentId());
 
-        if(dto.parentId()>0) communityComment.setParentId(dto.parentId());
+            Community community = communityRepository.getReferenceById(communityId);
+            Notification notification = Notification.builder().community(community)
+                    .communityComment(communityComment).userId(community.getUser().getId())
+                    .event(String.format(NotificationEnum.CommentReplied.getContent(), user.getNickname()))
+                    .build();
+            notificationService.addNotification(notification);
+            //대댓글 게시자에게 알림
+            List<Long> list = communityCommentRepository.findByParentId(dto.parentId()).stream()
+                    .map(o-> o.getUser().getId()).collect(Collectors.toSet()).stream().toList();
+
+            for(Long id: list){
+                notificationService.addNotification(Notification.builder()
+                                .event(String.format(NotificationEnum.CommentReplied.getContent(), user.getNickname()))
+                                .communityComment(communityComment)
+                                .community(community).userId(id)
+                            .build());
+            }
+        }
+
 
         communityCommentRepository.save(communityComment);
     }
