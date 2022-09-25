@@ -129,7 +129,7 @@ function PlusPage() {
   }, []);
   return (
     <div className={styles.wrapper}>
-      <div className={styles.coverBox}>
+      {/* <div className={styles.coverBox}>
         {toggleBtn ? (
           <>
             <button className={styles.recordBtn} onClick={handlePause}>
@@ -146,7 +146,7 @@ function PlusPage() {
             <button onClick={handleDirection}>전환</button>
           </>
         )}
-      </div>
+      </div> */}
       {/*
       <button className={styles.recordBtn} onClick={handleSave}>
         save
@@ -160,7 +160,7 @@ function PlusPage() {
           style={{ width: "100%", height: "100%" }}
         />
       ) : (
-        <video controls autoPlay s ref={refVideo} style={{ width: "100%", height: "100%" }} />
+        <video controls autoPlay ref={refVideo} style={{ width: "100%", height: "100%" }} />
       )}
     </div>
   );
