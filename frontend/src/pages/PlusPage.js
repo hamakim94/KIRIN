@@ -12,6 +12,7 @@ function PlusPage() {
   const [number, setNumber] = useState(null);
   const [waitButton, setWaitButton] = useState(false);
   const [changeCam, setChangeCam] = useState("user");
+  const [checkBtn, setCheckBtn] = useState(true);
 
   useInterval(
     () => {
@@ -103,6 +104,7 @@ function PlusPage() {
         setStream(mediaStream);
       };
       start();
+      setCheckBtn(!checkBtn);
     } else {
       console.log("방향전환");
       setChangeCam("user");
@@ -118,6 +120,7 @@ function PlusPage() {
         setStream(mediaStream);
       };
       start();
+      setCheckBtn(!checkBtn);
     }
   };
 
@@ -172,7 +175,7 @@ function PlusPage() {
       <button className={styles.recordBtn} onClick={handleSave}>
         save
       </button> */}
-      {blob ? (
+      {/* {blob ? (
         <video
           src={URL.createObjectURL(blob)}
           controls
@@ -180,6 +183,11 @@ function PlusPage() {
           loop
           style={{ width: "100%", height: "100%" }}
         />
+      ) : (
+        <video controls autoPlay ref={refVideo} style={{ width: "100%", height: "100%" }} />
+      )} */}
+      {checkBtn ? (
+        <video controls autoPlay ref={refVideo} style={{ width: "100%", height: "100%" }} />
       ) : (
         <video controls autoPlay ref={refVideo} style={{ width: "100%", height: "100%" }} />
       )}
