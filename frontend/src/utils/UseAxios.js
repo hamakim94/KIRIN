@@ -5,7 +5,7 @@ const apiadr = process.env.REACT_APP_FILEURL;
 const cookies = new Cookies();
 
 const UseAxios = axios.create({
-  baseURL: `/api`,
+  baseURL: `${apiadr}/api`,
 });
 
 UseAxios.interceptors.request.use(
