@@ -21,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Sort;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -30,6 +31,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -72,7 +74,7 @@ public class ChallengeServiceImpl implements ChallengeService {
 
     @Override
     public List<Challenge> listAllByRandom() {
-        List<Challenge> challenges = challengeRepository.findAll();
+        List<Challenge> challenges = challengeRepository.findByIsProceeding(true);
         Collections.shuffle(challenges);
         return challenges;
     }
@@ -105,8 +107,8 @@ public class ChallengeServiceImpl implements ChallengeService {
     @Override
     public List<ChallengeCommentDTO> getChallengeComment(long challengeId) {
 
-        return challengeCommentRepository.findByChallengeId(challengeId).stream().map(o-> {
-            ChallengeCommentDTO dto = ChallengeCommentMapStruct.INSTANT.mapToChallengeCommentDTO(o);
+        return challengeCommentRepository.findByChallengeId(challengeId).stream().map(o -> {
+            ChallengeCommentDTO dto = ChallengeCommentMapStruct.INSTANCE.mapToChallengeCommentDTO(o);
             dto.setUser(UserMapStruct.INSTANCE.mapToUserDTO(o.getUser()));
             return dto;
         }).collect(Collectors.toList());
@@ -156,6 +158,28 @@ public class ChallengeServiceImpl implements ChallengeService {
                                 o.getCelebChallengeInfo().getStampImg(),
                                 o.getCelebChallengeInfo().getSound(), null)
                 ).collect(Collectors.toList());
+    }
+
+    @Scheduled(initialDelay = 1000, fixedDelay = 10000)
+    @Transactional
+    public void scheduleChallenge() {
+        // get list of expired stars' challeges
+        // expire stars' challenge and expire following challeges along with notification sent
+        challengeRepository.findByIsOriginalAndIsProceedingAndCelebChallengeInfo_EndDateBefore(true, true, LocalDateTime.now())
+                .forEach(o -> {o.setIsProceeding(false);
+                                //get list of following challenges
+                                challengeRepository.findByChallengeId(o.getId())
+                                        .forEach(c -> {
+                                            //expire following challenge
+                                            c.setIsProceeding(false);
+                                            //send notifiaction
+                                            notificationService.addNotification(Notification.builder()
+                                                    .userId(c.getUser().getId()).challenge(o).event(String.format(NotificationEnum.ChallengeEnd.getContent(), o.getTitle()))
+                                                    .build());
+                    });
+        });
+
+
     }
 
     @Transactional

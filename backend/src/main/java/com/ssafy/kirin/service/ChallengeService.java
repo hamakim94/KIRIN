@@ -26,6 +26,5 @@ public interface ChallengeService {
     List<ChallengeCommentDTO> getChallengeComment(long challengeId);
     void writeChallengeComment(long userId, long challengeId,
                                ChallengeCommentRequestDTO challengeCommentRequestDTO);
-
     List<ChallengeSelectResponseDTO> selectChallenge();
 }
