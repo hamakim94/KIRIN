@@ -96,10 +96,10 @@ public class UserController {
                                         @ApiIgnore @AuthenticationPrincipal UserDTO user){
         System.out.println(1);
         // Redis에 해당 user id로 저장된 refresh token이 있을 경우 삭제
-        if (redisTemplate.opsForValue().get(user.getId()) != null) {
+        if (redisTemplate.opsForValue().get(user.getId().toString()) != null) {
             System.out.println(2);
 
-            redisTemplate.delete(user.getId());
+            redisTemplate.delete(user.getId().toString());
         }
 
         System.out.println(3);
