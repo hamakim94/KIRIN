@@ -5,13 +5,16 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
 public interface ChallengeRepository extends JpaRepository<Challenge, Long> {
-    List<Challenge> findAll();
+    List<Challenge> findByIsProceeding(boolean isProceeding);
     List<Challenge> findByIsOriginalAndIsProceeding(boolean isOriginal, boolean isProceeding);
     List<Challenge> findByIsOriginalAndIsProceeding(boolean isOriginal, boolean isProceeding, Sort sort);
+    List<Challenge> findByIsOriginalAndIsProceedingAndCelebChallengeInfo_EndDateBefore(boolean isOriginal, boolean isProceeding, LocalDateTime endDate);
+    List<Challenge> findByIsOriginalAndIsProceedingAndChallengeId(boolean isOriginal, boolean isProceeding, long challengeId);
     List<Challenge> findByChallengeId(long challengeId);
     List<Challenge> findByUserId(long userId);
 

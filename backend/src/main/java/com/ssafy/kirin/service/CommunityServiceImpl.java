@@ -8,10 +8,7 @@ import com.ssafy.kirin.dto.response.CommunityDTO;
 import com.ssafy.kirin.dto.response.CommunityResponseDTO;
 import com.ssafy.kirin.entity.*;
 import com.ssafy.kirin.repository.*;
-import com.ssafy.kirin.util.CommunityCommentMapStruct;
-import com.ssafy.kirin.util.CommunityMapStruct;
-import com.ssafy.kirin.util.NotificationEnum;
-import com.ssafy.kirin.util.UserMapStruct;
+import com.ssafy.kirin.util.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -81,7 +78,7 @@ public class CommunityServiceImpl implements CommunityService {
 
         return new CommunityResponseDTO(CommunityMapStruct.INSTANCE.mapToCommunityDTO(community),
                                             commentList.stream().map(o->{
-                                                CommunityCommentDTO dto = CommunityCommentMapStruct.INSTANT.mapToCommunityCommentDTO(o);
+                                                CommunityCommentDTO dto = CommunityCommentMapStruct.INSTANCE.mapToCommunityCommentDTO(o);
                                                 dto.setUser(UserMapStruct.INSTANCE.mapToUserDTO(o.getUser()));
                                                 return dto;
                                             }).collect(Collectors.toList()));

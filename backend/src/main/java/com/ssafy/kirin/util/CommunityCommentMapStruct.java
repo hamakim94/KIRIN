@@ -7,6 +7,6 @@ import org.mapstruct.factory.Mappers;
 
 @Mapper
 public interface CommunityCommentMapStruct {
-    CommunityCommentMapStruct INSTANT = Mappers.getMapper(CommunityCommentMapStruct.class);
+    CommunityCommentMapStruct INSTANCE = Mappers.getMapper(CommunityCommentMapStruct.class);
     CommunityCommentDTO mapToCommunityCommentDTO(CommunityComment communityComment);
 }
