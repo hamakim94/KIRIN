@@ -32,7 +32,7 @@ const theme = createTheme({
   },
 });
 
-function EditProfilePage(parentCallback) {
+function EditProfilePage({ parentCallback }) {
   const navigate = useNavigate();
   const [width] = useState(window.innerWidth);
   const [nickname, setNickname] = useState('');
@@ -65,7 +65,7 @@ function EditProfilePage(parentCallback) {
         .then((res) => {
           swal('', '확인되었습니다.');
           setNicknameChecked(true);
-          // if (emailChecked && agreement) setCanSubmit(true);
+          setCanSubmit(true);
         })
         .catch((err) => {
           swal('', '사용 중인 닉네임입니다.');
@@ -109,15 +109,11 @@ function EditProfilePage(parentCallback) {
 
   const onSubmit = () => {
     const check = () => {
-      if (nickname.length < 2) {
-        swal('닉네임을 확인해주세요');
-        setCanSubmit(false);
-      } else if (nicknameChecked === false) {
+      if (nicknameChecked === false) {
         swal('닉네임 중복 확인을 진행해주세요.');
         setCanSubmit(false);
       }
     };
-
     check();
     const data = new FormData();
     data.append('profileImg', file);
@@ -126,16 +122,15 @@ function EditProfilePage(parentCallback) {
     const blob = new Blob([json], { type: 'application/json' });
     data.append('userDTO', blob);
 
-    console.log(data);
+    console.log(blob);
     if (canSubmit) {
       UseAxios.put(`/users/profiles`, data, {
         headers: { 'Content-Type': 'multipart/form-data' },
       })
-
         .then((res) => {
-          console.log(res.data);
           swal('프로필 편집이 완료되었습니다.');
-          navigate('/mypage/setting/editprofile');
+          navigate('');
+          console.log('완료');
         })
         .catch((err) => {
           console.log(err);
