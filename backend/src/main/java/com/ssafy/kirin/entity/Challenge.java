@@ -27,7 +27,7 @@ public class Challenge {
     Boolean isOriginal;
 
     @Column(name = "challenge_id")
-    Long challengeId;
+    Long challengeId; // 본챌린지id
 
     @ManyToOne
     @JoinColumn(name = "user_id")

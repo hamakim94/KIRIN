@@ -40,10 +40,12 @@ public class CelebChallengeInfo {
     @Column(name = "target_num")
     Integer targetNum;
 
-    Integer amount;
+    @Column(name = "target_amount")
+    Integer targetAmount;
 
-    @Column(name = "contract_hash")
-    String contractHash;
+    @OneToOne
+    @JoinColumn(name = "contract_id")
+    ChallengeContract challengeContract;
 
     @ManyToOne
     @JoinColumn(name = "donation_organization_id")
