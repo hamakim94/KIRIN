@@ -33,10 +33,10 @@ function FindPasswordPage() {
       <div>
         <FindPasswordTop styles={styles}></FindPasswordTop>
         <img
-          src="../assets/img/lock.png"
-          alt=""
-          width="100"
-          height="100"
+          src={require('../assets/img/lock.png')}
+          alt=''
+          width='100'
+          height='100'
           style={{ display: 'block', margin: 'auto' }}
         ></img>
 
@@ -48,11 +48,11 @@ function FindPasswordPage() {
             required
             autoFocus
             fullWidth
-            type="email"
-            id="email"
-            name="email"
-            placeholder="이메일"
-            size="small"
+            type='email'
+            id='email'
+            name='email'
+            placeholder='이메일'
+            size='small'
           />
         </Grid>
 
@@ -62,20 +62,20 @@ function FindPasswordPage() {
           <TextField
             required
             fullWidth
-            type="name"
-            id="name"
-            name="name"
-            placeholder="이름"
-            size="small"
+            type='name'
+            id='name'
+            name='name'
+            placeholder='이름'
+            size='small'
           />
         </Grid>
         <Button
-          type="submit"
+          type='submit'
           fullWidth
-          variant="contained"
+          variant='contained'
           sx={{ mt: 3, mb: 5 }}
-          color="primary"
-          size="large"
+          color='primary'
+          size='large'
         >
           다음
         </Button>
