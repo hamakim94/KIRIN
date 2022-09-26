@@ -10,11 +10,43 @@
 .coverBox {
   position: absolute;
   display: flex;
+  flex-direction: column;
   width: 100%;
   height: 100%;
   z-index: 1;
-  align-items: flex-end;
   justify-content: center;
 }
+
 .recordBtn {
+  border-width: 5px;
+  border-style: solid;
+  border-color: black;
+  outline-style: solid;
+  outline-width: 5px;
+  outline-color: white;
+  background-color: red;
+  border-radius: 100%;
+  width: 80px;
+  height: 80px;
+  transition: 1s;
+}
+.recordBtn:active {
+  opacity: 0.6;
+}
+
+.pauseBtn {
+  border-width: 5px;
+  border-style: solid;
+  border-color: black;
+  outline-style: solid;
+  outline-width: 5px;
+  outline-color: white;
+  border-radius: 100%;
+  width: 80px;
+  height: 80px;
+  transition: 1s;
+}
+
+.pauseBtn:active {
+  opacity: 0.6;
 }
