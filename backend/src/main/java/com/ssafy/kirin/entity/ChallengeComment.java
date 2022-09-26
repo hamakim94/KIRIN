@@ -36,5 +36,5 @@ public class ChallengeComment {
     Challenge challenge;
 
     @Formula("(SELECT COUNT(*) FROM challenge_comment_like l WHERE l.challenge_comment_id = id)")
-    int likeCnt;
+    Integer likeCnt;
 }

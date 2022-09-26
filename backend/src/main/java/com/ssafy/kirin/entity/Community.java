@@ -27,10 +27,10 @@ public class Community {
     LocalDateTime reg;
 
     @Formula("(SELECT COUNT(*) FROM community_like l WHERE l.community_id = id)")
-    int likeCnt;
+    Integer likeCnt;
 
     @Formula("(SELECT COUNT(*) FROM community_comment c WHERE c.community_id = id)")
-    int commentCnt;
+    Integer commentCnt;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

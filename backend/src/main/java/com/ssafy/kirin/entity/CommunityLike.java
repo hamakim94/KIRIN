@@ -19,8 +19,8 @@ public class CommunityLike {
     Long id;
 
     @Column(name = "community_id")
-    long communityId;
+    Long communityId;
 
     @Column(name = "user_id")
-    long userId;
+    Long userId;
 }

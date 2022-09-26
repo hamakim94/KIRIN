@@ -43,22 +43,22 @@ public class ChallengeServiceImpl implements ChallengeService {
 
     @Override
     public List<Challenge> listStarsByPopularity() {
-        return challengeRepository.findByIsOriginal(true, Sort.by(Sort.Direction.DESC,"likeCnt"));
+        return challengeRepository.findByIsOriginalAndIsProceeding(true,true, Sort.by(Sort.Direction.DESC,"likeCnt"));
     }
 
     @Override
     public List<Challenge> listStarsByLatest() {
-        return challengeRepository.findByIsOriginal(true, Sort.by(Sort.Direction.DESC,"id"));
+        return challengeRepository.findByIsOriginalAndIsProceeding(true,true, Sort.by(Sort.Direction.DESC,"id"));
     }
 
     @Override
     public List<Challenge> listGeneralByPopularity() {
-        return challengeRepository.findByIsOriginal(false,Sort.by(Sort.Direction.DESC,"likeCnt"));
+        return challengeRepository.findByIsOriginalAndIsProceeding(false,true,Sort.by(Sort.Direction.DESC,"likeCnt"));
     }
 
     @Override
     public List<Challenge> listGeneralByRandom() {
-        List<Challenge> challenges = challengeRepository.findByIsOriginal(false);
+        List<Challenge> challenges = challengeRepository.findByIsOriginalAndIsProceeding(false, true);
         Collections.shuffle(challenges);
         return challenges;
     }
@@ -137,11 +137,12 @@ public class ChallengeServiceImpl implements ChallengeService {
         try {
         User user = userRepository.getReferenceById(userDTO.getId());
         Challenge forChallenge = challengeRepository.getReferenceById(challengeRequestDTO.challengeId());
+        // 원 챌린지 음악과 이미지 저장경로
         String musicPath = forChallenge.getCelebChallengeInfo().getSound();
         String imgPath = forChallenge.getCelebChallengeInfo().getStampImg();
 
         // 비디오 외 정보 저장
-        Challenge challenge = challengeRepository.save(Challenge.builder().user(user).isDummy(false).reg(LocalDateTime.now())
+        Challenge challenge = challengeRepository.save(Challenge.builder().user(user).isProceeding(true).reg(LocalDateTime.now())
                 .title(challengeRequestDTO.title()).isOriginal(challengeRequestDTO.isOriginal()).challengeId(challengeRequestDTO.challengeId())
                 .build());
 
