@@ -77,46 +77,6 @@ function EditProfilePage(parentCallback) {
     }
   };
 
-  let body = {
-    nickname,
-  };
-
-  const onSubmit = () => {
-    const check = () => {
-      if (nickname.length < 2) {
-        swal('닉네임을 확인해주세요');
-        setCanSubmit(false);
-      } else if (nicknameChecked === false) {
-        swal('닉네임 중복 확인을 진행해주세요.');
-        setCanSubmit(false);
-      }
-    };
-
-    check();
-    const data = new FormData();
-    data.append('profileImg', file);
-    // data.append('userDTO', new Blob([JSON.stringify(body)]), { type: 'application/json' });
-    const json = JSON.stringify(body);
-    const blob = new Blob([json], { type: 'application/json' });
-    data.append('userDTO', blob);
-
-    console.log(blob);
-    if (canSubmit) {
-      UseAxios.put(`/users/profiles`, data, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      })
-
-        .then((res) => {
-          console.log(res.data);
-          navigate('/mypage/setting/editprofile');
-          swal('프로필 편집이 완료되었습니다.');
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
-  };
-
   const [profileImg, setProfileImg] = useState(
     'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'
   );
@@ -141,6 +101,46 @@ function EditProfilePage(parentCallback) {
       }
     };
     reader.readAsDataURL(e.target.files[0]);
+  };
+
+  let body = {
+    nickname,
+  };
+
+  const onSubmit = () => {
+    const check = () => {
+      if (nickname.length < 2) {
+        swal('닉네임을 확인해주세요');
+        setCanSubmit(false);
+      } else if (nicknameChecked === false) {
+        swal('닉네임 중복 확인을 진행해주세요.');
+        setCanSubmit(false);
+      }
+    };
+
+    check();
+    const data = new FormData();
+    data.append('profileImg', file);
+    // data.append('userDTO', new Blob([JSON.stringify(body)]), { type: 'application/json' });
+    const json = JSON.stringify(body);
+    const blob = new Blob([json], { type: 'application/json' });
+    data.append('userDTO', blob);
+
+    console.log(data);
+    if (canSubmit) {
+      UseAxios.put(`/users/profiles`, data, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      })
+
+        .then((res) => {
+          console.log(res.data);
+          swal('프로필 편집이 완료되었습니다.');
+          navigate('/mypage/setting/editprofile');
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
   };
 
   return (
