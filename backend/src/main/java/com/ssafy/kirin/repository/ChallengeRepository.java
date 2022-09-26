@@ -12,8 +12,7 @@ public interface ChallengeRepository extends JpaRepository<Challenge, Long> {
     List<Challenge> findAll();
     List<Challenge> findByIsOriginalAndIsProceeding(boolean isOriginal, boolean isProceeding);
     List<Challenge> findByIsOriginalAndIsProceeding(boolean isOriginal, boolean isProceeding, Sort sort);
-    List<Challenge> findByIsOriginal(boolean isOriginal, Sort sort);
     List<Challenge> findByChallengeId(long challengeId);
     List<Challenge> findByUserId(long userId);
-    Challenge save(Challenge challenge);
+
 }

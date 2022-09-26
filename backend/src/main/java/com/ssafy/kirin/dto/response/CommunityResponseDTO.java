@@ -5,5 +5,5 @@ import com.ssafy.kirin.entity.CommunityComment;
 
 import java.util.List;
 
-public record CommunityResponseDTO(CommunityDTO communityDTO, List<CommunityComment> commentList) {
+public record CommunityResponseDTO(CommunityDTO communityDTO, List<CommunityCommentDTO> commentList) {
 }

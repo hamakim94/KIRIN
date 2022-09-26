@@ -3,10 +3,12 @@ package com.ssafy.kirin.service;
 import com.ssafy.kirin.dto.UserDTO;
 import com.ssafy.kirin.dto.request.CommunityCommentRequestDTO;
 import com.ssafy.kirin.dto.request.CommunityRequestDTO;
+import com.ssafy.kirin.dto.response.CommunityCommentDTO;
 import com.ssafy.kirin.dto.response.CommunityDTO;
 import com.ssafy.kirin.dto.response.CommunityResponseDTO;
 import com.ssafy.kirin.entity.*;
 import com.ssafy.kirin.repository.*;
+import com.ssafy.kirin.util.CommunityCommentMapStruct;
 import com.ssafy.kirin.util.CommunityMapStruct;
 import com.ssafy.kirin.util.NotificationEnum;
 import com.ssafy.kirin.util.UserMapStruct;
@@ -78,7 +80,11 @@ public class CommunityServiceImpl implements CommunityService {
         List<CommunityComment> commentList = communityCommentRepository.findByCommunityId(boardId);
 
         return new CommunityResponseDTO(CommunityMapStruct.INSTANCE.mapToCommunityDTO(community),
-                commentList);
+                                            commentList.stream().map(o->{
+                                                CommunityCommentDTO dto = CommunityCommentMapStruct.INSTANT.mapToCommunityCommentDTO(o);
+                                                dto.setUser(UserMapStruct.INSTANCE.mapToUserDTO(o.getUser()));
+                                                return dto;
+                                            }).collect(Collectors.toList()));
     }
 
     @Override

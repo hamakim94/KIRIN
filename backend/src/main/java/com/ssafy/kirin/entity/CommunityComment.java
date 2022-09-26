@@ -35,7 +35,7 @@ public class CommunityComment {
     Integer reCommentCnt;
 
     @Formula("(SELECT COUNT(*) FROM community_comment_like l WHERE l.community_comment_id = id)")
-    Integer commentLikeCnt;
+    Integer likeCnt;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

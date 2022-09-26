@@ -1,7 +1,6 @@
 package com.ssafy.kirin.dto.response;
 
 import lombok.*;
-import org.mapstruct.Mapper;
 
 import java.time.LocalDateTime;
 
@@ -12,14 +11,13 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 @ToString
-public class CommunityCommentDTO {
-
+public class ChallengeCommentDTO {
     Long id;
     String content;
     LocalDateTime reg;
     Boolean isComment;
     Long parentId;
-    Long communityId;
+    Long challengeId;
     Integer reCommentCnt;
     Integer likeCnt;
     UserResponseDTO user;
