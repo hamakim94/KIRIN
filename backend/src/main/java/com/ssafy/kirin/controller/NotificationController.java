@@ -8,7 +8,7 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 @Api(value = "알림 API",tags = {"알림 API"})
 @RestController
-@RequestMapping("/notify")
+@RequestMapping("/api/notify")
 @RequiredArgsConstructor
 public class NotificationController {
 
