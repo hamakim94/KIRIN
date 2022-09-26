@@ -3,9 +3,14 @@ package com.ssafy.kirin.controller;
 import com.ssafy.kirin.dto.UserDTO;
 import com.ssafy.kirin.dto.request.ChallengeCommentRequestDTO;
 import com.ssafy.kirin.dto.request.ChallengeRequestDTO;
+import com.ssafy.kirin.dto.response.ChallengeCommentDTO;
+import com.ssafy.kirin.dto.response.ChallengeDTO;
+import com.ssafy.kirin.dto.response.ChallengeSelectResponseDTO;
 import com.ssafy.kirin.entity.Challenge;
 import com.ssafy.kirin.entity.ChallengeComment;
 import com.ssafy.kirin.service.ChallengeService;
+import com.ssafy.kirin.util.ChallengeMapStruct;
+import com.ssafy.kirin.util.UserMapStruct;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +23,7 @@ import springfox.documentation.annotations.ApiIgnore;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Api(value = "챌린지 API",tags = {"챌린지 API"})
 @RestController
@@ -28,8 +34,8 @@ public class ChallengeController {
 
     @GetMapping("")
     @ApiOperation(value = "챌린지 리스트")
-    public ResponseEntity<List<Challenge>> challengeList(@RequestParam(name = "scope",required = false, defaultValue = "") String scope,@RequestParam(name = "order",required = false, defaultValue = "") String order,
-                                                         @RequestParam(name = "userid", required = false, defaultValue = "0") int userId, @RequestParam(name = "challengeid", required = false,defaultValue = "0") int challengeId){
+    public ResponseEntity<List<ChallengeDTO>> challengeList(@RequestParam(name = "scope",required = false, defaultValue = "") String scope, @RequestParam(name = "order",required = false, defaultValue = "") String order,
+                                                            @RequestParam(name = "userid", required = false, defaultValue = "0") int userId, @RequestParam(name = "challengeid", required = false,defaultValue = "0") int challengeId){
         List<Challenge> list = switch (scope){
             case "stars" -> switch (order){
                 case "popularity" -> challengeService.listStarsByPopularity();
@@ -54,15 +60,25 @@ public class ChallengeController {
             default -> new ArrayList<>();
             };
 
-        return ResponseEntity.ok(list);
+
+
+        return ResponseEntity.ok(list.stream()
+                .map(o->{
+                    ChallengeDTO dto = ChallengeMapStruct.INSTANCE.mapToChallengeDTO(o);
+                    dto.setUser(UserMapStruct.INSTANCE.mapToUserDTO(o.getUser()));
+                    return dto;
+                })
+                .collect(Collectors.toList()));
         }
 
     @GetMapping("/user/{userId}")
     @ApiOperation(value = "내가 좋아요한 챌린지 리스트")
-    public ResponseEntity<List<Challenge>> likeChallengeList(@PathVariable("userId") Long userId){
+    public ResponseEntity<List<ChallengeDTO>> likeChallengeList(@PathVariable("userId") Long userId){
 
         return ResponseEntity.ok(challengeService.listUserLike(userId));
     }
+
+    @GetMapping("/")
 
     @PostMapping("/comment/{challengeId}")
     @ApiOperation(value = "챌린지 댓글 등록")
@@ -77,7 +93,7 @@ public class ChallengeController {
 
     @GetMapping("/comment/{challengeId}")
     @ApiOperation(value = "챌린지 댓글")
-    public ResponseEntity<List<ChallengeComment>> challengeCommentList(@PathVariable("challengeId") Long challengeId){
+    public ResponseEntity<List<ChallengeCommentDTO>> challengeCommentList(@PathVariable("challengeId") Long challengeId){
 
         return ResponseEntity.ok(challengeService.getChallengeComment(challengeId));
     }
@@ -97,5 +113,12 @@ public class ChallengeController {
         }
 
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/select")
+    @ApiOperation(value = "진행 중 챌린지 목록 조회 - 등록용")
+    public ResponseEntity<List<ChallengeSelectResponseDTO>> challengeSelect(){
+
+        return ResponseEntity.ok(challengeService.selectChallenge());
     }
 }

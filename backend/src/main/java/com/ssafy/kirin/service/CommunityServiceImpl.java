@@ -3,10 +3,15 @@ package com.ssafy.kirin.service;
 import com.ssafy.kirin.dto.UserDTO;
 import com.ssafy.kirin.dto.request.CommunityCommentRequestDTO;
 import com.ssafy.kirin.dto.request.CommunityRequestDTO;
+import com.ssafy.kirin.dto.response.CommunityCommentDTO;
+import com.ssafy.kirin.dto.response.CommunityDTO;
 import com.ssafy.kirin.dto.response.CommunityResponseDTO;
 import com.ssafy.kirin.entity.*;
 import com.ssafy.kirin.repository.*;
+import com.ssafy.kirin.util.CommunityCommentMapStruct;
+import com.ssafy.kirin.util.CommunityMapStruct;
 import com.ssafy.kirin.util.NotificationEnum;
+import com.ssafy.kirin.util.UserMapStruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -35,8 +40,13 @@ public class CommunityServiceImpl implements CommunityService {
     private String communityImageDirectory;
 
     @Override
-    public List<Community> getCommunityList(long starId) {
-        return communityRepository.findAllByUserId(starId);
+    public List<CommunityDTO> getCommunityList(long starId) {
+        return communityRepository.findAllByUserId(starId).stream()
+                .map(o-> {
+                    CommunityDTO dto = CommunityMapStruct.INSTANCE.mapToCommunityDTO(o);
+                    dto.setUser(UserMapStruct.INSTANCE.mapToUserDTO(o.getUser()));
+                    return dto;
+                }).collect(Collectors.toList());
     }
 
     @Override
@@ -69,7 +79,12 @@ public class CommunityServiceImpl implements CommunityService {
         Community community = communityRepository.findById(boardId);
         List<CommunityComment> commentList = communityCommentRepository.findByCommunityId(boardId);
 
-        return new CommunityResponseDTO(community, commentList);
+        return new CommunityResponseDTO(CommunityMapStruct.INSTANCE.mapToCommunityDTO(community),
+                                            commentList.stream().map(o->{
+                                                CommunityCommentDTO dto = CommunityCommentMapStruct.INSTANT.mapToCommunityCommentDTO(o);
+                                                dto.setUser(UserMapStruct.INSTANCE.mapToUserDTO(o.getUser()));
+                                                return dto;
+                                            }).collect(Collectors.toList()));
     }
 
     @Override

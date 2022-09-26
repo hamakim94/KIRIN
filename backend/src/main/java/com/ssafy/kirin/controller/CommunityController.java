@@ -3,6 +3,7 @@ package com.ssafy.kirin.controller;
 import com.ssafy.kirin.dto.UserDTO;
 import com.ssafy.kirin.dto.request.CommunityCommentRequestDTO;
 import com.ssafy.kirin.dto.request.CommunityRequestDTO;
+import com.ssafy.kirin.dto.response.CommunityDTO;
 import com.ssafy.kirin.dto.response.CommunityResponseDTO;
 import com.ssafy.kirin.entity.Community;
 import com.ssafy.kirin.service.CommunityService;
@@ -28,7 +29,7 @@ public class CommunityController {
 
     @GetMapping("/stars/{starId}")
     @ApiOperation(value = "커뮤니티 목록 최신순 나열")
-    public ResponseEntity<List<Community>> communityList(@PathVariable(name = "starId") long starId){
+    public ResponseEntity<List<CommunityDTO>> communityList(@PathVariable(name = "starId") long starId){
 
         return ResponseEntity.ok(communityService.getCommunityList(starId));
     }

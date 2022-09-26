@@ -34,16 +34,16 @@ public class Challenge {
     User user;
 
     @Formula("(SELECT COUNT(*) FROM challenge_like l WHERE l.challenge_id = id)")
-    int likeCnt;
+    Integer likeCnt;
 
     @Formula("(SELECT COUNT(*) FROM challenge_comment c WHERE c.challenge_id = id)")
-    int commentCnt;
+    Integer commentCnt;
 
     @Column(name = "view_cnt")
     Integer viewCnt;
 
-    @Column(name = "is_dummy")
-    boolean isDummy;
+    @Column(name = "is_proceeding")
+    Boolean isProceeding;
 
     @OneToOne
     @JoinColumn(name = "celeb_challenge_info_id")
