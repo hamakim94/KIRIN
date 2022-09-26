@@ -35,8 +35,8 @@ public class JwtTokenProvider {
 //    private long accessExpirationInMs = 60 * 3 * 1000L;
 //    private long refreshExpirationInMs = 60 * 10 * 1000L;
 
-    private long accessExpirationInMs = 60 * 30 * 1000L;
-    private long refreshExpirationInMs = 60 * 60 * 24 * 7 * 1000L;
+    private final long accessExpirationInMs = 60 * 3 * 1000L;
+    private final long refreshExpirationInMs = 60 * 60 * 24 * 7 * 1000L;
 
     private final UserServiceImpl userServiceImpl;
     private final RedisTemplate redisTemplate;
