@@ -136,15 +136,19 @@ function BlockchainPage() {
           <col width='50%' />
           <col width='10%' />
         </colgroup>
-
-        <th className={styles.table_header}>BLOCK HEIGHT</th>
-        <th className={styles.table_header}>AGE</th>
-        <th className={styles.table_header}>BLOCK HASH</th>
-        <th className={styles.table_header}>TX</th>
-
-        {blocks.map((block, index) => (
-          <Block block={block} key={index}></Block>
-        ))}
+        <thead>
+          <tr>
+            <th className={styles.table_header}>BLOCK HEIGHT</th>
+            <th className={styles.table_header}>AGE</th>
+            <th className={styles.table_header}>BLOCK HASH</th>
+            <th className={styles.table_header}>TX</th>
+          </tr>
+        </thead>
+        <tbody>
+          {blocks.map((block, index) => (
+            <Block block={block} key={index}></Block>
+          ))}
+        </tbody>
       </table>
       <div
         style={{
