@@ -160,7 +160,7 @@ public class ChallengeServiceImpl implements ChallengeService {
                 ).collect(Collectors.toList());
     }
 
-    @Scheduled(initialDelay = 1000, fixedDelay = 10000)
+    @Scheduled(initialDelay = 1000, fixedRateString = "${challenge.expiration.check-interval}")
     @Transactional
     public void scheduleChallenge() {
         // get list of expired stars' challeges
