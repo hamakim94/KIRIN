@@ -28,6 +28,17 @@ import SignupPage from './pages/SignupPage';
 import FinishSignupPage from './pages/FinishSignupPage';
 import ContractDeploy from './pages/ContractDeploy';
 function App() {
+  const [blob, setBlob] = useState(null);
+  const [userData, setUserData] = useState(null);
+  const cookies = new Cookies();
+  const value = cookies.get('accesstoken');
+  useEffect(() => {
+    if (value) {
+      UseAxios.get(`/users/profiles`).then((res) => {
+        setUserData(res.data);
+      });
+    }
+  }, []);
   return (
     <>
       {isMobile ? (
