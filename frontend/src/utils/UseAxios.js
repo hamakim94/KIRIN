@@ -39,7 +39,7 @@ UseAxios.interceptors.response.use(
       const refreshtoken = cookies.get("refreshtoken");
       // token refresh 요청
       const response = await axios.post(
-        `${apiadr}/api/users/reissue`, // token refresh api
+        `/api/users/reissue`, // token refresh api
         {},
         {
           headers: { ACCESSTOKEN: accesstoken, REFRESHTOKEN: refreshtoken },
@@ -48,6 +48,7 @@ UseAxios.interceptors.response.use(
       if (response.headers.accesstoken) {
         // axios에서 쿠키 설정 부분
         const accDate = new Date();
+        accDate.setMinutes(accDate.getMinutes() + 3); //실제로 30분으로 고쳐야함
         cookies.set("accesstoken", response.headers.accesstoken, {
           path: "/",
           secure: true,
