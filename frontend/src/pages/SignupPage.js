@@ -42,7 +42,8 @@ function SignupPage({ parentCallback }) {
   const [passwordCheck, setPasswordCheck] = useState('');
   const [agreement, setAgreement] = useState(false);
   const [canSubmit, setCanSubmit] = useState(false);
-  const [checked, setChecked] = useState(false);
+  const [emailChecked, setEmailChecked] = useState(false);
+  const [nicknameChecked, setNicknameChecked] = useState(false);
   const [file, setFile] = useState(null);
 
   /* 닉네임 검사 */
@@ -82,8 +83,10 @@ function SignupPage({ parentCallback }) {
   };
   /*약관 확인 */
   const agreementCheck = (e) => {
-    if (e.target.checked) setAgreement(true);
-    else if (!e.target.checked) setAgreement(false);
+    if (e.target.checked) {
+      setAgreement(true);
+      if (nicknameChecked && emailChecked) setCanSubmit(true);
+    } else if (!e.target.checked) setAgreement(false);
   };
 
   //e: React.FormEvent<HTMLFormElement>
@@ -91,29 +94,43 @@ function SignupPage({ parentCallback }) {
     e.preventDefault();
     if (canSubmit) parentCallback(nickname, email, password, name); // 전달
   };
+
   /* 이메일 중복 확인 */
   const emailDup = (e) => {
-    UseAxios.get(`/users/check-duplicate/email`, { params: { email: e.target.value } })
-      .then((res) => {
-        swal('', '확인되었습니다.');
-        setChecked(true);
-      })
-      .catch((err) => {
-        swal('', '사용 중인 이메일입니다.');
-        setChecked(false);
-      });
+    if (email.length > 0) {
+      UseAxios.get(`/users/check-duplicate/email`, { params: { email: e.target.value } })
+        .then((res) => {
+          swal('', '확인되었습니다.');
+          setEmailChecked(true);
+          if (nicknameChecked && agreement) setCanSubmit(true);
+        })
+        .catch((err) => {
+          swal('', '사용 중인 이메일입니다.');
+          setEmailChecked(false);
+        });
+    } else {
+      swal('', '이메일을 입력해 주세요.');
+      setEmailChecked(false);
+    }
   };
+
   /* 닉네임 중복 확인 */
   const nicknameDup = (e) => {
-    UseAxios.get(`/users/check-duplicate/nickname`, { params: { nickname: e.target.value } })
-      .then((res) => {
-        swal('', '확인되었습니다.');
-        setChecked(true);
-      })
-      .catch((err) => {
-        swal('', '사용 중인 닉네임입니다.');
-        setChecked(false);
-      });
+    if (nickname.length > 0) {
+      UseAxios.get(`/users/check-duplicate/nickname`, { params: { nickname: e.target.value } })
+        .then((res) => {
+          swal('', '확인되었습니다.');
+          setNicknameChecked(true);
+          if (emailChecked && agreement) setCanSubmit(true);
+        })
+        .catch((err) => {
+          swal('', '사용 중인 닉네임입니다.');
+          setNicknameChecked(false);
+        });
+    } else {
+      swal('', '닉네임을 입력해 주세요.');
+      setNicknameChecked(false);
+    }
   };
 
   const [profileImg, setProfileImg] = useState(
@@ -152,23 +169,31 @@ function SignupPage({ parentCallback }) {
   };
 
   const onSubmit = () => {
-    if (!email.includes('@')) {
-      swal('이메일을 확인해주세요');
-      setCanSubmit(false);
-    } else if (nickname.length < 2) {
-      swal('닉네임을 확인해주세요');
-      setCanSubmit(false);
-    } else if (agreement === false) {
-      swal('개인정보 약관에 동의해주세요');
-      setCanSubmit(false);
-    } else if (password.length < 8) {
-      swal('비밀번호는 8글자 이상이어야 합니다.');
-      setCanSubmit(false);
-    } else if (password !== passwordCheck) {
-      swal('비밀번호 확인이 일치하지 않습니다');
-      setCanSubmit(false);
-    }
-
+    const check = () => {
+      if (!email.includes('@')) {
+        swal('이메일을 확인해주세요');
+        setCanSubmit(false);
+      } else if (nickname.length < 2) {
+        swal('닉네임을 확인해주세요');
+        setCanSubmit(false);
+      } else if (agreement === false) {
+        swal('개인정보 약관에 동의해주세요');
+        setCanSubmit(false);
+      } else if (password.length < 8) {
+        swal('비밀번호는 8글자 이상이어야 합니다.');
+        setCanSubmit(false);
+      } else if (password !== passwordCheck) {
+        swal('비밀번호 확인이 일치하지 않습니다');
+        setCanSubmit(false);
+      } else if (emailChecked === false) {
+        swal('이메일 중복 확인을 진행해주세요.');
+        setCanSubmit(false);
+      } else if (nicknameChecked === false) {
+        swal('닉네임 중복 확인을 진행해주세요.');
+        setCanSubmit(false);
+      }
+    };
+    check();
     const data = new FormData();
     data.append('profileImg', file);
     // data.append('userDTO', new Blob([JSON.stringify(body)]), { type: 'application/json' });
@@ -177,17 +202,19 @@ function SignupPage({ parentCallback }) {
     data.append('userDTO', blob);
 
     console.log(blob);
-    UseAxios.post(`/users/signup`, data, {
-      headers: { 'Content-Type': 'multipart/form-data' },
-    })
-
-      .then((res) => {
-        console.log(res.data);
-        navigate('/finishsignup');
+    if (canSubmit) {
+      UseAxios.post(`/users/signup`, data, {
+        headers: { 'Content-Type': 'multipart/form-data' },
       })
-      .catch((err) => {
-        console.log(err);
-      });
+
+        .then((res) => {
+          console.log(res.data);
+          navigate('/finishsignup');
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
   };
 
   /*랜더링 */
@@ -242,7 +269,6 @@ function SignupPage({ parentCallback }) {
                     helperText={emailValidation() ? '올바른 이메일형식이 아닙니다' : ''}
                     label="이메일 주소 입력"
                     name="email"
-                    autoComplete="email"
                     autoFocus
                     size="small"
                   />
