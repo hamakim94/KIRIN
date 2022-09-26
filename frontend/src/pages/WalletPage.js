@@ -1,19 +1,18 @@
 import React, { useState, useEffect } from "react";
 import {
   Button,
-  CssBaseline,
   TextField,
-  FormControl,
   Grid,
-  Box,
   Typography,
   Container,
   Backdrop,
   CircularProgress,
 } from "@mui/material/";
+import styles from "./WalletPage.module.css";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import ABI from "../TokenABI.json";
 import CA from "../TokenCA.json";
+import { BiArrowBack } from "react-icons/bi";
 
 // 숫자만 입력해
 const isLetters = (str) => /^[0-9]*$/.test(str);
@@ -37,15 +36,18 @@ function WalletPage() {
   const [loading, setLoading] = useState(""); // 로딩창 관련
   const [tokenContract, setTokenContract] = useState("");
   const [tokens, setTokens] = useState("");
+  const [balance, setBalance] = useState(""); // 잔액
   const [open, setOpen] = React.useState(false);
 
   // 페이지가 실행되면, web3 이용 네트워크 연결)
   useEffect(() => {
     var Web3 = require("web3");
-    var web3 = new Web3(process.env.REACT_APP_TESTURL);
+    var web3 = new Web3(new Web3.providers.HttpProvider(`${process.env.REACT_APP_BASEURL}/bc/`));
+    // var web3 = new Web3(process.env.REACT_APP_TESTURL);
     var contract = new web3.eth.Contract(ABI, CA); // ABI, CA를 통해 contract 객체를 만들어서 보관한다. 나중에 활용함
     setWeb3(web3);
     setTokenContract(contract);
+    ethBalance();
     contract.methods // ABI, CA를 이용해 함수 접근
       .balanceOf(address)
       .call()
@@ -68,15 +70,54 @@ function WalletPage() {
     }
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  /**
+   * 계정의 토큰 잔액 확인하는 함수.
+   * eth는 wei단위기때문에 10^18로 나눠서 이더리움 단위로 환산
+   * 준비물 : 조회하려는 계정 주소
+   */
+  const ethBalance = () => {
+    setLoading(true);
+    web3.eth
+      .getBalance(address)
+      .then((e) => setBalance(e / Math.pow(10, 18)))
+      .then(setLoading(false));
+  };
+
+  const chargeEthBalance = (event) => {
+    handleToggle();
+    event.preventDefault();
+    var tx = {
+      from: process.env.REACT_APP_ADMINID,
+      to: address,
+      value: 10000000000000000000, // 10 ether
+      gas: 2000000,
+      chainId: 97889218,
+    };
+    web3.eth.accounts.signTransaction(tx, process.env.REACT_APP_ADMINKEY, (err, b) => {
+      if (err) {
+        console.log(err);
+      } else {
+        web3.eth
+          .sendSignedTransaction(b.rawTransaction, (err, transactionHash) => {
+            if (!err) {
+              console.log(transactionHash + " success");
+            } else {
+              console.log(err);
+            }
+          })
+          .then(() => {
+            alert("충전 완료");
+            ethBalance();
+            handleClose();
+          });
+      }
+    });
   };
 
   /**
    * 계정의 토큰 잔액 확인하는 함수.
    * tokenCA, tokenABI 필요하다(해당 함수는, 이미 데이터를 가지고있음)
    */
-  //
   const viewTokenBalance = () => {
     tokenContract.methods // ABI, CA를 이용해 함수 접근
       .balanceOf(address)
@@ -85,7 +126,6 @@ function WalletPage() {
         setTokenBalance(balance);
       });
   };
-
   /**
    * contract를 배포한 admin 계정으로부터 1000 토큰을 받아오는 함수
    * 1000을 나중에 폼으로 수정해, 얼마 충전할지 정할 수 있음
@@ -123,6 +163,7 @@ function WalletPage() {
             setLoading("");
             setTokens("");
             viewTokenBalance();
+            alert("충전 완료!");
             handleClose();
           });
       }
@@ -140,41 +181,82 @@ function WalletPage() {
           <CircularProgress color="inherit" />
         </Backdrop>
       </div>
-      <Container component="main" maxWidth="xs">
-        <Grid container spacing={2} mt={3}>
-          <Grid item xs={12}>
-            <Typography sx={{ ml: 0.5, mb: 0.5 }}>지갑 주소</Typography>
-            <Typography sx={{ ml: 0.5, mb: 0.5 }}>{address}</Typography>
-          </Grid>
+      <div className={styles.topBox}>
+        <a href="/mypage">
+          <BiArrowBack className={styles.back}></BiArrowBack>
+        </a>
+        <div className={styles.pageTitle}>내 지갑!</div>
+        <a href=""></a>
+      </div>
+      <div>
+        <Container component="main" maxWidth="lg" m={2} disableGutters={true}>
+          <Grid container alignItems="center" justify="center" spacing={2} p={2}>
+            <Grid item xs={6}>
+              <Typography sx={{ ml: 0.5, mb: 0.5 }}>지갑 주소</Typography>
+            </Grid>
+            <Grid item xs={6}>
+              <Typography sx={{ ml: 0.5, mb: 0.5 }}>{address.substr(0, 15) + "..."}</Typography>
+            </Grid>
 
-          <Grid item xs={12}>
-            <Typography sx={{ ml: 0.5, mt: 1, mb: 0.5 }}>KIRIN 토큰양</Typography>
-            <Typography sx={{ ml: 0.5, mb: 0.5 }}>
-              {tokenBalance ? tokenBalance + " KRT" : ""}
-            </Typography>
+            <Grid item xs={6}>
+              <Typography sx={{ ml: 0.5, mb: 0.5 }}>이더리움 잔고</Typography>
+            </Grid>
+            <Grid item xs={3}>
+              <Typography sx={{ ml: 0.5, mb: 0.5 }}>
+                {balance ? balance + " ETH" : "0 ETH"}
+              </Typography>
+            </Grid>
+            <Grid item xs={3}>
+              <Button
+                type="button"
+                fullWidth
+                variant="contained"
+                color="primary"
+                onClick={chargeEthBalance}
+                size="medium"
+              >
+                충전
+              </Button>
+            </Grid>
+            <Grid item xs={6}>
+              <Typography sx={{ ml: 0.5, mt: 1, mb: 0.5 }}>KIRIN 토큰양</Typography>
+            </Grid>
+            <Grid item xs={6}>
+              <Typography sx={{ ml: 0.5, mb: 0.5 }}>
+                {tokenBalance ? tokenBalance + " KRT" : "0 KRT"}
+              </Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <Typography sx={{ ml: 0.5, mt: 1 }}>KIRIN 토큰 충전하기*</Typography>
+            </Grid>
+            <Grid item xs={9} sm={9}>
+              <TextField
+                variant="outlined"
+                required
+                fullWidth
+                id="tokens"
+                onChange={onChangeTokens}
+                value={tokens}
+                label="숫자만 입력 가능합니다"
+                size="small"
+              />
+            </Grid>
+            <Grid item xs={3} sm={3}>
+              <Button
+                type="button"
+                fullWidth
+                variant="contained"
+                color="primary"
+                onClick={getToken}
+                disabled={!tokens}
+                size="medium"
+              >
+                충전
+              </Button>
+            </Grid>
           </Grid>
-          <Grid item xs={12}>
-            <Typography sx={{ ml: 0.5, mb: 0.5, mt: 1 }}>토큰 충전하기*</Typography>
-          </Grid>
-          <Grid item xs={9} sm={9}>
-            <TextField
-              variant="outlined"
-              required
-              fullWidth
-              id="tokens"
-              onChange={onChangeTokens}
-              value={tokens}
-              label="숫자만 입력 가능합니다"
-              size="small"
-            />
-          </Grid>
-          <Grid item xs={3} sm={3}>
-            <Button type="button" fullWidth variant="contained" color="primary" onClick={getToken}>
-              충전하기
-            </Button>
-          </Grid>
-        </Grid>
-      </Container>
+        </Container>
+      </div>
     </ThemeProvider>
   );
 }
