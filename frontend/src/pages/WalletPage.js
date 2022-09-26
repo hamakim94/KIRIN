@@ -16,7 +16,7 @@ function WalletPage() {
   // 페이지가 실행되면, web3 이용 네트워크 연결)
   useEffect(() => {
     var Web3 = require("web3");
-    var web3 = new Web3(new Web3.providers.HttpProvider(`${process.env.REACT_APP_BASEURL}/bc`));
+    var web3 = new Web3(new Web3.providers.HttpProvider(`${process.env.REACT_APP_BASEURL}/bc/`));
     var contract = new web3.eth.Contract(ABI, CA); // ABI, CA를 통해 contract 객체를 만들어서 보관한다. 나중에 활용함
     setWeb3(web3);
     setTokenContract(contract);
