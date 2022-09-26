@@ -1,6 +1,6 @@
-import React, { useEffect, useRef, useState } from "react";
-import styles from "./PlusPage.module.css";
-import RecordRTC, { invokeSaveAsDialog } from "recordrtc";
+import React, { useEffect, useRef, useState } from 'react';
+import styles from './PlusPage.module.css';
+import RecordRTC, { invokeSaveAsDialog } from 'recordrtc';
 
 function PlusPage() {
   const [stream, setStream] = useState(null);
@@ -11,8 +11,9 @@ function PlusPage() {
   const recorderRef = useRef(null);
   const [number, setNumber] = useState(null);
   const [waitButton, setWaitButton] = useState(false);
-  const [changeCam, setChangeCam] = useState("user");
+  const [changeCam, setChangeCam] = useState('user');
 
+  let dummysound = new Audio('../assets/sound/dummy.mp3');
   useInterval(
     () => {
       if (waitButton) {
@@ -58,10 +59,12 @@ function PlusPage() {
     }
     setStream(mediaStream);
     recorderRef.current = new RecordRTC(mediaStream, {
-      type: "video",
-      mimeType: "video/webm;codecs=vp9",
+      type: 'video',
+      mimeType: 'video/webm;codecs=vp9',
     });
     recorderRef.current.startRecording();
+    dummysound.currentTime = 0;
+    dummysound.play();
     setToggleBtn(true);
   };
 
@@ -91,32 +94,32 @@ function PlusPage() {
     stream.getTracks().forEach(function (track) {
       track.stop();
     });
-    if (changeCam === "user") {
-      console.log("유저유저");
-      setChangeCam({ exact: "environment" });
+    if (changeCam === 'user') {
+      console.log('유저유저');
+      setChangeCam({ exact: 'environment' });
       let mediaStream;
       const start = async () => {
         mediaStream = await navigator.mediaDevices.getUserMedia({
           video: {
             frameRate: 30,
-            facingMode: { exact: "environment" },
+            facingMode: { exact: 'environment' },
           },
           audio: false,
         });
         setStream(mediaStream);
         refVideo.current.srcObject = mediaStream;
-        console.log("망했다");
+        console.log('망했다');
       };
       start();
     } else {
-      console.log("후면후면");
-      setChangeCam("user");
+      console.log('후면후면');
+      setChangeCam('user');
       let mediaStream;
       const start = async () => {
         mediaStream = await navigator.mediaDevices.getUserMedia({
           video: {
             frameRate: 30,
-            facingMode: "user",
+            facingMode: 'user',
           },
           audio: false,
         });
@@ -142,7 +145,7 @@ function PlusPage() {
       mediaStream = await navigator.mediaDevices.getUserMedia({
         video: {
           frameRate: 30,
-          facingMode: { exact: "environment" },
+          facingMode: { exact: 'environment' },
         },
         audio: false,
       });
@@ -151,7 +154,7 @@ function PlusPage() {
     start();
     setNumber(15);
     return () => {
-      console.log("화면나갔어12");
+      console.log('화면나갔어12');
     };
   }, []);
 
@@ -190,7 +193,7 @@ function PlusPage() {
       ) : (
         <video controls autoPlay ref={refVideo} style={{ width: "100%", height: "100%" }} />
       )} */}
-      <video controls autoPlay ref={refVideo} style={{ width: "100%", height: "100%" }} />
+      <video controls autoPlay ref={refVideo} style={{ width: '100%', height: '100%' }} />
     </div>
   );
 }
