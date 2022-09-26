@@ -33,6 +33,8 @@ UseAxios.interceptors.response.use(
       response: { status },
     } = error;
     if (status === 403) {
+      const exDate = new Date();
+      exDate.setDate(exDate.getDate() + 60);
       const originalRequest = config;
       const accesstoken = cookies.get('accesstoken');
       const refreshtoken = cookies.get('refreshtoken');
@@ -50,6 +52,7 @@ UseAxios.interceptors.response.use(
           path: '/',
           secure: true,
           sameSite: 'none',
+          expires: exDate,
         });
         originalRequest.headers['ACCESSTOKEN'] = response.headers.accesstoken;
         return axios(originalRequest);
