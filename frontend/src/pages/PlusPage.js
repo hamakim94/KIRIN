@@ -1,20 +1,23 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import styles from './PlusPage.module.css';
 import RecordRTC, { invokeSaveAsDialog } from 'recordrtc';
 import dummy from '../assets/sound/dummy.mp3';
+import { useNavigate } from 'react-router-dom';
+import Context from '../utils/Context';
 
 function PlusPage() {
   const [stream, setStream] = useState(null);
-  const [blob, setBlob] = useState(null);
+  const { blob, setBlob } = useContext(Context);
   const [toggleBtn, setToggleBtn] = useState(false);
   const [pause, setPause] = useState(false);
-  const refVideo = useRef(null);
-  const recorderRef = useRef(null);
   const [number, setNumber] = useState(null);
   const [waitButton, setWaitButton] = useState(false);
   const [changeCam, setChangeCam] = useState('user');
-  const [mp3, setMp3] = useState(null);
-
+  const [plusState, setPlusState] = useState(null);
+  const refVideo = useRef(null);
+  const recorderRef = useRef(null);
+  const audioRef = useRef(null);
+  const navigate = useNavigate();
   const handleRecording = async () => {
     const mediaStream = await navigator.mediaDevices.getUserMedia({
       video: {
@@ -33,8 +36,7 @@ function PlusPage() {
       mimeType: 'video/webm;codecs=vp9',
     });
     recorderRef.current.startRecording();
-    mp3.currentTime = 0;
-    mp3.play();
+    audioRef.current.play();
     setToggleBtn(true);
     setWaitButton(true);
   };
@@ -43,14 +45,14 @@ function PlusPage() {
     recorderRef.current.pauseRecording();
     setToggleBtn(false);
     setPause(true);
-    mp3.pause();
+    audioRef.current.pause();
     setWaitButton(false);
   };
 
   const handleResume = () => {
     recorderRef.current.resumeRecording();
     setToggleBtn(true);
-    mp3.play();
+    audioRef.current.play();
     setWaitButton(true);
   };
 
@@ -59,9 +61,11 @@ function PlusPage() {
       setBlob(recorderRef.current.getBlob());
       refVideo.current.srcObject = null;
     });
-    mp3.pause();
+    audioRef.current.pause();
+    audioRef.current.currentTime = 0;
     setWaitButton(false);
     setNumber(15);
+    navigate('/preview');
   };
 
   const handleSave = () => {
@@ -105,7 +109,6 @@ function PlusPage() {
         });
         setStream(mediaStream);
         refVideo.current.srcObject = mediaStream;
-        console.log(refVideo.current.srcObject);
       };
       start();
     }
@@ -130,18 +133,19 @@ function PlusPage() {
         audio: false,
       });
       setStream(mediaStream);
+      audioRef.current = new Audio(dummy);
     };
     start();
     setNumber(15);
-    setMp3(new Audio(dummy));
     return () => {
       if (stream) {
         stream.getTracks().forEach(function (track) {
           track.stop();
         });
       }
-      if (mp3) {
-        mp3.pause();
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.currentTime = 0;
       }
     };
   }, []);
@@ -162,6 +166,9 @@ function PlusPage() {
           setNumber(15);
           setWaitButton(false);
           clearInterval(id);
+          if (recorderRef.current && audioRef) {
+            handleStop();
+          }
         };
       }
     }, [delay]);
