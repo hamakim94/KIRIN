@@ -1,22 +1,31 @@
-import React, { useState, useRef } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import swal from 'sweetalert';
 import UseAxios from '../../utils/UseAxios';
+import Context from '../../utils/Context';
+import { useNavigate } from 'react-router-dom';
+import { Cookies } from 'react-cookie';
 
 function SettingMenu(props) {
-  const [willLogout, setWillLogout] = useState([]);
-
+  const navigate = useNavigate();
+  const { setUserData } = useContext(Context);
+  const cookies = new Cookies();
   const logout = () => {
     swal({
       text: '로그아웃 하시겠습니까?',
-      buttons: true,
-      dangerMode: true,
-    }).then((willLogout) => {
-      if (willLogout) {
-        UseAxios.get(`/users/logout`);
-        swal('로그아웃이 완료되었습니다.');
-      } else {
+      dangerMode: true, // ok
+      buttons: true, // cancel
+    }).then((res) => {
+      console.log(res);
+      if (res === true) {
+        UseAxios.get(`/users/logout`).then((res) => {
+          setUserData(null);
+          swal('로그아웃이 완료되었습니다.');
+          cookies.remove('accesstoken', { path: '/' });
+          cookies.remove('refreshtoken', { path: '/' });
+          console.log('로그아웃성공');
+          navigate('/');
+        });
       }
-      console.log('로그아웃');
     });
   };
 
