@@ -171,6 +171,9 @@ function PlusPage() {
   return (
     <div className={styles.wrapper}>
       <div className={styles.coverBox}>
+        <button className={styles.recordBtn} onClick={handleSave}>
+          save
+        </button>
         {toggleBtn ? (
           <>
             <button className={styles.recordBtn} onClick={handlePause}>
@@ -188,10 +191,7 @@ function PlusPage() {
           </>
         )}
       </div>
-      {/*
-      <button className={styles.recordBtn} onClick={handleSave}>
-        save
-      </button> */}
+
       {/* {blob ? (
         <video
           src={URL.createObjectURL(blob)}
