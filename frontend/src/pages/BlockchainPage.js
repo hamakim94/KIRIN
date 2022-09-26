@@ -1,31 +1,31 @@
-import React, { useEffect, useState } from 'react';
-import Web3 from 'web3';
-import { Pagination } from '@mui/material';
+import React, { useEffect, useState } from "react";
+import Web3 from "web3";
+import { Pagination } from "@mui/material";
 
 // timestamp 포맷을 사람이 읽을 수 있는 형태로 변환한다.
 function timeSince(date) {
   var seconds = Math.floor((new Date() - date * 1000) / 1000);
   var interval = Math.floor(seconds / 31536000);
   if (interval > 1) {
-    return interval + ' years ago';
+    return interval + " years ago";
   }
   interval = Math.floor(seconds / 2592000);
   if (interval > 1) {
-    return interval + ' months ago';
+    return interval + " months ago";
   }
   interval = Math.floor(seconds / 86400);
   if (interval > 1) {
-    return interval + ' days ago';
+    return interval + " days ago";
   }
   interval = Math.floor(seconds / 3600);
   if (interval > 1) {
-    return interval + ' hours ago';
+    return interval + " hours ago";
   }
   interval = Math.floor(seconds / 60);
   if (interval > 1) {
-    return interval + ' minutes ago';
+    return interval + " minutes ago";
   }
-  return Math.floor(seconds) + ' seconds ago';
+  return Math.floor(seconds) + " seconds ago";
 }
 
 function BlockchainPage() {
@@ -39,14 +39,15 @@ function BlockchainPage() {
       <div>
         <hr></hr>
         <div>
-          {block.number} {block.timestamp} {block.hash.substr(0, 6) + '...'} {block.txCount}
+          {block.number} {block.timestamp} {block.hash.substr(0, 6) + "..."} {block.txCount}
         </div>
       </div>
     );
   }
 
   useEffect(() => {
-    var web3 = new Web3(new Web3.providers.HttpProvider(`${process.env.REACT_APP_BASEURL}/bc`));
+    // var web3 = new Web3(new Web3.providers.HttpProvider(`${process.env.REACT_APP_BASEURL}/bc/`));
+    var web3 = new Web3(process.env.REACT_APP_TESTURL);
     // 1000 초만 실행
     const interval = setInterval(() => {
       const asyncCall = async () => {
@@ -106,12 +107,12 @@ function BlockchainPage() {
         ))}
       </div>
       <hr></hr>
-      <div style={{ display: 'flex', justifyContent: 'center' }}>
+      <div style={{ display: "flex", justifyContent: "center" }}>
         <Pagination
           count={lastPage}
           defaultPage={1}
           boundaryCount={2}
-          size='medium'
+          size="medium"
           sx={{ mt: 3, mb: 3 }}
           onChange={(e) => handlePage(e)}
           hideNextButton={true}
