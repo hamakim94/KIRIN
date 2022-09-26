@@ -39,7 +39,7 @@ UseAxios.interceptors.response.use(
       const refreshtoken = cookies.get("refreshtoken");
       // token refresh 요청
       const response = await axios.post(
-        `${apiadr}/api/users/reissue`, // token refresh api
+        `/api/users/reissue`, // token refresh api
         {},
         {
           headers: { ACCESSTOKEN: accesstoken, REFRESHTOKEN: refreshtoken },
