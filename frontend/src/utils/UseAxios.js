@@ -48,6 +48,7 @@ UseAxios.interceptors.response.use(
       if (response.headers.accesstoken) {
         // axios에서 쿠키 설정 부분
         const accDate = new Date();
+        accDate.setMinutes(accDate.getMinutes() + 30);
         cookies.set("accesstoken", response.headers.accesstoken, {
           path: "/",
           secure: true,
