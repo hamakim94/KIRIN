@@ -118,7 +118,7 @@ public class UserController {
         if(refreshToken.equals(redisTemplate.opsForValue().get(userId)) && jwtTokenProvider.validateToken(refreshToken)){ // refresh token이 유효하면
             Authentication auth = jwtTokenProvider.getAuthentication(accessToken);
             accessToken = jwtTokenProvider.createAccessToken(auth); // accessToken 재발급
-            response.setHeader("ACCESSTOKEN", accessToken);
+            response.setHeader("accesstoken", accessToken);
             auth = jwtTokenProvider.getAuthentication(accessToken);
             SecurityContextHolder.getContext().setAuthentication(auth); // authentication 재저장
 

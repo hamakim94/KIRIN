@@ -85,7 +85,7 @@ public class ChallengeController {
 
     @PostMapping("")
     @ApiOperation(value = "챌린지 등록")
-    public ResponseEntity<?> challengeUpload(@AuthenticationPrincipal UserDTO userDTO,
+    public ResponseEntity<?> challengeUpload(@ApiIgnore @AuthenticationPrincipal UserDTO userDTO,
                                              @RequestPart MultipartFile video,
                                              @RequestPart ChallengeRequestDTO challengeRequestDTO){
 
