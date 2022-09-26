@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import styles from "./PlusPage.module.css";
 import RecordRTC, { invokeSaveAsDialog } from "recordrtc";
+import dummy from "../assets/sound/dummy.mp3";
 
 function PlusPage() {
   const [stream, setStream] = useState(null);
@@ -12,7 +13,7 @@ function PlusPage() {
   const [number, setNumber] = useState(null);
   const [waitButton, setWaitButton] = useState(false);
   const [changeCam, setChangeCam] = useState("user");
-
+  const [mp3, setMp3] = useState(null);
   useInterval(
     () => {
       if (waitButton) {
@@ -62,6 +63,8 @@ function PlusPage() {
       mimeType: "video/webm;codecs=vp9",
     });
     recorderRef.current.startRecording();
+    mp3.currentTime = 0;
+    mp3.play();
     setToggleBtn(true);
   };
 
@@ -69,11 +72,13 @@ function PlusPage() {
     recorderRef.current.pauseRecording();
     setToggleBtn(false);
     setPause(true);
+    mp3.pause();
   };
 
   const handleResume = () => {
     recorderRef.current.resumeRecording();
     setToggleBtn(true);
+    mp3.play();
   };
 
   const handleStop = () => {
@@ -81,6 +86,7 @@ function PlusPage() {
       setBlob(recorderRef.current.getBlob());
       refVideo.current.srcObject = null;
     });
+    mp3.pause();
   };
 
   const handleSave = () => {
@@ -88,9 +94,11 @@ function PlusPage() {
   };
 
   const handleDirection = () => {
-    stream.getTracks().forEach(function (track) {
-      track.stop();
-    });
+    if (stream) {
+      stream.getTracks().forEach(function (track) {
+        track.stop();
+      });
+    }
     if (changeCam === "user") {
       console.log("유저유저");
       setChangeCam({ exact: "environment" });
@@ -142,7 +150,7 @@ function PlusPage() {
       mediaStream = await navigator.mediaDevices.getUserMedia({
         video: {
           frameRate: 30,
-          facingMode: { exact: "environment" },
+          facingMode: "user",
         },
         audio: false,
       });
@@ -150,8 +158,13 @@ function PlusPage() {
     };
     start();
     setNumber(15);
+    setMp3(new Audio(dummy));
     return () => {
-      console.log("화면나갔어12");
+      if (stream) {
+        stream.getTracks().forEach(function (track) {
+          track.stop();
+        });
+      }
     };
   }, []);
 
