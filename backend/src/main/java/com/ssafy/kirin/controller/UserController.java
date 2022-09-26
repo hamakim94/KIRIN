@@ -94,25 +94,17 @@ public class UserController {
     @ApiOperation(value = "사용자 로그아웃")
     public ResponseEntity<?> userLogout(HttpServletRequest request,
                                         @ApiIgnore @AuthenticationPrincipal UserDTO user){
-        System.out.println(1);
         // Redis에 해당 user id로 저장된 refresh token이 있을 경우 삭제
         if (redisTemplate.opsForValue().get(user.getId().toString()) != null) {
-            System.out.println(2);
 
             redisTemplate.delete(user.getId().toString());
         }
 
-        System.out.println(3);
-
         String accessToken = jwtTokenProvider.getTokenFromRequest(request, "ACCESSTOKEN");
-
-        System.out.println(4);
 
         // 해당 access token의 유효시간 가지고 와서 logout된 access token 저장
         Long expiration = jwtTokenProvider.getExpiration(accessToken);
         redisTemplate.opsForValue().set(accessToken, "logout", expiration, TimeUnit.MILLISECONDS);
-
-        System.out.println(5);
 
         return ResponseEntity.ok().build();
     }
