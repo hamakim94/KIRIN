@@ -13,7 +13,6 @@ function PlusPage() {
   const [number, setNumber] = useState(null);
   const [waitButton, setWaitButton] = useState(false);
   const [changeCam, setChangeCam] = useState('user');
-  const [plusState, setPlusState] = useState(null);
   const refVideo = useRef(null);
   const recorderRef = useRef(null);
   const audioRef = useRef(null);
@@ -217,7 +216,6 @@ function PlusPage() {
               >
                 <button className={styles.pauseBtn} onClick={handlePause}></button>
               </div>
-
               <button onClick={handleStop}>보내기</button>
             </>
           ) : (
@@ -253,16 +251,7 @@ function PlusPage() {
           ''
         )}
       </div>
-      {blob ? (
-        <video
-          src={URL.createObjectURL(blob)}
-          autoPlay
-          loop
-          style={{ width: '100%', height: '100%' }}
-        />
-      ) : (
-        <video autoPlay ref={refVideo} style={{ width: '100%', height: '100%' }} />
-      )}
+      <video autoPlay ref={refVideo} style={{ width: '100%', height: '100%' }} />
     </div>
   );
 }
