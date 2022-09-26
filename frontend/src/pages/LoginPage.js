@@ -30,17 +30,20 @@ function LoginPage() {
   };
 
   const onSubmit = () => {
-    console.log(body);
     UseAxios.post(`/users/login`, body).then((res) => {
+      const exDate = new Date();
+      exDate.setDate(exDate.getDate() + 60);
       cookies.set('accesstoken', res.headers.accesstoken, {
         path: '/',
         secure: true,
         sameSite: 'none',
+        expires: exDate,
       });
       cookies.set('refreshtoken', res.headers.refreshtoken, {
         path: '/',
         secure: true,
         sameSite: 'none',
+        expires: exDate,
       });
       navigate('/');
     });
