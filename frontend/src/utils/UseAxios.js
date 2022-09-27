@@ -58,7 +58,9 @@ UseAxios.interceptors.response.use(
         return axios(originalRequest);
       } else {
         // 전체 삭제 되는지 확인해야할 부분
-        cookies.remove();
+        console.log('둘다완료');
+        cookies.remove('accesstoken', { path: '/' });
+        cookies.remove('refreshtoken', { path: '/' });
       }
     }
     return Promise.reject(error);

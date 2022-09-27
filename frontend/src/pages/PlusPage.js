@@ -4,6 +4,20 @@ import RecordRTC, { invokeSaveAsDialog } from 'recordrtc';
 import dummy from '../assets/sound/dummy.mp3';
 import { useNavigate } from 'react-router-dom';
 import Context from '../utils/Context';
+import { MdOutlineFlipCameraAndroid, MdOutlineQueueMusic } from 'react-icons/md';
+
+function ProgressBar(props) {
+  const [value, setValue] = useState(0);
+  useEffect(() => {
+    const newValue = props.width * props.percent;
+    setValue(newValue);
+  }, [props.width, props.percent]);
+  return (
+    <div className={props.styles.progressDiv} style={{ width: props.width }}>
+      <div style={{ width: `${value}px` }} className={props.styles.progress} />
+    </div>
+  );
+}
 
 function PlusPage() {
   const [stream, setStream] = useState(null);
@@ -18,26 +32,54 @@ function PlusPage() {
   const audioRef = useRef(null);
   const navigate = useNavigate();
   const handleRecording = async () => {
-    const mediaStream = await navigator.mediaDevices.getUserMedia({
-      video: {
-        frameRate: 30,
-        facingMode: changeCam,
-      },
-      audio: false,
-    });
+    if (number === 0) {
+      setNumber((prev) => (prev = 15));
+      const mediaStream = await navigator.mediaDevices.getUserMedia({
+        video: {
+          frameRate: 30,
+          facingMode: changeCam,
+        },
+        audio: false,
+      });
 
-    if (blob) {
-      setBlob(null);
+      if (blob) {
+        setBlob(null);
+      }
+      setStream(mediaStream);
+      recorderRef.current = new RecordRTC(mediaStream, {
+        type: 'video',
+        mimeType: 'video/webm;codecs=vp9',
+      });
+      recorderRef.current.startRecording();
+      audioRef.current.currentTime = 50;
+      audioRef.current.volume = 0.2;
+      audioRef.current.play();
+      setToggleBtn(true);
+      setWaitButton(true);
+    } else {
+      const mediaStream = await navigator.mediaDevices.getUserMedia({
+        video: {
+          frameRate: 30,
+          facingMode: changeCam,
+        },
+        audio: false,
+      });
+
+      if (blob) {
+        setBlob(null);
+      }
+      setStream(mediaStream);
+      recorderRef.current = new RecordRTC(mediaStream, {
+        type: 'video',
+        mimeType: 'video/webm;codecs=vp9',
+      });
+      recorderRef.current.startRecording();
+      audioRef.current.currentTime = 50;
+      audioRef.current.volume = 0.2;
+      audioRef.current.play();
+      setToggleBtn(true);
+      setWaitButton(true);
     }
-    setStream(mediaStream);
-    recorderRef.current = new RecordRTC(mediaStream, {
-      type: 'video',
-      mimeType: 'video/webm;codecs=vp9',
-    });
-    recorderRef.current.startRecording();
-    audioRef.current.play();
-    setToggleBtn(true);
-    setWaitButton(true);
   };
 
   const handlePause = () => {
@@ -58,10 +100,9 @@ function PlusPage() {
   const handleStop = () => {
     recorderRef.current.stopRecording(() => {
       setBlob(recorderRef.current.getBlob());
-      refVideo.current.srcObject = null;
     });
     audioRef.current.pause();
-    audioRef.current.currentTime = 0;
+    audioRef.current.currentTime = 55;
     setWaitButton(false);
     setNumber(15);
     navigate('/preview');
@@ -144,7 +185,7 @@ function PlusPage() {
       }
       if (audioRef.current) {
         audioRef.current.pause();
-        audioRef.current.currentTime = 0;
+        audioRef.current.currentTime = 55;
       }
     };
   }, []);
@@ -162,12 +203,18 @@ function PlusPage() {
       if (delay !== null) {
         let id = setInterval(tick, delay);
         return () => {
-          setNumber(15);
           setWaitButton(false);
           clearInterval(id);
           if (recorderRef.current && audioRef) {
-            handleStop();
-          }
+            recorderRef.current.stopRecording(() => {
+              setBlob(recorderRef.current.getBlob());
+            });
+            audioRef.current.pause();
+            audioRef.current.currentTime = 55;
+            setToggleBtn(false);
+            setPause(false);
+            setNumber(0);
+          } else setNumber(15);
         };
       }
     }, [delay]);
@@ -186,69 +233,176 @@ function PlusPage() {
       <div className={styles.coverBox}>
         <div style={{ flex: 1, flexDirection: 'row' }}>
           <div style={{ flex: 1 }}>
-            <div style={{ backgroundColor: 'white' }}>프로그레스바</div>
+            <ProgressBar
+              styles={styles}
+              width={window.innerWidth}
+              percent={(15 - number) / 15}
+            ></ProgressBar>
           </div>
-          <div style={{ flex: 1 }}>
-            <div style={{ backgroundColor: 'white' }}>챌린지 선택</div>
+          <div
+            style={{
+              display: 'flex',
+              flex: 1,
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              marginTop: 5,
+            }}
+          >
+            <div style={{ flex: 1, color: '#FFFFFF' }}>
+              <span style={{ marginLeft: 10 }} onClick={() => navigate('/')}>
+                X
+              </span>
+            </div>
+            <div
+              style={{
+                display: 'flex',
+                flex: 1,
+                flexDirection: 'column',
+                justifyContent: 'center',
+                textAlign: 'center',
+                color: '#FFFFFF',
+              }}
+            >
+              <span style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <MdOutlineQueueMusic style={{ marginRight: 2 }} size={25}></MdOutlineQueueMusic>
+                <span>챌린지 선택</span>
+              </span>
+            </div>
+            <div
+              style={{
+                display: 'flex',
+                flex: 1,
+                justifyContent: 'flex-end',
+              }}
+            >
+              {pause ? (
+                ''
+              ) : (
+                <MdOutlineFlipCameraAndroid
+                  style={{
+                    marginRight: 15,
+                    border: 0,
+                    outline: 0,
+                  }}
+                  color={'#FFFFFF'}
+                  size={23}
+                  onClick={handleDirection}
+                >
+                  전환
+                </MdOutlineFlipCameraAndroid>
+              )}
+            </div>
           </div>
         </div>
-        <div style={{ flex: 9, flexDirection: 'row' }}></div>
-        {!blob ? (
-          toggleBtn ? (
-            <>
+        <div style={{ flex: 9, flexDirection: 'row', alignItems: 'center' }}></div>
+        {toggleBtn ? (
+          <>
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                flex: 2,
+                justifyContent: 'center',
+              }}
+            >
               <div
                 style={{
                   display: 'flex',
+                  flex: 1,
                   justifyContent: 'center',
-                  color: 'white',
-                  marginBottom: 10,
+                  alignItems: 'center',
+                  flexDirection: 'column',
                 }}
               >
-                {number}
+                <div
+                  style={{
+                    justifyContent: 'center',
+                    color: 'white',
+                    height: 30,
+                  }}
+                >
+                  {number}
+                </div>
+                <div style={{ display: 'flex', flex: 1 }}>
+                  <button className={styles.pauseBtn} onClick={handlePause}></button>
+                </div>
               </div>
-              <div
-                style={{
-                  display: 'flex',
-                  flexDirection: 'row',
-                  flex: 2,
-                  justifyContent: 'center',
-                }}
-              >
-                <button className={styles.pauseBtn} onClick={handlePause}></button>
-              </div>
-              <button onClick={handleStop}>보내기</button>
-            </>
-          ) : (
-            <>
-              <div
-                style={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  color: 'white',
-                  marginBottom: 10,
-                }}
-              >
-                {number}
-              </div>
-              <div
-                style={{
-                  display: 'flex',
-                  flexDirection: 'row',
-                  flex: 2,
-                  justifyContent: 'center',
-                }}
-              >
-                <button
-                  className={styles.recordBtn}
-                  onClick={pause ? handleResume : handleRecording}
-                ></button>
-              </div>
-              {number < 15 ? <button onClick={handleStop}>보내기</button> : null}
-              <button onClick={handleDirection}>전환</button>
-            </>
-          )
+            </div>
+            <div
+              style={{
+                display: 'flex',
+                flex: 1,
+              }}
+            ></div>
+          </>
         ) : (
-          ''
+          <>
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                flex: 2,
+                justifyContent: 'center',
+              }}
+            >
+              <div
+                style={{
+                  display: 'flex',
+                  flex: 1,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  color: 'white',
+                  paddingTop: 20,
+                }}
+              >
+                다시찍기
+              </div>
+              <div
+                style={{
+                  display: 'flex',
+                  flex: 1,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  flexDirection: 'column',
+                }}
+              >
+                <div
+                  style={{
+                    justifyContent: 'center',
+                    color: 'white',
+                    height: 30,
+                  }}
+                >
+                  {number}
+                </div>
+                <div style={{ display: 'flex', flex: 1 }}>
+                  <button
+                    className={styles.recordBtn}
+                    onClick={pause ? handleResume : handleRecording}
+                  ></button>
+                </div>
+              </div>
+              <div
+                style={{
+                  display: 'flex',
+                  flex: 1,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  paddingTop: 20,
+                  color: 'white',
+                }}
+              >
+                {blob || number < 15 ? <span onClick={handleStop}>보내기</span> : ''}
+              </div>
+            </div>
+            <div
+              style={{
+                display: 'flex',
+                flex: 1,
+              }}
+            ></div>
+          </>
         )}
       </div>
       <video autoPlay ref={refVideo} style={{ width: '100%', height: '100%' }} />
