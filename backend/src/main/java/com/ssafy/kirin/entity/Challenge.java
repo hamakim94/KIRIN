@@ -44,8 +44,4 @@ public class Challenge {
 
     @Column(name = "is_proceeding")
     Boolean isProceeding;
-
-    @OneToOne
-    @JoinColumn(name = "celeb_challenge_info_id")
-    CelebChallengeInfo celebChallengeInfo;
 }

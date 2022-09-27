@@ -23,7 +23,8 @@ public class CelebChallengeInfo {
     @JoinColumn(name = "challenge_id")
     Challenge challenge;
 
-    String sound;
+    String music;
+    String musicTitle;
     Integer length;
 
     @Column(name = "stamp_img")

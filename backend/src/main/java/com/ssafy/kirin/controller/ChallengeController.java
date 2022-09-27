@@ -3,6 +3,7 @@ package com.ssafy.kirin.controller;
 import com.ssafy.kirin.dto.UserDTO;
 import com.ssafy.kirin.dto.request.ChallengeCommentRequestDTO;
 import com.ssafy.kirin.dto.request.ChallengeRequestDTO;
+import com.ssafy.kirin.dto.request.StarChallengeRequestDTO;
 import com.ssafy.kirin.dto.response.ChallengeCommentDTO;
 import com.ssafy.kirin.dto.response.ChallengeDTO;
 import com.ssafy.kirin.dto.response.ChallengeSelectResponseDTO;
@@ -105,7 +106,6 @@ public class ChallengeController {
                                              @RequestPart MultipartFile video,
                                              @RequestPart ChallengeRequestDTO challengeRequestDTO){
 
-        System.out.println("I'M IN CHALLENGE CONTROLLER");
         try {
             challengeService.createChallenge(userDTO, challengeRequestDTO, video);
         } catch (IOException e) {
@@ -113,6 +113,20 @@ public class ChallengeController {
         }
 
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/star")
+    @ApiOperation(value = "스타 챌린지 등록")
+    public ResponseEntity<?> starChallengeUpload(@ApiIgnore @AuthenticationPrincipal UserDTO userDTO,
+                                                 @RequestPart MultipartFile video,
+                                                 @RequestPart MultipartFile stamp,
+                                                 @RequestPart StarChallengeRequestDTO starChallengeRequestDTO){
+
+
+        challengeService.createStarChallenge(userDTO, starChallengeRequestDTO, video, stamp);
+
+        return ResponseEntity.ok().build();
+
     }
 
     @GetMapping("/select")
