@@ -101,7 +101,7 @@ contract FundRaising {
      */
     modifier onlyInProgress() {
         require(
-            (block.timestamp > fundRaisingCloses) &&
+            (block.timestamp >= fundRaisingOpens) &&
                 (block.timestamp < fundRaisingCloses),
             "only Fund in progress"
         );

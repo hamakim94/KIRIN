@@ -30,7 +30,7 @@ const theme = createTheme({
 
 function WalletPage() {
   const [web3, setWeb3] = useState(""); // web3 연결하는 부분, useEffect를 통해 초반에 생성된다.
-  const [address] = useState(process.env.REACT_APP_USERID); // 내 주소를 저장하는 부분, 추후에 상태관리 해야할 부분
+  const [address] = useState(process.env.REACT_APP_BENIFITID); // 내 주소를 저장하는 부분, 추후에 상태관리 해야할 부분
   // const [privateKey, setprivateKey] = useState(process.env.REACT_APP_USERKEY); // 내 비밀번호, 추후에 상태관리 해야할 부분 or db
   const [tokenBalance, setTokenBalance] = useState(""); // 토큰 잔액
   const [tokenContract, setTokenContract] = useState("");
