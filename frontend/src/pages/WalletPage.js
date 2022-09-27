@@ -1,18 +1,43 @@
 import React, { useState, useEffect } from 'react';
-
+import {
+  Button,
+  TextField,
+  Grid,
+  Typography,
+  Container,
+  Backdrop,
+  CircularProgress,
+} from '@mui/material/';
+import styles from './WalletPage.module.css';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import ABI from '../TokenABI.json';
 import CA from '../TokenCA.json';
+import { BiArrowBack } from 'react-icons/bi';
+
+// 숫자만 입력해
+const isLetters = (str) => /^[0-9]*$/.test(str);
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#FFC947',
+    },
+    secondary: {
+      main: '#11cb5f',
+    },
+  },
+});
 
 function WalletPage() {
   const [web3, setWeb3] = useState(''); // web3 연결하는 부분, useEffect를 통해 초반에 생성된다.
-  const [address, setAddress] = useState(process.env.REACT_APP_USERID); // 내 주소를 저장하는 부분, 추후에 상태관리 해야할 부분
-  const [privateKey, setprivateKey] = useState(process.env.REACT_APP_BENIFITID); // 내 비밀번호, 추후에 상태관리 해야할 부분 or db
-  // const [address, setAddress] = useState(process.env.REACT_APP_USERID); // 내 주소를 저장하는 부분, 추후에 상태관리 해야할 부분
+  const [address] = useState(process.env.REACT_APP_USERID); // 내 주소를 저장하는 부분, 추후에 상태관리 해야할 부분
   // const [privateKey, setprivateKey] = useState(process.env.REACT_APP_USERKEY); // 내 비밀번호, 추후에 상태관리 해야할 부분 or db
-  const [balance, setBalance] = useState(''); // 잔액
   const [tokenBalance, setTokenBalance] = useState(''); // 토큰 잔액
-  const [loading, setLoading] = useState(''); // 로딩창 관련
   const [tokenContract, setTokenContract] = useState('');
+  const [tokens, setTokens] = useState('');
+  const [balance, setBalance] = useState(''); // 잔액
+  const [open, setOpen] = React.useState(false);
+
   // 페이지가 실행되면, web3 이용 네트워크 연결)
   useEffect(() => {
     var Web3 = require('web3');
@@ -21,7 +46,7 @@ function WalletPage() {
     var contract = new web3.eth.Contract(ABI, CA); // ABI, CA를 통해 contract 객체를 만들어서 보관한다. 나중에 활용함
     setWeb3(web3);
     setTokenContract(contract);
-    ethBalance();
+    web3.eth.getBalance(address).then((e) => setBalance(e / Math.pow(10, 18)));
     contract.methods // ABI, CA를 이용해 함수 접근
       .balanceOf(address)
       .call()
@@ -50,15 +75,15 @@ function WalletPage() {
    * 준비물 : 조회하려는 계정 주소
    */
   const ethBalance = () => {
-    setLoading(true);
+    handleToggle();
     web3.eth
       .getBalance(address)
       .then((e) => setBalance(e / Math.pow(10, 18)))
-      .then(setLoading(false));
+      .then(() => handleClose());
   };
 
   const chargeEthBalance = (event) => {
-    setLoading('Loading');
+    handleToggle();
     event.preventDefault();
     var tx = {
       from: process.env.REACT_APP_ADMINID,
@@ -80,8 +105,9 @@ function WalletPage() {
             }
           })
           .then(() => {
-            setLoading('');
-            alert('잔액 다시 보기 클릭하세용');
+            alert('충전 완료');
+            ethBalance();
+            handleClose();
           });
       }
     });
@@ -105,10 +131,8 @@ function WalletPage() {
    * encodeIBI를 통해, ABI,CA를 활용한 Contract 자체를 transaction의 data에 넣어서 실행이 가능
    * 준비물 : AdminAddress, Admin AdminPrivateKey, tokenContractCA
    */
-  const getToken = async (event) => {
-    event.preventDefault();
-    setLoading('기다리세요');
-
+  const getToken = async () => {
+    handleToggle();
     var test = tokenContract.methods
       .transferFrom(process.env.REACT_APP_ADMINID, address, Number(tokens)) // num개 충전
       .encodeABI(); // Contract Method를 ABI로 만들기
@@ -134,8 +158,10 @@ function WalletPage() {
             }
           })
           .then(() => {
-            setLoading('');
-            alert('잔액 다시 보기 클릭하세용');
+            setTokens('');
+            viewTokenBalance();
+            alert('충전 완료!');
+            handleClose();
           });
       }
     });
@@ -145,35 +171,28 @@ function WalletPage() {
     <ThemeProvider theme={theme}>
       <div>
         <Backdrop
-          sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
           open={open}
           onClick={handleClose}
         >
-          <CircularProgress color="inherit" />
+          <CircularProgress color='inherit' />
         </Backdrop>
       </div>
-      <hr></hr>
-      <button onClick={ethBalance}>이더리움 잔액 보기</button>
-      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <div>잔액 : {balance}</div>
-        <form onSubmit={chargeEthBalance}>
-          {/* address : <input type="text"></input> */}
-          <button type='submit'>10 이더 충전하기</button>
-        </form>
-      </div>
-      <hr></hr>
-      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <button onClick={viewTokenBalance}>토큰잔액 보기</button>
-        <button onClick={getToken}>1000 토큰 받기</button>
+      <div className={styles.topBox}>
+        <a href='/mypage'>
+          <BiArrowBack className={styles.back}></BiArrowBack>
+        </a>
+        <div className={styles.pageTitle}>내 지갑!</div>
+        <a href=''></a>
       </div>
       <div>
-        <Container component="main" maxWidth="lg" m={2} disableGutters={true}>
-          <Grid container alignItems="center" justify="center" spacing={2} p={2}>
+        <Container component='main' maxWidth='lg' m={2} disableGutters={true}>
+          <Grid container alignItems='center' justify='center' spacing={2} p={2}>
             <Grid item xs={6}>
               <Typography sx={{ ml: 0.5, mb: 0.5 }}>지갑 주소</Typography>
             </Grid>
             <Grid item xs={6}>
-              <Typography sx={{ ml: 0.5, mb: 0.5 }}>{address.substr(0, 15) + "..."}</Typography>
+              <Typography sx={{ ml: 0.5, mb: 0.5 }}>{address.substr(0, 15) + '...'}</Typography>
             </Grid>
 
             <Grid item xs={6}>
@@ -181,17 +200,17 @@ function WalletPage() {
             </Grid>
             <Grid item xs={3}>
               <Typography sx={{ ml: 0.5, mb: 0.5 }}>
-                {balance ? balance + " ETH" : "0 ETH"}
+                {balance ? balance + ' ETH' : '0 ETH'}
               </Typography>
             </Grid>
             <Grid item xs={3}>
               <Button
-                type="button"
+                type='button'
                 fullWidth
-                variant="contained"
-                color="primary"
+                variant='contained'
+                color='primary'
                 onClick={chargeEthBalance}
-                size="medium"
+                size='medium'
               >
                 충전
               </Button>
@@ -201,7 +220,7 @@ function WalletPage() {
             </Grid>
             <Grid item xs={6}>
               <Typography sx={{ ml: 0.5, mb: 0.5 }}>
-                {tokenBalance ? tokenBalance + " KRT" : "0 KRT"}
+                {tokenBalance ? tokenBalance + ' KRT' : '0 KRT'}
               </Typography>
             </Grid>
             <Grid item xs={12}>
@@ -209,25 +228,25 @@ function WalletPage() {
             </Grid>
             <Grid item xs={9} sm={9}>
               <TextField
-                variant="outlined"
+                variant='outlined'
                 required
                 fullWidth
-                id="tokens"
+                id='tokens'
                 onChange={onChangeTokens}
                 value={tokens}
-                label="숫자만 입력 가능합니다"
-                size="small"
+                label='숫자만 입력 가능합니다'
+                size='small'
               />
             </Grid>
             <Grid item xs={3} sm={3}>
               <Button
-                type="button"
+                type='button'
                 fullWidth
-                variant="contained"
-                color="primary"
+                variant='contained'
+                color='primary'
                 onClick={getToken}
                 disabled={!tokens}
-                size="medium"
+                size='medium'
               >
                 충전
               </Button>
