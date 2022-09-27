@@ -1,0 +1,115 @@
+.topBox {
+  display: flex;
+  flex-direction: row;
+  margin-top: 20px;
+  margin-bottom: 40px;
+  justify-content: space-between;
+}
+
+.back {
+  height: 25px;
+  width: 25px;
+  color: black;
+}
+.pageTitle {
+  font-size: 20px;
+  font-weight: bold;
+  justify-content: center;
+}
+
+.setting {
+  height: 25px;
+  width: 25px;
+  color: white;
+}
+
+.profileBox {
+  display: flex;
+  flex-direction: row;
+}
+
+.imgName {
+  margin-left: 20px;
+}
+
+.starImg {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 100%;
+  justify-items: center;
+}
+
+.starName {
+  text-align: center;
+  margin-top: 5px;
+}
+
+.starInfo {
+  margin-left: 40px;
+}
+
+.tabMenu {
+  margin-top: 50px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+ul {
+  list-style: none;
+  font-size: medium;
+  justify-content: center;
+}
+
+hr {
+  margin-top: 10px;
+}
+
+.styles.active {
+  color: aqua;
+}
+
+.infoTop {
+  margin-top: 50px;
+  margin-left: 40px;
+  margin-right: 40px;
+}
+.infoSet {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.donationInfo {
+  margin-bottom: 20px;
+}
+.nowImg {
+  width: 55px;
+  height: 55px;
+  object-fit: cover;
+  border-radius: 100%;
+  justify-items: center;
+}
+
+.nowTop {
+  margin-top: 30px;
+  margin-left: 30px;
+  margin-right: 30px;
+}
+.nowList {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.medalBox {
+  display: flex;
+  flex-direction: row;
+}
+.number {
+  align-self: center;
+}
+.nameTocken {
+  margin-left: 10px;
+  align-self: center;
+}
