@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import Subscribe from './Subscribe.json';
 import UseAxios from '../../utils/UseAxios';
 
 function MyStar(props) {
@@ -9,7 +8,7 @@ function MyStar(props) {
     UseAxios.get(`/users/subscribes`).then((res) => {
       setSubs(res.data);
     });
-  });
+  }, []);
 
   return (
     <div>

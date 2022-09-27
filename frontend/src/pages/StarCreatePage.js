@@ -33,13 +33,10 @@ function StarCreatePage() {
   };
   const handleSubmit = (e) => {
     e.preventDefault();
-    const titleData = title.trim();
-    const infoData = info.trim();
-    const musicTitleData = musicTitle.trim();
     let body = {
-      title: titleData,
-      info: infoData,
-      musicTitle: musicTitleData,
+      title: title.trim(),
+      info: info.trim(),
+      musicTitle: musicTitle.trim(),
       startDate,
       endDate,
       targetNum,

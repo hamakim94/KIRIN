@@ -60,10 +60,12 @@ UseAxios.interceptors.response.use(
         }
       }
     } catch (err) {
-      cookies.remove('accesstoken', { path: '/' });
-      cookies.remove('refreshtoken', { path: '/' });
-      alert('세션이 만료되었습니다. 다시 로그인 해주세요.');
-      window.location.href = '/';
+      if (err.state === 400) {
+        cookies.remove('accesstoken', { path: '/' });
+        cookies.remove('refreshtoken', { path: '/' });
+        alert('세션이 만료되었습니다. 다시 로그인 해주세요.');
+        window.location.href = '/';
+      }
     }
     return Promise.reject(error);
   }
