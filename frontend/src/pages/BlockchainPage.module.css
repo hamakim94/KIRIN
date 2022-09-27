@@ -1,8 +1,19 @@
+/* 기본 모양 */
 .hash {
   max-width: 120px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+/* 540px 이상 */
+@media (min-width: 540px) {
+  .hash {
+    max-width: 500px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 }
 
 .table_header {

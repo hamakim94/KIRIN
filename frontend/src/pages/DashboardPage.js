@@ -12,8 +12,8 @@ function DashboardPage() {
 
   useEffect(() => {
     const asyncCall = async () => {
-      var web3 = new Web3(new Web3.providers.HttpProvider(`${process.env.REACT_APP_BASEURL}/bc/`));
-      // var web3 = new Web3(process.env.REACT_APP_TESTURL);
+      // var web3 = new Web3(new Web3.providers.HttpProvider(`${process.env.REACT_APP_BASEURL}/bc/`));
+      var web3 = new Web3(process.env.REACT_APP_TESTURL);
       setWeb3(web3);
       const chainId = await web3.eth.getChainId();
       setChainId(chainId);
