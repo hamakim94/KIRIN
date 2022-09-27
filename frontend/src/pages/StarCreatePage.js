@@ -49,7 +49,7 @@ function StarCreatePage() {
     data.append('starChallengeRequestDTO', new Blob([JSON.stringify(body)]), {
       type: 'application/json',
     });
-    UseAxios.post(`/star`, data, {
+    UseAxios.post(`/challenges/star`, data, {
       headers: { 'Content-Type': 'multipart/form-data' },
     })
       .then((res) => {
