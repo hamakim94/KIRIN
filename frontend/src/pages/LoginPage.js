@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Avatar, Button, TextField, Box, Grid, Link, Typography, Container } from '@mui/material/';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import LoginTop from '../components/sign/LoginTop';
@@ -6,6 +6,7 @@ import styles from './LoginPage.module.css';
 import UseAxios from '../utils/UseAxios';
 import { useNavigate } from 'react-router-dom';
 import { Cookies } from 'react-cookie';
+import Context from '../utils/Context';
 
 const theme = createTheme({
   palette: {
@@ -23,32 +24,32 @@ function LoginPage() {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
+  const { setUserData } = useContext(Context);
   let body = {
     email,
     password,
   };
 
   const onSubmit = () => {
-    console.log(body);
     UseAxios.post(`/users/login`, body).then((res) => {
-      const accDate = new Date();
-      const refDate = new Date();
-      accDate.setMinutes(accDate.getMinutes() + 30);
-      refDate.setDate(refDate.getDate() + 7);
+      const exDate = new Date();
+      exDate.setDate(exDate.getDate() + 60);
       cookies.set('accesstoken', res.headers.accesstoken, {
         path: '/',
         secure: true,
         sameSite: 'none',
-        expires: accDate,
+        expires: exDate,
       });
       cookies.set('refreshtoken', res.headers.refreshtoken, {
         path: '/',
         secure: true,
         sameSite: 'none',
-        expires: refDate,
+        expires: exDate,
       });
-      navigate('/');
+      UseAxios.get(`/users/profiles`).then((res) => {
+        setUserData(res.data);
+        navigate('/');
+      });
     });
   };
 

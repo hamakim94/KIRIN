@@ -1,0 +1,55 @@
+.hash {
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.table_header {
+  height: 40px;
+  vertical-align: middle;
+  font-size: 14px;
+  background-color: #fde9ae;
+  border-radius: 8px;
+}
+
+.row {
+  /* height: 40px; */
+  text-align: center;
+  font-size: smaller;
+}
+
+.pagination {
+  display: 'flex';
+  justify-content: 'center';
+}
+
+.topBox {
+  display: flex;
+  flex-direction: row;
+  margin-top: 20px;
+  margin-bottom: 30px;
+  justify-content: space-between;
+}
+
+.back {
+  height: 25px;
+  width: 25px;
+  color: black;
+}
+
+.pageTitle {
+  font-size: 20px;
+  font-weight: bold;
+  justify-content: center;
+}
+
+.setting {
+  height: 25px;
+  width: 25px;
+  color: white;
+}
+
+td {
+  border-bottom: 1px solid #f1f1f1;
+}
