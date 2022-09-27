@@ -5,7 +5,10 @@
   width: 100vw;
   height: 100vh;
   height: var(--vh, 1vh) * 100;
-  padding-bottom: 55px;
+}
+
+.wrapper {
+  padding: 15px 0 55px 0;
 }
 
 .Pc {

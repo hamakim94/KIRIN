@@ -119,6 +119,7 @@ function App() {
             <Context.Provider value={{ blob, setBlob, userData, setUserData }}>
               <Routes>
                 <Route path='/' element={<LoginPage></LoginPage>}></Route>
+                <Route path='/login' element={<LoginPage></LoginPage>}></Route>
                 <Route path='/finishsignup' element={<FinishSignupPage></FinishSignupPage>}></Route>
                 <Route path='/findpassword' element={<FindPasswordPage></FindPasswordPage>}></Route>
                 <Route path='/signup' element={<SignupPage></SignupPage>}></Route>
