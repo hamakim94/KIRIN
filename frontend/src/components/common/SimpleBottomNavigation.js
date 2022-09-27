@@ -1,22 +1,23 @@
-import React, { useEffect, useState } from "react";
-import Box from "@mui/material/Box";
-import { Link } from "react-router-dom";
-import BottomNavigation from "@mui/material/BottomNavigation";
-import BottomNavigationAction from "@mui/material/BottomNavigationAction";
+import React, { useEffect, useState } from 'react';
+import Box from '@mui/material/Box';
+import { Link, useLocation } from 'react-router-dom';
+import BottomNavigation from '@mui/material/BottomNavigation';
+import BottomNavigationAction from '@mui/material/BottomNavigationAction';
 
 function SimpleBottomNavigation() {
   const [value, setValue] = useState(0);
-  const [location, setLocation] = useState(null);
+  const [path, setPath] = useState(null);
+  const location = useLocation();
   useEffect(() => {
-    setLocation(window.location.pathname);
-  }, [window.location.pathname]);
-  if (location && location === "/plus") {
+    setPath(location.pathname);
+  }, [location]);
+  if (path && (path === '/plus' || path === '/preview')) {
     return null;
-  } else if (location) {
+  } else if (path) {
     return (
       <Box
         sx={{
-          position: "fixed",
+          position: 'fixed',
           bottom: 0,
           left: 0,
           right: 0,
@@ -30,16 +31,16 @@ function SimpleBottomNavigation() {
             setValue(newValue);
           }}
           sx={{
-            "& .Mui-selected, .Mui-selected > svg": {
-              color: "#FFC947",
+            '& .Mui-selected, .Mui-selected > svg': {
+              color: '#FFC947',
             },
           }}
         >
-          <BottomNavigationAction label="홈" LinkComponent={Link} to="/" />
-          <BottomNavigationAction label="사바나" LinkComponent={Link} to="/savana" />
-          <BottomNavigationAction label="플러스" LinkComponent={Link} to="/plus" />
-          <BottomNavigationAction label="기부" LinkComponent={Link} to="/donation" />
-          <BottomNavigationAction label="마이" LinkComponent={Link} to="/mypage" />
+          <BottomNavigationAction label='홈' LinkComponent={Link} to='/' />
+          <BottomNavigationAction label='사바나' LinkComponent={Link} to='/savana' />
+          <BottomNavigationAction label='플러스' LinkComponent={Link} to='/plus' />
+          <BottomNavigationAction label='기부' LinkComponent={Link} to='/donation' />
+          <BottomNavigationAction label='마이' LinkComponent={Link} to='/mypage' />
         </BottomNavigation>
       </Box>
     );

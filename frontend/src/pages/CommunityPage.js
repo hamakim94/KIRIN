@@ -1,10 +1,10 @@
-import React from "react";
-import CommunityComment from "../components/community/CommunityComment";
-import CommunityContent from "../components/community/CommunityContent";
-import CommunityHeader from "../components/community/CommunityHeader";
-import CommunityWriter from "../components/community/CommunityWriter";
-import CoummnityFooter from "../components/community/CoummnityFooter";
-import styles from "./CommunityPage.module.css";
+import React from 'react';
+import CommunityComment from '../components/community/CommunityComment';
+import CommunityContent from '../components/community/CommunityContent';
+import CommunityHeader from '../components/community/CommunityHeader';
+import CommunityWriter from '../components/community/CommunityWriter';
+import CoummnityFooter from '../components/community/CoummnityFooter';
+import styles from './CommunityPage.module.css';
 function CommunityPage() {
   return (
     <div className={styles.wrapper}>

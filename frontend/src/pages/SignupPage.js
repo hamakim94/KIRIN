@@ -166,7 +166,6 @@ function SignupPage({ parentCallback }) {
     nickname,
     name,
     isCeleb: false,
-    walletId: Math.floor(Math.random() * 10000000),
   };
 
   const onSubmit = () => {
@@ -247,7 +246,7 @@ function SignupPage({ parentCallback }) {
             <input
               type='file'
               style={{ display: 'none' }}
-              accept='image/jpg,impge/png,image/jpeg'
+              accept='image/*'
               name='profile_img'
               onChange={onChange}
               ref={fileInput}
