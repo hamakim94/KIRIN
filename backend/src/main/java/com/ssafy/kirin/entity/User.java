@@ -35,8 +35,9 @@ public class User {
 
     String password;
 
-    @Column(name = "wallet_id")
-    Long walletId;
+    @OneToOne
+    @JoinColumn(name = "wallet_id")
+    Wallet wallet;
 
 //    @Column(name = "account_type")
 //    Integer accountType;
