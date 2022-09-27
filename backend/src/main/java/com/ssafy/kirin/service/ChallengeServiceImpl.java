@@ -234,13 +234,19 @@ public class ChallengeServiceImpl implements ChallengeService {
             String musicDir = challengeDir+UUID.randomUUID()+".mp3";
             String commandExtractMusic = String.format("ffmpeg -i %s -q:a 0 -map a %s",videoDir,musicDir);
             Process p = Runtime.getRuntime().exec(commandExtractMusic);
-
             p.waitFor();
+
             p = Runtime.getRuntime().exec(String.format("ffprobe -i %s -show_entries format=duration -v quiet -of csv=\"p=0\"",musicDir));
+            p.waitFor();
             Integer musicLength = Integer.valueOf(String.valueOf(new InputStreamReader(p.getInputStream())));
 
+            String thumbDir = challengeDir+UUID.randomUUID()+".gif";
+            String commandExtractThumbnail = String.format("ffmpeg -t 2 -i %s  -vf \"fps=10,scale=320:-1:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse\" -loop 0 %s", videoDir,thumbDir);
+            p = Runtime.getRuntime().exec(commandExtractThumbnail);
+            p.waitFor();
+
             Challenge challenge = Challenge.builder().user(user).video(videoDir)
-                    .isProceeding(true).reg(LocalDateTime.now()).isOriginal(true)
+                    .isProceeding(true).reg(LocalDateTime.now()).isOriginal(true).thumbnail(thumbDir)
                     .title(starChallengeRequestDTO.title()).build();
 
             challengeRepository.save(challenge);
