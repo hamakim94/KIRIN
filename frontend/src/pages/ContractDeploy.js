@@ -14,7 +14,8 @@ function ContractDeploy() {
 
   useEffect(() => {
     const Web3 = require("web3");
-    const web3 = new Web3(new Web3.providers.HttpProvider(process.env.REACT_APP_TESTURL));
+    var web3 = new Web3(new Web3.providers.HttpProvider(`${process.env.REACT_APP_BASEURL}/bc/`));
+    // const web3 = new Web3(new Web3.providers.HttpProvider(process.env.REACT_APP_TESTURL));
     setWeb3(web3);
     setAbi(require("../FundRaisingABI.json"));
     setTokenCa(require("../TokenCA.json"));

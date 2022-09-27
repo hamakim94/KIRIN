@@ -30,7 +30,7 @@ const theme = createTheme({
 
 function WalletPage() {
   const [web3, setWeb3] = useState(""); // web3 연결하는 부분, useEffect를 통해 초반에 생성된다.
-  const [address] = useState(process.env.REACT_APP_BENIFITID); // 내 주소를 저장하는 부분, 추후에 상태관리 해야할 부분
+  const [address] = useState(process.env.REACT_APP_USERID); // 내 주소를 저장하는 부분, 추후에 상태관리 해야할 부분
   // const [privateKey, setprivateKey] = useState(process.env.REACT_APP_USERKEY); // 내 비밀번호, 추후에 상태관리 해야할 부분 or db
   const [tokenBalance, setTokenBalance] = useState(""); // 토큰 잔액
   const [tokenContract, setTokenContract] = useState("");
@@ -41,19 +41,21 @@ function WalletPage() {
   // 페이지가 실행되면, web3 이용 네트워크 연결)
   useEffect(() => {
     var Web3 = require("web3");
-    // var web3 = new Web3(new Web3.providers.HttpProvider(`${process.env.REACT_APP_BASEURL}/bc/`));
-    var web3 = new Web3(process.env.REACT_APP_TESTURL);
+    var web3 = new Web3(new Web3.providers.HttpProvider(`${process.env.REACT_APP_BASEURL}/bc/`));
+    // var web3 = new Web3(process.env.REACT_APP_TESTURL);
     var contract = new web3.eth.Contract(ABI, CA); // ABI, CA를 통해 contract 객체를 만들어서 보관한다. 나중에 활용함
     setWeb3(web3);
     setTokenContract(contract);
-    web3.eth.getBalance(address).then((e) => setBalance(e / Math.pow(10, 18)));
+    web3.eth
+      .getBalance(address)
+      .then((e) => setBalance(Math.round((e / Math.pow(10, 18)) * 10000) / 10000));
     contract.methods // ABI, CA를 이용해 함수 접근
       .balanceOf(address)
       .call()
       .then((balance) => {
         setTokenBalance(balance);
       });
-  }, []);
+  }, [address]);
   // 로딩 관련
   const handleClose = () => {
     setOpen(false);
@@ -183,7 +185,7 @@ function WalletPage() {
           <BiArrowBack className={styles.back}></BiArrowBack>
         </a>
         <div className={styles.pageTitle}>내 지갑!</div>
-        <a href=""></a>
+        {"\u00A0"}
       </div>
       <div>
         <Container component="main" maxWidth="lg" m={2} disableGutters={true}>
