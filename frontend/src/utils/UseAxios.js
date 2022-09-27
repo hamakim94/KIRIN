@@ -28,11 +28,11 @@ UseAxios.interceptors.response.use(
     return response;
   },
   async (error) => {
+    const {
+      config,
+      response: { status },
+    } = error;
     try {
-      const {
-        config,
-        response: { status },
-      } = error;
       if (status === 403) {
         const exDate = new Date();
         exDate.setDate(exDate.getDate() + 60);
@@ -59,8 +59,8 @@ UseAxios.interceptors.response.use(
           return axios(originalRequest);
         }
       }
-    } catch (err) {
-      if (err.state === 400) {
+    } catch {
+      if (status === 400) {
         cookies.remove('accesstoken', { path: '/' });
         cookies.remove('refreshtoken', { path: '/' });
         alert('세션이 만료되었습니다. 다시 로그인 해주세요.');

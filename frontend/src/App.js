@@ -33,10 +33,12 @@ import Context from './utils/Context';
 import UseAxios from './utils/UseAxios';
 import { Cookies } from 'react-cookie';
 import StarCreatePage from './pages/StarCreatePage';
+import SelectPage from './pages/SelectPage';
 
 function App() {
   const [blob, setBlob] = useState(null);
   const [userData, setUserData] = useState(null);
+  const [selected, setSelected] = useState(null);
   const cookies = new Cookies();
   const value = cookies.get('accesstoken');
   useEffect(() => {
@@ -51,13 +53,16 @@ function App() {
       {isMobile ? (
         value ? (
           <div className='App'>
-            <Context.Provider value={{ blob, setBlob, userData, setUserData }}>
+            <Context.Provider
+              value={{ blob, setBlob, userData, setUserData, selected, setSelected }}
+            >
               <Routes>
                 <Route path='/' element={<HomePage></HomePage>}></Route>
                 <Route path='/search' element={<SearchPage></SearchPage>}></Route>
                 <Route path='/savana' element={<SavanaPage></SavanaPage>}></Route>
                 <Route path='/donation' element={<DonationPage></DonationPage>}></Route>
                 <Route path='/plus' element={<PlusPage></PlusPage>}></Route>
+                <Route path='/select' element={<SelectPage></SelectPage>}></Route>
                 <Route path='/preview' element={<PreviewPage></PreviewPage>}></Route>
                 <Route path='/star/:starId' element={<StarPage></StarPage>}></Route>
                 <Route
