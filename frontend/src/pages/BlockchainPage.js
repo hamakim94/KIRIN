@@ -126,7 +126,7 @@ function BlockchainPage() {
         <div className={styles.pageTitle}>블록 정보</div>
         <div style={{ width: 25 }}></div>
       </div>
-      <table>
+      <table className={styles.table}>
         <colgroup>
           <col width='18%' />
           <col width='22%' />
