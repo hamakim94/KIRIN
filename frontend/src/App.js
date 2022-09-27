@@ -34,6 +34,7 @@ import UseAxios from './utils/UseAxios';
 import { Cookies } from 'react-cookie';
 import StarCreatePage from './pages/StarCreatePage';
 import SelectPage from './pages/SelectPage';
+import WalletPage from './pages/WalletPage';
 
 function App() {
   const [blob, setBlob] = useState(null);
@@ -70,13 +71,13 @@ function App() {
                   element={<CommunityPage></CommunityPage>}
                 ></Route>
                 <Route
-                  path="/challenge/:challengeId"
+                  path='/challenge/:challengeId'
                   element={<ChallengePage></ChallengePage>}
                 ></Route>
-                <Route path="*" element={<NotFoundPage></NotFoundPage>}></Route>
-                <Route path="/mypage" element={<MyPage></MyPage>}></Route>
-                <Route path="/mypage/setting" element={<SettingPage></SettingPage>}></Route>
-                <Route path="/dashboard" element={<DashboardPage></DashboardPage>}></Route>
+                <Route path='*' element={<NotFoundPage></NotFoundPage>}></Route>
+                <Route path='/mypage' element={<MyPage></MyPage>}></Route>
+                <Route path='/mypage/setting' element={<SettingPage></SettingPage>}></Route>
+                <Route path='/dashboard' element={<DashboardPage></DashboardPage>}></Route>
                 <Route
                   path='/dashboard/blockchain'
                   element={<BlockchainPage></BlockchainPage>}
