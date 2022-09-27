@@ -1,18 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import BottomNavigation from '@mui/material/BottomNavigation';
 import BottomNavigationAction from '@mui/material/BottomNavigationAction';
 
 function SimpleBottomNavigation() {
   const [value, setValue] = useState(0);
-  const [location, setLocation] = useState(null);
+  const [path, setPath] = useState(null);
+  const location = useLocation();
   useEffect(() => {
-    setLocation(window.location.pathname);
-  }, [window.location.pathname]);
-  if (location && (location === '/plus' || location === '/preview')) {
+    setPath(location.pathname);
+  }, [location]);
+  if (path && (path === '/plus' || path === '/preview')) {
     return null;
-  } else if (location) {
+  } else if (path) {
     return (
       <Box
         sx={{
