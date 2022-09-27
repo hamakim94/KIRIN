@@ -36,4 +36,7 @@ public class ChallengeComment {
 
     @Formula("(SELECT COUNT(*) FROM challenge_comment_like l WHERE l.challenge_comment_id = id)")
     Integer likeCnt;
+
+    @Formula("(SELECT COUNT(*) FROM challenge_comment c WHERE c.parent_id = id)")
+    Integer reCommentCnt;
 }

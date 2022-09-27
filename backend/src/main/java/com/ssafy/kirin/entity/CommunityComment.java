@@ -31,7 +31,7 @@ public class CommunityComment {
     @Column(name = "community_id")
     Long communityId;
 
-    @Formula("(SELECT COUNT(*) FROM community_comment c WHERE c.community_id = id)")
+    @Formula("(SELECT COUNT(*) FROM community_comment c WHERE c.parent_id = id)")
     Integer reCommentCnt;
 
     @Formula("(SELECT COUNT(*) FROM community_comment_like l WHERE l.community_comment_id = id)")
