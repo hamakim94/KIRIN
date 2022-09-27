@@ -59,8 +59,8 @@ UseAxios.interceptors.response.use(
           return axios(originalRequest);
         }
       }
-    } catch {
-      if (status === 400) {
+    } catch (err) {
+      if (err.response.status === 400) {
         cookies.remove('accesstoken', { path: '/' });
         cookies.remove('refreshtoken', { path: '/' });
         alert('세션이 만료되었습니다. 다시 로그인 해주세요.');
