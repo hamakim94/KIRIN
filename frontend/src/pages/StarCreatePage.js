@@ -46,10 +46,10 @@ function StarCreatePage() {
     const data = new FormData();
     data.append('video', video);
     data.append('stamp', img);
-    data.append('starChallengeRequestDTO', new Blob([JSON.stringify(body)]), {
-      type: 'application/json',
-    });
-    UseAxios.post(`/star`, data, {
+    const json = JSON.stringify(body);
+    const blob = new Blob([json], { type: 'application/json' });
+    data.append('starChallengeRequestDTO', blob);
+    UseAxios.post(`/challenges/star`, data, {
       headers: { 'Content-Type': 'multipart/form-data' },
     })
       .then((res) => {

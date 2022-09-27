@@ -16,7 +16,7 @@ import ChangePasswordPage from './pages/settings/ChangePasswordPage';
 import TermsOfServicePage from './pages/settings/TermsOfServicePage';
 import PrivacyPolicyPage from './pages/settings/PrivacyPolicyPage';
 import NotFoundPage from './pages/NotFoundPage';
-import WalletPage from './pages/WalletPage';
+import ChallengePage from './pages/ChallengePage';
 import SimpleBottomNavigation from './components/common/SimpleBottomNavigation';
 import CommunityPage from './pages/CommunityPage';
 import BlockchainPage from './pages/BlockchainPage';
@@ -33,10 +33,13 @@ import Context from './utils/Context';
 import UseAxios from './utils/UseAxios';
 import { Cookies } from 'react-cookie';
 import StarCreatePage from './pages/StarCreatePage';
+import SelectPage from './pages/SelectPage';
+import WalletPage from './pages/WalletPage';
 
 function App() {
   const [blob, setBlob] = useState(null);
   const [userData, setUserData] = useState(null);
+  const [selected, setSelected] = useState(null);
   const cookies = new Cookies();
   const value = cookies.get('accesstoken');
   useEffect(() => {
@@ -51,18 +54,25 @@ function App() {
       {isMobile ? (
         value ? (
           <div className='App'>
-            <Context.Provider value={{ blob, setBlob, userData, setUserData }}>
+            <Context.Provider
+              value={{ blob, setBlob, userData, setUserData, selected, setSelected }}
+            >
               <Routes>
                 <Route path='/' element={<HomePage></HomePage>}></Route>
                 <Route path='/search' element={<SearchPage></SearchPage>}></Route>
                 <Route path='/savana' element={<SavanaPage></SavanaPage>}></Route>
                 <Route path='/donation' element={<DonationPage></DonationPage>}></Route>
                 <Route path='/plus' element={<PlusPage></PlusPage>}></Route>
+                <Route path='/select' element={<SelectPage></SelectPage>}></Route>
                 <Route path='/preview' element={<PreviewPage></PreviewPage>}></Route>
                 <Route path='/star/:starId' element={<StarPage></StarPage>}></Route>
                 <Route
                   path='/star/:starId/community'
                   element={<CommunityPage></CommunityPage>}
+                ></Route>
+                <Route
+                  path='/challenge/:challengeId'
+                  element={<ChallengePage></ChallengePage>}
                 ></Route>
                 <Route path='*' element={<NotFoundPage></NotFoundPage>}></Route>
                 <Route path='/mypage' element={<MyPage></MyPage>}></Route>
@@ -109,6 +119,7 @@ function App() {
             <Context.Provider value={{ blob, setBlob, userData, setUserData }}>
               <Routes>
                 <Route path='/' element={<LoginPage></LoginPage>}></Route>
+                <Route path='/login' element={<LoginPage></LoginPage>}></Route>
                 <Route path='/finishsignup' element={<FinishSignupPage></FinishSignupPage>}></Route>
                 <Route path='/findpassword' element={<FindPasswordPage></FindPasswordPage>}></Route>
                 <Route path='/signup' element={<SignupPage></SignupPage>}></Route>

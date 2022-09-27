@@ -178,8 +178,8 @@ function PlusPage() {
     start();
     setNumber(15);
     return () => {
-      if (stream) {
-        stream.getTracks().forEach(function (track) {
+      if (mediaStream) {
+        mediaStream.getTracks().forEach(function (track) {
           track.stop();
         });
       }

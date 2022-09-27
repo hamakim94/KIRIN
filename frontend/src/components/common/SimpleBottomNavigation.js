@@ -1,18 +1,20 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import Box from '@mui/material/Box';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import BottomNavigation from '@mui/material/BottomNavigation';
 import BottomNavigationAction from '@mui/material/BottomNavigationAction';
-
+import Context from '../../utils/Context';
 function SimpleBottomNavigation() {
   const [value, setValue] = useState(0);
-  const [location, setLocation] = useState(null);
+  const [path, setPath] = useState(null);
+  const { selected, setSelected } = useContext(Context);
+  const location = useLocation();
   useEffect(() => {
-    setLocation(window.location.pathname);
-  }, [window.location.pathname]);
-  if (location && (location === '/plus' || location === '/preview')) {
+    setPath(location.pathname);
+  }, [location]);
+  if (path && (path === '/plus' || path === '/preview')) {
     return null;
-  } else if (location) {
+  } else if (path) {
     return (
       <Box
         sx={{
@@ -37,7 +39,11 @@ function SimpleBottomNavigation() {
         >
           <BottomNavigationAction label='홈' LinkComponent={Link} to='/' />
           <BottomNavigationAction label='사바나' LinkComponent={Link} to='/savana' />
-          <BottomNavigationAction label='플러스' LinkComponent={Link} to='/plus' />
+          <BottomNavigationAction
+            label='플러스'
+            LinkComponent={Link}
+            to={selected ? '/plus' : '/select'}
+          />
           <BottomNavigationAction label='기부' LinkComponent={Link} to='/donation' />
           <BottomNavigationAction label='마이' LinkComponent={Link} to='/mypage' />
         </BottomNavigation>
