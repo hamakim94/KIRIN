@@ -47,101 +47,67 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     public void signup(UserSignupRequestDTO userSignupRequestDTO, MultipartFile profileImg, MultipartFile coverImg, PasswordEncoder passwordEncoder) throws Exception {
         User user = null;
 
-        // 일반 회원가입인 경우 : email, password null check && email, nickname 중복 check -> 스타, 일반인
-        // 소셜 회원가입인 경우 : socialId null check && nickname 중복 check -> 일반인
-//        if(userSignupRequestDTO.getAccountType() == 0){ // 일반 회원가입 accountType:0
-//            log.info("일반 회원가입");
-            if(userSignupRequestDTO.getEmail() == null || userSignupRequestDTO.getPassword() == null){ // email, password null check
-                log.info("email, password null");
-                throw new Exception();
-            }
+        // email, password null check && email, nickname 중복 check -> 스타, 일반인
+        if(userSignupRequestDTO.getEmail() == null || userSignupRequestDTO.getPassword() == null){ // email, password null check
+            log.info("email, password null");
+            throw new Exception();
+        }
 
-            if(userRepository.existsByEmail(userSignupRequestDTO.getEmail()) || userRepository.existsByNickname(userSignupRequestDTO.getNickname())){ // email,nickname 중복 check
-                log.info("email, nickname 중복");
-                throw new Exception();
-            }
+        if(userRepository.existsByEmail(userSignupRequestDTO.getEmail()) || userRepository.existsByNickname(userSignupRequestDTO.getNickname())){ // email,nickname 중복 check
+            log.info("email, nickname 중복");
+            throw new Exception();
+        }
 
-            userSignupRequestDTO.setPassword(passwordEncoder.encode(userSignupRequestDTO.getPassword()));
+        userSignupRequestDTO.setPassword(passwordEncoder.encode(userSignupRequestDTO.getPassword()));
 
-            if(userSignupRequestDTO.getIsCeleb()){ // 스타일 경우
-                log.info("스타 회원가입");
-                System.out.println("회원가입 userSignupRequestDTO: " + userSignupRequestDTO);
+        if(userSignupRequestDTO.getIsCeleb()){ // 스타일 경우
+            log.info("스타 회원가입");
+            System.out.println("회원가입 userSignupRequestDTO: " + userSignupRequestDTO);
 
-                CelebInfo celebInfo = CelebInfo.builder()
-                        .coverImg(getFilePath(coverImg))
-                        .info(userSignupRequestDTO.getInfo())
-                        .build();
+            CelebInfo celebInfo = CelebInfo.builder()
+                    .coverImg(getFilePath(coverImg))
+                    .info(userSignupRequestDTO.getInfo())
+                    .build();
 
-                user = User.builder()
-                        .name(userSignupRequestDTO.getName())
-                        .nickname(userSignupRequestDTO.getNickname())
-                        .profileImg(getFilePath(profileImg)) // null일수도
-                        .email(userSignupRequestDTO.getEmail())
-                        .password(userSignupRequestDTO.getPassword())
-//                        .accountType(userSignupRequestDTO.getAccountType())
-                        .isCeleb(userSignupRequestDTO.getIsCeleb())
-                        .walletId(userSignupRequestDTO.getWalletId())
-                        .reg(LocalDateTime.now())
-                        .build();
+            // wallet 만들어서 넣어줘야됨.
 
-                user.setCelebInfo(celebInfoRepository.save(celebInfo));
+            user = User.builder()
+                    .name(userSignupRequestDTO.getName())
+                    .nickname(userSignupRequestDTO.getNickname())
+                    .profileImg(getFilePath(profileImg)) // null일수도
+                    .email(userSignupRequestDTO.getEmail())
+                    .password(userSignupRequestDTO.getPassword())
+                    .isCeleb(userSignupRequestDTO.getIsCeleb())
+                    .reg(LocalDateTime.now())
+                    .build();
 
-                System.out.println(4);
-            } else { // 일반인인 경우
-                log.info("일반인 회원가입");
-                System.out.println("회원가입 userSignupRequestDTO: " + userSignupRequestDTO);
+            user.setCelebInfo(celebInfoRepository.save(celebInfo));
 
-                user = User.builder()
-                        .name(userSignupRequestDTO.getName())
-                        .nickname(userSignupRequestDTO.getNickname())
-                        .profileImg(getFilePath(profileImg)) // null일수도
-                        .email(userSignupRequestDTO.getEmail())
-                        .password(userSignupRequestDTO.getPassword())
-//                        .accountType(userSignupRequestDTO.getAccountType())
-                        .walletId(userSignupRequestDTO.getWalletId())
-                        .isCeleb(userSignupRequestDTO.getIsCeleb())
-                        .reg(LocalDateTime.now())
-                        .build();
+            System.out.println(4);
+        } else { // 일반인인 경우
+            log.info("일반인 회원가입");
+            System.out.println("회원가입 userSignupRequestDTO: " + userSignupRequestDTO);
 
-            }
-            userRepository.save(user);
+            // wallet 만들어서 넣어줘야됨.
 
-            // 이메일 verify 확인
-            EmailAuth emailAuth = emailAuthRepository.save(
-                    new EmailAuth(userSignupRequestDTO.getEmail(), UUID.randomUUID().toString(), false)
-            );
+            user = User.builder()
+                    .name(userSignupRequestDTO.getName())
+                    .nickname(userSignupRequestDTO.getNickname())
+                    .profileImg(getFilePath(profileImg)) // null일수도
+                    .email(userSignupRequestDTO.getEmail())
+                    .password(userSignupRequestDTO.getPassword())
+                    .isCeleb(userSignupRequestDTO.getIsCeleb())
+                    .reg(LocalDateTime.now())
+                    .build();
+        }
+        userRepository.save(user);
 
-            emailService.sendVerifyMail(emailAuth.getEmail(), emailAuth.getAuthToken()); // 이메일 인증 메일 보내기
-//        }
-//        else if(userSignupRequestDTO.getAccountType() == 1){ // 카카오 소셜 회원가입 accountType:1
-//            log.info("카카오 소셜 회원가입");
-//            if(userSignupRequestDTO.getSocialId() == null){ // socialId null check
-//                System.out.println("socialId null");
-//                throw new Exception();
-//            }
-//
-//            if(userRepository.existsByNickname(userSignupRequestDTO.getNickname())){ // nickname 중복 check
-//                log.info("nickname 중복");
-//                throw new Exception();
-//            }
-//
-//            if(!userSignupRequestDTO.getIsCeleb()){ // 일반인만
-//                log.info("일반인 회원가입");
-//                user = User.builder()
-//                        .name(userSignupRequestDTO.getName())
-//                        .nickname(userSignupRequestDTO.getNickname())
-//                        .profileImg(userSignupRequestDTO.getProfileImg()) // null일수도
-//                        .socialId(userSignupRequestDTO.getSocialId())
-//                        .accountType(userSignupRequestDTO.getAccountType())
-//                        .isCeleb(userSignupRequestDTO.getIsCeleb())
-//                        .reg(LocalDateTime.now())
-//                        .build();
-//
-//                userRepository.save(user);
-//            } else { // 스타는 소셜 회원가입 X
-//                throw new Exception();
-//            }
-//        }
+        // 이메일 verify 확인
+        EmailAuth emailAuth = emailAuthRepository.save(
+                new EmailAuth(userSignupRequestDTO.getEmail(), UUID.randomUUID().toString(), false)
+        );
+
+        emailService.sendVerifyMail(emailAuth.getEmail(), emailAuth.getAuthToken()); // 이메일 인증 메일 보내기
     }
 
     @Override
@@ -175,14 +141,6 @@ public class UserServiceImpl implements UserDetailsService, UserService {
             return null;
         }
 
-//        if(user.getIsCeleb()){ // 스타인 경우
-////            CelebInfo celebInfo = celebInfoRepository.findById(user.getCelebInfo().getId())
-////                    .orElseThrow(() -> new NoSuchElementException("Login Celeb info : " + user.getCelebInfo().getId() + " was not found"));
-//
-//            return userToCelebDto(user);
-//        }
-//
-//        // 일반인인 경우
         return userToUserDto(user); // 일반인인 경우, 스타인 경우 모두 포함
     }
 
@@ -211,17 +169,11 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NoSuchElementException("User : " + userId + " was not found"));
 
-//        if(user.getIsCeleb()){ // 스타인 경우
-//            return userToCelebDto(user);
-//        }
-//
-//        // 일반인인 경우
         return userToUserDto(user);
     }
 
     @Override
     public void subscribe(long userId, long celebId) {
-        // user가 스타가 아니고, celeb이 스타인지 확인을 해야 할까?
         User celeb = userRepository.getReferenceById(celebId);
 
         Subscribe subscribe = Subscribe.builder()
@@ -376,8 +328,6 @@ public class UserServiceImpl implements UserDetailsService, UserService {
                 String fileName = UUID.randomUUID() + file.getOriginalFilename();
                 Path dir = Paths.get(uploadPath + fileName);
 
-//                System.out.println(storeName);
-
                 // 지정된 디렉토리에 저장
                 Files.copy(file.getInputStream(), dir);
 
@@ -386,7 +336,6 @@ public class UserServiceImpl implements UserDetailsService, UserService {
                 log.error("getFilePath error: ", e);
             }
         }
-        System.out.println("file XXXX");
 
         log.error("file이 존재하지 않음");
         return null;
