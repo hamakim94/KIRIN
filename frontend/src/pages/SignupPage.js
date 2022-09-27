@@ -81,6 +81,7 @@ function SignupPage({ parentCallback }) {
   const passwordCheckValidation = () => {
     return password !== passwordCheck && passwordCheck.length > 1;
   };
+
   /*약관 확인 */
   const agreementCheck = (e) => {
     if (e.target.checked) {
