@@ -1,23 +1,16 @@
-import React, { useEffect, useState } from 'react';
-import User from './User.json';
+import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import UseAxios from '../../utils/UseAxios';
+import Context from '../../utils/Context';
 
 function Profile(props) {
   const navigate = useNavigate();
-  const [user, setUser] = useState([]);
-
-  useEffect(() => {
-    UseAxios.get(`/users/profiles`).then((res) => {
-      setUser(res.data);
-    });
-  });
+  const { userData } = useContext(Context);
 
   return (
     <div>
       <div className={props.styles.profileBox}>
-        <img src={`/files/${user.profileImg}`} className={props.styles.userImg}></img>
-        <div className={props.styles.userName}>{user.nickname} </div>
+        <img src={`/files/${userData.profileImg}`} className={props.styles.userImg}></img>
+        <div className={props.styles.userName}>{userData.nickname} </div>
         <button onClick={() => navigate(`/mypage/wallet`)} className={props.styles.myWallet}>
           내지갑
         </button>
