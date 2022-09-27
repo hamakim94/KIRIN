@@ -16,6 +16,24 @@
   }
 }
 
+/* 기본 모양 */
+.hash2 {
+  max-width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 540px 이상 */
+@media (min-width: 540px) {
+  .hash2 {
+    max-width: 500px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
 .table_header {
   height: 40px;
   vertical-align: middle;
@@ -26,7 +44,7 @@
 
 .row {
   /* height: 40px; */
-  text-align: center;
+  /* text-align: center; */
   font-size: smaller;
 }
 
@@ -63,4 +81,12 @@
 
 td {
   border-bottom: 1px solid #f1f1f1;
+}
+
+.fromtobox {
+  border: 1px solid red;
+}
+
+.fromto {
+  display: flex;
 }
