@@ -1,14 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import Web3 from 'web3';
-import { Pagination } from '@mui/material';
 import styles from './BlockchainPage.module.css';
 import { AiFillSetting } from 'react-icons/ai';
 import { BiArrowBack } from 'react-icons/bi';
 
 function TransactionPage() {
   const [transactions, setTransactions] = useState([]);
-  const [lastPage, setLastPage] = useState(0);
-  const [page, setPage] = useState(1); // 처음 페이지는 1이다.
   const rowNumPerPage = 15;
   const height = window.innerHeight;
   const rowHeight = (height - 237) / rowNumPerPage;
@@ -91,8 +88,8 @@ function TransactionPage() {
 
   useEffect(() => {
     const asyncCall = async () => {
-      // var web3 = new Web3(new Web3.providers.HttpProvider(`${process.env.REACT_APP_BASEURL}/bc/`));
-      var web3 = new Web3(process.env.REACT_APP_TESTURL);
+      var web3 = new Web3(new Web3.providers.HttpProvider(`${process.env.REACT_APP_BASEURL}/bc/`));
+      // var web3 = new Web3(process.env.REACT_APP_TESTURL);
       const blockNum = await web3.eth.getBlockNumber();
 
       // 전체 가져오기
@@ -150,11 +147,6 @@ function TransactionPage() {
     }
     return Math.floor(seconds) + '초 전';
   }
-
-  const handlePage = (event) => {
-    const nowPageInt = parseInt(event.target.outerText);
-    setPage(nowPageInt);
-  };
 
   return (
     <div style={{ paddingBottom: 55 }}>
