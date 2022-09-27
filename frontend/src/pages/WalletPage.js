@@ -1,34 +1,72 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
+import {
+  Button,
+  TextField,
+  Grid,
+  Typography,
+  Container,
+  Backdrop,
+  CircularProgress,
+} from '@mui/material/';
+import styles from './WalletPage.module.css';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import ABI from '../TokenABI.json';
+import CA from '../TokenCA.json';
+import { BiArrowBack } from 'react-icons/bi';
 
-import ABI from "../TokenABI.json";
-import CA from "../TokenCA.json";
+// 숫자만 입력해
+const isLetters = (str) => /^[0-9]*$/.test(str);
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#FFC947',
+    },
+    secondary: {
+      main: '#11cb5f',
+    },
+  },
+});
 
 function WalletPage() {
-  const [web3, setWeb3] = useState(""); // web3 연결하는 부분, useEffect를 통해 초반에 생성된다.
-  const [address, setAddress] = useState(process.env.REACT_APP_USERID); // 내 주소를 저장하는 부분, 추후에 상태관리 해야할 부분
-  const [privateKey, setprivateKey] = useState(process.env.REACT_APP_BENIFITID); // 내 비밀번호, 추후에 상태관리 해야할 부분 or db
-  // const [address, setAddress] = useState(process.env.REACT_APP_USERID); // 내 주소를 저장하는 부분, 추후에 상태관리 해야할 부분
+  const [web3, setWeb3] = useState(''); // web3 연결하는 부분, useEffect를 통해 초반에 생성된다.
+  const [address] = useState(process.env.REACT_APP_USERID); // 내 주소를 저장하는 부분, 추후에 상태관리 해야할 부분
   // const [privateKey, setprivateKey] = useState(process.env.REACT_APP_USERKEY); // 내 비밀번호, 추후에 상태관리 해야할 부분 or db
-  const [balance, setBalance] = useState(""); // 잔액
-  const [tokenBalance, setTokenBalance] = useState(""); // 토큰 잔액
-  const [loading, setLoading] = useState(""); // 로딩창 관련
-  const [tokenContract, setTokenContract] = useState("");
+  const [tokenBalance, setTokenBalance] = useState(''); // 토큰 잔액
+  const [tokenContract, setTokenContract] = useState('');
+  const [tokens, setTokens] = useState('');
+  const [balance, setBalance] = useState(''); // 잔액
+  const [open, setOpen] = React.useState(false);
+
   // 페이지가 실행되면, web3 이용 네트워크 연결)
   useEffect(() => {
-    var Web3 = require("web3");
+    var Web3 = require('web3');
     var web3 = new Web3(new Web3.providers.HttpProvider(`${process.env.REACT_APP_BASEURL}/bc/`));
+    // var web3 = new Web3(process.env.REACT_APP_TESTURL);
     var contract = new web3.eth.Contract(ABI, CA); // ABI, CA를 통해 contract 객체를 만들어서 보관한다. 나중에 활용함
     setWeb3(web3);
     setTokenContract(contract);
-    console.log(contract);
+    web3.eth.getBalance(address).then((e) => setBalance(e / Math.pow(10, 18)));
+    contract.methods // ABI, CA를 이용해 함수 접근
+      .balanceOf(address)
+      .call()
+      .then((balance) => {
+        setTokenBalance(balance);
+      });
   }, []);
-
-  // 계정 생성하기 클릭하면, account 만들어줌 => 나중에 api로 저장하던가, back에서 처리해야할 부분 생김
-  const makeWallet = (event) => {
-    event.preventDefault();
-    var account = web3.eth.accounts.create();
-    setAddress(account.address);
-    setprivateKey(account.privateKey);
+  // 로딩 관련
+  const handleClose = () => {
+    setOpen(false);
+  };
+  const handleToggle = () => {
+    setOpen(!open);
+  };
+  // 폼에 숫자만 입력해요
+  const onChangeTokens = (e) => {
+    const { value } = e.target;
+    if (isLetters(value)) {
+      setTokens(value);
+    }
   };
 
   /**
@@ -36,24 +74,16 @@ function WalletPage() {
    * eth는 wei단위기때문에 10^18로 나눠서 이더리움 단위로 환산
    * 준비물 : 조회하려는 계정 주소
    */
-  const ethBalance = (event) => {
-    event.preventDefault();
-    setLoading(true);
+  const ethBalance = () => {
+    handleToggle();
     web3.eth
       .getBalance(address)
       .then((e) => setBalance(e / Math.pow(10, 18)))
-      .then(setLoading(false));
+      .then(() => handleClose());
   };
 
-  /**
-   * Admin계정(대충 이더리움 많음)
-   * Admin Private Key로 트랜잭션을 sign
-   * 준비물 : Admin Address, 받는 사람 address
-   * 그다음 sendTransaction(계정을 unlock했기 때문에 sign이 필요 없다)을 통해,
-   * 만든 계정에 1 이더리움을 보내는 함수
-   */
   const chargeEthBalance = (event) => {
-    setLoading("Loading");
+    handleToggle();
     event.preventDefault();
     var tx = {
       from: process.env.REACT_APP_ADMINID,
@@ -69,14 +99,15 @@ function WalletPage() {
         web3.eth
           .sendSignedTransaction(b.rawTransaction, (err, transactionHash) => {
             if (!err) {
-              console.log(transactionHash + " success");
+              console.log(transactionHash + ' success');
             } else {
               console.log(err);
             }
           })
           .then(() => {
-            setLoading("");
-            alert("잔액 다시 보기 클릭하세용");
+            alert('충전 완료');
+            ethBalance();
+            handleClose();
           });
       }
     });
@@ -86,32 +117,24 @@ function WalletPage() {
    * 계정의 토큰 잔액 확인하는 함수.
    * tokenCA, tokenABI 필요하다(해당 함수는, 이미 데이터를 가지고있음)
    */
-  //
-  const viewTokenBalance = (event) => {
-    event.preventDefault();
-    setLoading(true);
-
+  const viewTokenBalance = () => {
     tokenContract.methods // ABI, CA를 이용해 함수 접근
       .balanceOf(address)
       .call()
       .then((balance) => {
         setTokenBalance(balance);
-        setLoading(false);
       });
   };
-
   /**
    * contract를 배포한 admin 계정으로부터 1000 토큰을 받아오는 함수
    * 1000을 나중에 폼으로 수정해, 얼마 충전할지 정할 수 있음
    * encodeIBI를 통해, ABI,CA를 활용한 Contract 자체를 transaction의 data에 넣어서 실행이 가능
    * 준비물 : AdminAddress, Admin AdminPrivateKey, tokenContractCA
    */
-  const getToken = async (event) => {
-    event.preventDefault();
-    setLoading("기다리세요");
-
+  const getToken = async () => {
+    handleToggle();
     var test = tokenContract.methods
-      .transferFrom(process.env.REACT_APP_ADMINID, address, 1000) // 1000개 충전
+      .transferFrom(process.env.REACT_APP_ADMINID, address, Number(tokens)) // num개 충전
       .encodeABI(); // Contract Method를 ABI로 만들기
     var tx = {
       data: test,
@@ -129,45 +152,109 @@ function WalletPage() {
         web3.eth
           .sendSignedTransaction(b.rawTransaction, (err, transactionHash) => {
             if (!err) {
-              console.log(transactionHash + " success");
+              console.log(transactionHash + ' success');
             } else {
               console.log(err);
             }
           })
           .then(() => {
-            setLoading("");
-            alert("잔액 다시 보기 클릭하세용");
+            setTokens('');
+            viewTokenBalance();
+            alert('충전 완료!');
+            handleClose();
           });
       }
     });
   };
 
   return (
-    <div>
-      <button onClick={makeWallet}>지갑 생성하기</button>
+    <ThemeProvider theme={theme}>
       <div>
-        <div>주소 : {address}</div>
-        <div>개인 키 : {privateKey}</div>
+        <Backdrop
+          sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          open={open}
+          onClick={handleClose}
+        >
+          <CircularProgress color='inherit' />
+        </Backdrop>
       </div>
-      <hr></hr>
-      <button onClick={ethBalance}>이더리움 잔액 보기</button>
-      <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <div>잔액 : {balance}</div>
-        <form onSubmit={chargeEthBalance}>
-          {/* address : <input type="text"></input> */}
-          <button type="submit">10 이더 충전하기</button>
-        </form>
+      <div className={styles.topBox}>
+        <a href='/mypage'>
+          <BiArrowBack className={styles.back}></BiArrowBack>
+        </a>
+        <div className={styles.pageTitle}>내 지갑!</div>
+        <a href=''></a>
       </div>
-      <hr></hr>
-      <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <button onClick={viewTokenBalance}>토큰잔액 보기</button>
-        <button onClick={getToken}>1000 토큰 받기</button>
-      </div>
+      <div>
+        <Container component='main' maxWidth='lg' m={2} disableGutters={true}>
+          <Grid container alignItems='center' justify='center' spacing={2} p={2}>
+            <Grid item xs={6}>
+              <Typography sx={{ ml: 0.5, mb: 0.5 }}>지갑 주소</Typography>
+            </Grid>
+            <Grid item xs={6}>
+              <Typography sx={{ ml: 0.5, mb: 0.5 }}>{address.substr(0, 15) + '...'}</Typography>
+            </Grid>
 
-      <div>잔액 : {tokenBalance}</div>
-      <hr></hr>
-      {loading}
-    </div>
+            <Grid item xs={6}>
+              <Typography sx={{ ml: 0.5, mb: 0.5 }}>이더리움 잔고</Typography>
+            </Grid>
+            <Grid item xs={3}>
+              <Typography sx={{ ml: 0.5, mb: 0.5 }}>
+                {balance ? balance + ' ETH' : '0 ETH'}
+              </Typography>
+            </Grid>
+            <Grid item xs={3}>
+              <Button
+                type='button'
+                fullWidth
+                variant='contained'
+                color='primary'
+                onClick={chargeEthBalance}
+                size='medium'
+              >
+                충전
+              </Button>
+            </Grid>
+            <Grid item xs={6}>
+              <Typography sx={{ ml: 0.5, mt: 1, mb: 0.5 }}>KIRIN 토큰양</Typography>
+            </Grid>
+            <Grid item xs={6}>
+              <Typography sx={{ ml: 0.5, mb: 0.5 }}>
+                {tokenBalance ? tokenBalance + ' KRT' : '0 KRT'}
+              </Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <Typography sx={{ ml: 0.5, mt: 1 }}>KIRIN 토큰 충전하기*</Typography>
+            </Grid>
+            <Grid item xs={9} sm={9}>
+              <TextField
+                variant='outlined'
+                required
+                fullWidth
+                id='tokens'
+                onChange={onChangeTokens}
+                value={tokens}
+                label='숫자만 입력 가능합니다'
+                size='small'
+              />
+            </Grid>
+            <Grid item xs={3} sm={3}>
+              <Button
+                type='button'
+                fullWidth
+                variant='contained'
+                color='primary'
+                onClick={getToken}
+                disabled={!tokens}
+                size='medium'
+              >
+                충전
+              </Button>
+            </Grid>
+          </Grid>
+        </Container>
+      </div>
+    </ThemeProvider>
   );
 }
 

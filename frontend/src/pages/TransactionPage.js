@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import Web3 from 'web3';
+import React, { useEffect, useState } from "react";
+import Web3 from "web3";
 
 function TransactionPage() {
   const [blocks, setBlocks] = useState([]);
   const [transactions, setTransactions] = useState([]);
   const [block, setBlock] = useState(0);
   const [blockHeight, setBlockHeight] = useState(null);
-  const [web3, setWeb3] = useState('');
+  const [web3, setWeb3] = useState("");
 
   // 하나의 블록
   function Transaction({ tx }) {
@@ -31,7 +31,8 @@ function TransactionPage() {
 
   useEffect(() => {
     const asyncCall = async () => {
-      var web3 = new Web3(new Web3.providers.HttpProvider(`${process.env.REACT_APP_BASEURL}/bc`));
+      var web3 = new Web3(new Web3.providers.HttpProvider(`${process.env.REACT_APP_BASEURL}/bc/`));
+      // var web3 = new Web3(process.env.REACT_APP_TESTURL);
       setWeb3(web3);
       const blockNum = await web3.eth.getBlockNumber();
 
@@ -60,7 +61,7 @@ function TransactionPage() {
         });
       }
       setTransactions(txArr);
-      console.log(txArr);
+      // console.log(txArr);
     };
     asyncCall();
   }, []);
@@ -70,25 +71,25 @@ function TransactionPage() {
     var seconds = Math.floor((new Date() - date * 1000) / 1000);
     var interval = Math.floor(seconds / 31536000);
     if (interval > 1) {
-      return interval + ' years ago';
+      return interval + " years ago";
     }
     interval = Math.floor(seconds / 2592000);
     if (interval > 1) {
-      return interval + ' months ago';
+      return interval + " months ago";
     }
     interval = Math.floor(seconds / 86400);
     if (interval > 1) {
-      return interval + ' days ago';
+      return interval + " days ago";
     }
     interval = Math.floor(seconds / 3600);
     if (interval > 1) {
-      return interval + ' hours ago';
+      return interval + " hours ago";
     }
     interval = Math.floor(seconds / 60);
     if (interval > 1) {
-      return interval + ' minutes ago';
+      return interval + " minutes ago";
     }
-    return Math.floor(seconds) + ' seconds ago';
+    return Math.floor(seconds) + " seconds ago";
   }
   return (
     <div>
