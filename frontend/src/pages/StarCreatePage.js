@@ -49,23 +49,37 @@ function StarCreatePage() {
           style={{ display: 'none' }}
         />
       </div>
+      <div>챌린지 제목</div>
       <div>
-        <input type='text' value={title} onChange={(value) => setTitle(value)}></input>
+        <input type='text' value={title} onChange={(e) => setTitle(e.target.value)}></input>
+      </div>
+      <div>기부 기관</div>
+      <div>
+        <input type='text' value={title} onChange={(e) => setTitle(e.target.value)}></input>
+      </div>
+      <div>기부 기관</div>
+      <div>
+        <input type='text' value={title} onChange={(e) => setTitle(e.target.value)}></input>
+      </div>
+      <div>기부 기관</div>
+      <div>
+        <input type='text' value={title} onChange={(e) => setTitle(e.target.value)}></input>
       </div>
       <div>
-        시작일
+        챌린지 기간
         <DatePicker
           selected={startDate}
           onChange={(date) => setStartDate(date)}
           locale={ko}
           dateFormat='yyyy년 MM월 dd일'
+          placeholderText='시작일'
         />
-        종료일
         <DatePicker
           selected={endDate}
           onChange={(date) => setEndDate(date)}
           locale={ko}
           dateFormat='yyyy년 MM월 dd일'
+          placeholderText='종료일'
         />
       </div>
       <div></div>
