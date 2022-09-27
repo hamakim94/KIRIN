@@ -16,7 +16,7 @@ function Profile(props) {
   return (
     <div>
       <div className={props.styles.profileBox}>
-        <img src={user.profileImg} className={props.styles.userImg}></img>
+        <img src={`/files/${user.profileImg}`} className={props.styles.userImg}></img>
         <div className={props.styles.userName}>{user.nickname} </div>
         <button onClick={() => navigate(`/mypage/wallet`)} className={props.styles.myWallet}>
           내지갑
