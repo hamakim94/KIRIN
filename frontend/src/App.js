@@ -16,7 +16,7 @@ import ChangePasswordPage from './pages/settings/ChangePasswordPage';
 import TermsOfServicePage from './pages/settings/TermsOfServicePage';
 import PrivacyPolicyPage from './pages/settings/PrivacyPolicyPage';
 import NotFoundPage from './pages/NotFoundPage';
-import WalletPage from './pages/WalletPage';
+import ChallengePage from './pages/ChallengePage';
 import SimpleBottomNavigation from './components/common/SimpleBottomNavigation';
 import CommunityPage from './pages/CommunityPage';
 import BlockchainPage from './pages/BlockchainPage';
@@ -64,10 +64,14 @@ function App() {
                   path='/star/:starId/community'
                   element={<CommunityPage></CommunityPage>}
                 ></Route>
-                <Route path='*' element={<NotFoundPage></NotFoundPage>}></Route>
-                <Route path='/mypage' element={<MyPage></MyPage>}></Route>
-                <Route path='/mypage/setting' element={<SettingPage></SettingPage>}></Route>
-                <Route path='/dashboard' element={<DashboardPage></DashboardPage>}></Route>
+                <Route
+                  path="/challenge/:challengeId"
+                  element={<ChallengePage></ChallengePage>}
+                ></Route>
+                <Route path="*" element={<NotFoundPage></NotFoundPage>}></Route>
+                <Route path="/mypage" element={<MyPage></MyPage>}></Route>
+                <Route path="/mypage/setting" element={<SettingPage></SettingPage>}></Route>
+                <Route path="/dashboard" element={<DashboardPage></DashboardPage>}></Route>
                 <Route
                   path='/dashboard/blockchain'
                   element={<BlockchainPage></BlockchainPage>}
