@@ -32,6 +32,7 @@ import React, { useEffect, useState } from 'react';
 import Context from './utils/Context';
 import UseAxios from './utils/UseAxios';
 import { Cookies } from 'react-cookie';
+import StarCreatePage from './pages/StarCreatePage';
 
 function App() {
   const [blob, setBlob] = useState(null);
@@ -98,6 +99,7 @@ function App() {
                 <Route path='/login' element={<LoginPage></LoginPage>}></Route>
                 <Route path='/finishsignup' element={<FinishSignupPage></FinishSignupPage>}></Route>
                 <Route path='/findpassword' element={<FindPasswordPage></FindPasswordPage>}></Route>
+                <Route path='/create' element={<StarCreatePage></StarCreatePage>}></Route>
               </Routes>
               <SimpleBottomNavigation></SimpleBottomNavigation>
             </Context.Provider>

@@ -117,7 +117,7 @@ function TransactionPage() {
         });
       }
       setTransactions(txArr);
-      console.log(txArr);
+      // console.log(txArr);
     };
     asyncCall();
   }, []);

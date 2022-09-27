@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import Web3 from 'web3';
-import styles from './DashboardPage.module.css';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import Web3 from "web3";
+import styles from "./DashboardPage.module.css";
+import { useNavigate } from "react-router-dom";
 
 function DashboardPage() {
   const navigate = useNavigate();
   const [blockNum, setBlockNum] = useState(0);
   const [transactionNum, setTransactionNum] = useState([]);
-  const [chainId, setChainId] = useState('');
-  const [web3, setWeb3] = useState('');
+  const [chainId, setChainId] = useState("");
+  const [web3, setWeb3] = useState("");
 
   useEffect(() => {
     const asyncCall = async () => {
