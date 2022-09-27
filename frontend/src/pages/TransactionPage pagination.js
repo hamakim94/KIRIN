@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import Web3 from 'web3';
+import { Pagination } from '@mui/material';
 import styles from './BlockchainPage.module.css';
 import { AiFillSetting } from 'react-icons/ai';
 import { BiArrowBack } from 'react-icons/bi';
 
 function TransactionPage() {
   const [transactions, setTransactions] = useState([]);
+  const [lastPage, setLastPage] = useState(0);
+  const [page, setPage] = useState(1); // 처음 페이지는 1이다.
   const rowNumPerPage = 15;
   const height = window.innerHeight;
   const rowHeight = (height - 237) / rowNumPerPage;
@@ -90,37 +93,67 @@ function TransactionPage() {
     const asyncCall = async () => {
       var web3 = new Web3(new Web3.providers.HttpProvider(`${process.env.REACT_APP_BASEURL}/bc/`));
       // var web3 = new Web3(process.env.REACT_APP_TESTURL);
-      const blockNum = await web3.eth.getBlockNumber();
 
-      // 전체 가져오기
       let block;
       let i;
       let txArr = [];
-      for (i = 0; i < blockNum; i++) {
-        block = await web3.eth.getBlock(blockNum - i);
-        block.transactions.forEach((tx) => {
-          var txInfo = {
-            hash: tx,
-            from: null,
-            to: null,
-            timeSince: timeSince(block.timestamp),
-            timeStamp: block.timestamp,
-          };
-          txArr.push(txInfo);
-          web3.eth
-            .getTransaction(tx)
-            .then((txDetail) => {
-              txInfo.from = txDetail.from;
-              txInfo.to = txDetail.to;
-            })
-            .catch(console.error);
-        });
+      var temp;
+
+      const blockNum = await web3.eth.getBlockNumber();
+      const LAST_PAGE =
+        blockNum % rowNumPerPage === 0
+          ? parseInt(blockNum / rowNumPerPage)
+          : parseInt(blockNum / rowNumPerPage) + 1; // 마지막 페이지
+      setLastPage(LAST_PAGE);
+
+      if (page === LAST_PAGE) {
+        // 마지막 페이지는 데이터가 5개보다 부족할 수도 있다.
+        for (i = rowNumPerPage * (page - 1); i < blockNum; i++) {
+          block = await web3.eth.getBlock(blockNum - i);
+          block.transactions.forEach((tx) => {
+            temp = {
+              hash: tx,
+              from: null,
+              to: null,
+              timeSince: timeSince(block.timestamp),
+              timeStamp: block.timestamp,
+            };
+            txArr.push(temp);
+            web3.eth
+              .getTransaction(tx)
+              .then((txDetail) => {
+                temp.from = txDetail.from;
+                temp.to = txDetail.to;
+              })
+              .catch(console.error);
+          });
+        }
+      } else {
+        for (i = rowNumPerPage * (page - 1); i < rowNumPerPage * (page - 1) + rowNumPerPage; i++) {
+          block = await web3.eth.getBlock(blockNum - i);
+          block.transactions.forEach((tx) => {
+            temp = {
+              hash: tx,
+              from: null,
+              to: null,
+              timeSince: timeSince(block.timestamp),
+              timeStamp: block.timestamp,
+            };
+            txArr.push(temp);
+            web3.eth
+              .getTransaction(tx)
+              .then((txDetail) => {
+                temp.from = txDetail.from;
+                temp.to = txDetail.to;
+              })
+              .catch(console.error);
+          });
+        }
       }
       setTransactions(txArr);
-      // console.log(txArr);
     };
     asyncCall();
-  }, []);
+  }, [page]);
 
   // timestamp 포맷을 사람이 읽을 수 있는 형태로 변환한다.
   function timeSince(date) {
@@ -147,6 +180,11 @@ function TransactionPage() {
     }
     return Math.floor(seconds) + '초 전';
   }
+
+  const handlePage = (event) => {
+    const nowPageInt = parseInt(event.target.outerText);
+    setPage(nowPageInt);
+  };
 
   return (
     <div style={{ paddingBottom: 55 }}>
@@ -178,6 +216,23 @@ function TransactionPage() {
           ))}
         </tbody>
       </table>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          marginTop: 20,
+          marginBottom: 10,
+        }}
+      >
+        <Pagination
+          count={lastPage}
+          defaultPage={1}
+          boundaryCount={2}
+          onChange={(e) => handlePage(e)}
+          hideNextButton={true}
+          hidePrevButton={true}
+        />
+      </div>
     </div>
   );
 }
