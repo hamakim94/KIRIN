@@ -6,6 +6,7 @@ import { ko } from 'date-fns/esm/locale';
 function StarCreatePage() {
   const [img, setImg] = useState(null);
   const [video, setVideo] = useState(null);
+  const [title, setTitle] = useState(null);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const onChangeImg = (e) => {
@@ -49,6 +50,9 @@ function StarCreatePage() {
         />
       </div>
       <div>
+        <input type='text' value={title} onChange={(value) => setTitle(value)}></input>
+      </div>
+      <div>
         시작일
         <DatePicker
           selected={startDate}
@@ -56,8 +60,6 @@ function StarCreatePage() {
           locale={ko}
           dateFormat='yyyy년 MM월 dd일'
         />
-      </div>
-      <div>
         종료일
         <DatePicker
           selected={endDate}
@@ -66,6 +68,7 @@ function StarCreatePage() {
           dateFormat='yyyy년 MM월 dd일'
         />
       </div>
+      <div></div>
       <div></div>
       <div></div>
       <div></div>
