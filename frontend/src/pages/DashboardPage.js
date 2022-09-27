@@ -1,14 +1,15 @@
-import React, { useEffect, useState } from "react";
-import Web3 from "web3";
-import styles from "./DashboardPage.module.css";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from 'react';
+import Web3 from 'web3';
+import styles from './DashboardPage.module.css';
+import { useNavigate } from 'react-router-dom';
+import { BiArrowBack } from 'react-icons/bi';
 
 function DashboardPage() {
   const navigate = useNavigate();
   const [blockNum, setBlockNum] = useState(0);
   const [transactionNum, setTransactionNum] = useState([]);
-  const [chainId, setChainId] = useState("");
-  const [web3, setWeb3] = useState("");
+  const [chainId, setChainId] = useState('');
+  const [web3, setWeb3] = useState('');
 
   useEffect(() => {
     const asyncCall = async () => {
@@ -38,7 +39,11 @@ function DashboardPage() {
   return (
     <div className={styles.wrapper}>
       <div className={styles.topBox}>
+        <a>
+          <BiArrowBack className={styles.back}></BiArrowBack>
+        </a>
         <div className={styles.pageTitle}>블록체인 정보</div>
+        <div style={{ width: 25 }}></div>
       </div>
       <div className={styles.infoBox}>
         <div className={styles.infoName}>기린 토큰</div>
