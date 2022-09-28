@@ -201,6 +201,7 @@ public class ChallengeServiceImpl implements ChallengeService {
     @Override
     public void createChallenge(UserDTO userDTO, ChallengeRequestDTO challengeRequestDTO, MultipartFile video) throws IOException {
         try {
+            System.out.println("I'm in create challenge");
             // 원 챌린지 음악과 이미지 저장경로
             Challenge forChallenge = challengeRepository.getReferenceById(challengeRequestDTO.challengeId());
             CelebChallengeInfo celebChallengeInfo = celebChallengeInfoRepository.findByChallengeId(forChallenge.getId());
@@ -220,9 +221,15 @@ public class ChallengeServiceImpl implements ChallengeService {
             String outputPath = UUID.randomUUID() + ".mp4";
             String commandInsertWatermark = String.format("ffmpeg -y -i %s -i %s -i %s -filter_complex \"[1][0]scale2ref=w=oh*mdar:h=ih*0.08[logo][video];[logo]format=argb,geq=r='r(X,Y)':a='0.8*alpha(X,Y)'[soo];[video][soo]overlay=30:30\" -map \"v\" -map 2:a -c:v libx264 -crf 17 -c:a aac -strict experimental %s"
                     , videoTmpDir, kirinStamp, musicPath, (challengeDir+ outputPath));
+            System.out.println("videoTmpDir : "+videoTmpDir+"\nkirinStamp :"+kirinStamp+"\nmusicPath : "+musicPath+"\nchallengeDir+ outputPath : "+(challengeDir+ outputPath));
+            System.out.println("command will be : ");
+            System.out.println(commandInsertWatermark);
+            BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            String line;
+            while((line=br.readLine())!=null) System.out.println(line);
             p = Runtime.getRuntime().exec(commandInsertWatermark);
             p.waitFor();
-
+            System.out.println("saving challenge");
             challengeRepository.save(
                     Challenge.builder().user(user).isProceeding(true).reg(LocalDateTime.now()).thumbnail(thumbDir)
                                .title(challengeRequestDTO.title()).isOriginal(false).challengeId(challengeRequestDTO.challengeId())
