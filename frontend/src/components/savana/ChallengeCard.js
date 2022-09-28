@@ -9,6 +9,8 @@ import {
   RiBearSmileFill,
 } from 'react-icons/ri';
 import swal from 'sweetalert';
+import Sheet from 'react-modal-sheet';
+import SavanaComment from './SavanaComment';
 
 function ProgressBar(props) {
   const [value, setValue] = useState(0);
@@ -28,6 +30,7 @@ function ChallengeCard(props) {
   // 마우스 오버 상태
   const [hover, setHover] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [isOpen, setOpen] = useState(false);
 
   function copy() {
     const el = document.createElement('input');
@@ -48,19 +51,29 @@ function ChallengeCard(props) {
     >
       <div className={props.styles.coverBox}>
         <div className={props.styles.blankBox}></div>
+
         <div className={props.styles.iconBox}>
-          <a href='/challenge/${challengeId}'>
+          <a href="/challenge/${challengeId}">
             <RiZoomInFill className={props.styles.clickIcon}></RiZoomInFill>
           </a>
           <div>
-            <a href='/donation'>
+            <a href="/donation">
               <RiHeart2Line className={props.styles.clickIcon}></RiHeart2Line>
             </a>
             <div className={props.styles.iconCount}>32</div>
           </div>
           <div>
-            <a>
+            <a onClick={() => setOpen(true)} class="button">
               <RiMessage3Line className={props.styles.clickIcon}></RiMessage3Line>
+              <Sheet isOpen={isOpen} onClose={() => setOpen(false)}>
+                <Sheet.Container style={{ height: '500px' }}>
+                  <Sheet.Header />
+                  <Sheet.Content style={{ margin: '20px' }}>
+                    <SavanaComment></SavanaComment>
+                  </Sheet.Content>
+                </Sheet.Container>
+                <Sheet.Backdrop />
+              </Sheet>
             </a>
             <div className={props.styles.iconCount}>25</div>
           </div>
@@ -68,7 +81,7 @@ function ChallengeCard(props) {
           <a>
             <RiShareFill className={props.styles.clickIcon} onClick={copy}></RiShareFill>
           </a>
-          <a href='/donation'>
+          <a href="/donation">
             <RiBearSmileFill className={props.styles.clickIcon}></RiBearSmileFill>
           </a>
         </div>
@@ -90,9 +103,9 @@ function ChallengeCard(props) {
             playerVars: { modestbranding: 1, mute: 1 },
           },
         }}
-        url='https://www.youtube.com/watch?v=fgaLAomg68c'
-        width='100%'
-        height='100%'
+        url="https://www.youtube.com/watch?v=fgaLAomg68c"
+        width="100%"
+        height="100%"
         playing={hover}
         controls={false}
         loop={true}

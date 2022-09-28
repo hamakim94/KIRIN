@@ -35,6 +35,8 @@ import { Cookies } from 'react-cookie';
 import StarCreatePage from './pages/StarCreatePage';
 import SelectPage from './pages/SelectPage';
 import WalletPage from './pages/WalletPage';
+import SuccessPage from './pages/SuccessPage';
+import FailPage from './pages/FailPage';
 
 function App() {
   const [blob, setBlob] = useState(null);
@@ -123,6 +125,8 @@ function App() {
                 <Route path='/finishsignup' element={<FinishSignupPage></FinishSignupPage>}></Route>
                 <Route path='/findpassword' element={<FindPasswordPage></FindPasswordPage>}></Route>
                 <Route path='/signup' element={<SignupPage></SignupPage>}></Route>
+                <Route path='/success' element={<SuccessPage></SuccessPage>}></Route>
+                <Route path='/fail' element={<FailPage></FailPage>}></Route>
                 <Route path='*' element={<NotFoundPage></NotFoundPage>}></Route>
               </Routes>
             </Context.Provider>
@@ -130,7 +134,12 @@ function App() {
         )
       ) : (
         <div className='Pc'>
-          <PcPage></PcPage>
+          <Routes>
+            <Route path='/' element={<PcPage></PcPage>}></Route>
+            <Route path='/success' element={<SuccessPage></SuccessPage>}></Route>
+            <Route path='/fail' element={<FailPage></FailPage>}></Route>
+            <Route path='*' element={<NotFoundPage></NotFoundPage>}></Route>
+          </Routes>
         </div>
       )}
     </>

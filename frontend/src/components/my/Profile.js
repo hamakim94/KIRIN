@@ -12,7 +12,7 @@ function Profile(props) {
           <img
             src={
               userData.profileImg
-                ? `${process.env.REACT_APP_BASEURL}/files/${userData.profileImg}`
+                ? `/files/${userData.profileImg}`
                 : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'
             }
             className={props.styles.userImg}

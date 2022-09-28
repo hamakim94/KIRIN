@@ -1,0 +1,67 @@
+.wrapper {
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.topWrapper {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.midWrapper {
+  box-sizing: border-box;
+  width: 100%;
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 10px;
+  padding: 15px;
+  margin-bottom: 10px;
+}
+
+.writerWrapper {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  padding-left: 10px;
+}
+
+.nameWrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.starImg {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 100%;
+  margin-right: 10px;
+}
+
+.writeDate {
+  color: #808080;
+  font-size: 12px;
+}
+
+.communityImg {
+  width: 100%;
+  object-fit: cover;
+  margin-top: 10px;
+}
+
+.inputBox {
+  width: 100%;
+  border-width: 0px;
+  background-color: #ffffff;
+}
+.inputBox:focus {
+  outline: 0;
+}
+
+.commentImg {
+  width: 40x;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 100%;
+}

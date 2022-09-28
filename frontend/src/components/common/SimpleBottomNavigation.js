@@ -24,6 +24,9 @@ function SimpleBottomNavigation() {
           left: 0,
           right: 0,
           height: 55,
+          borderTopStyle: 'solid',
+          borderTopWidth: 0.1,
+          borderTopColor: '#C9C9C9',
         }}
       >
         <BottomNavigation

@@ -6,7 +6,6 @@ import UseAxios from '../utils/UseAxios';
 
 function StarCreatePage() {
   const videoRef = useRef(null);
-  const [img, setImg] = useState(null);
   const [video, setVideo] = useState(null);
   const [title, setTitle] = useState(null);
   const [info, setInfo] = useState(null);
@@ -16,13 +15,7 @@ function StarCreatePage() {
   const [endDate, setEndDate] = useState(null);
   const [targetNum, setTargetNum] = useState(null);
   const [targetAmount, setTargetAmount] = useState(null);
-  const onChangeImg = (e) => {
-    if (e.target.files[0]) {
-      setImg(e.target.files[0]);
-    } else {
-      return;
-    }
-  };
+
   const onChangeVideo = (e) => {
     if (e.target.files[0]) {
       setVideo(e.target.files[0]);
@@ -36,7 +29,7 @@ function StarCreatePage() {
       title: title.trim(),
       info: info.trim(),
       musicTitle: musicTitle.trim(),
-      length: videoRef.current.duration.toFixed(1),
+      length: 3.0,
       startDate,
       endDate,
       targetNum,
@@ -46,7 +39,6 @@ function StarCreatePage() {
     console.log(body.length);
     const data = new FormData();
     data.append('video', video);
-    data.append('stamp', img);
     const json = JSON.stringify(body);
     const blob = new Blob([json], { type: 'application/json' });
     data.append('starChallengeRequestDTO', blob);
@@ -54,7 +46,7 @@ function StarCreatePage() {
       headers: { 'Content-Type': 'multipart/form-data' },
     })
       .then((res) => {
-        console.log(res.data);
+        console.log(res);
       })
       .catch((err) => {
         console.log(err);
@@ -68,19 +60,6 @@ function StarCreatePage() {
   return (
     <div style={{ paddingBottom: 55 }}>
       <form onSubmit={handleSubmit}>
-        <div style={{ margin: 5 }}>
-          <label htmlFor='ex_img' style={{ borderWidth: 1, borderStyle: 'solid' }}>
-            이미지 업로드
-          </label>
-          <input
-            type='file'
-            accept='image/*'
-            id='ex_img'
-            onChange={onChangeImg}
-            style={{ display: 'none' }}
-            required
-          />
-        </div>
         <div style={{ margin: 5 }}>
           <label htmlFor='ex_video' style={{ borderWidth: 1, borderStyle: 'solid' }}>
             동영상 업로드
@@ -189,11 +168,6 @@ function StarCreatePage() {
           업로드
         </button>
       </form>
-      {img ? (
-        <img alt='이미지' src={URL.createObjectURL(img)} height={'100%'} width={'100%'}></img>
-      ) : (
-        ''
-      )}
       {video ? (
         <video
           ref={videoRef}
