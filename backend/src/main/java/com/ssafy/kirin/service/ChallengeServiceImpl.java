@@ -243,7 +243,8 @@ public class ChallengeServiceImpl implements ChallengeService {
             p.waitFor();
 
             String thumbDir = challengeDir+UUID.randomUUID()+".gif";
-            String commandExtractThumbnail = String.format("ffmpeg -t 2 -i %s  -vf \"fps=10,scale=320:-1:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse\" -loop 0 %s", videoDir,thumbDir);
+//            "ffmpeg -t 2 -i %s  -vf \"fps=10,scale=320:-1:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse\" -loop 0 %s"
+            String commandExtractThumbnail = String.format("ffmpeg -y -ss 2 -t 2 -i %s -r 10 -loop 0 %s", videoDir,thumbDir);
             p = Runtime.getRuntime().exec(commandExtractThumbnail);
             BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
             String line;
