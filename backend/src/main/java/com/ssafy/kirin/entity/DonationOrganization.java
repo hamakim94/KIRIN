@@ -19,4 +19,8 @@ public class DonationOrganization {
     Long id;
 
     String name;
+
+    @OneToOne
+    @JoinColumn(name = "wallet_id")
+    Wallet wallet;
 }
