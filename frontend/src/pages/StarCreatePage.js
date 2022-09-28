@@ -10,13 +10,13 @@ function StarCreatePage() {
   const [video, setVideo] = useState(null);
   const [title, setTitle] = useState(null);
   const [info, setInfo] = useState(null);
+  const [duration, setDuration] = useState(null);
   const [musicTitle, setMusicTitle] = useState(null);
   const [donationOrganizationId, setDonationOrganizationId] = useState(null);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [targetNum, setTargetNum] = useState(null);
   const [targetAmount, setTargetAmount] = useState(null);
-
   const onChangeImg = (e) => {
     if (e.target.files[0]) {
       setImg(e.target.files[0]);
