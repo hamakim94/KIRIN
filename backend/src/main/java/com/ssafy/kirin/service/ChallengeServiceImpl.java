@@ -50,60 +50,56 @@ public class ChallengeServiceImpl implements ChallengeService {
     @Value("${property.app.upload-path}")
     private String challengeDir;
 //    @Value("${kirin.stamp}")
-    private String kirinStamp = "/files/bd363c62-476d-4c29-aed6-8a5346fb41bfstamp.png";
+    private final String kirinStamp = "/files/bd363c62-476d-4c29-aed6-8a5346fb41bfstamp.png";
 
     @Override
-    public List<Challenge> listStarsByPopularity() {
-        return challengeRepository.findByIsOriginalAndIsProceeding(true, true, Sort.by(Sort.Direction.DESC, "likeCnt"));
+    public List<ChallengeDTO> listStarsByPopularity() {
+        return this.challegeListToChallengDTOList(challengeRepository.findByIsOriginalAndIsProceeding(true, true, Sort.by(Sort.Direction.DESC, "likeCnt")));
     }
 
     @Override
-    public List<Challenge> listStarsByLatest() {
-        return challengeRepository.findByIsOriginalAndIsProceeding(true, true, Sort.by(Sort.Direction.DESC, "id"));
+    public List<ChallengeDTO> listStarsByLatest() {
+        return this.challegeListToChallengDTOList(challengeRepository.findByIsOriginalAndIsProceeding(true, true, Sort.by(Sort.Direction.DESC, "id")));
     }
 
     @Override
-    public List<Challenge> listGeneralByPopularity() {
-        return challengeRepository.findByIsOriginalAndIsProceeding(false, true, Sort.by(Sort.Direction.DESC, "likeCnt"));
+    public List<ChallengeDTO> listGeneralByPopularity() {
+        return this.challegeListToChallengDTOList(challengeRepository.findByIsOriginalAndIsProceeding(false, true, Sort.by(Sort.Direction.DESC, "likeCnt")));
     }
 
     @Override
-    public List<Challenge> listGeneralByRandom() {
-        List<Challenge> challenges = challengeRepository.findByIsOriginalAndIsProceeding(false, true);
+    public List<ChallengeDTO> listGeneralByRandom() {
+        List<ChallengeDTO> challenges = this.challegeListToChallengDTOList(challengeRepository.findByIsOriginalAndIsProceeding(false, true));
         Collections.shuffle(challenges);
         return challenges;
     }
 
     @Override
-    public List<Challenge> listAllByRandom() {
-        List<Challenge> challenges = challengeRepository.findByIsProceeding(true);
+    public List<ChallengeDTO> listAllByRandom() {
+        List<ChallengeDTO> challenges = this.challegeListToChallengDTOList(challengeRepository.findByIsProceeding(true));
         Collections.shuffle(challenges);
         return challenges;
     }
 
     @Override
-    public List<Challenge> listAllByAlphabet() {
-        return challengeRepository.findAll(Sort.by(Sort.Direction.ASC, "title"));
+    public List<ChallengeDTO> listAllByAlphabet() {
+        return this.challegeListToChallengDTOList(challengeRepository.findAll(Sort.by(Sort.Direction.ASC, "title")));
     }
 
     @Override
-    public List<Challenge> listAllByChallenge(Long challengeId) {
-        return challengeRepository.findByChallengeId(challengeId);
+    public List<ChallengeDTO> listAllByChallenge(Long challengeId) {
+        return this.challegeListToChallengDTOList(challengeRepository.findByChallengeId(challengeId));
     }
 
     @Override
-    public List<Challenge> listAllByUser(Long userId) {
-        return challengeRepository.findByUserId(userId);
+    public List<ChallengeDTO> listAllByUser(Long userId) {
+        return this.challegeListToChallengDTOList(challengeRepository.findByUserId(userId));
     }
 
     @Override
     public List<ChallengeDTO> listUserLike(Long userId) {
         return challengeLikeRepository.findByUserId(userId).stream()
-                .map(ChallengeLike::getChallenge).map(o -> {
-                    ChallengeDTO dto = ChallengeMapStruct.INSTANCE.mapToChallengeDTO(o);
-                    dto.setUser(UserMapStruct.INSTANCE.mapToUserDTO(o.getUser()));
-                    return dto;
-                }).collect(Collectors.toList());
+                .map(ChallengeLike::getChallenge).map(this::mapChallengeDTO).collect(Collectors.toList());
     }
 
     @Override
@@ -291,5 +287,19 @@ public class ChallengeServiceImpl implements ChallengeService {
             throw new RuntimeException(e);
         }
 
+    }
+
+    public ChallengeDTO mapChallengeDTO(Challenge challenge) {
+
+        CelebChallengeInfo celebChallengeInfo = celebChallengeInfoRepository.findByChallengeId(challenge.getId());
+        ChallengeDTO dto = ChallengeMapStruct.INSTANCE.mapToChallengeDTO(challenge,celebChallengeInfo);
+        dto.setUser(UserMapStruct.INSTANCE.mapToUserDTO(challenge.getUser()));
+        return dto;
+    }
+
+    public List<ChallengeDTO> challegeListToChallengDTOList(List<Challenge> challengeList){
+        return challengeList.stream()
+                .map(this::mapChallengeDTO)
+                .collect(Collectors.toList());
     }
 }

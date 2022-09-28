@@ -15,14 +15,14 @@ import java.io.IOException;
 import java.util.List;
 
 public interface ChallengeService {
-    List<Challenge> listStarsByPopularity();
-    List<Challenge> listStarsByLatest();
-    List<Challenge> listGeneralByPopularity();
-    List<Challenge> listGeneralByRandom();
-    List<Challenge> listAllByRandom();
-    List<Challenge> listAllByAlphabet();
-    List<Challenge> listAllByChallenge(Long challengeId);
-    List<Challenge> listAllByUser(Long userId);
+    List<ChallengeDTO> listStarsByPopularity();
+    List<ChallengeDTO> listStarsByLatest();
+    List<ChallengeDTO> listGeneralByPopularity();
+    List<ChallengeDTO> listGeneralByRandom();
+    List<ChallengeDTO> listAllByRandom();
+    List<ChallengeDTO> listAllByAlphabet();
+    List<ChallengeDTO> listAllByChallenge(Long challengeId);
+    List<ChallengeDTO> listAllByUser(Long userId);
     List<ChallengeDTO> listUserLike(Long userId);
     void createChallenge(UserDTO userDTO, ChallengeRequestDTO challengeRequestDTO, MultipartFile video) throws IOException;
     void createStarChallenge(UserDTO userDTO, StarChallengeRequestDTO starChallengeRequestDTO, MultipartFile video);
