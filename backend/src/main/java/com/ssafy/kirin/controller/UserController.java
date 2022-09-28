@@ -145,10 +145,8 @@ public class UserController {
 
     @GetMapping("/profiles")
     @ApiOperation(value = "사용자 프로필 정보 조회")
-    public ResponseEntity<UserResponseDTO> userProfile(@ApiIgnore @AuthenticationPrincipal UserDTO user){
-        UserResponseDTO userDTO = userService.getUserProfile(user);
-
-        return new ResponseEntity<>(userDTO, HttpStatus.OK);
+    public ResponseEntity<UserDTO> userProfile(@ApiIgnore @AuthenticationPrincipal UserDTO user){
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     @PutMapping("/profiles")
