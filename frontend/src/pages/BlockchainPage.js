@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import Web3 from 'web3';
 import { Pagination } from '@mui/material';
 import styles from './BlockchainPage.module.css';
-import { AiFillSetting } from 'react-icons/ai';
 import { BiArrowBack } from 'react-icons/bi';
 
 // timestamp 포맷을 사람이 읽을 수 있는 형태로 변환한다.
@@ -45,7 +44,7 @@ function BlockchainPage() {
       <tr style={{ height: `${rowHeight}px` }} className={styles.row}>
         <td>{block.number}</td>
         <td>{block.timestamp}</td>
-        <td className={styles.hash}>{block.hash}</td>
+        <td className={styles.ellipsis}>{block.hash}</td>
         <td>{block.txCount}</td>
       </tr>
       // <div>
@@ -125,11 +124,9 @@ function BlockchainPage() {
           <BiArrowBack className={styles.back}></BiArrowBack>
         </a>
         <div className={styles.pageTitle}>블록 정보</div>
-        <div href='/mypage/setting'>
-          <AiFillSetting className={styles.setting}></AiFillSetting>
-        </div>
+        <div style={{ width: 25 }}></div>
       </div>
-      <table style={{ borderCollapse: 'collapse' }}>
+      <table className={styles.table}>
         <colgroup>
           <col width='18%' />
           <col width='22%' />

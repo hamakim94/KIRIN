@@ -16,7 +16,6 @@ function StarCreatePage() {
   const [endDate, setEndDate] = useState(null);
   const [targetNum, setTargetNum] = useState(null);
   const [targetAmount, setTargetAmount] = useState(null);
-
   const onChangeImg = (e) => {
     if (e.target.files[0]) {
       setImg(e.target.files[0]);
@@ -37,12 +36,14 @@ function StarCreatePage() {
       title: title.trim(),
       info: info.trim(),
       musicTitle: musicTitle.trim(),
+      length: videoRef.current.duration.toFixed(1),
       startDate,
       endDate,
       targetNum,
       targetAmount,
       donationOrganizationId,
     };
+    console.log(body.length);
     const data = new FormData();
     data.append('video', video);
     data.append('stamp', img);

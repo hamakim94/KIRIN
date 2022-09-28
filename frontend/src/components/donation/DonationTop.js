@@ -9,9 +9,7 @@ function DontaionTop(props) {
         <BiArrowBack className={props.styles.back}></BiArrowBack>
       </a>
       <div className={props.styles.pageTitle}>나의 기부</div>
-      <div href="/mypage/setting">
-        <AiFillSetting className={props.styles.setting}></AiFillSetting>
-      </div>
+      <div style={{ width: 25 }}></div>
     </div>
   );
 }

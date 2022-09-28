@@ -8,9 +8,11 @@ import {
   RiShareFill,
   RiBearSmileFill,
 } from 'react-icons/ri';
+import swal from 'sweetalert';
 
 function ProgressBar(props) {
   const [value, setValue] = useState(0);
+
   useEffect(() => {
     const newValue = props.width * props.percent;
     setValue(newValue);
@@ -35,6 +37,7 @@ function ChallengeCard(props) {
     document.execCommand('copy');
     document.body.removeChild(el);
     setCopied(true);
+    swal('링크 복사가 완료되었습니다');
   }
 
   return (
@@ -46,17 +49,17 @@ function ChallengeCard(props) {
       <div className={props.styles.coverBox}>
         <div className={props.styles.blankBox}></div>
         <div className={props.styles.iconBox}>
-          <a href="/donation">
+          <a href='/challenge/${challengeId}'>
             <RiZoomInFill className={props.styles.clickIcon}></RiZoomInFill>
           </a>
           <div>
-            <a href="/donation">
+            <a href='/donation'>
               <RiHeart2Line className={props.styles.clickIcon}></RiHeart2Line>
             </a>
             <div className={props.styles.iconCount}>32</div>
           </div>
           <div>
-            <a href="/donation">
+            <a>
               <RiMessage3Line className={props.styles.clickIcon}></RiMessage3Line>
             </a>
             <div className={props.styles.iconCount}>25</div>
@@ -65,7 +68,7 @@ function ChallengeCard(props) {
           <a>
             <RiShareFill className={props.styles.clickIcon} onClick={copy}></RiShareFill>
           </a>
-          <a href="/donation">
+          <a href='/donation'>
             <RiBearSmileFill className={props.styles.clickIcon}></RiBearSmileFill>
           </a>
         </div>
@@ -87,9 +90,9 @@ function ChallengeCard(props) {
             playerVars: { modestbranding: 1, mute: 1 },
           },
         }}
-        url="https://www.youtube.com/watch?v=fgaLAomg68c"
-        width="100%"
-        height="100%"
+        url='https://www.youtube.com/watch?v=fgaLAomg68c'
+        width='100%'
+        height='100%'
         playing={hover}
         controls={false}
         loop={true}

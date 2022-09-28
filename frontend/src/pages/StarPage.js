@@ -17,7 +17,7 @@ function StarPage() {
   }, []);
 
   return (
-    <div className={styles.wrapper}>
+    <div className="wrapper">
       <div className={styles.topWrapper}>
         {/* 커버사진 */}
         <div

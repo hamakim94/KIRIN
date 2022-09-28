@@ -1,7 +1,3 @@
-.wrapper {
-  padding-top: 15px;
-  padding-bottom: 55px;
-}
 .coverImg {
   height: 150px;
   background-image: url(https://cdn.pixabay.com/photo/2015/01/27/19/34/giraffe-614141_960_720.jpg);
@@ -31,7 +27,7 @@
 }
 .starName {
   display: inline-block;
-  font-family: "SCD600";
+  font-family: 'SCD600';
   margin-left: 15px;
   width: 100px;
   text-align: center;
@@ -49,12 +45,13 @@
   padding-right: 10px;
   padding-top: 4.5px;
   border: 0;
-  font-family: "SCD800";
+  font-family: 'SCD800';
   color: #7e370c;
   border-radius: 10%;
 }
-.subBtn:hover {
+.subBtn:active {
   background-color: #cd9105;
+  transition: 0.3s;
 }
 
 .contentBox {
@@ -72,7 +69,7 @@
 .category {
   display: inline-block;
   margin-left: 15px;
-  font-family: "SCD500";
+  font-family: 'SCD500';
   font-size: 20px;
 }
 
