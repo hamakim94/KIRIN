@@ -3,7 +3,10 @@ package com.ssafy.kirin.service;
 import com.ssafy.kirin.dto.UserDTO;
 import com.ssafy.kirin.dto.request.UserFindPWRequestDTO;
 import com.ssafy.kirin.dto.request.UserLoginRequestDTO;
+import com.ssafy.kirin.dto.request.UserModifyRequestDTO;
 import com.ssafy.kirin.dto.request.UserSignupRequestDTO;
+import com.ssafy.kirin.dto.response.CelebResponseDTO;
+import com.ssafy.kirin.dto.response.UserResponseDTO;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.Errors;
 import org.springframework.web.multipart.MultipartFile;
@@ -15,23 +18,23 @@ import java.util.List;
 import java.util.Map;
 
 public interface UserService {
-    void signup(UserSignupRequestDTO userSignupRequestDTO, MultipartFile profileImg, MultipartFile coverImg, PasswordEncoder passwordEncoder) throws Exception;
+    void signup(UserSignupRequestDTO userSignupRequestDTO, MultipartFile profileImg, PasswordEncoder passwordEncoder) throws Exception;
 
     void confirmEmail(String email, String authToken);
 
-    UserDTO login(UserLoginRequestDTO userLoginRequestDTO, PasswordEncoder passwordEncoder);
+    UserResponseDTO login(UserLoginRequestDTO userLoginRequestDTO, PasswordEncoder passwordEncoder);
 
-    UserDTO modifyUser(UserDTO userDTO, MultipartFile profileImg) throws IOException;
+    UserResponseDTO modifyUser(long userId, String nickname, MultipartFile profileImg) throws IOException;
 
     UserDTO getUserById(long userId);
 
-    void subscribe(long userId, long starId);
+    void subscribe(long userId, long starId) throws Exception;
 
-    List<UserDTO> getCelebList();
+    List<UserResponseDTO> getCelebList();
 
-    List<UserDTO> getCelebListById(long userId);
+    List<UserResponseDTO> getCelebListById(long userId);
 
-    UserDTO getCelebInfo(long starId);
+    CelebResponseDTO getCelebInfo(long starId);
 
     boolean checkEmailDuplicate(String email);
 
@@ -43,5 +46,9 @@ public interface UserService {
 
     void updatePassword(UserFindPWRequestDTO userFindPWRequestDTO, PasswordEncoder passwordEncoder) throws Exception;
 
-    void updateCoverImg(long starId, MultipartFile coverImg);
+    void updateCoverImg(long starId, MultipartFile coverImg) throws Exception;
+
+    void updateStarInfo(long starId, String info) throws Exception;
+
+    UserResponseDTO getUserProfile(UserDTO userDTO);
 }

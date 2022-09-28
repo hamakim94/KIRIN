@@ -1,5 +1,6 @@
 package com.ssafy.kirin.dto.response;
 
+
 import lombok.*;
 
 @Getter
@@ -9,8 +10,10 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 @ToString
-public class UserResponseDTO {
+public class CelebResponseDTO {
     Long id;
     String nickname;
     String profileImg;
+    String info;
+    String coverImg;
 }

@@ -5,7 +5,10 @@ import com.ssafy.kirin.config.security.JwtTokenProvider;
 import com.ssafy.kirin.dto.UserDTO;
 import com.ssafy.kirin.dto.request.UserFindPWRequestDTO;
 import com.ssafy.kirin.dto.request.UserLoginRequestDTO;
+import com.ssafy.kirin.dto.request.UserModifyRequestDTO;
 import com.ssafy.kirin.dto.request.UserSignupRequestDTO;
+import com.ssafy.kirin.dto.response.CelebResponseDTO;
+import com.ssafy.kirin.dto.response.UserResponseDTO;
 import com.ssafy.kirin.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -44,40 +47,34 @@ public class UserController {
 
     @PostMapping("/signup")
     @ApiOperation(value = "사용자 회원가입") // 요청 URL에 매핑된 API에 대한 설명
-    public ResponseEntity<?> userSignup(@RequestPart(value = "profileImg", required = false) MultipartFile profileImg, @RequestPart(value="coverImg", required = false) MultipartFile coverImg, @Valid @RequestPart(value="userDTO") UserSignupRequestDTO userSignupRequestDTO, Errors errors){
-        System.out.println(profileImg);
-        System.out.println(coverImg);
-        System.out.println(userSignupRequestDTO);
-
+    public ResponseEntity<?> userSignup(@RequestPart(value = "profileImg", required = false) MultipartFile profileImg, @Valid @RequestPart(value="userDTO") UserSignupRequestDTO userSignupRequestDTO, Errors errors){
         if(errors.hasErrors()){ // 유효성 검사 실패
             Map<String, String> validatorResult = userService.validateHandling(errors);
             for (String key : validatorResult.keySet()) {
                 log.error(key + ": " + validatorResult.get(key));
             }
 
-            System.out.println("유효성 검사 실패");
+            log.error("유효성 검사 실패");
 
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
         try{
-            userService.signup(userSignupRequestDTO, profileImg, coverImg, passwordEncoder);
-            System.out.println("회원가입 service 완료");
+            userService.signup(userSignupRequestDTO, profileImg, passwordEncoder);
         } catch (Exception e){
-            System.out.println("회원가입 오류");
+            log.error("회원가입 오류");
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        System.out.println("회원가입 완료");
+        log.info("회원가입 완료");
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/login")
     @ApiOperation(value = "사용자 로그인")
     public ResponseEntity<?> userLogin(@RequestBody UserLoginRequestDTO userLoginRequestDTO){
-        log.info("login 함수 실행");
         try{
-            UserDTO userDTO = userService.login(userLoginRequestDTO, passwordEncoder);
+            UserResponseDTO userDTO = userService.login(userLoginRequestDTO, passwordEncoder);
 
             Authentication auth = new UsernamePasswordAuthenticationToken(userDTO.getId(), userLoginRequestDTO.getPassword());
             String accessToken = jwtTokenProvider.createAccessToken(auth); // access token 발급
@@ -116,13 +113,6 @@ public class UserController {
         String refreshToken = jwtTokenProvider.getTokenFromRequest(request, "REFRESHTOKEN");
         String userId = jwtTokenProvider.getUserPk(accessToken);
 
-//        System.out.println("accessToken: " + accessToken);
-//        System.out.println("refreshToken: " + refreshToken);
-//        System.out.println(userId);
-//
-//        System.out.println(refreshToken.equals(redisTemplate.opsForValue().get(userId)));
-//        System.out.println(jwtTokenProvider.validateToken(refreshToken));
-
         if(refreshToken.equals(redisTemplate.opsForValue().get(userId)) && jwtTokenProvider.validateToken(refreshToken)){ // refresh token이 유효하면
             Authentication auth = jwtTokenProvider.getAuthentication(accessToken);
             accessToken = jwtTokenProvider.createAccessToken(auth); // accessToken 재발급
@@ -149,25 +139,26 @@ public class UserController {
             // email 만료되면 해당 계정의 이메일, 닉네임은 다시 못 쓰게 할건지? 아니면 해당 user 내역을 삭제해야될지?
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping("/profiles")
     @ApiOperation(value = "사용자 프로필 정보 조회")
-    public ResponseEntity<UserDTO> userProfile(@ApiIgnore @AuthenticationPrincipal UserDTO user){
-        return new ResponseEntity<>(user, HttpStatus.OK);
+    public ResponseEntity<UserResponseDTO> userProfile(@ApiIgnore @AuthenticationPrincipal UserDTO user){
+        UserResponseDTO userDTO = userService.getUserProfile(user);
+
+        return new ResponseEntity<>(userDTO, HttpStatus.OK);
     }
 
     @PutMapping("/profiles")
-    @ApiOperation(value = "사용자 프로필 수정")
-    public ResponseEntity<UserDTO> userProfileEdit(@ApiIgnore @AuthenticationPrincipal UserDTO user,
-                                                   @RequestPart(value = "profileImg", required = false) MultipartFile profileImg, @RequestPart(value = "userDTO") UserDTO userDTO){
-        // id, 닉네임, 프로필 사진 (스타일 경우, info, cover_img도)
-        userDTO.setId(user.getId());
-        UserDTO changedUserDTO;
+    @ApiOperation(value = "사용자 프로필 정보 수정")
+    public ResponseEntity<UserResponseDTO> userProfileEdit(@ApiIgnore @AuthenticationPrincipal UserDTO user,
+                                                   @RequestPart(value = "profileImg", required = false) MultipartFile profileImg, @Valid @RequestPart String nickname){
+        UserResponseDTO changedUserDTO;
 
         try {
-            changedUserDTO = userService.modifyUser(userDTO, profileImg);
+            changedUserDTO = userService.modifyUser(user.getId(), nickname, profileImg);
         } catch (Exception e){
             log.error("userProfileEdit user 조회 실패");
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -180,15 +171,19 @@ public class UserController {
     @ApiOperation(value = "스타 구독")
     public ResponseEntity<?> subscribe(@ApiIgnore @AuthenticationPrincipal UserDTO user,
                                        @RequestParam long celebId){
-        userService.subscribe(user.getId(), celebId);
+        try{
+            userService.subscribe(user.getId(), celebId);
+        } catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping("/subscribes")
     @ApiOperation(value = "구독한 스타 목록 조회")
-    public ResponseEntity<List<UserDTO>> subscribeStarList(@ApiIgnore @AuthenticationPrincipal UserDTO user){
-        List<UserDTO> stars = userService.getCelebListById(user.getId());
+    public ResponseEntity<List<UserResponseDTO>> subscribeStarList(@ApiIgnore @AuthenticationPrincipal UserDTO user){
+        List<UserResponseDTO> stars = userService.getCelebListById(user.getId());
 
         return new ResponseEntity<>(stars, HttpStatus.OK);
     }
@@ -213,16 +208,16 @@ public class UserController {
 
     @GetMapping("/stars")
     @ApiOperation(value = "스타 목록 전체 조회")
-    public ResponseEntity<List<UserDTO>> starListGet(){
-        List<UserDTO> users = userService.getCelebList();
+    public ResponseEntity<List<UserResponseDTO>> starListGet(){
+        List<UserResponseDTO> users = userService.getCelebList();
 
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
     @GetMapping("/stars/{starId}")
     @ApiOperation(value = "스타 정보 조회")
-    public ResponseEntity<UserDTO> starInfoGet(@PathVariable long starId){
-        UserDTO user = userService.getCelebInfo(starId);
+    public ResponseEntity<CelebResponseDTO> starInfoGet(@PathVariable long starId){
+        CelebResponseDTO user = userService.getCelebInfo(starId);
 
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
@@ -251,17 +246,36 @@ public class UserController {
                 userService.updatePassword(userFindPWRequestDTO, passwordEncoder);
                 return new ResponseEntity<>(HttpStatus.OK);
             } catch (Exception e){
+                log.error("비밀번호 변경 오류: 비밀번호가 일치하지 않음");
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
         }
-
+        log.error("사용자 id가 일치하지 않습니다.");
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
     @PutMapping("/change-cover")
     @ApiOperation(value = "커버이미지 변경")
     public ResponseEntity<?> coverImgUpdate(@ApiIgnore @AuthenticationPrincipal UserDTO user, @RequestPart(value = "coverImg", required = false) MultipartFile coverImg){
-        userService.updateCoverImg(user.getId(), coverImg);
+        try{
+            userService.updateCoverImg(user.getId(), coverImg);
+        } catch (Exception e){
+            log.error("스타가 아닙니다: " + e);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PutMapping("/change-star")
+    @ApiOperation(value = "스타 소개글 변경")
+    public ResponseEntity<?> starInfoUpdate(@ApiIgnore @AuthenticationPrincipal UserDTO user, @RequestBody String info){
+        try{
+            userService.updateStarInfo(user.getId(), info);
+        } catch (Exception e){
+            log.error("스타가 아닙니다: " + e);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
 
         return new ResponseEntity<>(HttpStatus.OK);
     }

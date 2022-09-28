@@ -3,7 +3,10 @@ package com.ssafy.kirin.service;
 import com.ssafy.kirin.dto.UserDTO;
 import com.ssafy.kirin.dto.request.UserFindPWRequestDTO;
 import com.ssafy.kirin.dto.request.UserLoginRequestDTO;
+import com.ssafy.kirin.dto.request.UserModifyRequestDTO;
 import com.ssafy.kirin.dto.request.UserSignupRequestDTO;
+import com.ssafy.kirin.dto.response.CelebResponseDTO;
+import com.ssafy.kirin.dto.response.UserResponseDTO;
 import com.ssafy.kirin.entity.CelebInfo;
 import com.ssafy.kirin.entity.EmailAuth;
 import com.ssafy.kirin.entity.Subscribe;
@@ -44,7 +47,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     private String uploadPath;
 
     @Override
-    public void signup(UserSignupRequestDTO userSignupRequestDTO, MultipartFile profileImg, MultipartFile coverImg, PasswordEncoder passwordEncoder) throws Exception {
+    public void signup(UserSignupRequestDTO userSignupRequestDTO, MultipartFile profileImg, PasswordEncoder passwordEncoder) throws Exception {
         User user = null;
 
         // email, password null check && email, nickname 중복 check -> 스타, 일반인
@@ -61,13 +64,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         userSignupRequestDTO.setPassword(passwordEncoder.encode(userSignupRequestDTO.getPassword()));
 
         if(userSignupRequestDTO.getIsCeleb()){ // 스타일 경우
-            log.info("스타 회원가입");
-            System.out.println("회원가입 userSignupRequestDTO: " + userSignupRequestDTO);
-
-            CelebInfo celebInfo = CelebInfo.builder()
-                    .coverImg(getFilePath(coverImg))
-                    .info(userSignupRequestDTO.getInfo())
-                    .build();
+            CelebInfo celebInfo = new CelebInfo(); // info, coverImg는 따로 등록
 
             // wallet 만들어서 넣어줘야됨.
 
@@ -82,11 +79,8 @@ public class UserServiceImpl implements UserDetailsService, UserService {
                     .build();
 
             user.setCelebInfo(celebInfoRepository.save(celebInfo));
-
-            System.out.println(4);
         } else { // 일반인인 경우
             log.info("일반인 회원가입");
-            System.out.println("회원가입 userSignupRequestDTO: " + userSignupRequestDTO);
 
             // wallet 만들어서 넣어줘야됨.
 
@@ -122,7 +116,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     }
 
     @Override
-    public UserDTO login(UserLoginRequestDTO userLoginRequestDTO, PasswordEncoder passwordEncoder) {
+    public UserResponseDTO login(UserLoginRequestDTO userLoginRequestDTO, PasswordEncoder passwordEncoder) {
         User user = userRepository.findByEmail(userLoginRequestDTO.getEmail())
                 .orElseThrow(() -> new NoSuchElementException("User : " + userLoginRequestDTO.getEmail() + " was not found"));
 
@@ -141,23 +135,25 @@ public class UserServiceImpl implements UserDetailsService, UserService {
             return null;
         }
 
-        return userToUserDto(user); // 일반인인 경우, 스타인 경우 모두 포함
+        return userToUserDto(user);
     }
 
     @Override
-    public UserDTO modifyUser(UserDTO userDTO, MultipartFile profileImg) {
-        User user = userRepository.findById(userDTO.getId())
-                .orElseThrow(() -> new NoSuchElementException("User : " + userDTO.getId() + " was not found"));
+    public UserResponseDTO modifyUser(long userId, String nickname, MultipartFile profileImg) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NoSuchElementException("User : " + userId + " was not found"));
 
         // 원래 profile 사진은 지우기
-        deleteFile(userDTO.getProfileImg());
-
-        user.setProfileImgAndNickname(getFilePath(profileImg), userDTO.getNickname());
-
-        if(user.getIsCeleb()){ // 스타인 경우, celebInfo update
-            user.getCelebInfo().setInfo(userDTO.getInfo());
-            celebInfoRepository.save(user.getCelebInfo());
+        if(user.getProfileImg() != null){
+            deleteFile(user.getProfileImg());
         }
+
+        user.setProfileImgAndNickname(getFilePath(profileImg), nickname);
+
+//        if(user.getIsCeleb()){ // 스타인 경우, celebInfo update
+//            user.getCelebInfo().setInfo(userDTO.getInfo());
+//            celebInfoRepository.save(user.getCelebInfo());
+//        }
 
         userRepository.save(user); // user update
 
@@ -169,25 +165,50 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NoSuchElementException("User : " + userId + " was not found"));
 
-        return userToUserDto(user);
-    }
-
-    @Override
-    public void subscribe(long userId, long celebId) {
-        User celeb = userRepository.getReferenceById(celebId);
-
-        Subscribe subscribe = Subscribe.builder()
-                .userId(userId)
-                .celeb(celeb)
+        return UserDTO.builder()
+                .id(user.getId())
+                .name(user.getName())
+                .nickname(user.getNickname())
+                .profileImg(user.getProfileImg())
+                .email(user.getEmail())
                 .build();
-
-        subscribeRepository.save(subscribe);
     }
 
     @Override
-    public List<UserDTO> getCelebList() {
+    public void subscribe(long userId, long celebId) throws Exception {
+        if(userId == celebId) {
+            log.error("본인 구독은 불가합니다.");
+            throw new Exception();
+        }
+
+        // celebId가 celeb인지 확인
+        User celeb = userRepository.findById(celebId)
+                .orElseThrow(() -> new NoSuchElementException("Star : " + celebId + " was not found"));
+
+        if(!celeb.getIsCeleb()){
+            log.error("celeb 구독이 아닙니다.");
+            throw new Exception();
+        }
+
+        // subscribe이 존재하는지 여부
+        Subscribe subscribe = subscribeRepository.findByUserIdAndCelebId(userId, celebId).orElse(null);
+
+        if(subscribe != null){ // 구독 취소
+            subscribeRepository.delete(subscribe);
+        } else { // 구독
+            Subscribe newSubscribe = Subscribe.builder()
+                    .userId(userId)
+                    .celebId(celebId)
+                    .build();
+
+            subscribeRepository.save(newSubscribe);
+        }
+    }
+
+    @Override
+    public List<UserResponseDTO> getCelebList() {
         List<User> users = userRepository.findByIsCeleb(true);
-        List<UserDTO> result = new ArrayList<>();
+        List<UserResponseDTO> result = new ArrayList<>();
 
         for(User user: users){
             result.add(userToUserDto(user));
@@ -197,12 +218,13 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     }
 
     @Override
-    public List<UserDTO> getCelebListById(long userId) {
+    public List<UserResponseDTO> getCelebListById(long userId) {
         List<Subscribe> subscribes = subscribeRepository.findByUserId(userId);
-        List<UserDTO> result = new ArrayList<>();
+        List<UserResponseDTO> result = new ArrayList<>();
 
         for(Subscribe subscribe: subscribes){
-            UserDTO userDTO = userToUserDto(subscribe.getCeleb());
+            UserResponseDTO userDTO = userToUserDto(userRepository.findById(subscribe.getCelebId())
+                    .orElseThrow(() -> new NoSuchElementException("Star : " + subscribe.getCelebId() + " was not found")));
             result.add(userDTO);
         }
 
@@ -210,7 +232,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     }
 
     @Override
-    public UserDTO getCelebInfo(long starId) {
+    public CelebResponseDTO getCelebInfo(long starId) {
         User user = userRepository.findById(starId)
                 .orElseThrow(() -> new NoSuchElementException("Star : " + starId + " was not found"));
 
@@ -219,7 +241,13 @@ public class UserServiceImpl implements UserDetailsService, UserService {
             return null;
         }
 
-        return userToUserDto(user);
+        return CelebResponseDTO.builder()
+                .id(user.getId())
+                .nickname(user.getNickname())
+                .profileImg(user.getProfileImg())
+                .coverImg(user.getCelebInfo().getCoverImg())
+                .info(user.getCelebInfo().getInfo())
+                .build();
     }
 
     @Override
@@ -279,44 +307,68 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     @Override
     public void updatePassword(UserFindPWRequestDTO userFindPWRequestDTO, PasswordEncoder passwordEncoder) throws Exception {
         User user = userRepository.findById(userFindPWRequestDTO.getUserId())
-                .orElseThrow(() -> new NoSuchElementException("User : " + userFindPWRequestDTO.getUserId() + " was not found"));;
+                .orElseThrow(() -> new NoSuchElementException("User : " + userFindPWRequestDTO.getUserId() + " was not found"));
 
         if(passwordEncoder.matches(userFindPWRequestDTO.getPassword(), user.getPassword())){
             user.setPassword(passwordEncoder.encode(userFindPWRequestDTO.getNewPassword()));
             userRepository.save(user);
         } else {
-            throw new Exception("비밀번호가 일치하지 않습니다.");
+            throw new Exception();
         }
     }
 
     @Override
-    public void updateCoverImg(long starId, MultipartFile coverImg) {
+    public void updateCoverImg(long starId, MultipartFile coverImg) throws Exception {
         User user = userRepository.findById(starId)
-                .orElseThrow(() -> new NoSuchElementException("Star : " + starId + " was not found"));;
+                .orElseThrow(() -> new NoSuchElementException("Star : " + starId + " was not found"));
 
-        CelebInfo celebInfo = user.getCelebInfo();
+        if(!user.getIsCeleb()){
+            throw new Exception();
+        } else {
+            CelebInfo celebInfo = user.getCelebInfo();
 
-        // 원래 파일 지워야
-        deleteFile(celebInfo.getCoverImg());
+            if(user.getCelebInfo().getCoverImg() != null){
+                // 원래 파일 지워야
+                deleteFile(celebInfo.getCoverImg());
+            }
+            celebInfo.setCoverImg(getFilePath(coverImg));
 
-        celebInfo.setCoverImg(getFilePath(coverImg));
-
-        celebInfoRepository.save(celebInfo);
+            celebInfoRepository.save(celebInfo);
+        }
     }
 
-    private UserDTO userToUserDto(User user){
-        System.out.println("userToUserDto");
+    @Override
+    public void updateStarInfo(long starId, String info) throws Exception {
+        User user = userRepository.findById(starId)
+                .orElseThrow(() -> new NoSuchElementException("Star : " + starId + " was not found"));
 
-        return UserDTO.builder()
+        if(!user.getIsCeleb()){
+            throw new Exception();
+        } else {
+            CelebInfo celebInfo = user.getCelebInfo();
+
+            celebInfo.setInfo(info);
+
+            celebInfoRepository.save(celebInfo);
+        }
+    }
+
+    @Override
+    public UserResponseDTO getUserProfile(UserDTO userDTO) {
+        UserResponseDTO userResponseDTO = UserResponseDTO.builder()
+                .id(userDTO.getId())
+                .nickname(userDTO.getNickname())
+                .profileImg(userDTO.getProfileImg())
+                .build();
+
+        return userResponseDTO;
+    }
+
+    private UserResponseDTO userToUserDto(User user){
+        return UserResponseDTO.builder()
                 .id(user.getId())
-                .email(user.getEmail())
-                .name(user.getName())
                 .nickname(user.getNickname())
                 .profileImg(user.getProfileImg())
-//                .accountType(user.getAccountType())
-                .isCeleb(user.getIsCeleb())
-                .info(user.getCelebInfo() != null ? user.getCelebInfo().getInfo() : null)
-                .coverImg(user.getCelebInfo() != null ? user.getCelebInfo().getCoverImg() : null)
                 .build();
     }
 

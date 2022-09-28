@@ -1,9 +1,6 @@
 package com.ssafy.kirin.dto.request;
 
 import lombok.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import javax.mail.Multipart;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
@@ -30,9 +27,5 @@ public class UserSignupRequestDTO { // 회원가입
     private String password;
 
     private Long walletId; // 나중엔 없애야함
-//    private Integer accountType; // 0: 일반, 1: 소셜
-//    private String socialId;
     private Boolean isCeleb;
-    private String info;
-//    private String coverImg; // 이미지 경로
 }
