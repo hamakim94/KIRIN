@@ -3,8 +3,11 @@ import ChallengeList from "../components/home/ChallengeList";
 import HomeCategory from "../components/home/HomeCategory";
 import CommunityItem from "../components/star/CommunityItem";
 import styles from "./StarPage.module.css";
+import { useLocation } from "react-router-dom";
 
 function StarPage() {
+  const { state } = useLocation();
+  console.log(state);
   return (
     <div className={styles.wrapper}>
       <div className={styles.topWrapper}>

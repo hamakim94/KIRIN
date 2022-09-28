@@ -9,11 +9,11 @@ contract FundRaising {
     address public deployer; // 계약 배포자
     uint256 public targetNum; // 목표치
     uint256 public participatedNum; // 현재 참여자 수
+    uint256 public starAmount; // 스타가 처음에 넣는 양
     address public beneficiary; // address type : 이더리움 account를 넣을 수 있음, fund를 수혜할 사람
     address public token; // 어떤 token을 가지고 있는지!!
     mapping(address => uint256) funderToAmount;
     address[] funders;
-    uint256[] public amount; // 상태변수 선언
     uint256 public benefitAmount; // 최종 전달된 금액(to beneficiary)
     uint256 public refundAmount; //  회수된 금액(to star)
 
@@ -28,16 +28,19 @@ contract FundRaising {
         uint256 _startTime,
         uint256 _endTime,
         uint256 _targetNum,
+        uint256 _starAmount, // 스타가 미리 넣을 토큰의 양
         address _beneficiary,
         address _token
     ) {
         fundRaisingOpens = _startTime;
         fundRaisingCloses = _endTime; // duration을 통해 끝나는 시간
         targetNum = _targetNum;
+        starAmount = _starAmount;
         beneficiary = _beneficiary; // address를 받아서 수혜자 등록
         token = _token; // token의 contract address
         deployer = msg.sender;
         participatedNum = 0;
+        funderToAmount[msg.sender] += _starAmount;
     }
 
     /**
