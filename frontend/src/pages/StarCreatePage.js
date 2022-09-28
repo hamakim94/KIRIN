@@ -62,6 +62,7 @@ function StarCreatePage() {
   useEffect(() => {
     if (video) {
       videoRef.current.volume = 0.1;
+      console.log(videoRef.current);
     }
   }, [video]);
   return (

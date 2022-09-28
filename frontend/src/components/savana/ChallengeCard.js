@@ -9,7 +9,6 @@ import {
   RiBearSmileFill,
 } from 'react-icons/ri';
 import swal from 'sweetalert';
-import Comment from './Comment';
 
 function ProgressBar(props) {
   const [value, setValue] = useState(0);
@@ -50,11 +49,11 @@ function ChallengeCard(props) {
       <div className={props.styles.coverBox}>
         <div className={props.styles.blankBox}></div>
         <div className={props.styles.iconBox}>
-          <a href="/challenge/${challengeId}">
+          <a href='/challenge/${challengeId}'>
             <RiZoomInFill className={props.styles.clickIcon}></RiZoomInFill>
           </a>
           <div>
-            <a href="/donation">
+            <a href='/donation'>
               <RiHeart2Line className={props.styles.clickIcon}></RiHeart2Line>
             </a>
             <div className={props.styles.iconCount}>32</div>
@@ -69,7 +68,7 @@ function ChallengeCard(props) {
           <a>
             <RiShareFill className={props.styles.clickIcon} onClick={copy}></RiShareFill>
           </a>
-          <a href="/donation">
+          <a href='/donation'>
             <RiBearSmileFill className={props.styles.clickIcon}></RiBearSmileFill>
           </a>
         </div>
@@ -91,9 +90,9 @@ function ChallengeCard(props) {
             playerVars: { modestbranding: 1, mute: 1 },
           },
         }}
-        url="https://www.youtube.com/watch?v=fgaLAomg68c"
-        width="100%"
-        height="100%"
+        url='https://www.youtube.com/watch?v=fgaLAomg68c'
+        width='100%'
+        height='100%'
         playing={hover}
         controls={false}
         loop={true}
