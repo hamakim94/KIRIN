@@ -4,6 +4,7 @@ import com.ssafy.kirin.dto.UserDTO;
 import com.ssafy.kirin.dto.request.UserFindPWRequestDTO;
 import com.ssafy.kirin.dto.request.UserLoginRequestDTO;
 import com.ssafy.kirin.dto.request.UserSignupRequestDTO;
+import com.ssafy.kirin.dto.response.UserResponseDTO;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.Errors;
 import org.springframework.web.multipart.MultipartFile;
@@ -44,4 +45,6 @@ public interface UserService {
     void updatePassword(UserFindPWRequestDTO userFindPWRequestDTO, PasswordEncoder passwordEncoder) throws Exception;
 
     void updateCoverImg(long starId, MultipartFile coverImg);
+
+    UserResponseDTO getUserProfile(UserDTO userDTO);
 }

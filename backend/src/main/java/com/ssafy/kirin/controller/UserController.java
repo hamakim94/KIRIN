@@ -6,6 +6,7 @@ import com.ssafy.kirin.dto.UserDTO;
 import com.ssafy.kirin.dto.request.UserFindPWRequestDTO;
 import com.ssafy.kirin.dto.request.UserLoginRequestDTO;
 import com.ssafy.kirin.dto.request.UserSignupRequestDTO;
+import com.ssafy.kirin.dto.response.UserResponseDTO;
 import com.ssafy.kirin.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -154,7 +155,9 @@ public class UserController {
 
     @GetMapping("/profiles")
     @ApiOperation(value = "사용자 프로필 정보 조회")
-    public ResponseEntity<UserDTO> userProfile(@ApiIgnore @AuthenticationPrincipal UserDTO user){
+    public ResponseEntity<UserResponseDTO> userProfile(@ApiIgnore @AuthenticationPrincipal UserDTO user){
+        UserResponseDTO userDTO = userService
+
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 

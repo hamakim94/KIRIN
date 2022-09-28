@@ -13,5 +13,13 @@ public class UserResponseDTO {
     Long id;
     String nickname;
     String profileImg;
-    Boolean isCeleb;
+
+    @Getter
+    @Setter
+    @Builder
+    public class CelebResponseDTO{
+        String info;
+        String coverImg;
+        Boolean isCeleb;
+    }
 }

@@ -4,6 +4,7 @@ import com.ssafy.kirin.dto.UserDTO;
 import com.ssafy.kirin.dto.request.UserFindPWRequestDTO;
 import com.ssafy.kirin.dto.request.UserLoginRequestDTO;
 import com.ssafy.kirin.dto.request.UserSignupRequestDTO;
+import com.ssafy.kirin.dto.response.UserResponseDTO;
 import com.ssafy.kirin.entity.CelebInfo;
 import com.ssafy.kirin.entity.EmailAuth;
 import com.ssafy.kirin.entity.Subscribe;
@@ -302,6 +303,26 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         celebInfo.setCoverImg(getFilePath(coverImg));
 
         celebInfoRepository.save(celebInfo);
+    }
+
+    @Override
+    public UserResponseDTO getUserProfile(UserDTO userDTO) {
+        UserResponseDTO userResponseDTO = UserResponseDTO.builder()
+                .id(userDTO.getId())
+                .nickname(userDTO.getNickname())
+                .profileImg(userDTO.getProfileImg())
+//                .walletId(userDTO.getWalletId())
+//                .isCeleb(userDTO.getIsCeleb())
+//                .info(userDTO.getInfo())
+//                .coverImg(userDTO.getCoverImg())
+                .build();
+
+        if(userDTO.getIsCeleb()){
+            UserResponseDTO.CelebResponseDTO celebResponseDTO = userResponseDTO.new CelebResponseDTO();
+            celebResponseDTO.builder()
+        }
+
+        return null;
     }
 
     private UserDTO userToUserDto(User user){
