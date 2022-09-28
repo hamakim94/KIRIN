@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import styles from './PlusPage.module.css';
-import RecordRTC from 'recordrtc';
+import RecordRTC, { invokeSaveAsDialog } from 'recordrtc';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Context from '../utils/Context';
 import { MdOutlineFlipCameraAndroid, MdOutlineQueueMusic } from 'react-icons/md';
@@ -35,6 +35,11 @@ function PlusPage() {
   const navigate = useNavigate();
   const location = useLocation();
   let mediaStream;
+
+  // 파일저장
+  // const handleSave = () => {
+  //   invokeSaveAsDialog(blob);
+  // };
 
   const handleRecording = async () => {
     // 시작하려고 했을 떄 이미 진행 다했으면 시간초 늘려놓기
@@ -122,7 +127,7 @@ function PlusPage() {
         track.stop();
       });
     }
-    navigate('/regist', {
+    navigate('/register', {
       state: {
         id: challengeData.challengeId,
         title: challengeData.title,

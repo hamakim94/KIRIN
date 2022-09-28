@@ -27,7 +27,7 @@ import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
 import FinishSignupPage from './pages/FinishSignupPage';
 import ContractDeploy from './pages/ContractDeploy';
-import RegistPage from './pages/RegistPage';
+import RegisterPage from './pages/RegisterPage';
 import React, { useEffect, useState } from 'react';
 import Context from './utils/Context';
 import UseAxios from './utils/UseAxios';
@@ -66,7 +66,7 @@ function App() {
                 <Route path='/donation' element={<DonationPage></DonationPage>}></Route>
                 <Route path='/plus' element={<PlusPage></PlusPage>}></Route>
                 <Route path='/select' element={<SelectPage></SelectPage>}></Route>
-                <Route path='/regist' element={<RegistPage></RegistPage>}></Route>
+                <Route path='/register' element={<RegisterPage></RegisterPage>}></Route>
                 <Route path='/star/:starId' element={<StarPage></StarPage>}></Route>
                 <Route
                   path='/star/:starId/community'

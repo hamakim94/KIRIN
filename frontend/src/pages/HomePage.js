@@ -7,12 +7,16 @@ import UseAxios from '../utils/UseAxios';
 function HomePage() {
   const [popularityData, setPopularityData] = useState(null);
   const [latestData, setLatestData] = useState(null);
+  const [randomData, setRandomData] = useState(null);
   useEffect(() => {
     UseAxios.get('/challenges?scope=stars&order=popularity').then((res) => {
       setPopularityData(res.data);
     });
     UseAxios.get('/challenges?scope=stars&order=latest').then((res) => {
       setLatestData(res.data);
+    });
+    UseAxios.get('/challenges?scope=general&order=random').then((res) => {
+      setRandomData(res.data);
     });
   }, []);
   return (
@@ -24,6 +28,8 @@ function HomePage() {
       <img className={styles.img} alt='함께' src={require('../assets/img/together.png')}></img>
       <HomeCategory title={'최신순'} styles={styles}></HomeCategory>
       <ChallengeList styles={styles} data={latestData}></ChallengeList>
+      <HomeCategory title={'기린기린'} styles={styles}></HomeCategory>
+      <ChallengeList styles={styles} data={randomData}></ChallengeList>
     </div>
   );
 }
