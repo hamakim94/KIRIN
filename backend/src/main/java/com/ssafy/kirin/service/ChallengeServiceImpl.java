@@ -158,7 +158,7 @@ public class ChallengeServiceImpl implements ChallengeService {
                 .stream().map(o -> {
                     CelebChallengeInfo celebChallengeInfo = celebChallengeInfoRepository.findByChallengeId(o.getId());
                     return new ChallengeSelectResponseDTO(o.getChallengeId(),o.getTitle(), o.getUser().getNickname(),
-                            o.getUser().getProfileImg(),
+                            o.getUser().getProfileImg(),celebChallengeInfo.getLength(),
                             celebChallengeInfo.getMusic(), celebChallengeInfo.getMusicTitle());
                 }).collect(Collectors.toList());
     }
@@ -170,7 +170,7 @@ public class ChallengeServiceImpl implements ChallengeService {
             Challenge c = challenge.get();
             CelebChallengeInfo celebChallengeInfo = celebChallengeInfoRepository.findByChallengeId(challengeId);
             return new ChallengeSelectResponseDTO(challengeId, c.getTitle(),c.getUser().getNickname() ,
-                    c.getUser().getProfileImg(),celebChallengeInfo.getMusic() ,celebChallengeInfo.getMusicTitle() );
+                    c.getUser().getProfileImg(),celebChallengeInfo.getLength(),celebChallengeInfo.getMusic() ,celebChallengeInfo.getMusicTitle() );
 
 
         }
