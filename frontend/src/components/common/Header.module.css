@@ -1,0 +1,17 @@
+.topBox {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 30px;
+  justify-content: space-between;
+}
+
+.sideBox {
+  flex: 1;
+}
+.pageTitle {
+  display: flex;
+  font-size: 20px;
+  font-weight: bold;
+  justify-content: center;
+  flex: 6;
+}

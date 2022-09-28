@@ -49,8 +49,9 @@
   color: #7e370c;
   border-radius: 10%;
 }
-.subBtn:hover {
+.subBtn:active {
   background-color: #cd9105;
+  transition: 0.3s;
 }
 
 .contentBox {
