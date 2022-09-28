@@ -7,6 +7,7 @@ import swal from 'sweetalert';
 import UseAxios from '../utils/UseAxios';
 import Context from '../utils/Context';
 import { Avatar } from '@mui/material';
+import { flushSync } from 'react-dom';
 
 function StarPage() {
   const [starInfo, setStarInfo] = useState({});
@@ -21,8 +22,7 @@ function StarPage() {
     console.log(starId);
     UseAxios.get(`/users/stars/${starId}`).then((res) => {
       setStarInfo(res.data);
-      setCoverImg(res.data.coverImg);
-      console.log(res.data.coverImg);
+      setCoverImg(`/files/${res.data.coverImg}`);
     });
   }, []);
 
@@ -31,7 +31,6 @@ function StarPage() {
       setFile(e.target.files[0]);
     } else {
       //업로드 취소할 시
-
       return;
     }
     //화면에 프로필 사진 표시
@@ -40,18 +39,15 @@ function StarPage() {
       if (reader.readyState === 2) {
         setCoverImg(reader.result);
       }
-      console.log(starInfo.coverImg);
     };
     reader.readAsDataURL(e.target.files[0]);
-    changeImg()
-      .then(() => swal('배경화면 수정이 완료되었습니다.'))
-      .catch((err) => console.log(err));
+    changeImg(e.target.files[0]);
   };
 
-  const changeImg = async () => {
+  const changeImg = (obj) => {
     const data = new FormData();
-    data.append('coverImg', file);
-    console.log(data);
+    data.append('coverImg', obj);
+    console.log(obj);
     UseAxios.put(`/users/change-cover`, data, {
       headers: { 'Content-Type': 'multipart/form-data' },
     })
@@ -68,11 +64,10 @@ function StarPage() {
       <div className={styles.topWrapper}>
         {/* 커버사진 */}
         <Avatar
-          src={`${process.env.REACT_APP_BASEURL}/files/${coverImg}`}
+          src={coverImg}
           style={{
             height: '150px',
             width: '100%',
-            // backgroundImage: `${process.env.REACT_APP_BASEURL}/files/${starInfo.backgroundImage}`,
             backgroundRepeat: 'no-repeat',
             backgroundPosition: 'center',
             backgroundSize: 'cover',
