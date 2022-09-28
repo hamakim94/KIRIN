@@ -1,9 +1,6 @@
 package com.ssafy.kirin.dto.request;
 
 import lombok.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import javax.mail.Multipart;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
