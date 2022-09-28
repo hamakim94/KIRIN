@@ -31,10 +31,12 @@ function PlusPage() {
   const recorderRef = useRef(null);
   const audioRef = useRef(null);
   const navigate = useNavigate();
+  let mediaStream;
+
   const handleRecording = async () => {
     if (number === 0) {
       setNumber((prev) => (prev = 15));
-      const mediaStream = await navigator.mediaDevices.getUserMedia({
+      mediaStream = await navigator.mediaDevices.getUserMedia({
         video: {
           frameRate: 30,
           facingMode: changeCam,
@@ -57,7 +59,7 @@ function PlusPage() {
       setToggleBtn(true);
       setWaitButton(true);
     } else {
-      const mediaStream = await navigator.mediaDevices.getUserMedia({
+      mediaStream = await navigator.mediaDevices.getUserMedia({
         video: {
           frameRate: 30,
           facingMode: changeCam,
@@ -105,7 +107,40 @@ function PlusPage() {
     audioRef.current.currentTime = 55;
     setWaitButton(false);
     setNumber(15);
-    navigate('/preview');
+    if (stream) {
+      stream.getTracks().forEach(function (track) {
+        track.stop();
+      });
+    }
+    navigate('/regist');
+  };
+
+  const handleRetry = () => {
+    recorderRef.current.stopRecording(() => {
+      setBlob(null);
+    });
+    audioRef.current.pause();
+    audioRef.current.currentTime = 55;
+    setWaitButton(false);
+    setNumber(15);
+    setPause(false);
+    if (stream) {
+      stream.getTracks().forEach(function (track) {
+        track.stop();
+      });
+    }
+    const retry = async () => {
+      mediaStream = await navigator.mediaDevices.getUserMedia({
+        video: {
+          frameRate: 30,
+          facingMode: changeCam,
+        },
+        audio: false,
+      });
+      setStream(mediaStream);
+      refVideo.current.srcObject = mediaStream;
+    };
+    retry();
   };
 
   const handleSave = () => {
@@ -121,7 +156,6 @@ function PlusPage() {
     if (changeCam === 'user') {
       console.log('유저유저');
       setChangeCam({ exact: 'environment' });
-      let mediaStream;
       const start = async () => {
         mediaStream = await navigator.mediaDevices.getUserMedia({
           video: {
@@ -138,7 +172,6 @@ function PlusPage() {
     } else {
       console.log('후면후면');
       setChangeCam('user');
-      let mediaStream;
       const start = async () => {
         mediaStream = await navigator.mediaDevices.getUserMedia({
           video: {
@@ -159,11 +192,16 @@ function PlusPage() {
       return;
     }
     refVideo.current.srcObject = stream;
+    return () => {
+      if (stream) {
+        stream.getTracks().forEach(function (track) {
+          track.stop();
+        });
+      }
+    };
   }, [stream, refVideo]);
 
   useEffect(() => {
-    let mediaStream;
-
     const start = async () => {
       mediaStream = await navigator.mediaDevices.getUserMedia({
         video: {
@@ -178,11 +216,6 @@ function PlusPage() {
     start();
     setNumber(15);
     return () => {
-      if (mediaStream) {
-        mediaStream.getTracks().forEach(function (track) {
-          track.stop();
-        });
-      }
       if (audioRef.current) {
         audioRef.current.pause();
         audioRef.current.currentTime = 55;
@@ -356,7 +389,7 @@ function PlusPage() {
                   paddingTop: 20,
                 }}
               >
-                다시찍기
+                <span onClick={handleRetry}>다시찍기</span>
               </div>
               <div
                 style={{
