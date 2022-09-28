@@ -220,9 +220,12 @@ public class ChallengeServiceImpl implements ChallengeService {
             // insert Watermark and music
 //            String commandInsertWatermark = String.format("ffmpeg -y -i %s -i %s -i %s -filter_complex \"[1][0]scale2ref=w=oh*mdar:h=ih*0.08[logo][video];[logo]format=argb,geq=r='r(X,Y)':a='0.8*alpha(X,Y)'[soo];[video][soo]overlay=30:30\" -map \"v\" -map 2:a -c:v libx264 -crf 17 -c:a aac -strict experimental %s"
 //                    , videoTmpDir, kirinStamp, musicPath, (challengeDir+ outputPath));
+            String webmTomp4Dir = UUID.randomUUID() + ".mp4";
+            p=Runtime.getRuntime().exec(String.format("ffmpeg -y -i %s %s", (challengeDir+videoTmpDir),(challengeDir+webmTomp4Dir)));
+            p.waitFor();
             String midTmp = challengeDir+ UUID.randomUUID() + videoExt;
             String commandInsertWatermark = String.format("ffmpeg -y -i %s -i %s -i -filter_complex [1][0]scale2ref=w=oh*mdar:h=ih*0.08[logo][video];[logo]format=argb,geq=r='r(X,Y)':a='0.8*alpha(X,Y)'[soo];[video][soo]overlay=30:30 %s"
-                                                            ,videoTmpDir,kirinStamp,midTmp);
+                                                            ,webmTomp4Dir,kirinStamp,midTmp);
             p = Runtime.getRuntime().exec(commandInsertWatermark);
             p.waitFor();
             String outputPath = UUID.randomUUID() + ".mp4";
