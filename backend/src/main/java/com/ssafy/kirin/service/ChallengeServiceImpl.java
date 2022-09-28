@@ -224,10 +224,11 @@ public class ChallengeServiceImpl implements ChallengeService {
             System.out.println("videoTmpDir : "+videoTmpDir+"\nkirinStamp :"+kirinStamp+"\nmusicPath : "+musicPath+"\nchallengeDir+ outputPath : "+(challengeDir+ outputPath));
             System.out.println("command will be : ");
             System.out.println(commandInsertWatermark);
+            p = Runtime.getRuntime().exec(commandInsertWatermark);
             BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
             String line;
             while((line=br.readLine())!=null) System.out.println(line);
-            p = Runtime.getRuntime().exec(commandInsertWatermark);
+
             p.waitFor();
             System.out.println("saving challenge");
             challengeRepository.save(
