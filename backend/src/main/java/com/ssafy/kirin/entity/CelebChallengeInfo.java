@@ -45,7 +45,7 @@ public class CelebChallengeInfo {
     @Formula("(SELECT COUNT(*) FROM donation d WHERE d.challenge_id=challenge_id)")
     Integer currentNum;
 
-    @Formula("(SELECT SUM(d.amount) FROM donation d WHERE d.challenge_id=chllenge_id)")
+    @Formula("(SELECT SUM(d.amount) FROM donation d WHERE d.challenge_id=challenge_id)")
     Integer currentAmount;
 
     @OneToOne
