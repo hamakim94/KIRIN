@@ -15,12 +15,18 @@ function MyStar(props) {
       <div className={props.styles.myTitle}>나의 스타</div>
       <div className={props.styles.hScroll}>
         <div className={props.styles.starList}>
-          {subs.map((sub) => (
-            <div className={props.styles.profileImgName}>
-              <img src={sub.profileImg} className={props.styles.starImg}></img>
-              <div className={props.styles.starName}>{sub.nickname}</div>
+          {subs.length === 0 ? (
+            <div style={{ height: '50px', marginLeft: '10px', marginTop: '20PX' }}>
+              구독한 스타가 없습니다.
             </div>
-          ))}
+          ) : (
+            subs.map((sub) => (
+              <div className={props.styles.profileImgName}>
+                <img src={sub.profileImg} className={props.styles.starImg}></img>
+                <div className={props.styles.starName}>{sub.nickname}</div>
+              </div>
+            ))
+          )}
         </div>
       </div>
     </div>
