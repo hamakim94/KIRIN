@@ -221,24 +221,25 @@ public class ChallengeServiceImpl implements ChallengeService {
             throw new RuntimeException(e);
         }
     }
-
+    @Transactional
     @Override
     public void createStarChallenge(UserDTO userDTO, StarChallengeRequestDTO starChallengeRequestDTO, MultipartFile video, MultipartFile image) {
         try {
             User user = userRepository.getReferenceById(userDTO.getId());
-            String ext = video.getOriginalFilename().substring(video.getOriginalFilename().lastIndexOf("."));
-            String videoDir = challengeDir+UUID.randomUUID()+ext;
+            String videoExt = video.getOriginalFilename().substring(video.getOriginalFilename().lastIndexOf("."));
+            String videoDir = challengeDir+UUID.randomUUID()+videoExt;
             Path videoTmp = Paths.get(videoDir);
-
             Files.copy(video.getInputStream(), videoTmp);
+
+            String imageExt = image.getOriginalFilename().substring(image.getOriginalFilename().lastIndexOf("."));
+            String imageDir = challengeDir + UUID.randomUUID()+imageExt;
+            Path imageTmp = Paths.get(imageDir);
+            Files.copy( image.getInputStream(), imageTmp);
+
             String musicDir = challengeDir+UUID.randomUUID()+".mp3";
             String commandExtractMusic = String.format("ffmpeg -i %s -q:a 0 -map a %s",videoDir,musicDir);
             Process p = Runtime.getRuntime().exec(commandExtractMusic);
             p.waitFor();
-
-            p = Runtime.getRuntime().exec(String.format("ffprobe -i %s -show_entries format=duration -v quiet -of csv=\"p=0\"",musicDir));
-            p.waitFor();
-            Integer musicLength = Integer.valueOf(String.valueOf(new InputStreamReader(p.getInputStream())));
 
             String thumbDir = challengeDir+UUID.randomUUID()+".gif";
             String commandExtractThumbnail = String.format("ffmpeg -t 2 -i %s  -vf \"fps=10,scale=320:-1:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse\" -loop 0 %s", videoDir,thumbDir);
@@ -253,8 +254,8 @@ public class ChallengeServiceImpl implements ChallengeService {
             challenge.setChallengeId(challenge.getId());
 
             CelebChallengeInfo celebChallengeInfo = CelebChallengeInfo.builder().info(starChallengeRequestDTO.info()).challenge(challenge).targetAmount(starChallengeRequestDTO.targetAmount())
-                    .targetNum(starChallengeRequestDTO.targetNum()).music(musicDir).musicTitle(starChallengeRequestDTO.musicTitle()).length(musicLength)
-                    .endDate(starChallengeRequestDTO.endDate()).startDate(starChallengeRequestDTO.startDate())
+                    .targetNum(starChallengeRequestDTO.targetNum()).music(musicDir).musicTitle(starChallengeRequestDTO.musicTitle()).length(starChallengeRequestDTO.length())
+                    .endDate(starChallengeRequestDTO.endDate()).startDate(starChallengeRequestDTO.startDate()).stampImg(imageDir)
                     .donationOrganization(donationOrganizationRepository.getReferenceById(starChallengeRequestDTO.donationOrganizationId()))
                     .build();
 

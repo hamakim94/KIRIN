@@ -25,7 +25,7 @@ public class CelebChallengeInfo {
 
     String music;
     String musicTitle;
-    Integer length;
+    Double length;
 
     @Column(name = "stamp_img")
     String stampImg;
