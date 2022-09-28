@@ -1,11 +1,14 @@
 import React from "react";
 import SearchStar from "./SearchStar";
+
 function SearchList(props) {
-  const searchData = [];
-  for (let i = 0; i < 10; i++) {
-    searchData.push(<SearchStar styles={props.styles}></SearchStar>);
-  }
-  return <div className={props.styles.searchContainer}>{searchData}</div>;
+  return (
+    <div className={props.styles.searchContainer}>
+      {props.starList.map((star) => (
+        <SearchStar styles={props.styles} star={star} key={star.id}></SearchStar>
+      ))}
+    </div>
+  );
 }
 
 export default SearchList;
