@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useContext } from 'react';
 import styles from './ChangePasswordPage.module.css';
 import { AiFillSetting } from 'react-icons/ai';
 import { BiArrowBack } from 'react-icons/bi';
@@ -20,6 +20,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import UseAxios from '../../utils/UseAxios';
 import swal from 'sweetalert';
 import { useNavigate } from 'react-router-dom';
+import Context from '../../utils/Context';
 
 const theme = createTheme({
   palette: {
@@ -31,12 +32,13 @@ const theme = createTheme({
     },
   },
 });
-function ChangePasswordPage({ parentCallback }) {
+function ChangePasswordPage() {
   const navigate = useNavigate();
   const [password, setPassword] = useState('');
   const [newPassword, setnewPassword] = useState('');
   const [newPasswordCheck, setNewPasswordCheck] = useState('');
   const [canSubmit, setCanSubmit] = useState(false);
+  const { userData } = useContext(Context);
 
   /*비밀번호 유효 검사 */
   const onChangePassword = (e) => {
@@ -58,16 +60,12 @@ function ChangePasswordPage({ parentCallback }) {
     return newPassword !== newPasswordCheck && newPasswordCheck.length > 1;
   };
 
-  const checked = () => {
-    if (newPassword === newPasswordCheck) setCanSubmit(true);
-  };
+  // let body = {
+  //   password,
+  //   newPassword,
+  // };
 
-  const sendData = (e) => {
-    e.preventDefault();
-    if (canSubmit) parentCallback(password, newPassword); // 전달
-  };
-
-  const onSubmit = () => {
+  const onSubmit = (data) => {
     const check = () => {
       if (newPassword.length < 8) {
         swal('비밀번호는 8글자 이상이어야 합니다.');
@@ -79,21 +77,23 @@ function ChangePasswordPage({ parentCallback }) {
       // 현재 비밀번호가 틀렸을 경우 없음
     };
     check();
-    checked();
     console.log(password);
     console.log(newPassword);
-    UseAxios.put(`/users/change-password`, {
-      password: password,
-      newPassword: newPassword,
-    })
-      .then((res) => {
-        swal('비밀번호 변경이 완료되었습니다.');
-        navigate('');
-        console.log('완료');
+    if (canSubmit) {
+      UseAxios.put(`/users/change-password`, {
+        password: data.password,
+        newPassword: data.newPassword,
+        userId: userData.userId,
       })
-      .catch((err) => {
-        console.log(err);
-      });
+        .then((res) => {
+          swal('비밀번호 변경이 완료되었습니다.');
+          console.log(res);
+          navigate('mypage/setting');
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
   };
 
   return (
@@ -108,7 +108,7 @@ function ChangePasswordPage({ parentCallback }) {
         </div>
       </div>
       <Container component="main" maxWidth="sm">
-        <form onSubmit={sendData}>
+        <form>
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <Typography sx={{ ml: 1, mb: 0.5 }}>현재 비밀번호*</Typography>
@@ -174,7 +174,6 @@ function ChangePasswordPage({ parentCallback }) {
               size="large"
               color="primary"
               onClick={onSubmit}
-              disabled={newPassword != password}
             >
               비밀번호 변경
             </Button>
