@@ -219,12 +219,13 @@ public class ChallengeServiceImpl implements ChallengeService {
             p.waitFor();
             // insert Watermark
             String outputPath = UUID.randomUUID() + ".mp4";
-            String commandInsertWatermark = String.format("/bin/sh -c ffmpeg -y -i %s -i %s -i %s -filter_complex \"[1][0]scale2ref=w=oh*mdar:h=ih*0.08[logo][video];[logo]format=argb,geq=r='r(X,Y)':a='0.8*alpha(X,Y)'[soo];[video][soo]overlay=30:30\" -map \"v\" -map 2:a -c:v libx264 -crf 17 -c:a aac -strict experimental %s"
+            String commandInsertWatermark = String.format("ffmpeg -y -i %s -i %s -i %s -filter_complex \"[1][0]scale2ref=w=oh*mdar:h=ih*0.08[logo][video];[logo]format=argb,geq=r='r(X,Y)':a='0.8*alpha(X,Y)'[soo];[video][soo]overlay=30:30\" -map \"v\" -map 2:a -c:v libx264 -crf 17 -c:a aac -strict experimental %s"
                     , videoTmpDir, kirinStamp, musicPath, (challengeDir+ outputPath));
+
             System.out.println("videoTmpDir : "+videoTmpDir+"\nkirinStamp :"+kirinStamp+"\nmusicPath : "+musicPath+"\nchallengeDir+ outputPath : "+(challengeDir+ outputPath));
             System.out.println("command will be : ");
             System.out.println(commandInsertWatermark);
-            p = Runtime.getRuntime().exec(commandInsertWatermark);
+            p = Runtime.getRuntime().exec("ffmpeg -y -i /files/10e8c5ff-1055-47f4-9d2d-e1d6e520fa73.webm -i /files/bd363c62-476d-4c29-aed6-8a5346fb41bfstamp.png -i /files/talkthattalk.ogg -filter_complex \"[1][0]scale2ref=w=oh*mdar:h=ih*0.08[logo][video];[logo]format=argb,geq=r='r(X,Y)':a='0.8*alpha(X,Y)'[soo];[video][soo]overlay=30:30\" -map \"v\" -map 2:a -c:v libx264 -crf 17 -c:a aac -strict experimental /files/bbbbbbbbbbbbbb.mp4");
             BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
             String line;
             while((line=br.readLine())!=null) System.out.println(line);
