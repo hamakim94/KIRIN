@@ -205,29 +205,33 @@ public class ChallengeServiceImpl implements ChallengeService {
     @Override
     public void createChallenge(UserDTO userDTO, ChallengeRequestDTO challengeRequestDTO, MultipartFile video) throws IOException {
         try {
-            User user = userRepository.getReferenceById(userDTO.getId());
-            Challenge forChallenge = challengeRepository.getReferenceById(challengeRequestDTO.challengeId());
             // 원 챌린지 음악과 이미지 저장경로
+            Challenge forChallenge = challengeRepository.getReferenceById(challengeRequestDTO.challengeId());
             CelebChallengeInfo celebChallengeInfo = celebChallengeInfoRepository.findByChallengeId(forChallenge.getId());
             String musicPath = celebChallengeInfo.getMusic();
-
-            // 비디오 외 정보 저장
-            Challenge challenge = challengeRepository.save(Challenge.builder().user(user).isProceeding(true).reg(LocalDateTime.now())
-                    .title(challengeRequestDTO.title()).isOriginal(challengeRequestDTO.isOriginal()).challengeId(challengeRequestDTO.challengeId())
-                    .build());
-            String ext = video.getOriginalFilename().substring(video.getOriginalFilename().lastIndexOf("."));
-
-            Path outputTmp = Paths.get((challengeDir + UUID.randomUUID() + ext));
-            Files.copy(video.getInputStream(), outputTmp);
-            String outputPath = challengeDir + UUID.randomUUID() + ext;
-
-            String command = String.format("ffmpeg -y -i %s -i %s -i %s -filter_complex [1][0]scale2ref=w=oh*mdar:h=ih*0.08[logo][video];[logo]format=argb,geq=r='r(X,Y)':a='0.8*alpha(X,Y)'[soo];[video][soo]overlay=30:30 -map \"v\" -map 2:a -c:v libx264 -crf 17 -c:a copy -shortest %s"
-                    , outputTmp, kirinStamp, musicPath, outputPath);
-
-            Files.delete(outputTmp);
-            Process p = Runtime.getRuntime().exec(command);
+            User user = userRepository.getReferenceById(userDTO.getId());
+            //copy video file
+            String videoExt = video.getOriginalFilename().substring(video.getOriginalFilename().lastIndexOf("."));
+            String videoTmpDir = challengeDir+UUID.randomUUID()+videoExt;
+            Path videoTmp = Paths.get(videoTmpDir);
+            Files.copy(video.getInputStream(), videoTmp);
+            //make thumbnail
+            String thumbDir = challengeDir+UUID.randomUUID()+".gif";
+            String commandExtractThumbnail = String.format("ffmpeg -y -ss 2 -t 2 -i %s -r 10 -loop 0 %s", videoTmpDir,thumbDir);
+            Process p = Runtime.getRuntime().exec(commandExtractThumbnail);
             p.waitFor();
-            challenge.setVideo(outputPath);
+            // insert Watermark
+            String outputPath = challengeDir + UUID.randomUUID() + videoExt;
+            String commandInsertWatermark = String.format("ffmpeg -y -i %s -i %s -i %s -filter_complex [1][0]scale2ref=w=oh*mdar:h=ih*0.08[logo][video];[logo]format=argb,geq=r='r(X,Y)':a='0.8*alpha(X,Y)'[soo];[video][soo]overlay=30:30 -map \"v\" -map 2:a -c:v libx264 -crf 17 -c:a copy -shortest %s"
+                    , videoTmpDir, kirinStamp, musicPath, outputPath);
+            p = Runtime.getRuntime().exec(commandInsertWatermark);
+            p.waitFor();
+
+            challengeRepository.save(
+                    Challenge.builder().user(user).isProceeding(true).reg(LocalDateTime.now()).thumbnail(thumbDir)
+                               .title(challengeRequestDTO.title()).isOriginal(false).challengeId(challengeRequestDTO.challengeId())
+                               .video(outputPath).build()
+            );
 
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
