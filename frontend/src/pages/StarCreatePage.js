@@ -10,7 +10,6 @@ function StarCreatePage() {
   const [video, setVideo] = useState(null);
   const [title, setTitle] = useState(null);
   const [info, setInfo] = useState(null);
-  const [duration, setDuration] = useState(null);
   const [musicTitle, setMusicTitle] = useState(null);
   const [donationOrganizationId, setDonationOrganizationId] = useState(null);
   const [startDate, setStartDate] = useState(null);
@@ -37,12 +36,14 @@ function StarCreatePage() {
       title: title.trim(),
       info: info.trim(),
       musicTitle: musicTitle.trim(),
+      length: videoRef.current.duration.toFixed(1),
       startDate,
       endDate,
       targetNum,
       targetAmount,
       donationOrganizationId,
     };
+    console.log(body.length);
     const data = new FormData();
     data.append('video', video);
     data.append('stamp', img);
@@ -62,7 +63,6 @@ function StarCreatePage() {
   useEffect(() => {
     if (video) {
       videoRef.current.volume = 0.1;
-      console.log(videoRef.current);
     }
   }, [video]);
   return (
