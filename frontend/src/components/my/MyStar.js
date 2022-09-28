@@ -17,7 +17,7 @@ function MyStar(props) {
         <div className={props.styles.starList}>
           {subs.map((sub) => (
             <div className={props.styles.profileImgName}>
-              <img src={sub.profileImg} className={props.styles.starImg}></img>
+              <img src={`/files/${sub.profileImg}`} className={props.styles.starImg}></img>
               <div className={props.styles.starName}>{sub.nickname}</div>
             </div>
           ))}

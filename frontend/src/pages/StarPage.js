@@ -3,32 +3,33 @@ import ChallengeList from '../components/home/ChallengeList';
 import HomeCategory from '../components/home/HomeCategory';
 import CommunityItem from '../components/star/CommunityItem';
 import styles from './StarPage.module.css';
-import swal from 'sweetalert';
 import UseAxios from '../utils/UseAxios';
 import Context from '../utils/Context';
 import { Avatar } from '@mui/material';
-import { flushSync } from 'react-dom';
 
 function StarPage() {
   const [starInfo, setStarInfo] = useState({});
   const { userData } = useContext(Context);
-  const [file, setFile] = useState(null);
   const fileInput = useRef(null);
-  const [coverImg, setCoverImg] = useState(null);
+  const [coverImg, setCoverImg] = useState('');
+  const [subscribed, setSubscribed] = useState(false);
 
   useEffect(() => {
     const location = window.location.href.split('/');
     const starId = Number(location[location.length - 1]);
-    console.log(starId);
     UseAxios.get(`/users/stars/${starId}`).then((res) => {
       setStarInfo(res.data);
       setCoverImg(`/files/${res.data.coverImg}`);
+    });
+    UseAxios.get(`/users/subscribes`).then((res) => {
+      if (res.data.findIndex((stars) => stars.id === starId) > -1) {
+        setSubscribed(true);
+      }
     });
   }, []);
 
   const onChange = (e) => {
     if (e.target.files[0]) {
-      setFile(e.target.files[0]);
     } else {
       //업로드 취소할 시
       return;
@@ -59,40 +60,76 @@ function StarPage() {
       });
   };
 
+  const subscribe = () => {
+    UseAxios.post(
+      `/users/subscribes`,
+      {},
+      {
+        params: { celebId: starInfo.id },
+      }
+    )
+      .then((res) => {
+        console.log(res);
+        setSubscribed(!subscribed);
+      })
+      .catch((err) => console.log(err));
+  };
+
   return (
     <div className='wrapper'>
       <div className={styles.topWrapper}>
         {/* 커버사진 */}
-        <Avatar
-          src={coverImg}
-          style={{
-            height: '150px',
-            width: '100%',
-            backgroundRepeat: 'no-repeat',
-            backgroundPosition: 'center',
-            backgroundSize: 'cover',
-          }}
-          variant='square'
-          onClick={() => {
-            fileInput.current.click();
-          }}
-        ></Avatar>
-        <form>
-          <input
-            type='file'
-            style={{ display: 'none' }}
-            accept='image/jpg,image/png,image/jpeg'
-            name='coverImg'
-            onChange={onChange}
-            ref={fileInput}
-          ></input>
-        </form>
+        {userData.id === starInfo.id ? (
+          <div>
+            {' '}
+            <Avatar
+              src={coverImg}
+              style={{
+                height: '150px',
+                width: '100%',
+                backgroundRepeat: 'no-repeat',
+                backgroundPosition: 'center',
+                backgroundSize: 'cover',
+              }}
+              variant='square'
+              onClick={() => {
+                fileInput.current.click();
+              }}
+            ></Avatar>
+            <form>
+              <input
+                type='file'
+                style={{ display: 'none' }}
+                accept='image/jpg,image/png,image/jpeg'
+                name='coverImg'
+                onChange={onChange}
+                ref={fileInput}
+              ></input>
+            </form>
+          </div>
+        ) : (
+          <div>
+            {' '}
+            <Avatar
+              src={coverImg}
+              style={{
+                height: '150px',
+                width: '100%',
+                backgroundRepeat: 'no-repeat',
+                backgroundPosition: 'center',
+                backgroundSize: 'cover',
+              }}
+              variant='square'
+              alt='cover'
+            ></Avatar>
+          </div>
+        )}
         <div
           style={{
             position: 'absolute',
             left: '15px',
             bottom: '0',
-            backgroundImage: `url(${process.env.REACT_APP_BASEURL}/files/${starInfo.profileImg})`,
+            backgroundImage: `url(/files/${starInfo.profileImg})`,
             backgroundRepeat: 'no-repeat',
             backgroundPosition: 'center',
             backgroundSize: 'cover',
@@ -108,9 +145,19 @@ function StarPage() {
         <div className={styles.starName}>
           <span>{starInfo.nickname}</span>
         </div>
-        <div className={styles.btnWrapper}>
-          <button className={styles.subBtn}>구독</button>
-        </div>
+        {subscribed ? (
+          <div className={styles.btnWrapper}>
+            <button className={styles.unSubBtn} onClick={subscribe}>
+              구독취소
+            </button>
+          </div>
+        ) : (
+          <div className={styles.btnWrapper}>
+            <button className={styles.subBtn} onClick={subscribe}>
+              구독
+            </button>
+          </div>
+        )}
       </div>
       <div className={styles.contentBox}>{starInfo.info ? starInfo.info : '없졍'}</div>
       <div className={styles.titleBox}>
