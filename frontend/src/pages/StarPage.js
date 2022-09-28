@@ -6,7 +6,7 @@ import styles from './StarPage.module.css';
 
 function StarPage() {
   return (
-    <div>
+    <div className='wrapper'>
       <div className={styles.topWrapper}>
         <div className={styles.coverImg}></div> {/* 커버사진 */}
         <div className={styles.starImg}></div> {/* 프로필사진 */}

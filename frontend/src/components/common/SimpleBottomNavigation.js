@@ -11,8 +11,9 @@ function SimpleBottomNavigation() {
   const location = useLocation();
   useEffect(() => {
     setPath(location.pathname);
+    console.log(location);
   }, [location]);
-  if (path && (path === '/plus' || path === '/preview')) {
+  if (path && path === '/plus') {
     return null;
   } else if (path) {
     return (
