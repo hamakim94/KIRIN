@@ -216,14 +216,14 @@ public class ChallengeServiceImpl implements ChallengeService {
             Path videoTmp = Paths.get(videoTmpDir);
             Files.copy(video.getInputStream(), videoTmp);
             //make thumbnail
-            String thumbDir = challengeDir+UUID.randomUUID()+".gif";
-            String commandExtractThumbnail = String.format("ffmpeg -y -ss 2 -t 2 -i %s -r 10 -loop 0 %s", videoTmpDir,thumbDir);
+            String thumbDir = UUID.randomUUID()+".gif";
+            String commandExtractThumbnail = String.format("ffmpeg -y -ss 2 -t 2 -i %s -r 10 -loop 0 %s", videoTmpDir,(challengeDir+thumbDir));
             Process p = Runtime.getRuntime().exec(commandExtractThumbnail);
             p.waitFor();
             // insert Watermark
-            String outputPath = challengeDir + UUID.randomUUID() + videoExt;
+            String outputPath = UUID.randomUUID() + videoExt;
             String commandInsertWatermark = String.format("ffmpeg -y -i %s -i %s -i %s -filter_complex [1][0]scale2ref=w=oh*mdar:h=ih*0.08[logo][video];[logo]format=argb,geq=r='r(X,Y)':a='0.8*alpha(X,Y)'[soo];[video][soo]overlay=30:30 -map \"v\" -map 2:a -c:v libx264 -crf 17 -c:a copy -shortest %s"
-                    , videoTmpDir, kirinStamp, musicPath, outputPath);
+                    , videoTmpDir, kirinStamp, musicPath, (challengeDir+ outputPath));
             p = Runtime.getRuntime().exec(commandInsertWatermark);
             p.waitFor();
 
@@ -248,19 +248,19 @@ public class ChallengeServiceImpl implements ChallengeService {
             Path videoTmp = Paths.get(videoTmpDir);
             Files.copy(video.getInputStream(), videoTmp);
             //make thumbnail
-            String thumbDir = challengeDir+UUID.randomUUID()+".gif";
-            String commandExtractThumbnail = String.format("ffmpeg -y -ss 2 -t 2 -i %s -r 10 -loop 0 %s", videoTmpDir,thumbDir);
+            String thumbDir = UUID.randomUUID()+".gif";
+            String commandExtractThumbnail = String.format("ffmpeg -y -ss 2 -t 2 -i %s -r 10 -loop 0 %s", videoTmpDir,challengeDir+thumbDir);
             Process p = Runtime.getRuntime().exec(commandExtractThumbnail);
             p.waitFor();
             //extract music
-            String musicDir = challengeDir+UUID.randomUUID()+".mp3";
-            String commandExtractMusic = String.format("ffmpeg -i %s -q:a 0 -map a %s",videoTmpDir,musicDir);
+            String musicDir = UUID.randomUUID()+".mp3";
+            String commandExtractMusic = String.format("ffmpeg -i %s -q:a 0 -map a %s",videoTmpDir,challengeDir+musicDir);
             p = Runtime.getRuntime().exec(commandExtractMusic);
             p.waitFor();
             // insert watermark
-            String videoDir = challengeDir+UUID.randomUUID()+videoExt;
+            String videoDir = UUID.randomUUID()+videoExt;
             String commandWatermark = String.format("ffmpeg -y -i %s -i %s -filter_complex [1][0]scale2ref=w=oh*mdar:h=ih*0.08[logo][video];[logo]format=argb,geq=r='r(X,Y)':a='0.8*alpha(X,Y)'[soo];[video][soo]overlay=30:30 %s",
-                    videoTmpDir,kirinStamp,videoDir);
+                    videoTmpDir, kirinStamp, challengeDir+videoDir);
             p = Runtime.getRuntime().exec(commandWatermark);
             p.waitFor();
             //delete original videoFile
