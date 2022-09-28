@@ -36,7 +36,7 @@ function StarCreatePage() {
       title: title.trim(),
       info: info.trim(),
       musicTitle: musicTitle.trim(),
-      length: videoRef.current.duration.toFixed(1),
+      length: 3.0,
       startDate,
       endDate,
       targetNum,
@@ -54,7 +54,7 @@ function StarCreatePage() {
       headers: { 'Content-Type': 'multipart/form-data' },
     })
       .then((res) => {
-        console.log(res.data);
+        console.log(res);
       })
       .catch((err) => {
         console.log(err);
