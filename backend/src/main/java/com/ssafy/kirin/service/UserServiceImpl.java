@@ -63,12 +63,10 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
         if(userSignupRequestDTO.getIsCeleb()){ // 스타일 경우
             log.info("스타 회원가입");
-            System.out.println("회원가입 userSignupRequestDTO: " + userSignupRequestDTO);
 
-            CelebInfo celebInfo = CelebInfo.builder()
-                    .coverImg(getFilePath(coverImg))
-                    .info(userSignupRequestDTO.getInfo())
-                    .build();
+//            CelebInfo celebInfo = CelebInfo.builder().build();
+
+            CelebInfo celebInfo = new CelebInfo(); // info, coverImg는 따로 등록
 
             // wallet 만들어서 넣어줘야됨.
 
@@ -83,11 +81,8 @@ public class UserServiceImpl implements UserDetailsService, UserService {
                     .build();
 
             user.setCelebInfo(celebInfoRepository.save(celebInfo));
-
-            System.out.println(4);
         } else { // 일반인인 경우
             log.info("일반인 회원가입");
-            System.out.println("회원가입 userSignupRequestDTO: " + userSignupRequestDTO);
 
             // wallet 만들어서 넣어줘야됨.
 
@@ -150,8 +145,10 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         User user = userRepository.findById(userDTO.getId())
                 .orElseThrow(() -> new NoSuchElementException("User : " + userDTO.getId() + " was not found"));
 
-        // 원래 profile 사진은 지우기
-        deleteFile(userDTO.getProfileImg());
+        if(userDTO.getProfileImg() != null){
+            // 원래 profile 사진은 지우기
+            deleteFile(userDTO.getProfileImg());
+        }
 
         user.setProfileImgAndNickname(getFilePath(profileImg), userDTO.getNickname());
 
@@ -175,14 +172,19 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
     @Override
     public void subscribe(long userId, long celebId) {
-        User celeb = userRepository.getReferenceById(celebId);
+        // subscribe이 존재하는지 여부
+        Subscribe subscribe = subscribeRepository.findByUserIdAndCelebId(userId, celebId).orElse(null);
 
-        Subscribe subscribe = Subscribe.builder()
-                .userId(userId)
-                .celeb(celeb)
-                .build();
+        if(subscribe != null){ // 구독 취소
+            subscribeRepository.delete(subscribe);
+        } else { // 구독
+            Subscribe newSubscribe = Subscribe.builder()
+                    .userId(userId)
+                    .celebId(celebId)
+                    .build();
 
-        subscribeRepository.save(subscribe);
+            subscribeRepository.save(newSubscribe);
+        }
     }
 
     @Override
@@ -203,7 +205,8 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         List<UserDTO> result = new ArrayList<>();
 
         for(Subscribe subscribe: subscribes){
-            UserDTO userDTO = userToUserDto(subscribe.getCeleb());
+            UserDTO userDTO = userToUserDto(userRepository.findById(subscribe.getCelebId())
+                    .orElseThrow(() -> new NoSuchElementException("Star : " + subscribe.getCelebId() + " was not found")));
             result.add(userDTO);
         }
 
@@ -307,20 +310,20 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
     @Override
     public UserResponseDTO getUserProfile(UserDTO userDTO) {
-        UserResponseDTO userResponseDTO = UserResponseDTO.builder()
-                .id(userDTO.getId())
-                .nickname(userDTO.getNickname())
-                .profileImg(userDTO.getProfileImg())
-//                .walletId(userDTO.getWalletId())
-//                .isCeleb(userDTO.getIsCeleb())
-//                .info(userDTO.getInfo())
-//                .coverImg(userDTO.getCoverImg())
-                .build();
-
-        if(userDTO.getIsCeleb()){
-            UserResponseDTO.CelebResponseDTO celebResponseDTO = userResponseDTO.new CelebResponseDTO();
-            celebResponseDTO.builder()
-        }
+//        UserResponseDTO userResponseDTO = UserResponseDTO.builder()
+//                .id(userDTO.getId())
+//                .nickname(userDTO.getNickname())
+//                .profileImg(userDTO.getProfileImg())
+////                .walletId(userDTO.getWalletId())
+////                .isCeleb(userDTO.getIsCeleb())
+////                .info(userDTO.getInfo())
+////                .coverImg(userDTO.getCoverImg())
+//                .build();
+//
+//        if(userDTO.getIsCeleb()){
+//            UserResponseDTO.CelebResponseDTO celebResponseDTO = userResponseDTO.new CelebResponseDTO();
+//            celebResponseDTO.builder()
+//        }
 
         return null;
     }
