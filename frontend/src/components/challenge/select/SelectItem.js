@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 function SelectItem(props) {
@@ -8,20 +8,22 @@ function SelectItem(props) {
     if (props.audioRef.current) {
       props.audioRef.current.pause();
     }
-    if (props.checkRef.current == props.index) {
+    if (props.checkRef.current === props.index) {
       if (playing) {
         props.audioRef.current.pause();
         setPlaying(false);
       } else {
+        props.audioRef.current.volume = 0.2;
         props.audioRef.current.play();
         setPlaying(true);
       }
     } else {
       props.audioRef.current = new Audio(props.item.music);
+      props.audioRef.current.volume = 0.2;
       props.audioRef.current.play();
       setPlaying(true);
     }
-    if (props.prevRef.current && props.checkRef.current != props.index) {
+    if (props.prevRef.current && props.checkRef.current !== props.index) {
       props.prevRef.current(false);
     }
     props.checkRef.current = props.index;

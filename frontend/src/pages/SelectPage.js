@@ -11,6 +11,7 @@ function SelectPage() {
     UseAxios.get(`/challenges/select`).then((res) => {
       setChallengeData(res.data);
       setLoading(true);
+      console.log(res.data);
     });
   }, []);
   return (

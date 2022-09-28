@@ -1,11 +1,13 @@
 import React, { useMemo, useContext, useRef, useState, useEffect } from 'react';
 import Context from '../utils/Context';
 import Header from '../components/common/Header';
-import styles from './RegistPage.module.css';
+import styles from './RegisterPage.module.css';
 import getBlobDuration from 'get-blob-duration';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '@mui/material/';
-function RegistPage() {
+import UseAxios from '../utils/UseAxios';
+
+function RegisterPage() {
   const videoRef = useRef(null);
   const checkRef = useRef(null);
   const audioRef = useRef(null);
@@ -15,11 +17,10 @@ function RegistPage() {
   const [tip, setTip] = useState('비디오를 누를 시 영상이 재생됩니다.');
   const [title, setTitle] = useState(null);
   const [amount, setAmount] = useState(null);
-  const { blob } = useContext(Context);
+  const { blob, setBlob } = useContext(Context);
   const location = useLocation();
-  getBlobDuration(blob).then(function (duration) {
-    setLength(duration);
-  });
+  const navigate = useNavigate();
+
   const handleClick = () => {
     if (videoRef.current) {
       if (checkRef.current) {
@@ -29,6 +30,7 @@ function RegistPage() {
         audioRef.current.pause();
         setWaitButton(false);
       } else {
+        audioRef.current.volume = 0.2;
         videoRef.current.play();
         audioRef.current.play();
         checkRef.current = true;
@@ -80,32 +82,58 @@ function RegistPage() {
     return (
       <video
         ref={videoRef}
-        src={URL.createObjectURL(blob)}
+        src={blob ? URL.createObjectURL(blob) : ''}
         style={{ width: '100%', height: '100%' }}
         onClick={handleClick}
       ></video>
     );
   });
   const MemoizedItem = useMemo(() => videoItem, [blob]);
-  const buttonItem = React.memo(function buttonItem() {
-    return (
-      <Button
-        type='button'
-        fullWidth
-        variant='contained'
-        size='medium'
-        className={styles.Btn}
-        style={{ height: 30, backgroundColor: title ? '#ffd046' : '#d2d2d2', transition: 1 }}
-      >
-        업로드
-      </Button>
-    );
-  });
+
   useEffect(() => {
     if (!videoRef.current) {
       return;
     }
   }, [videoRef]);
+
+  useEffect(() => {
+    if (blob) {
+      getBlobDuration(blob).then(function (duration) {
+        setLength(duration);
+      });
+    }
+  }, [blob]);
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    let body = {
+      challengeId: location.state.id,
+      title: title.trim(),
+    };
+    function uuidv4() {
+      return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+        var r = (Math.random() * 16) | 0,
+          v = c == 'x' ? r : (r & 0x3) | 0x8;
+        return v.toString(16);
+      });
+    }
+    let filename = uuidv4() + '.webm';
+    const file = new File([blob], filename);
+    const data = new FormData();
+    data.append('video', file);
+    const json = JSON.stringify(body);
+    const fixData = new Blob([json], { type: 'application/json' });
+    data.append('challengeRequestDTO', fixData);
+    UseAxios.post(`/challenges`, data, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    })
+      .then((res) => {
+        setBlob(null);
+        navigate('/');
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
   return (
     <div className='wrapper'>
       <Header title={'챌린지 등록'}></Header>
@@ -134,25 +162,38 @@ function RegistPage() {
           value={location ? `${location.state.title}` : ''}
         ></input>
       </div>
-      <form>
+      <form onSubmit={handleSubmit}>
         <div>나의 챌린지 제목</div>
         <input
           className={styles.inputBox}
           type='text'
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
+          value={title || ''}
+          onChange={(e) => setTitle(e.target.value.replace(/^\s*/, ''))}
+          maxLength='45'
+          required
         ></input>
         <div>기부 금액(선택)</div>
         <div>
+          <input
+            id={styles.tokenBox}
+            type='number'
+            value={amount || ''}
+            onChange={(e) => {
+              setAmount(e.target.value);
+            }}
+          ></input>
+          KRT
+        </div>
+        <div>
           <Button
-            type='button'
+            type='submit'
             fullWidth
             variant='contained'
             size='medium'
             className={styles.Btn}
-            style={{ height: 30, backgroundColor: title ? '#ffd046' : '#d2d2d2', transition: 1 }}
+            style={{ height: 30, backgroundColor: title ? '#ffd046' : '#d2d2d2' }}
           >
-            충전
+            업로드
           </Button>
         </div>
       </form>
@@ -160,4 +201,4 @@ function RegistPage() {
   );
 }
 
-export default RegistPage;
+export default RegisterPage;
