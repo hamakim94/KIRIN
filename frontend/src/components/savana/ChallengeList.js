@@ -1,5 +1,6 @@
 import React from 'react';
 import ChallengeCard from './ChallengeCard';
+
 function ChallengeList(props) {
   const challengeData = [];
   for (let i = 0; i < 10; i++) {
