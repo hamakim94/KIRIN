@@ -1,10 +1,10 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import styles from './PlusPage.module.css';
-import RecordRTC, { invokeSaveAsDialog } from 'recordrtc';
-import dummy from '../assets/sound/dummy.mp3';
-import { useNavigate } from 'react-router-dom';
+import RecordRTC from 'recordrtc';
+import { useNavigate, useLocation } from 'react-router-dom';
 import Context from '../utils/Context';
 import { MdOutlineFlipCameraAndroid, MdOutlineQueueMusic } from 'react-icons/md';
+import UseAxios from '../utils/UseAxios';
 
 function ProgressBar(props) {
   const [value, setValue] = useState(0);
@@ -27,15 +27,19 @@ function PlusPage() {
   const [number, setNumber] = useState(null);
   const [waitButton, setWaitButton] = useState(false);
   const [changeCam, setChangeCam] = useState('user');
+  const [challengeData, setChallengeData] = useState(null);
+  const [length, setLength] = useState(null);
   const refVideo = useRef(null);
   const recorderRef = useRef(null);
   const audioRef = useRef(null);
   const navigate = useNavigate();
+  const location = useLocation();
   let mediaStream;
 
   const handleRecording = async () => {
+    // 시작하려고 했을 떄 이미 진행 다했으면 시간초 늘려놓기
     if (number === 0) {
-      setNumber((prev) => (prev = 15));
+      setNumber((prev) => (prev = length));
       mediaStream = await navigator.mediaDevices.getUserMedia({
         video: {
           frameRate: 30,
@@ -43,20 +47,26 @@ function PlusPage() {
         },
         audio: false,
       });
-
+      // 기존에 있던 영상파일 날리고 시작
       if (blob) {
         setBlob(null);
       }
+
+      // 새녹화
       setStream(mediaStream);
       recorderRef.current = new RecordRTC(mediaStream, {
         type: 'video',
         mimeType: 'video/webm;codecs=vp9',
       });
       recorderRef.current.startRecording();
-      audioRef.current.currentTime = 50;
+
+      // 노래 새로 시작
+      audioRef.current.currentTime = 0;
       audioRef.current.volume = 0.2;
       audioRef.current.play();
+
       setToggleBtn(true);
+      // 타이머 시작
       setWaitButton(true);
     } else {
       mediaStream = await navigator.mediaDevices.getUserMedia({
@@ -76,7 +86,7 @@ function PlusPage() {
         mimeType: 'video/webm;codecs=vp9',
       });
       recorderRef.current.startRecording();
-      audioRef.current.currentTime = 50;
+      audioRef.current.currentTime = 0;
       audioRef.current.volume = 0.2;
       audioRef.current.play();
       setToggleBtn(true);
@@ -104,15 +114,22 @@ function PlusPage() {
       setBlob(recorderRef.current.getBlob());
     });
     audioRef.current.pause();
-    audioRef.current.currentTime = 55;
+    audioRef.current.currentTime = 0;
     setWaitButton(false);
-    setNumber(15);
+    setNumber(length);
     if (stream) {
       stream.getTracks().forEach(function (track) {
         track.stop();
       });
     }
-    navigate('/regist');
+    navigate('/regist', {
+      state: {
+        id: challengeData.challengeId,
+        title: challengeData.title,
+        length: challengeData.length,
+        music: challengeData.music,
+      },
+    });
   };
 
   const handleRetry = () => {
@@ -120,9 +137,9 @@ function PlusPage() {
       setBlob(null);
     });
     audioRef.current.pause();
-    audioRef.current.currentTime = 55;
+    audioRef.current.currentTime = 0;
     setWaitButton(false);
-    setNumber(15);
+    setNumber(length);
     setPause(false);
     if (stream) {
       stream.getTracks().forEach(function (track) {
@@ -141,10 +158,6 @@ function PlusPage() {
       refVideo.current.srcObject = mediaStream;
     };
     retry();
-  };
-
-  const handleSave = () => {
-    invokeSaveAsDialog(blob);
   };
 
   const handleDirection = () => {
@@ -211,14 +224,20 @@ function PlusPage() {
         audio: false,
       });
       setStream(mediaStream);
-      audioRef.current = new Audio(dummy);
     };
     start();
-    setNumber(15);
+
+    UseAxios.get(`/challenges/select/${location.state.id}`).then((res) => {
+      setChallengeData(res.data);
+      setNumber(res.data.length);
+      setLength(res.data.length);
+      audioRef.current = new Audio(res.data.music);
+    });
+
     return () => {
       if (audioRef.current) {
         audioRef.current.pause();
-        audioRef.current.currentTime = 55;
+        audioRef.current.currentTime = 0;
       }
     };
   }, []);
@@ -243,11 +262,13 @@ function PlusPage() {
               setBlob(recorderRef.current.getBlob());
             });
             audioRef.current.pause();
-            audioRef.current.currentTime = 55;
+            audioRef.current.currentTime = 0;
             setToggleBtn(false);
             setPause(false);
             setNumber(0);
-          } else setNumber(15);
+          } else {
+            if (length) setNumber(length);
+          }
         };
       }
     }, [delay]);
@@ -269,7 +290,7 @@ function PlusPage() {
             <ProgressBar
               styles={styles}
               width={window.innerWidth}
-              percent={(15 - number) / 15}
+              percent={length ? (length - number) / length : 0}
             ></ProgressBar>
           </div>
           <div
@@ -290,17 +311,36 @@ function PlusPage() {
             <div
               style={{
                 display: 'flex',
-                flex: 1,
+                flex: 8,
                 flexDirection: 'column',
                 justifyContent: 'center',
                 textAlign: 'center',
                 color: '#FFFFFF',
               }}
             >
-              <span style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                <MdOutlineQueueMusic style={{ marginRight: 2 }} size={25}></MdOutlineQueueMusic>
-                <span>챌린지 선택</span>
-              </span>
+              <div
+                style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+                onClick={() => navigate('/select')}
+              >
+                <div
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    paddingRight: 25,
+                  }}
+                >
+                  <div>
+                    <MdOutlineQueueMusic style={{ marginRight: 2 }} size={30}></MdOutlineQueueMusic>
+                  </div>
+                  <div>
+                    <div>{challengeData ? challengeData.title : '챌린지선택'}</div>
+                    <div style={{ fontSize: '0.75em' }}>
+                      {challengeData ? challengeData.star + '-' + challengeData.musicTitle : ''}
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
             <div
               style={{
@@ -309,7 +349,7 @@ function PlusPage() {
                 justifyContent: 'flex-end',
               }}
             >
-              {pause ? (
+              {pause || waitButton ? (
                 ''
               ) : (
                 <MdOutlineFlipCameraAndroid
@@ -389,7 +429,7 @@ function PlusPage() {
                   paddingTop: 20,
                 }}
               >
-                <span onClick={handleRetry}>다시찍기</span>
+                {blob || number < length ? <span onClick={handleRetry}>다시찍기</span> : ''}
               </div>
               <div
                 style={{
@@ -426,7 +466,8 @@ function PlusPage() {
                   color: 'white',
                 }}
               >
-                {blob || number < 15 ? <span onClick={handleStop}>보내기</span> : ''}
+                {/* 영상이 있거나 시간 초를 썼다면 보내기 */}
+                {blob || number < length ? <span onClick={handleStop}>보내기</span> : ''}
               </div>
             </div>
             <div

@@ -1,9 +1,21 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import SelectItem from './SelectItem';
 
 function SelectList(props) {
   const audioRef = useRef(null);
-  const [checkIdx, setCheckIdx] = useState(null);
+  const checkRef = useRef(null);
+  const prevRef = useRef(null);
+
+  useEffect(() => {
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
+      checkRef.current = null;
+      prevRef.current = null;
+    };
+  }, []);
   return (
     <div>
       {props.data
@@ -13,8 +25,8 @@ function SelectList(props) {
               item={item}
               index={index}
               audioRef={audioRef}
-              checkIdx={checkIdx}
-              setCheckIdx={setCheckIdx}
+              checkRef={checkRef}
+              prevRef={prevRef}
               key={index}
             />
           ))

@@ -30,7 +30,7 @@
 .leftWrapper {
   display: flex;
   align-items: center;
-  flex: 2;
+  flex: 1;
 }
 
 .midWrapper {
@@ -38,6 +38,7 @@
   flex-direction: column;
   justify-content: center;
   flex: 8;
+  padding-left: 10px;
 }
 
 .topText {
@@ -50,7 +51,7 @@
 .rightWrapper {
   display: flex;
   align-items: center;
-  flex: 2;
+  flex: 3;
 }
 
 .coverImg {

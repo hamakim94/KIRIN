@@ -1,14 +1,16 @@
-import React, { useEffect, useState } from "react";
-import styles from "./SearchPage.module.css";
-import BackButton from "../components/common/BackButton";
-import SearchList from "../components/search/SearchList";
-import UseAxios from "../utils/UseAxios";
+import React, { useEffect, useState } from 'react';
+import styles from './SearchPage.module.css';
+import BackButton from '../components/common/BackButton';
+import SearchList from '../components/search/SearchList';
+
+import UseAxios from '../utils/UseAxios';
 function SearchPage() {
-  const [starName, setStarName] = useState("");
+  const [starName, setStarName] = useState('');
   const [starList, setStarList] = useState([]);
   const [filteredStarList, setFilteredStarList] = useState([]);
+
   useEffect(() => {
-    UseAxios.get("/users/stars")
+    UseAxios.get('/users/stars')
       .then((res) => {
         setFilteredStarList(res.data);
         setStarList(res.data);
@@ -20,7 +22,7 @@ function SearchPage() {
   const searchFilter = (text) => {
     if (text) {
       const newData = starList.filter((star) => {
-        const starData = star.nickname ? star.nickname.toUpperCase() : "".toUpperCase();
+        const starData = star.nickname ? star.nickname.toUpperCase() : ''.toUpperCase();
         const textData = text.toUpperCase();
         return starData.indexOf(textData) > -1;
       });
@@ -40,8 +42,8 @@ function SearchPage() {
           className={styles.searchBox}
           value={starName}
           onChange={(e) => searchFilter(e.target.value)}
-          type={"text"}
-          placeholder={"검색"}
+          type={'text'}
+          placeholder={'검색'}
         ></input>
       </div>
       <SearchList styles={styles} starList={filteredStarList}></SearchList>
