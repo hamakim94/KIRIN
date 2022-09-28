@@ -15,3 +15,12 @@
   justify-content: center;
   flex: 6;
 }
+
+.pageWhiteTitle {
+  display: flex;
+  font-size: 20px;
+  font-weight: bold;
+  justify-content: center;
+  flex: 6;
+  color: #ffffff;
+}

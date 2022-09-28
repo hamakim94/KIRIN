@@ -283,7 +283,7 @@ function PlusPage() {
             }}
           >
             <div style={{ flex: 1, color: '#FFFFFF' }}>
-              <span style={{ marginLeft: 10 }} onClick={() => navigate('/')}>
+              <span style={{ marginLeft: 10 }} onClick={() => navigate(-1)}>
                 X
               </span>
             </div>
