@@ -218,13 +218,9 @@ public class ChallengeServiceImpl implements ChallengeService {
             p.waitFor();
             // insert Watermark
             String outputPath = UUID.randomUUID() + ".mp4";
-            String commandInsertWatermark = String.format("ffmpeg -y -i %s -i %s -i %s -filter_complex [1][0]scale2ref=w=oh*mdar:h=ih*0.08[logo][video];[logo]format=argb,geq=r='r(X,Y)':a='0.8*alpha(X,Y)'[soo];[video][soo]overlay=30:30 -map \"v\" -map 2:a -c:v libx264 -crf 17 -c:a aac -strict experimental %s"
+            String commandInsertWatermark = String.format("ffmpeg -y -i %s -i %s -i %s -filter_complex \"[1][0]scale2ref=w=oh*mdar:h=ih*0.08[logo][video];[logo]format=argb,geq=r='r(X,Y)':a='0.8*alpha(X,Y)'[soo];[video][soo]overlay=30:30\" -map \"v\" -map 2:a -c:v libx264 -crf 17 -c:a aac -strict experimental %s"
                     , videoTmpDir, kirinStamp, musicPath, (challengeDir+ outputPath));
-            System.out.println("starting video editing!!!!!!");
             p = Runtime.getRuntime().exec(commandInsertWatermark);
-            String line;
-            BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
-            while ((line=br.readLine())!=null) System.out.println(line);
             p.waitFor();
 
             challengeRepository.save(
