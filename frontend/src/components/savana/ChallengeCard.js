@@ -8,9 +8,12 @@ import {
   RiShareFill,
   RiBearSmileFill,
 } from 'react-icons/ri';
+import swal from 'sweetalert';
+import Comment from './Comment';
 
 function ProgressBar(props) {
   const [value, setValue] = useState(0);
+
   useEffect(() => {
     const newValue = props.width * props.percent;
     setValue(newValue);
@@ -35,6 +38,7 @@ function ChallengeCard(props) {
     document.execCommand('copy');
     document.body.removeChild(el);
     setCopied(true);
+    swal('링크 복사가 완료되었습니다');
   }
 
   return (
@@ -46,7 +50,7 @@ function ChallengeCard(props) {
       <div className={props.styles.coverBox}>
         <div className={props.styles.blankBox}></div>
         <div className={props.styles.iconBox}>
-          <a href="/donation">
+          <a href="/challenge/${challengeId}">
             <RiZoomInFill className={props.styles.clickIcon}></RiZoomInFill>
           </a>
           <div>
@@ -56,7 +60,7 @@ function ChallengeCard(props) {
             <div className={props.styles.iconCount}>32</div>
           </div>
           <div>
-            <a href="/donation">
+            <a>
               <RiMessage3Line className={props.styles.clickIcon}></RiMessage3Line>
             </a>
             <div className={props.styles.iconCount}>25</div>
