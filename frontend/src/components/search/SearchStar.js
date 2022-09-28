@@ -4,10 +4,7 @@ import { useNavigate } from "react-router-dom";
 function SearchStar(props) {
   const navigate = useNavigate();
   return (
-    <div
-      className={props.styles.starContainer}
-      onClick={() => navigate(`/star/${props.star.id}`, { state: props.star.id })}
-    >
+    <div className={props.styles.starContainer} onClick={() => navigate(`/star/${props.star.id}`)}>
       <img
         alt="star"
         className={props.styles.starImg}
