@@ -72,8 +72,8 @@ public class CommunityController {
     @DeleteMapping("/stars/{starId}/boards/{boardId}")
     @ApiOperation(value = "커뮤니티 좋아요 취소")
     public ResponseEntity<?> communityUnlike(@ApiIgnore @AuthenticationPrincipal UserDTO userDTO,
-                                             @PathVariable long starId,
-                                             @PathVariable long boardId){
+                                             @PathVariable Long starId,
+                                             @PathVariable Long boardId){
 
         communityService.unlikeCommunity(userDTO.getId(), boardId);
 
@@ -83,7 +83,7 @@ public class CommunityController {
     @PostMapping("/stars/{starId}/boards/{boardId}/comments")
     @ApiOperation(value = "커뮤니티 댓글 작성")
     public ResponseEntity<?> communityCommentWrite(@ApiIgnore @AuthenticationPrincipal UserDTO userDTO,
-                                                   @PathVariable long boardId,
+                                                   @PathVariable Long boardId,
                                                    CommunityCommentRequestDTO communityCommentRequestDTO){
 
         communityService.writeComment(userDTO.getId(), boardId, communityCommentRequestDTO);
@@ -94,7 +94,7 @@ public class CommunityController {
     @PostMapping("/stars/{starId}/boards/{boardId}/comments/{commentId}")
     @ApiOperation(value = "커뮤니티 댓글 좋아요")
     public ResponseEntity<?> communityCommentLike(@ApiIgnore @AuthenticationPrincipal UserDTO userDTO,
-                                                  @PathVariable long commentId){
+                                                  @PathVariable Long commentId){
 
         communityService.likeCommunityComment(userDTO.getId(), commentId);
 
@@ -104,7 +104,7 @@ public class CommunityController {
     @DeleteMapping("/stars/{starId}/boards/{boardId}/comments/{commentId}")
     @ApiOperation(value = "커뮤니티 댓글 좋아요 취소")
     public ResponseEntity<?> communityCommentUnlike(@ApiIgnore @AuthenticationPrincipal UserDTO userDTO,
-                                                    @PathVariable long commentId){
+                                                    @PathVariable Long commentId){
 
         communityService.unlikeCommunityComment(userDTO.getId(), commentId);
 

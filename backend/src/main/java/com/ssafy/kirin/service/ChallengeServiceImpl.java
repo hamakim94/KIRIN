@@ -49,8 +49,8 @@ public class ChallengeServiceImpl implements ChallengeService {
     private final DonationOrganizationRepository donationOrganizationRepository;
     @Value("${property.app.upload-path}")
     private String challengeDir;
-    @Value("${kirin.stamp}")
-    private String kirinStamp;
+//    @Value("${kirin.stamp}")
+    private String kirinStamp = "/files/bd363c62-476d-4c29-aed6-8a5346fb41bfstamp.png";
 
     @Override
     public List<Challenge> listStarsByPopularity() {
@@ -87,17 +87,17 @@ public class ChallengeServiceImpl implements ChallengeService {
     }
 
     @Override
-    public List<Challenge> listAllByChallenge(long challengeId) {
+    public List<Challenge> listAllByChallenge(Long challengeId) {
         return challengeRepository.findByChallengeId(challengeId);
     }
 
     @Override
-    public List<Challenge> listAllByUser(long userId) {
+    public List<Challenge> listAllByUser(Long userId) {
         return challengeRepository.findByUserId(userId);
     }
 
     @Override
-    public List<ChallengeDTO> listUserLike(long userId) {
+    public List<ChallengeDTO> listUserLike(Long userId) {
         return challengeLikeRepository.findByUserId(userId).stream()
                 .map(ChallengeLike::getChallenge).map(o -> {
                     ChallengeDTO dto = ChallengeMapStruct.INSTANCE.mapToChallengeDTO(o);
@@ -107,7 +107,7 @@ public class ChallengeServiceImpl implements ChallengeService {
     }
 
     @Override
-    public List<ChallengeCommentDTO> getChallengeComment(long challengeId) {
+    public List<ChallengeCommentDTO> getChallengeComment(Long challengeId) {
 
         return challengeCommentRepository.findByChallengeId(challengeId).stream().map(o -> {
             ChallengeCommentDTO dto = ChallengeCommentMapStruct.INSTANCE.mapToChallengeCommentDTO(o);
@@ -117,7 +117,7 @@ public class ChallengeServiceImpl implements ChallengeService {
     }
 
     @Override
-    public void writeChallengeComment(long userId, long challengeId, ChallengeCommentRequestDTO dto) {
+    public void writeChallengeComment(Long userId, Long challengeId, ChallengeCommentRequestDTO dto) {
         User user = userRepository.getReferenceById(userId);
         Challenge challenge = challengeRepository.getReferenceById(challengeId);
         ChallengeComment challengeComment = ChallengeComment.builder()
@@ -262,6 +262,10 @@ public class ChallengeServiceImpl implements ChallengeService {
             String commandWatermark = String.format("ffmpeg -y -i %s -i %s -filter_complex [1][0]scale2ref=w=oh*mdar:h=ih*0.08[logo][video];[logo]format=argb,geq=r='r(X,Y)':a='0.8*alpha(X,Y)'[soo];[video][soo]overlay=30:30 %s",
                     videoTmpDir, kirinStamp, challengeDir+videoDir);
             p = Runtime.getRuntime().exec(commandWatermark);
+            BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            System.out.println("------------------------------\nwatermark inserted");
+            String line;
+            while((line =br.readLine())!=null) System.out.println(line);
             p.waitFor();
             //delete original videoFile
             Files.delete(videoTmp);

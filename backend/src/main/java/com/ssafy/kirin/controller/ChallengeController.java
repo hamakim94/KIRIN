@@ -36,7 +36,7 @@ public class ChallengeController {
     @GetMapping("")
     @ApiOperation(value = "챌린지 리스트")
     public ResponseEntity<List<ChallengeDTO>> challengeList(@RequestParam(name = "scope",required = false, defaultValue = "") String scope, @RequestParam(name = "order",required = false, defaultValue = "") String order,
-                                                            @RequestParam(name = "userid", required = false, defaultValue = "0") int userId, @RequestParam(name = "challengeid", required = false,defaultValue = "0") int challengeId){
+                                                            @RequestParam(name = "userid", required = false, defaultValue = "0") Long userId, @RequestParam(name = "challengeid", required = false,defaultValue = "0") Long challengeId){
         List<Challenge> list = switch (scope){
             case "stars" -> switch (order){
                 case "popularity" -> challengeService.listStarsByPopularity();

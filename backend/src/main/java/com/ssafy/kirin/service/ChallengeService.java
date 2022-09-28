@@ -21,13 +21,13 @@ public interface ChallengeService {
     List<Challenge> listGeneralByRandom();
     List<Challenge> listAllByRandom();
     List<Challenge> listAllByAlphabet();
-    List<Challenge> listAllByChallenge(long challengeId);
-    List<Challenge> listAllByUser(long userId);
-    List<ChallengeDTO> listUserLike(long userId);
+    List<Challenge> listAllByChallenge(Long challengeId);
+    List<Challenge> listAllByUser(Long userId);
+    List<ChallengeDTO> listUserLike(Long userId);
     void createChallenge(UserDTO userDTO, ChallengeRequestDTO challengeRequestDTO, MultipartFile video) throws IOException;
     void createStarChallenge(UserDTO userDTO, StarChallengeRequestDTO starChallengeRequestDTO, MultipartFile video);
-    List<ChallengeCommentDTO> getChallengeComment(long challengeId);
-    void writeChallengeComment(long userId, long challengeId,
+    List<ChallengeCommentDTO> getChallengeComment(Long challengeId);
+    void writeChallengeComment(Long userId, Long challengeId,
                                ChallengeCommentRequestDTO challengeCommentRequestDTO);
     List<ChallengeSelectResponseDTO> selectChallenge();
 
