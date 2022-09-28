@@ -130,14 +130,27 @@ public class UserController {
     @GetMapping("/confirm-email")
     @ApiOperation(value = "이메일 확인(계정 활성화)")
     public ResponseEntity<?> emailConfirm(@RequestParam(value = "email") String email, @RequestParam(value = "authToken") String authToken) {
+        boolean confirm = true;
+
         try {
             userService.confirmEmail(email, authToken);
             //            response.sendRedirect("https://i7a202.p.ssafy.io/signup/success.html");
         } catch (Exception e){
             //                response.sendRedirect("https://i7a202.p.ssafy.io/signup/error.html");
-            log.error("email auth token 만료");
+            log.error("email auth token 기간 만료");
             // email 만료되면 해당 계정의 이메일, 닉네임은 다시 못 쓰게 할건지? 아니면 해당 user 내역을 삭제해야될지?
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            confirm = false;
+        }
+
+        if(!confirm){
+            try {
+                log.info("이메일 재전송");
+                userService.reissueEmailAuth(email, authToken);
+            } catch (Exception e){
+                log.error("이메일 재전송 실패");
+
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
         }
 
         return new ResponseEntity<>(HttpStatus.OK);

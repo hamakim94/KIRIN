@@ -51,4 +51,6 @@ public interface UserService {
     void updateStarInfo(long starId, String info) throws Exception;
 
     UserResponseDTO getUserProfile(UserDTO userDTO);
+
+    void reissueEmailAuth(String email, String authToken) throws MessagingException, UnsupportedEncodingException;
 }
