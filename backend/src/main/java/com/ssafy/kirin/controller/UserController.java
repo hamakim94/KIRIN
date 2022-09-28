@@ -30,6 +30,7 @@ import springfox.documentation.annotations.ApiIgnore;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -129,17 +130,22 @@ public class UserController {
 
     @GetMapping("/confirm-email")
     @ApiOperation(value = "이메일 확인(계정 활성화)")
-    public ResponseEntity<?> emailConfirm(@RequestParam(value = "email") String email, @RequestParam(value = "authToken") String authToken) {
+    public ResponseEntity<?> emailConfirm(@RequestParam(value = "email") String email, @RequestParam(value = "authToken") String authToken, HttpServletResponse response) {
         boolean confirm = true;
 
         try {
             userService.confirmEmail(email, authToken);
-            //            response.sendRedirect("https://i7a202.p.ssafy.io/signup/success.html");
+            response.sendRedirect("https://j7a708.p.ssafy.io/success");
         } catch (Exception e){
-            //                response.sendRedirect("https://i7a202.p.ssafy.io/signup/error.html");
-            log.error("email auth token 기간 만료");
-            // email 만료되면 해당 계정의 이메일, 닉네임은 다시 못 쓰게 할건지? 아니면 해당 user 내역을 삭제해야될지?
-            confirm = false;
+            try {
+                response.sendRedirect("https://j7a708.p.ssafy.io/fail");
+                log.error("email auth token 기간 만료");
+                // email 만료되면 해당 계정의 이메일, 닉네임은 다시 못 쓰게 할건지? 아니면 해당 user 내역을 삭제해야될지?
+                confirm = false;
+            } catch (Exception e2){
+                log.error("fail page redirect 실패: " + e2);
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
         }
 
         if(!confirm){
@@ -148,7 +154,6 @@ public class UserController {
                 userService.reissueEmailAuth(email, authToken);
             } catch (Exception e){
                 log.error("이메일 재전송 실패");
-
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
         }
