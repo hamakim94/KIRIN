@@ -1,32 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import {
-  Button,
-  TextField,
-  Grid,
-  Typography,
-  Container,
-  Backdrop,
-  CircularProgress,
-} from '@mui/material/';
 import styles from './WalletPage.module.css';
+import { BiArrowBack } from 'react-icons/bi';
+import { Button, TextField } from '@mui/material/';
+import { AiOutlineCopy } from 'react-icons/ai';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import ABI from '../TokenABI.json';
 import CA from '../TokenCA.json';
-import { BiArrowBack } from 'react-icons/bi';
-
-// 숫자만 입력해
-const isLetters = (str) => /^[0-9]*$/.test(str);
 
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#FFC947',
-    },
-    secondary: {
-      main: '#11cb5f',
+      main: '#d2d2d2',
     },
   },
 });
+
+// 숫자만 입력해
+const isLetters = (str) => /^[0-9]*$/.test(str);
 
 function WalletPage() {
   const [web3, setWeb3] = useState(''); // web3 연결하는 부분, useEffect를 통해 초반에 생성된다.
@@ -169,43 +159,39 @@ function WalletPage() {
     });
   };
 
+  const handleCopyClipBoard = async (obj) => {
+    try {
+      await navigator.clipboard.writeText(obj.address);
+      console.log('복사 성공');
+    } catch (error) {
+      console.log('복사 실패 ' + error);
+    }
+  };
+
   return (
     <ThemeProvider theme={theme}>
-      <div>
-        <Backdrop
-          sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-          open={open}
-          onClick={handleClose}
-        >
-          <CircularProgress color='inherit' />
-        </Backdrop>
-      </div>
-      <div className={styles.topBox}>
-        <a href='/mypage'>
-          <BiArrowBack className={styles.back}></BiArrowBack>
-        </a>
-        <div className={styles.pageTitle}>내 지갑!</div>
-        {'\u00A0'}
-      </div>
-      <div>
-        <Container component='main' maxWidth='lg' m={2} disableGutters={true}>
-          <Grid container alignItems='center' justify='center' spacing={2} p={2}>
-            <Grid item xs={6}>
-              <Typography sx={{ ml: 0.5, mb: 0.5 }}>지갑 주소</Typography>
-            </Grid>
-            <Grid item xs={6}>
-              <Typography sx={{ ml: 0.5, mb: 0.5 }}>{address.substr(0, 15) + '...'}</Typography>
-            </Grid>
-
-            <Grid item xs={6}>
-              <Typography sx={{ ml: 0.5, mb: 0.5 }}>이더리움 잔고</Typography>
-            </Grid>
-            <Grid item xs={3}>
-              <Typography sx={{ ml: 0.5, mb: 0.5 }}>
-                {balance ? balance + ' ETH' : '0 ETH'}
-              </Typography>
-            </Grid>
-            <Grid item xs={3}>
+      <div style={{ margin: 20 }}>
+        <div className={styles.topBox}>
+          <a>
+            <BiArrowBack className={styles.back}></BiArrowBack>
+          </a>
+          <div className={styles.pageTitle}>지갑 정보</div>
+          <div style={{ width: 25 }}></div>
+        </div>
+        <div className={styles.groupBox}>
+          <div className={styles.group}>
+            <div className={styles.title}>지갑 주소</div>
+            <div style={{ display: 'flex', justifyContent: 'space-evenly' }}>
+              <div className={`${styles.ellipsis} ${styles.content}`}>{address}</div>
+              <button className={styles.btn} onClick={() => handleCopyClipBoard({ address })}>
+                <AiOutlineCopy size={25}></AiOutlineCopy>
+              </button>
+            </div>
+          </div>
+          <div className={styles.group}>
+            <div className={styles.title}>이더리움 잔고</div>
+            <div className={styles.content}>{balance ? balance + ' ETH' : '0 ETH'}</div>
+            <div style={{ marginTop: 30 }}>
               <Button
                 type='button'
                 fullWidth
@@ -216,47 +202,134 @@ function WalletPage() {
               >
                 충전
               </Button>
-            </Grid>
-            <Grid item xs={6}>
-              <Typography sx={{ ml: 0.5, mt: 1, mb: 0.5 }}>KIRIN 토큰양</Typography>
-            </Grid>
-            <Grid item xs={6}>
-              <Typography sx={{ ml: 0.5, mb: 0.5 }}>
-                {tokenBalance ? tokenBalance + ' KRT' : '0 KRT'}
-              </Typography>
-            </Grid>
-            <Grid item xs={12}>
-              <Typography sx={{ ml: 0.5, mt: 1 }}>KIRIN 토큰 충전하기*</Typography>
-            </Grid>
-            <Grid item xs={9} sm={9}>
-              <TextField
-                variant='outlined'
-                required
-                fullWidth
-                id='tokens'
-                onChange={onChangeTokens}
-                value={tokens}
-                label='숫자만 입력 가능합니다'
-                size='small'
-              />
-            </Grid>
-            <Grid item xs={3} sm={3}>
-              <Button
-                type='button'
-                fullWidth
-                variant='contained'
-                color='primary'
-                onClick={getToken}
-                disabled={!tokens}
-                size='medium'
-              >
-                충전
-              </Button>
-            </Grid>
-          </Grid>
-        </Container>
+            </div>
+          </div>
+          <div className={styles.group}>
+            <div className={styles.title}>KIRIN 토큰양</div>
+            <div className={styles.content}>{tokenBalance ? tokenBalance + ' KRT' : '0 KRT'}</div>
+          </div>
+          <div className={styles.group}>
+            <div className={styles.title}>KIRIN 토큰 충전하기*</div>
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
+              <div style={{ flexShrink: 0, width: '70%', maxWidth: 500, marginRight: 10 }}>
+                <TextField
+                  variant='outlined'
+                  required
+                  fullWidth
+                  id='tokens'
+                  onChange={onChangeTokens}
+                  value={tokens}
+                  label='숫자만 입력 가능합니다'
+                  size='small'
+                  style={{ color: '#d2d2d2' }}
+                />
+              </div>
+              <div style={{ flexGrow: 1, maxWidth: 100, minWidth: 40 }}>
+                <Button
+                  type='button'
+                  fullWidth
+                  variant='contained'
+                  onClick={getToken}
+                  disabled={!tokens}
+                  size='medium'
+                  style={{ height: 40, backgroundColor: '#d2d2d2' }}
+                >
+                  충전
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </ThemeProvider>
+
+    // <ThemeProvider theme={theme}>
+    //   <div>
+    //     <Backdrop
+    //       sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+    //       open={open}
+    //       onClick={handleClose}
+    //     >
+    //       <CircularProgress color="inherit" />
+    //     </Backdrop>
+    //   </div>
+    //   <div className={styles.topBox}>
+    //     <a href="/mypage">
+    //       <BiArrowBack className={styles.back}></BiArrowBack>
+    //     </a>
+    //     <div className={styles.pageTitle}>내 지갑!</div>
+    //     {"\u00A0"}
+    //   </div>
+    //   <div>
+    //     <Container component="main" maxWidth="lg" m={2} disableGutters={true}>
+    //       <Grid container alignItems="center" justify="center" spacing={2} p={2}>
+    //         <Grid item xs={6}>
+    //           <Typography sx={{ ml: 0.5, mb: 0.5 }}>지갑 주소</Typography>
+    //         </Grid>
+    //         <Grid item xs={6}>
+    //           <Typography sx={{ ml: 0.5, mb: 0.5 }}>{address.substr(0, 15) + "..."}</Typography>
+    //         </Grid>
+
+    //         <Grid item xs={6}>
+    //           <Typography sx={{ ml: 0.5, mb: 0.5 }}>이더리움 잔고</Typography>
+    //         </Grid>
+    //         <Grid item xs={3}>
+    //           <Typography sx={{ ml: 0.5, mb: 0.5 }}>
+    //             {balance ? balance + " ETH" : "0 ETH"}
+    //           </Typography>
+    //         </Grid>
+    //         <Grid item xs={3}>
+    //           <Button
+    //             type="button"
+    //             fullWidth
+    //             variant="contained"
+    //             color="primary"
+    //             onClick={chargeEthBalance}
+    //             size="medium"
+    //           >
+    //             충전
+    //           </Button>
+    //         </Grid>
+    //         <Grid item xs={6}>
+    //           <Typography sx={{ ml: 0.5, mt: 1, mb: 0.5 }}>KIRIN 토큰양</Typography>
+    //         </Grid>
+    //         <Grid item xs={6}>
+    //           <Typography sx={{ ml: 0.5, mb: 0.5 }}>
+    //             {tokenBalance ? tokenBalance + " KRT" : "0 KRT"}
+    //           </Typography>
+    //         </Grid>
+    //         <Grid item xs={12}>
+    //           <Typography sx={{ ml: 0.5, mt: 1 }}>KIRIN 토큰 충전하기*</Typography>
+    //         </Grid>
+    //         <Grid item xs={9} sm={9}>
+    //           <TextField
+    //             variant="outlined"
+    //             required
+    //             fullWidth
+    //             id="tokens"
+    //             onChange={onChangeTokens}
+    //             value={tokens}
+    //             label="숫자만 입력 가능합니다"
+    //             size="small"
+    //           />
+    //         </Grid>
+    //         <Grid item xs={3} sm={3}>
+    //           <Button
+    //             type="button"
+    //             fullWidth
+    //             variant="contained"
+    //             color="primary"
+    //             onClick={getToken}
+    //             disabled={!tokens}
+    //             size="medium"
+    //           >
+    //             충전
+    //           </Button>
+    //         </Grid>
+    //       </Grid>
+    //     </Container>
+    //   </div>
+    // </ThemeProvider>
   );
 }
 

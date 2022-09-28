@@ -1,5 +1,5 @@
 /* 기본 모양 */
-.hash {
+.ellipsis {
   max-width: 120px;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -8,7 +8,7 @@
 
 /* 540px 이상 */
 @media (min-width: 540px) {
-  .hash {
+  .ellipsis {
     max-width: 500px;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -20,7 +20,7 @@
   height: 40px;
   vertical-align: middle;
   font-size: 14px;
-  background-color: #fde9ae;
+  background-color: #ffd046;
   border-radius: 8px;
 }
 
@@ -55,12 +55,10 @@
   justify-content: center;
 }
 
-.setting {
-  height: 25px;
-  width: 25px;
-  color: white;
-}
-
 td {
   border-bottom: 1px solid #f1f1f1;
+}
+
+.table {
+  border-collapse: collapse;
 }
