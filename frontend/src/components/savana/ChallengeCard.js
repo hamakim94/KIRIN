@@ -9,9 +9,11 @@ import {
   RiBearSmileFill,
 } from 'react-icons/ri';
 import swal from 'sweetalert';
+import Comment from './Comment';
 
 function ProgressBar(props) {
   const [value, setValue] = useState(0);
+
   useEffect(() => {
     const newValue = props.width * props.percent;
     setValue(newValue);
@@ -58,7 +60,7 @@ function ChallengeCard(props) {
             <div className={props.styles.iconCount}>32</div>
           </div>
           <div>
-            <a href="/donation">
+            <a>
               <RiMessage3Line className={props.styles.clickIcon}></RiMessage3Line>
             </a>
             <div className={props.styles.iconCount}>25</div>
