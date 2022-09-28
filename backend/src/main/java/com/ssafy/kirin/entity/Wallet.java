@@ -24,4 +24,7 @@ public class Wallet {
     BigDecimal balance;
 
     BigDecimal cash;
+
+    @Column(name = "private_key")
+    String privateKey;
 }
