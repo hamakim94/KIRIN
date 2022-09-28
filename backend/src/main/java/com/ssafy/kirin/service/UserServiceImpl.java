@@ -24,7 +24,9 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.FieldError;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.mail.MessagingException;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -106,11 +108,12 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
     @Override
     public void confirmEmail(String email, String authToken) {
-        EmailAuth emailAuth = emailAuthRepositoryCustom.findValidAuthByEmail(email, authToken, LocalDateTime.now())
+        EmailAuth emailAuth = emailAuthRepositoryCustom.findValidAuthByEmail(email, authToken, LocalDateTime.now()) // 이메일, authToken, 기간, 만료여부 check
                 .orElseThrow(() -> new NoSuchElementException("EmailAuth : " + email + " was not found"));
-        User user = userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("User : " + email + " was not found"));
-        emailAuth.useToken();
-        user.emailVerifiedSuccess();
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new NoSuchElementException("User : " + email + " was not found"));
+
+        emailAuth.useToken(); // 토큰 만료시킴
+        user.emailVerifiedSuccess(); // 유저 이메일 인증 완료 체크
         emailAuthRepository.save(emailAuth);
         userRepository.save(user);
     }
@@ -362,6 +365,20 @@ public class UserServiceImpl implements UserDetailsService, UserService {
                 .build();
 
         return userResponseDTO;
+    }
+
+    @Override
+    public void reissueEmailAuth(String email, String authToken) throws MessagingException, UnsupportedEncodingException {
+        EmailAuth emailAuth = emailAuthRepository.findByEmailAndAuthToken(email, authToken)
+                .orElseThrow(() -> new NoSuchElementException("EmailAuth : " + email + " was not found"));
+
+        emailAuthRepository.delete(emailAuth); // 원래 있던 거 삭제
+
+        EmailAuth newEmailAuth = emailAuthRepository.save(
+                new EmailAuth(email, UUID.randomUUID().toString(), false)
+        );
+
+        emailService.sendVerifyMail(newEmailAuth.getEmail(), newEmailAuth.getAuthToken()); // 이메일 인증 메일 보내기
     }
 
     private UserResponseDTO userToUserDto(User user){
