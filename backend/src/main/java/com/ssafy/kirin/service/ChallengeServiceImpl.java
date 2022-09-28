@@ -16,7 +16,6 @@ import com.ssafy.kirin.util.NotificationEnum;
 import com.ssafy.kirin.util.UserMapStruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.boot.archive.spi.InputStreamAccess;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -26,7 +25,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.time.LocalDateTime;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -51,6 +49,8 @@ public class ChallengeServiceImpl implements ChallengeService {
     private final DonationOrganizationRepository donationOrganizationRepository;
     @Value("${property.app.upload-path}")
     private String challengeDir;
+    @Value("${kirin.stamp}")
+    private String kirinStamp;
 
     @Override
     public List<Challenge> listStarsByPopularity() {
@@ -156,13 +156,25 @@ public class ChallengeServiceImpl implements ChallengeService {
 
         return challengeRepository.findByIsOriginalAndIsProceeding(true, true, Sort.by(Sort.Direction.DESC, "id"))
                 .stream().map(o -> {
-
                     CelebChallengeInfo celebChallengeInfo = celebChallengeInfoRepository.findByChallengeId(o.getId());
-                    return new ChallengeSelectResponseDTO(o.getTitle(), o.getUser().getNickname(),
-                            celebChallengeInfo.getStampImg(),
+                    return new ChallengeSelectResponseDTO(o.getChallengeId(),o.getTitle(), o.getUser().getNickname(),
+                            o.getUser().getProfileImg(),
                             celebChallengeInfo.getMusic(), celebChallengeInfo.getMusicTitle());
-
                 }).collect(Collectors.toList());
+    }
+
+    @Override
+    public ChallengeSelectResponseDTO selectOneChallenge(Long challengeId) {
+        Optional<Challenge> challenge = challengeRepository.findById(challengeId);
+        if(challenge.isPresent()){
+            Challenge c = challenge.get();
+            CelebChallengeInfo celebChallengeInfo = celebChallengeInfoRepository.findByChallengeId(challengeId);
+            return new ChallengeSelectResponseDTO(challengeId, c.getTitle(),c.getUser().getNickname() ,
+                    c.getUser().getProfileImg(),celebChallengeInfo.getMusic() ,celebChallengeInfo.getMusicTitle() );
+
+
+        }
+        return null;
     }
 
     @Scheduled(initialDelay = 1000, fixedRateString = "${challenge.expiration.check-interval}")
@@ -198,7 +210,6 @@ public class ChallengeServiceImpl implements ChallengeService {
             // 원 챌린지 음악과 이미지 저장경로
             CelebChallengeInfo celebChallengeInfo = celebChallengeInfoRepository.findByChallengeId(forChallenge.getId());
             String musicPath = celebChallengeInfo.getMusic();
-            String imgPath = celebChallengeInfo.getStampImg();
 
             // 비디오 외 정보 저장
             Challenge challenge = challengeRepository.save(Challenge.builder().user(user).isProceeding(true).reg(LocalDateTime.now())
@@ -210,8 +221,8 @@ public class ChallengeServiceImpl implements ChallengeService {
             Files.copy(video.getInputStream(), outputTmp);
             String outputPath = challengeDir + UUID.randomUUID() + ext;
 
-            String command = String.format("ffmpeg -y -i %s -i %s -i %s -filter_complex [1][0]scale2ref=w=oh*mdar:h=ih*0.1[logo][video];[video][logo]overlay=W-w-15:15 -map \"v\" -map 2:a -c:v libx264 -crf 17 -c:a copy -shortest %s"
-                    , outputTmp, imgPath, musicPath, outputPath);
+            String command = String.format("ffmpeg -y -i %s -i %s -i %s -filter_complex [1][0]scale2ref=w=oh*mdar:h=ih*0.08[logo][video];[logo]format=argb,geq=r='r(X,Y)':a='0.8*alpha(X,Y)'[soo];[video][soo]overlay=30:30 -map \"v\" -map 2:a -c:v libx264 -crf 17 -c:a copy -shortest %s"
+                    , outputTmp, kirinStamp, musicPath, outputPath);
 
             Files.delete(outputTmp);
             Process p = Runtime.getRuntime().exec(command);
@@ -224,33 +235,32 @@ public class ChallengeServiceImpl implements ChallengeService {
     }
     @Transactional
     @Override
-    public void createStarChallenge(UserDTO userDTO, StarChallengeRequestDTO starChallengeRequestDTO, MultipartFile video, MultipartFile image) {
+    public void createStarChallenge(UserDTO userDTO, StarChallengeRequestDTO starChallengeRequestDTO, MultipartFile video) {
         try {
             User user = userRepository.getReferenceById(userDTO.getId());
+            //copy video file
             String videoExt = video.getOriginalFilename().substring(video.getOriginalFilename().lastIndexOf("."));
-            String videoDir = challengeDir+UUID.randomUUID()+videoExt;
-            Path videoTmp = Paths.get(videoDir);
+            String videoTmpDir = challengeDir+UUID.randomUUID()+videoExt;
+            Path videoTmp = Paths.get(videoTmpDir);
             Files.copy(video.getInputStream(), videoTmp);
-
-            String imageExt = image.getOriginalFilename().substring(image.getOriginalFilename().lastIndexOf("."));
-            String imageDir = challengeDir + UUID.randomUUID()+imageExt;
-            Path imageTmp = Paths.get(imageDir);
-            Files.copy( image.getInputStream(), imageTmp);
-
-            String musicDir = challengeDir+UUID.randomUUID()+".mp3";
-            String commandExtractMusic = String.format("ffmpeg -i %s -q:a 0 -map a %s",videoDir,musicDir);
-            Process p = Runtime.getRuntime().exec(commandExtractMusic);
-            p.waitFor();
-
+            //make thumbnail
             String thumbDir = challengeDir+UUID.randomUUID()+".gif";
-//            "ffmpeg -t 2 -i %s  -vf \"fps=10,scale=320:-1:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse\" -loop 0 %s"
-            String commandExtractThumbnail = String.format("ffmpeg -y -ss 2 -t 2 -i %s -r 10 -loop 0 %s", videoDir,thumbDir);
-            p = Runtime.getRuntime().exec(commandExtractThumbnail);
-            BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
-            String line;
-            while((line=br.readLine())!=null)
-                System.out.println(line);
+            String commandExtractThumbnail = String.format("ffmpeg -y -ss 2 -t 2 -i %s -r 10 -loop 0 %s", videoTmpDir,thumbDir);
+            Process p = Runtime.getRuntime().exec(commandExtractThumbnail);
             p.waitFor();
+            //extract music
+            String musicDir = challengeDir+UUID.randomUUID()+".mp3";
+            String commandExtractMusic = String.format("ffmpeg -i %s -q:a 0 -map a %s",videoTmpDir,musicDir);
+            p = Runtime.getRuntime().exec(commandExtractMusic);
+            p.waitFor();
+            // insert watermark
+            String videoDir = challengeDir+UUID.randomUUID()+videoExt;
+            String commandWatermark = String.format("ffmpeg -y -i %s -i %s -filter_complex [1][0]scale2ref=w=oh*mdar:h=ih*0.08[logo][video];[logo]format=argb,geq=r='r(X,Y)':a='0.8*alpha(X,Y)'[soo];[video][soo]overlay=30:30 %s",
+                    videoTmpDir,kirinStamp,videoDir);
+            p = Runtime.getRuntime().exec(commandWatermark);
+            p.waitFor();
+            //delete original videoFile
+            Files.delete(videoTmp);
 
             Challenge challenge = Challenge.builder().user(user).video(videoDir)
                     .isProceeding(true).reg(LocalDateTime.now()).isOriginal(true).thumbnail(thumbDir)
@@ -261,7 +271,7 @@ public class ChallengeServiceImpl implements ChallengeService {
 
             CelebChallengeInfo celebChallengeInfo = CelebChallengeInfo.builder().info(starChallengeRequestDTO.info()).challenge(challenge).targetAmount(starChallengeRequestDTO.targetAmount())
                     .targetNum(starChallengeRequestDTO.targetNum()).music(musicDir).musicTitle(starChallengeRequestDTO.musicTitle()).length(starChallengeRequestDTO.length())
-                    .endDate(starChallengeRequestDTO.endDate()).startDate(starChallengeRequestDTO.startDate()).stampImg(imageDir)
+                    .endDate(starChallengeRequestDTO.endDate()).startDate(starChallengeRequestDTO.startDate())
                     .donationOrganization(donationOrganizationRepository.getReferenceById(starChallengeRequestDTO.donationOrganizationId()))
                     .build();
 

@@ -119,11 +119,10 @@ public class ChallengeController {
     @ApiOperation(value = "스타 챌린지 등록")
     public ResponseEntity<?> starChallengeUpload(@ApiIgnore @AuthenticationPrincipal UserDTO userDTO,
                                                  @RequestPart MultipartFile video,
-                                                 @RequestPart MultipartFile stamp,
                                                  @RequestPart StarChallengeRequestDTO starChallengeRequestDTO){
 
 
-        challengeService.createStarChallenge(userDTO, starChallengeRequestDTO, video, stamp);
+        challengeService.createStarChallenge(userDTO, starChallengeRequestDTO, video);
 
         return ResponseEntity.ok().build();
 
@@ -134,5 +133,12 @@ public class ChallengeController {
     public ResponseEntity<List<ChallengeSelectResponseDTO>> challengeSelect(){
 
         return ResponseEntity.ok(challengeService.selectChallenge());
+    }
+
+    @GetMapping("/select/{challengeId}")
+    @ApiOperation(value = "진행 중 챌린지 목록 조회 - 등록용")
+    public ResponseEntity<ChallengeSelectResponseDTO> challengeSelectOne(@PathVariable Long challengeId){
+
+        return ResponseEntity.ok(challengeService.selectOneChallenge(challengeId));
     }
 }

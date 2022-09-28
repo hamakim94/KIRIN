@@ -25,9 +25,11 @@ public interface ChallengeService {
     List<Challenge> listAllByUser(long userId);
     List<ChallengeDTO> listUserLike(long userId);
     void createChallenge(UserDTO userDTO, ChallengeRequestDTO challengeRequestDTO, MultipartFile video) throws IOException;
-    void createStarChallenge(UserDTO userDTO, StarChallengeRequestDTO starChallengeRequestDTO, MultipartFile video, MultipartFile image);
+    void createStarChallenge(UserDTO userDTO, StarChallengeRequestDTO starChallengeRequestDTO, MultipartFile video);
     List<ChallengeCommentDTO> getChallengeComment(long challengeId);
     void writeChallengeComment(long userId, long challengeId,
                                ChallengeCommentRequestDTO challengeCommentRequestDTO);
     List<ChallengeSelectResponseDTO> selectChallenge();
+
+    ChallengeSelectResponseDTO selectOneChallenge(Long challengeId);
 }
