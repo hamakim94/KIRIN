@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import ReactPlayer from "react-player";
+import React, { useEffect, useState } from 'react';
+import ReactPlayer from 'react-player';
 
 function ProgressBar(props) {
   const [value, setValue] = useState(0);
@@ -15,7 +15,6 @@ function ProgressBar(props) {
 }
 
 function ChallengeCard(props) {
-  // 마우스 오버 상태
   const [hover, setHover] = useState(false);
   return (
     <div
@@ -27,7 +26,7 @@ function ChallengeCard(props) {
         <div className={props.styles.blankBox}></div>
         <div className={props.styles.infoBox}>
           <div className={props.styles.infoTop}>
-            <span className={props.styles.infoText}>나연이랑 연탄팝팝!</span>
+            <span className={props.styles.infoText}>{props.item.title}</span>
             <span className={props.styles.infoText}>D-21</span>
           </div>
           <ProgressBar styles={props.styles} width={134} percent={0.7}></ProgressBar>
@@ -44,12 +43,12 @@ function ChallengeCard(props) {
             playerVars: { modestbranding: 1, mute: 1 },
           },
         }}
-        url="https://www.youtube.com/watch?v=fgaLAomg68c"
-        width="100%"
-        height="100%"
+        url={`${props.item.video}`}
+        width='100%'
+        height='100%'
         playing={hover}
         controls={false}
-        loop={true}
+        volume={0}
       />
     </div>
   );
