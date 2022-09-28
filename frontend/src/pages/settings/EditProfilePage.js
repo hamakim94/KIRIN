@@ -40,12 +40,15 @@ function EditProfilePage({ parentCallback }) {
   const [canSubmit, setCanSubmit] = useState(false);
   const [file, setFile] = useState(null);
   const [user, setUser] = useState([]);
+  const [profileImg, setProfileImg] = useState(null);
 
   useEffect(() => {
     UseAxios.get(`/users/profiles`).then((res) => {
       setUser(res.data);
+      setProfileImg(`${process.env.REACT_APP_BASEURL}/files/${res.data.profileImg}`);
+      console.log(res.data);
     });
-  });
+  }, []);
 
   const sendData = (e) => {
     e.preventDefault();
@@ -77,9 +80,6 @@ function EditProfilePage({ parentCallback }) {
     }
   };
 
-  const [profileImg, setProfileImg] = useState(
-    'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'
-  );
   const fileInput = useRef(null);
 
   const onChange = (e) => {
@@ -87,9 +87,7 @@ function EditProfilePage({ parentCallback }) {
       setFile(e.target.files[0]);
     } else {
       //업로드 취소할 시
-      setProfileImg(
-        'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'
-      );
+
       return;
     }
 
@@ -103,10 +101,6 @@ function EditProfilePage({ parentCallback }) {
     reader.readAsDataURL(e.target.files[0]);
   };
 
-  let body = {
-    nickname,
-  };
-
   const onSubmit = () => {
     const check = () => {
       if (nicknameChecked === false) {
@@ -118,11 +112,8 @@ function EditProfilePage({ parentCallback }) {
     const data = new FormData();
     data.append('profileImg', file);
     // data.append('userDTO', new Blob([JSON.stringify(body)]), { type: 'application/json' });
-    const json = JSON.stringify(body);
-    const blob = new Blob([json], { type: 'application/json' });
-    data.append('userDTO', blob);
+    data.append('nickname', nickname);
 
-    console.log(blob);
     if (canSubmit) {
       UseAxios.put(`/users/profiles`, data, {
         headers: { 'Content-Type': 'multipart/form-data' },
