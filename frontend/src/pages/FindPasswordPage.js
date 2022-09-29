@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState, useRef, useContext } from 'react';
 import {
   Avatar,
   Button,
@@ -16,6 +16,8 @@ import {
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import FindPasswordTop from '../components/sign/FindPasswordTop';
 import styles from './settings/SettingsPage.module.css';
+import UseAxios from '../utils/UseAxios';
+import swal from 'sweetalert';
 
 const theme = createTheme({
   palette: {
@@ -28,15 +30,43 @@ const theme = createTheme({
   },
 });
 function FindPasswordPage() {
+  const [email, setEmail] = useState('');
+  const [name, setName] = useState('');
+  const [change, setChange] = useState('');
+
+  let body = {
+    email,
+    name,
+  };
+
+  const onChangeEmail = (e) => {
+    setEmail(e.target.value);
+  };
+
+  const onChangeName = (e) => {
+    setName(e.target.value);
+  };
+
+  useEffect(() => {
+    UseAxios.get('/users/find-password', body)
+      .then((res) => {
+        setChange(res.data);
+        swal('', '이메일주소로 임시 비밀번호를 보냈습니다.');
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+
   return (
     <ThemeProvider theme={theme}>
       <div>
         <FindPasswordTop styles={styles}></FindPasswordTop>
         <img
           src={require('../assets/img/lock.png')}
-          alt=''
-          width='100'
-          height='100'
+          alt=""
+          width="100"
+          height="100"
           style={{ display: 'block', margin: 'auto' }}
         ></img>
 
@@ -45,14 +75,16 @@ function FindPasswordPage() {
         <Grid item xs={12}>
           <Typography sx={{ ml: 0.5, mb: 0.5, mt: 5 }}>이메일*</Typography>
           <TextField
+            value={email}
             required
             autoFocus
             fullWidth
-            type='email'
-            id='email'
-            name='email'
-            placeholder='이메일'
-            size='small'
+            type="email"
+            id="email"
+            name="email"
+            placeholder="이메일"
+            size="small"
+            onChange={onChangeEmail}
           />
         </Grid>
 
@@ -60,22 +92,25 @@ function FindPasswordPage() {
           <Typography sx={{ ml: 0.5, mt: 1, mb: 0.5 }}>이름*</Typography>
 
           <TextField
+            value={name}
             required
             fullWidth
-            type='name'
-            id='name'
-            name='name'
-            placeholder='이름'
-            size='small'
+            type="name"
+            id="name"
+            name="name"
+            placeholder="이름"
+            size="small"
+            onChange={onChangeName}
           />
         </Grid>
         <Button
-          type='submit'
+          type="submit"
           fullWidth
-          variant='contained'
+          variant="contained"
           sx={{ mt: 3, mb: 5 }}
-          color='primary'
-          size='large'
+          color="primary"
+          size="large"
+          // onClick={onSubmit}
         >
           다음
         </Button>

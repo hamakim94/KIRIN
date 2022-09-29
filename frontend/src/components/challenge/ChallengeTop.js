@@ -9,9 +9,7 @@ function ChallengeTop(props) {
         <BiArrowBack className={props.styles.back}></BiArrowBack>
       </a>
       <div className={props.styles.pageTitle}>챌린지 제목</div>
-      <div href="">
-        <AiFillSetting className={props.styles.setting}></AiFillSetting>
-      </div>
+      <div style={{ width: '25px' }}></div>
     </div>
   );
 }

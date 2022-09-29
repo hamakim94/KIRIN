@@ -27,7 +27,7 @@ import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
 import FinishSignupPage from './pages/FinishSignupPage';
 import ContractDeploy from './pages/ContractDeploy';
-import RegistPage from './pages/RegistPage';
+import RegisterPage from './pages/RegisterPage';
 import React, { useEffect, useState } from 'react';
 import Context from './utils/Context';
 import UseAxios from './utils/UseAxios';
@@ -35,6 +35,8 @@ import { Cookies } from 'react-cookie';
 import StarCreatePage from './pages/StarCreatePage';
 import SelectPage from './pages/SelectPage';
 import WalletPage from './pages/WalletPage';
+import SuccessPage from './pages/SuccessPage';
+import FailPage from './pages/FailPage';
 
 function App() {
   const [blob, setBlob] = useState(null);
@@ -64,7 +66,7 @@ function App() {
                 <Route path='/donation' element={<DonationPage></DonationPage>}></Route>
                 <Route path='/plus' element={<PlusPage></PlusPage>}></Route>
                 <Route path='/select' element={<SelectPage></SelectPage>}></Route>
-                <Route path='/regist' element={<RegistPage></RegistPage>}></Route>
+                <Route path='/register' element={<RegisterPage></RegisterPage>}></Route>
                 <Route path='/star/:starId' element={<StarPage></StarPage>}></Route>
                 <Route
                   path='/star/:starId/community'
@@ -123,6 +125,8 @@ function App() {
                 <Route path='/finishsignup' element={<FinishSignupPage></FinishSignupPage>}></Route>
                 <Route path='/findpassword' element={<FindPasswordPage></FindPasswordPage>}></Route>
                 <Route path='/signup' element={<SignupPage></SignupPage>}></Route>
+                <Route path='/success' element={<SuccessPage></SuccessPage>}></Route>
+                <Route path='/fail' element={<FailPage></FailPage>}></Route>
                 <Route path='*' element={<NotFoundPage></NotFoundPage>}></Route>
               </Routes>
             </Context.Provider>
@@ -130,7 +134,12 @@ function App() {
         )
       ) : (
         <div className='Pc'>
-          <PcPage></PcPage>
+          <Routes>
+            <Route path='/' element={<PcPage></PcPage>}></Route>
+            <Route path='/success' element={<SuccessPage></SuccessPage>}></Route>
+            <Route path='/fail' element={<FailPage></FailPage>}></Route>
+            <Route path='*' element={<NotFoundPage></NotFoundPage>}></Route>
+          </Routes>
         </div>
       )}
     </>

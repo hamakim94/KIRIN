@@ -84,6 +84,13 @@
   margin-top: 10px;
 }
 
+.likeIcon {
+  height: 35px;
+  width: 35px;
+  margin-top: 10px;
+  color: red;
+}
+
 .iconCount {
   padding-left: 10px;
   font-size: small;

@@ -6,6 +6,7 @@ import styles from './StarPage.module.css';
 import UseAxios from '../utils/UseAxios';
 import Context from '../utils/Context';
 import { Avatar } from '@mui/material';
+import StarPageModal from '../components/star/StarPageModal';
 
 function StarPage() {
   const [starInfo, setStarInfo] = useState({});
@@ -13,13 +14,14 @@ function StarPage() {
   const fileInput = useRef(null);
   const [coverImg, setCoverImg] = useState('');
   const [subscribed, setSubscribed] = useState(false);
-
+  const [info, setInfo] = useState('');
   useEffect(() => {
     const location = window.location.href.split('/');
     const starId = Number(location[location.length - 1]);
     UseAxios.get(`/users/stars/${starId}`).then((res) => {
       setStarInfo(res.data);
       setCoverImg(`/files/${res.data.coverImg}`);
+      setInfo(res.data.info.replaceAll('"', ''));
     });
     UseAxios.get(`/users/subscribes`).then((res) => {
       if (res.data.findIndex((stars) => stars.id === starId) > -1) {
@@ -145,7 +147,9 @@ function StarPage() {
         <div className={styles.starName}>
           <span>{starInfo.nickname}</span>
         </div>
-        {subscribed ? (
+        {userData.id === starInfo.id ? (
+          <></>
+        ) : subscribed ? (
           <div className={styles.btnWrapper}>
             <button className={styles.unSubBtn} onClick={subscribe}>
               구독취소
@@ -159,7 +163,12 @@ function StarPage() {
           </div>
         )}
       </div>
-      <div className={styles.contentBox}>{starInfo.info ? starInfo.info : '없졍'}</div>
+      {userData.id === starInfo.id ? (
+        <StarPageModal info={info} setInfo={setInfo} styles={styles}></StarPageModal>
+      ) : (
+        <div className={styles.contentBox}>{starInfo.info ? starInfo.info : '없졍'}</div>
+      )}
+
       <div className={styles.titleBox}>
         <HomeCategory title={'챌린지'} styles={styles}></HomeCategory>
         <div className={styles.sortTab}>

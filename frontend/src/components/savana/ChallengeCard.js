@@ -31,6 +31,7 @@ function ChallengeCard(props) {
   const [hover, setHover] = useState(false);
   const [copied, setCopied] = useState(false);
   const [isOpen, setOpen] = useState(false);
+  const [like, setLike] = useState(false);
 
   function copy() {
     const el = document.createElement('input');
@@ -42,6 +43,10 @@ function ChallengeCard(props) {
     setCopied(true);
     swal('링크 복사가 완료되었습니다');
   }
+
+  const likeButtonClick = () => {
+    setLike(!like);
+  };
 
   return (
     <div
@@ -57,8 +62,12 @@ function ChallengeCard(props) {
             <RiZoomInFill className={props.styles.clickIcon}></RiZoomInFill>
           </a>
           <div>
-            <a href="/donation">
-              <RiHeart2Line className={props.styles.clickIcon}></RiHeart2Line>
+            <a onClick={likeButtonClick}>
+              {like ? (
+                <RiHeart2Line className={props.styles.clickIcon}></RiHeart2Line>
+              ) : (
+                <RiHeart2Fill className={props.styles.likeIcon}></RiHeart2Fill>
+              )}
             </a>
             <div className={props.styles.iconCount}>32</div>
           </div>
