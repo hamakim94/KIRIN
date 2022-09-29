@@ -223,6 +223,7 @@ function PlusPage() {
     const start = async () => {
       mediaStream = await navigator.mediaDevices.getUserMedia({
         video: {
+          aspectRatio: 16 / 9,
           //   frameRate: 30,
           facingMode: 'user',
         },
