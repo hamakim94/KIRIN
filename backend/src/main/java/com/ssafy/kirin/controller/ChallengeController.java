@@ -74,7 +74,6 @@ public class ChallengeController {
         return ResponseEntity.ok(challengeService.listUserLike(userId));
     }
 
-    @GetMapping("/")
 
     @PostMapping("/comment/{challengeId}")
     @ApiOperation(value = "챌린지 댓글 등록")
