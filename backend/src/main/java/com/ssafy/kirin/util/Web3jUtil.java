@@ -1,5 +1,6 @@
 package com.ssafy.kirin.util;
 
+import com.ssafy.kirin.entity.Transaction;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,13 +15,20 @@ import org.web3j.protocol.core.methods.response.EthGetTransactionReceipt;
 import org.web3j.protocol.core.methods.response.EthSendTransaction;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.protocol.http.HttpService;
+import org.web3j.tx.RawTransactionManager;
+import org.web3j.tx.TransactionManager;
+import org.web3j.tx.Transfer;
 import org.web3j.utils.Convert;
 import org.web3j.utils.Convert.*;
 import org.web3j.utils.Numeric;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.TimeZone;
 import java.util.concurrent.ScheduledExecutorService;
 
 public class Web3jUtil {
@@ -50,7 +58,7 @@ public class Web3jUtil {
         BigInteger value = Convert.toWei(valueString, Unit.ETHER).toBigInteger();
         BigInteger gasLimit = BigInteger.valueOf(3000000);
         BigInteger gasPrice = Convert.toWei("1", Unit.GWEI).toBigInteger();
-
+        TransactionManager transactionManager = new RawTransactionManager(web3j, credentials, 97889218, 100, 100L);
         RawTransaction rawTransaction = RawTransaction.createEtherTransaction(
                 nonce,
                 gasPrice,
@@ -58,7 +66,7 @@ public class Web3jUtil {
                 toAddress,
                 value
         );
-        return Numeric.toHexString(TransactionEncoder.signMessage(rawTransaction, credentials));
+        return Numeric.toHexString(TransactionEncoder.signMessage(rawTransaction, 97889218, credentials));
     }
 
     public String signTransaction(Credentials credentials, String fromAddress, String toAddress, String valueString, String data ) throws Exception{
@@ -87,12 +95,16 @@ public class Web3jUtil {
     public void gasCheck(Credentials credentials) throws Exception {
         BigInteger balance = web3j.ethGetBalance(credentials.getAddress(), DefaultBlockParameterName.LATEST).send().getBalance();
         System.out.println("balance : "+ balance);
-        if (balance.compareTo(Convert.toWei("1", Convert.Unit.MWEI).toBigInteger())<=0 ){
-            String hexValue = signTransaction(adminCredentials, adminCredentials.getAddress(), credentials.getAddress(), "1000000000000000000");
-            EthSendTransaction ethSendTransaction = web3j.ethSendRawTransaction(hexValue).send();
-            String transactionHash = ethSendTransaction.getTransactionHash();
-            //트랜잭션 정보
-            Optional<TransactionReceipt> transactionReceipt = null;
+        if (balance.compareTo(Convert.toWei("1", Convert.Unit.GWEI).toBigInteger())<=0 ){
+            TransactionManager transactionManager = new RawTransactionManager(web3j, adminCredentials, 97889218, 100, 100L);
+            Transfer transfer = new Transfer(web3j, transactionManager);
+            transfer.sendFunds(credentials.getAddress(), BigDecimal.valueOf(1.0), Unit.ETHER).send();
+//            Tran
+//            String hexValue = signTransaction(adminCredentials, adminCredentials.getAddress(), credentials.getAddress(), "1000000000000000000");
+//            EthSendTransaction ethSendTransaction = web3j.ethSendRawTransaction(hexValue).send();
+//            String transactionHash = ethSendTransaction.getTransactionHash();
+//            //트랜잭션 정보
+//            Optional<TransactionReceipt> transactionReceipt = null;
 //            int i = 0;
 //            do {
 //                EthGetTransactionReceipt ethGetTransactionReceipt = web3j.ethGetTransactionReceipt(transactionHash).send();
@@ -101,6 +113,30 @@ public class Web3jUtil {
 //                i++;
 //            } while (!transactionReceipt.isPresent()&&i<30);
         }
+    }
+
+    public Transaction makeTransactionEntity(org.web3j.protocol.core.methods.response.Transaction transaction) throws IOException {
+        Transaction newTransaction = Transaction.builder()
+                .hash(transaction.getHash())
+                .nonce(transaction.getNonceRaw())
+                .blockHash(transaction.getBlockHash())
+                .blockNumber(transaction.getBlockNumberRaw())
+                .transactionIndex(transaction.getTransactionIndexRaw())
+                .fromHash(transaction.getFrom())
+                .toHash(transaction.getTo())
+                .value(transaction.getValueRaw())
+                .gasPrice(transaction.getGasPriceRaw())
+                .gas(transaction.getGasRaw())
+                .input(transaction.getInput())
+                .creates(transaction.getCreates())
+                .publicKey(transaction.getPublicKey())
+                .r(transaction.getR())
+                .s(transaction.getS())
+                .v((int)transaction.getV())
+                .reg(LocalDateTime.ofInstant(Instant.ofEpochMilli( web3j.ethGetBlockByHash(transaction.getBlockHash(), false).send().getResult().getTimestamp().longValue()*1000L), TimeZone.getDefault().toZoneId()))
+                .build();
+
+        return newTransaction;
     }
 
 

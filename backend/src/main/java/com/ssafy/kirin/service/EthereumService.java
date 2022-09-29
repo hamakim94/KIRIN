@@ -1,5 +1,6 @@
 package com.ssafy.kirin.service;
 
+import com.ssafy.kirin.entity.Wallet;
 import org.springframework.stereotype.Service;
 import org.web3j.crypto.Credentials;
 
@@ -9,4 +10,6 @@ public interface EthereumService {
     void addToken(String privatekey, int amount) throws Exception;
     void fundToken(String fundContract, int amount, String privatekey) throws Exception;
     void withdrawToken(String fundContract, int amount, String privatekey) throws Exception;
+
+    Wallet createWallet() throws Exception;
 }
