@@ -233,8 +233,8 @@ function PlusPage() {
     const start = async () => {
       mediaStream = await navigator.mediaDevices.getUserMedia({
         video: {
-          width: 1080,
-          height: 1920,
+          width: window.innerWidth,
+          height: window.innerHeight,
           frameRate: 30,
           facingMode: 'user',
         },
@@ -300,8 +300,8 @@ function PlusPage() {
     number < 0 ? null : 100
   );
   return (
-    <div id={styles.video_area}>
-      <video playsInline autoPlay muted ref={refVideo} id={styles.background_video} />
+    <div style={{ padding: 0, width: window.innerWidth, height: window.innerHeight }}>
+      <video playsInline autoPlay muted ref={refVideo} style={{ width: '100%', height: '100%' }} />
     </div>
   );
 }
