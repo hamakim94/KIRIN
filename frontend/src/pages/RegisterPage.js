@@ -136,6 +136,7 @@ function RegisterPage() {
         console.log(err);
       });
   };
+  if (blob) console.log(URL.createObjectURL(blob));
   return (
     <div className='wrapper'>
       <Header title={'챌린지 등록'}></Header>
