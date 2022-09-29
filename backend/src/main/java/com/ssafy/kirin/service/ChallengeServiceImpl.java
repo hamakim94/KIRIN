@@ -269,27 +269,27 @@ public class ChallengeServiceImpl implements ChallengeService {
             p=Runtime.getRuntime().exec(String.format("ffmpeg -y -i %s %s",videoTmpDir,(challengeDir+mp4File)));
             p.waitFor();
             // insert Watermark
-            String watermarkedVideo = UUID.randomUUID() + ".mp4";
-            String commandWatermark = String.format("ffmpeg -y -i %s -i %s -filter_complex [1][0]scale2ref=w=oh*mdar:h=ih*0.08[logo][video];[logo]format=argb,geq=r='r(X,Y)':a='0.8*alpha(X,Y)'[soo];[video][soo]overlay=30:30 %s",
-                    challengeDir+mp4File, kirinStamp, challengeDir+watermarkedVideo);
-            sb.append("command for watermarking video : \n" + commandWatermark+"\n");
-            sb.append(LocalDateTime.now()+"\n");
-            p= Runtime.getRuntime().exec(commandWatermark);
-            BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
-            while ((line=br.readLine())!=null) sb.append(line+"\n");
-            br = new BufferedReader(new InputStreamReader(p.getErrorStream()));
-            while ((line=br.readLine())!=null) sb.append(line+"\n");
-            sb.append("watermark inserted~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
-            sb.append(LocalDateTime.now()+"\n");
-            p.waitFor();
+//            String watermarkedVideo = UUID.randomUUID() + ".mp4";
+//            String commandWatermark = String.format("ffmpeg -y -i %s -i %s -filter_complex [1][0]scale2ref=w=oh*mdar:h=ih*0.08[logo][video];[logo]format=argb,geq=r='r(X,Y)':a='0.8*alpha(X,Y)'[soo];[video][soo]overlay=30:30 %s",
+//                    challengeDir+mp4File, kirinStamp, challengeDir+watermarkedVideo);
+//            sb.append("command for watermarking video : \n" + commandWatermark+"\n");
+//            sb.append(LocalDateTime.now()+"\n");
+//            p= Runtime.getRuntime().exec(commandWatermark);
+//            BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
+//            while ((line=br.readLine())!=null) sb.append(line+"\n");
+//            br = new BufferedReader(new InputStreamReader(p.getErrorStream()));
+//            while ((line=br.readLine())!=null) sb.append(line+"\n");
+//            sb.append("watermark inserted~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+//            sb.append(LocalDateTime.now()+"\n");
+//            p.waitFor();
             // insert music
             String outputPath = UUID.randomUUID() + ".mp4";
             String commandInsertMusic = String.format("ffmpeg -y -i %s -i %s -map 0:v -map 1:a -c:v copy -shortest %s",
-                    (challengeDir+watermarkedVideo),musicPath,(challengeDir+outputPath));
+                    (challengeDir+mp4File),musicPath,(challengeDir+outputPath));
             sb.append("command for inserting music : \n" + commandInsertMusic+"\n");
             sb.append(LocalDateTime.now()+"\n");
             p = Runtime.getRuntime().exec(commandInsertMusic);
-            br = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
             while ((line=br.readLine())!=null) sb.append(line+"\n");
             br = new BufferedReader(new InputStreamReader(p.getErrorStream()));
             while ((line=br.readLine())!=null) sb.append(line+"\n");

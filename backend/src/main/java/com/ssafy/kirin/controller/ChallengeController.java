@@ -143,7 +143,7 @@ public class ChallengeController {
         return ResponseEntity.ok().build();
     }
     @DeleteMapping("/like")
-    @ApiOperation(value = "챌린지 좋아요")
+    @ApiOperation(value = "챌린지 좋아요 취소")
     public ResponseEntity<?> challengeunLike(@AuthenticationPrincipal UserDTO userDTO, @RequestParam Long challengeId){
         challengeService.unlikeChallenge(userDTO.getId(), challengeId);
         return ResponseEntity.ok().build();
