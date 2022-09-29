@@ -201,6 +201,8 @@ public class ChallengeServiceImpl implements ChallengeService {
     @Override
     public void createChallenge(UserDTO userDTO, ChallengeRequestDTO challengeRequestDTO, MultipartFile video) throws IOException {
         try {
+            StringBuilder sb = new StringBuilder();
+            String line;
             System.out.println("I'm in create challenge");
             // 원 챌린지 음악과 이미지 저장경로
             Challenge forChallenge = challengeRepository.getReferenceById(challengeRequestDTO.challengeId());
@@ -217,26 +219,44 @@ public class ChallengeServiceImpl implements ChallengeService {
             String commandExtractThumbnail = String.format("ffmpeg -y -ss 2 -t 2 -i %s -r 10 -loop 0 %s", videoTmpDir,(challengeDir+thumbDir));
             Process p = Runtime.getRuntime().exec(commandExtractThumbnail);
             p.waitFor();
-            // insert Watermark
+            // wegM to MP4
             String mp4File = UUID.randomUUID() + ".mp4";
-            System.out.println("aaaaaaaaaaaaaaaaaaaaaa\n"+mp4File);
             p=Runtime.getRuntime().exec(String.format("ffmpeg -y -i %s %s",videoTmpDir,(challengeDir+mp4File)));
             p.waitFor();
-
-            String outputPath = UUID.randomUUID() + ".mp4";
-            String commandInsertWatermark = String.format("ffmpeg -y -i %s -i %s -i %s -filter_complex \"[1][0]scale2ref=w=oh*mdar:h=ih*0.08[logo][video];[logo]format=argb,geq=r='r(X,Y)':a='0.8*alpha(X,Y)'[soo];[video][soo]overlay=30:30\" -map \"v\" -map 2:a -c:v libx264 -crf 17 -c:a aac -strict experimental %s"
-                    , (challengeDir+mp4File), kirinStamp, musicPath, (challengeDir+outputPath));
-
-            String realCommand = "ffmpeg -y -i /files/d3f2e4c0-674b-42e1-a454-d97a6cfd23f5.mp4 -i /files/bd363c62-476d-4c29-aed6-8a5346fb41bfstamp.png -i /files/ffb2de79-7c2a-4811-92d1-9b7d49763f7e.mp3 -filter_complex \"[1][0]scale2ref=w=oh*mdar:h=ih*0.08[logo][video];[logo]format=argb,geq=r='r(X,Y)':a='0.8*alpha(X,Y)'[soo];[video][soo]overlay=30:30\" -map \"v\" -map 2:a -c:v libx264 -crf 17 -c:a aac /files/0eb729c4-b580-4431-925d-d650aa71fa66.mp4";
-            p= Runtime.getRuntime().exec(commandInsertWatermark);
-            String line;
-            StringBuilder sb = new StringBuilder();
+            // insert Watermark
+            String watermarkedVideo = UUID.randomUUID() + ".mp4";
+            String commandWatermark = String.format("ffmpeg -y -i %s -i %s -filter_complex [1][0]scale2ref=w=oh*mdar:h=ih*0.08[logo][video];[logo]format=argb,geq=r='r(X,Y)':a='0.8*alpha(X,Y)'[soo];[video][soo]overlay=30:30 %s",
+                    challengeDir+mp4File, kirinStamp, challengeDir+watermarkedVideo);
+            System.out.println("command for watermarking video : \n" + commandWatermark);
+            p= Runtime.getRuntime().exec(commandWatermark);
             BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
             while ((line=br.readLine())!=null) sb.append(line+"\n");
             br = new BufferedReader(new InputStreamReader(p.getErrorStream()));
             while ((line=br.readLine())!=null) sb.append(line+"\n");
-            System.out.println(sb.toString());
             p.waitFor();
+            // insert music
+            String outputPath = UUID.randomUUID() + ".mp4";
+            String commandInsertMusic = String.format("ffmpeg -y -i %s -i %s -map 0:v -map 1:a -c:v copy -shortest %s",
+                    (challengeDir+watermarkedVideo),musicPath,(challengeDir+outputPath));
+            System.out.println("command for inserting music : \n" + commandInsertMusic);
+            p = Runtime.getRuntime().exec(commandInsertMusic);
+            br = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            while ((line=br.readLine())!=null) sb.append(line+"\n");
+            br = new BufferedReader(new InputStreamReader(p.getErrorStream()));
+            while ((line=br.readLine())!=null) sb.append(line+"\n");
+            p.waitFor();
+//            String commandInsertWatermark = String.format("ffmpeg -y -i %s -i %s -i %s -filter_complex \"[1][0]scale2ref=w=oh*mdar:h=ih*0.08[logo][video];[logo]format=argb,geq=r='r(X,Y)':a='0.8*alpha(X,Y)'[soo];[video][soo]overlay=30:30\" -map \"v\" -map 2:a -c:v libx264 -crf 17 -c:a aac -strict experimental %s"
+//                    , (challengeDir+mp4File), kirinStamp, musicPath, (challengeDir+outputPath));
+
+
+//            p= Runtime.getRuntime().exec(commandInsertWatermark);
+//            String line;
+//            StringBuilder sb = new StringBuilder();
+//            BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
+//            while ((line=br.readLine())!=null) sb.append(line+"\n");
+//            br = new BufferedReader(new InputStreamReader(p.getErrorStream()));
+//            while ((line=br.readLine())!=null) sb.append(line+"\n");
+            System.out.println(sb.toString());
             System.out.println("saving challenge");
             challengeRepository.save(
                     Challenge.builder().user(user).isProceeding(true).reg(LocalDateTime.now()).thumbnail(thumbDir)
