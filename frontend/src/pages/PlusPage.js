@@ -47,7 +47,8 @@ function PlusPage() {
       setNumber((prev) => (prev = length));
       mediaStream = await navigator.mediaDevices.getUserMedia({
         video: {
-          frameRate: 30,
+          width: { min: 361 },
+          aspectRatio: 16 / 9,
           facingMode: changeCam,
         },
         audio: false,
@@ -76,9 +77,8 @@ function PlusPage() {
     } else {
       mediaStream = await navigator.mediaDevices.getUserMedia({
         video: {
-          width: { max: 360 },
-          height: { min: 480 },
-          //   aspectRatio: 9 / 16,
+          width: { min: 361 },
+          aspectRatio: 16 / 9,
           facingMode: changeCam,
         },
         audio: false,
@@ -156,7 +156,8 @@ function PlusPage() {
     const retry = async () => {
       mediaStream = await navigator.mediaDevices.getUserMedia({
         video: {
-          frameRate: 30,
+          width: { min: 361 },
+          aspectRatio: 16 / 9,
           facingMode: changeCam,
         },
         audio: false,
@@ -179,7 +180,8 @@ function PlusPage() {
       const start = async () => {
         mediaStream = await navigator.mediaDevices.getUserMedia({
           video: {
-            // frameRate: 30,
+            width: { min: 361 },
+            aspectRatio: 16 / 9,
             facingMode: { exact: 'environment' },
           },
           audio: false,
@@ -195,7 +197,8 @@ function PlusPage() {
       const start = async () => {
         mediaStream = await navigator.mediaDevices.getUserMedia({
           video: {
-            // frameRate: 30,
+            width: { min: 361 },
+            aspectRatio: 16 / 9,
             facingMode: 'user',
           },
           audio: false,
