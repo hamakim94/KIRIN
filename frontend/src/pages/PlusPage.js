@@ -177,7 +177,8 @@ function PlusPage() {
       const start = async () => {
         mediaStream = await navigator.mediaDevices.getUserMedia({
           video: {
-            frameRate: 30,
+            aspectRatio: 3 / 4,
+            // frameRate: 30,
             facingMode: { exact: 'environment' },
           },
           audio: false,
@@ -193,7 +194,8 @@ function PlusPage() {
       const start = async () => {
         mediaStream = await navigator.mediaDevices.getUserMedia({
           video: {
-            frameRate: 30,
+            aspectRatio: 9 / 16,
+            // frameRate: 30,
             facingMode: 'user',
           },
           audio: false,
@@ -223,9 +225,8 @@ function PlusPage() {
     const start = async () => {
       mediaStream = await navigator.mediaDevices.getUserMedia({
         video: {
-          width: { ideal: 720 },
-          height: { ideal: 1280 },
-          frameRate: 30,
+          aspectRatio: 9 / 22,
+          //   frameRate: 30,
           facingMode: 'user',
         },
         audio: false,
