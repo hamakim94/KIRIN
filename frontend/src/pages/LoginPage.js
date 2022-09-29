@@ -7,6 +7,7 @@ import UseAxios from '../utils/UseAxios';
 import { useNavigate } from 'react-router-dom';
 import { Cookies } from 'react-cookie';
 import Context from '../utils/Context';
+import Jello from 'react-reveal/Jello';
 
 const theme = createTheme({
   palette: {
@@ -55,66 +56,67 @@ function LoginPage() {
 
   return (
     <ThemeProvider theme={theme}>
-      <LoginTop styles={styles}></LoginTop>
-      <Container component='main' maxWidth='xs'>
-        <Box
-          sx={{
-            marginTop: 8,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
+      <div style={{ textAlign: 'center', marginLeft: 20, marginRight: 20 }}>
+        <div style={{ marginTop: 100, marginBottom: 50 }}>
+          <Jello duration={1500}>
+            <img
+              src={require('../assets/img/kirin_logo_nobackground.png')}
+              style={{ width: 100 }}
+            ></img>
+          </Jello>
+        </div>
+        <Typography component='h1' variant='h5'></Typography>
+        <TextField
+          onChange={(e) => setEmail(e.target.value)}
+          margin='normal'
+          required
+          fullWidth
+          id='email'
+          label='이메일'
+          name='email'
+          autoComplete='email'
+          autoFocus
+          size='small'
+        />
+        <TextField
+          onChange={(e) => setPassword(e.target.value)}
+          margin='normal'
+          required
+          fullWidth
+          name='password'
+          label='비밀번호'
+          type='password'
+          id='password'
+          autoComplete='current-password'
+          size='small'
+        />
+        <Button
+          type='submit'
+          onClick={onSubmit}
+          fullWidth
+          variant='contained'
+          sx={{ mt: 3, mb: 1 }}
         >
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}></Avatar>
-          <Typography component='h1' variant='h5'></Typography>
-          <TextField
-            onChange={(e) => setEmail(e.target.value)}
-            margin='normal'
-            required
-            fullWidth
-            id='email'
-            label='이메일'
-            name='email'
-            autoComplete='email'
-            autoFocus
-            size='small'
-          />
-          <TextField
-            onChange={(e) => setPassword(e.target.value)}
-            margin='normal'
-            required
-            fullWidth
-            name='password'
-            label='비밀번호'
-            type='password'
-            id='password'
-            autoComplete='current-password'
-            size='small'
-          />
-
-          <Button
-            type='submit'
-            onClick={onSubmit}
-            fullWidth
-            variant='contained'
-            sx={{ mt: 3, mb: 1 }}
-          >
-            로그인
-          </Button>
-          <Grid container>
-            <Grid item xs>
-              <Link href='/findpassword' variant='body2'>
-                비밀번호 찾기
-              </Link>
-            </Grid>
-            <Grid item>
-              <Link href='/signup' variant='body2'>
-                회원가입
-              </Link>
-            </Grid>
-          </Grid>
-        </Box>
-      </Container>
+          로그인
+        </Button>
+        <div style={{ textAlign: 'center' }}>
+          <Link href='/findpassword' variant='body2'>
+            비밀번호 찾기
+          </Link>
+          <span> / </span>
+          <Link href='/signup' variant='body2'>
+            회원가입
+          </Link>
+        </div>
+        {/* <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <Link href='/findpassword' variant='body2'>
+            비밀번호 찾기
+          </Link>
+          <Link href='/signup' variant='body2'>
+            회원가입
+          </Link>
+        </div> */}
+      </div>
     </ThemeProvider>
   );
 }
