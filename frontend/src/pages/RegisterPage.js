@@ -85,7 +85,7 @@ function RegisterPage() {
         muted
         ref={videoRef}
         src={blob ? URL.createObjectURL(blob) : ''}
-        style={{ width: 500, height: 500 }}
+        style={{ width: '100%', height: '100%' }}
         onClick={handleClick}
       ></video>
     );

@@ -63,7 +63,7 @@ function PlusPage() {
       setStream(mediaStream);
       recorderRef.current = new RecordRTC(mediaStream, {
         type: 'video',
-        mimeType: 'video/webm;codecs=vp8',
+        mimeType: 'video/mp4',
       });
       recorderRef.current.startRecording();
 
@@ -92,7 +92,7 @@ function PlusPage() {
       setStream(mediaStream);
       recorderRef.current = new RecordRTC(mediaStream, {
         type: 'video',
-        mimeType: 'video/webm;codecs=vp8',
+        mimeType: 'video/mp4',
       });
       recorderRef.current.startRecording();
       audioRef.current.currentTime = 0;
@@ -183,6 +183,8 @@ function PlusPage() {
       const start = async () => {
         mediaStream = await navigator.mediaDevices.getUserMedia({
           video: {
+            width: window.innerWidth,
+            height: window.innerHeight,
             frameRate: 30,
             facingMode: { exact: 'environment' },
           },
@@ -199,6 +201,8 @@ function PlusPage() {
       const start = async () => {
         mediaStream = await navigator.mediaDevices.getUserMedia({
           video: {
+            width: window.innerWidth,
+            height: window.innerHeight,
             frameRate: 30,
             facingMode: 'user',
           },
@@ -229,6 +233,8 @@ function PlusPage() {
     const start = async () => {
       mediaStream = await navigator.mediaDevices.getUserMedia({
         video: {
+          width: window.innerWidth,
+          height: window.innerHeight,
           frameRate: 30,
           facingMode: 'user',
         },
@@ -496,7 +502,7 @@ function PlusPage() {
         autoPlay
         muted
         ref={refVideo}
-        style={{ width: window.innerWidth, height: window.innerHeight }}
+        style={{ width: '100%', height: '100%', objectFit: 'fill' }}
       />
     </div>
   );
