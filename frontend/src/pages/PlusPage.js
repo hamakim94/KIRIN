@@ -502,7 +502,7 @@ function PlusPage() {
         autoPlay
         muted
         ref={refVideo}
-        style={{ width: '100%', height: '100%', objectFit: 'fill' }}
+        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
       />
     </div>
   );
