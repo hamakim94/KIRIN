@@ -5,8 +5,7 @@
   background-position: center;
   background-size: cover;
 }
-
-.starImg {
+.starProfileImg {
   position: absolute;
   left: 15px;
   bottom: 0;
@@ -18,6 +17,26 @@
   width: 100px;
   height: 100px;
 }
+
+.starImg {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 100%;
+  margin-right: 10px;
+}
+.writerWrapper {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  padding-left: 10px;
+}
+
+.nameWrapper {
+  display: flex;
+  flex-direction: column;
+}
+
 .topWrapper {
   position: relative;
   height: 200px;
@@ -113,12 +132,15 @@
 
 .communityItem {
   display: inline-block;
+  vertical-align: top;
   padding: 15px;
   border-style: solid;
   border-width: 1px;
   border-radius: 5%;
   margin-right: 16px;
   width: calc(100vw - 60px);
+  height: 450px;
+  overflow: hidden;
 }
 
 .communityImg {

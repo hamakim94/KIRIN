@@ -94,7 +94,7 @@ function App() {
                 <Route path='/register' element={<RegisterPage></RegisterPage>}></Route>
                 <Route path='/star/:starId' element={<StarPage></StarPage>}></Route>
                 <Route
-                  path='/star/:starId/community'
+                  path='/star/:starId/community/:communityId'
                   element={<CommunityPage></CommunityPage>}
                 ></Route>
                 <Route

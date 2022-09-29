@@ -1,41 +1,82 @@
-import React from "react";
-import CommentIcon from "../common/CommentIcon";
-import LikeIcon from "../common/LikeIcon";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from 'react';
+import CommentIcon from '../common/CommentIcon';
+import LikeIcon from '../common/LikeIcon';
+import { useNavigate } from 'react-router-dom';
+import CommunityWriter from '../community/CommunityWriter';
 function CommunityItem(props) {
+  const [itemData, setItemData] = useState(null);
   const navigate = useNavigate();
-  return (
-    <div className={props.styles.communityItem} onClick={() => navigate(`/star/1/community`)}>
-      <div style={{ display: "flex", alignItems: "center", marginBottom: 10 }}>
-        <div
+  useEffect(() => {
+    if (props.item) {
+      setItemData(props.item);
+    }
+  }, [props.item]);
+  return itemData ? (
+    <div
+      className={props.styles.communityItem}
+      onClick={() =>
+        navigate(`/star/${itemData.user.id}/community/${itemData.id}`, {
+          state: {
+            starId: itemData.user.id,
+            boardId: itemData.id,
+          },
+        })
+      }
+    >
+      <div style={{ display: 'flex', alignItems: 'center', marginBottom: 10 }}>
+        {/* <div
           style={{
-            display: "inline-block",
-            borderRadius: "100%",
+            display: 'inline-block',
+            borderRadius: '100%',
             width: 50,
             height: 50,
-            backgroundColor: "wheat",
+            backgroundImage: `url(/files/${itemData.user.profileImg}`,
+            backgroundRepeat: 'no-repeat',
+            backgroundPosition: 'center',
+            backgroundSize: 'cover',
           }}
         ></div>
-        <span style={{ fontFamily: "SCD500", marginLeft: 10 }}>키위</span>
+        <span style={{ fontFamily: 'SCD500', marginLeft: 10 }}>{itemData.user.nickname}</span> */}
+        <CommunityWriter styles={props.styles} data={props.item}></CommunityWriter>
       </div>
-      <div>
-        <span style={{ whiteSpace: "normal" }}>
-          여러분 안녕하세요 새콤달콤의 키위 현수입니다. 오늘부로 함께하게 되어 정말 신나요! 저소득
-          유치원 아이들을 위해 춤추고 기부해요 :)
-        </span>
+      <div style={{ display: 'flex', flexDirection: 'column' }}>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'flex-end',
+          }}
+        >
+          <span
+            style={{
+              whiteSpace: 'nowrap',
+              width: '70%',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+            }}
+          >
+            {itemData.content}
+          </span>
+          <span style={{ fontSize: 12, color: '#808080' }}>
+            {itemData.content.length > 15 ? '자세히보기' : ''}
+          </span>
+        </div>
         <div>
           <img
             alt='star'
             className={props.styles.communityImg}
-            src='https://cdn.pixabay.com/photo/2022/05/06/17/15/cartoon-giraffe-7178753_960_720.jpg'
+            src={`/files/${itemData.img}`}
           ></img>
         </div>
         <div>
-          <CommentIcon></CommentIcon>
-          <LikeIcon></LikeIcon>
+          <CommentIcon cnt={itemData.commentCnt}></CommentIcon>
+          <LikeIcon cnt={itemData.likeCnt}></LikeIcon>
         </div>
       </div>
     </div>
+  ) : (
+    '로딩'
   );
 }
 

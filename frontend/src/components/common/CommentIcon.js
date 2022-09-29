@@ -1,10 +1,10 @@
-import React from "react";
-import { RiMessage3Line } from "react-icons/ri";
-function CommentIcon() {
+import React from 'react';
+import { RiMessage3Line } from 'react-icons/ri';
+function CommentIcon(props) {
   return (
     <>
       <RiMessage3Line></RiMessage3Line>
-      <span>12</span>
+      <span>{props.cnt}</span>
     </>
   );
 }
