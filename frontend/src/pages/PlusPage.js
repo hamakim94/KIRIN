@@ -484,7 +484,7 @@ function PlusPage() {
           </>
         )}
       </div>
-      <iframe autoPlay ref={refVideo} style={{ width: '100%', height: '100%' }} />
+      <video playinline muted autoPlay ref={refVideo} style={{ width: '100%', height: '100%' }} />
     </div>
   );
 }
