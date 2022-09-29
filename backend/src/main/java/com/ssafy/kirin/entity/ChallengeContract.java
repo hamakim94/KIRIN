@@ -25,4 +25,12 @@ public class ChallengeContract {
 
     @Column(name = "contract_hash")
     String contractHash;
+
+    public void setAmount(Long amount) {
+        this.amount = amount;
+    }
+
+    public void setParticipateNum(Integer participateNum) {
+        this.participateNum = participateNum;
+    }
 }

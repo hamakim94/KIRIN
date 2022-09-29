@@ -32,4 +32,7 @@ public class Wallet {
     public void addCash(int amount) {
         cash = cash.add(BigDecimal.valueOf(amount));
     }
+    public void subCash(int amount) {
+        cash = cash.subtract(BigDecimal.valueOf(amount));
+    }
 }

@@ -51,6 +51,7 @@ public class ChallengeServiceImpl implements ChallengeService {
     private final DonationOrganizationRepository donationOrganizationRepository;
     private final EthereumService ethereumService;
     private final ChallengeContractRepository challengeContractRepository;
+    private final DonationRepository donationRepository;
     @Value("${property.app.upload-path}")
     private String challengeDir;
 //    @Value("${kirin.stamp}")
@@ -205,12 +206,14 @@ public class ChallengeServiceImpl implements ChallengeService {
     @Override
     public void createChallenge(UserDTO userDTO, ChallengeRequestDTO challengeRequestDTO, MultipartFile video) throws IOException {
         try {
+            User user = userRepository.getReferenceById(userDTO.getId());
+            //토큰 잔액 확인
+            if (ethereumService.getTokenAmount(user)<challengeRequestDTO.amount()) throw new Exception();
             System.out.println("I'm in create challenge");
             // 원 챌린지 음악과 이미지 저장경로
             Challenge forChallenge = challengeRepository.getReferenceById(challengeRequestDTO.challengeId());
             CelebChallengeInfo celebChallengeInfo = celebChallengeInfoRepository.findByChallengeId(forChallenge.getId());
             String musicPath = celebChallengeInfo.getMusic();
-            User user = userRepository.getReferenceById(userDTO.getId());
             //copy video file
             String videoExt = video.getOriginalFilename().substring(video.getOriginalFilename().lastIndexOf("."));
             String videoTmpDir = challengeDir+UUID.randomUUID()+videoExt;
@@ -236,14 +239,28 @@ public class ChallengeServiceImpl implements ChallengeService {
             br = new BufferedReader(new InputStreamReader(p.getInputStream()));
             while ((line=br.readLine())!=null) System.out.println(line);
             p.waitFor();
+            ChallengeContract challengeContract = celebChallengeInfo.getChallengeContract();
+            String transactionHash = ethereumService.fundToken(user, challengeContract.getContractHash(), challengeRequestDTO.amount());
             System.out.println("saving challenge");
-            challengeRepository.save(
+            Challenge challenge = challengeRepository.save(
                     Challenge.builder().user(user).isProceeding(true).reg(LocalDateTime.now()).thumbnail(thumbDir)
                                .title(challengeRequestDTO.title()).isOriginal(false).challengeId(challengeRequestDTO.challengeId())
                                .video(outputPath).build()
             );
+            Donation donation = Donation.builder()
+                    .challenge(challenge)
+                    .amount(challengeRequestDTO.amount())
+                    .transactionHash(transactionHash)
+                    .reg(LocalDateTime.now())
+                    .build();
+            donationRepository.save(donation);
+            challengeContract.setAmount((long)ethereumService.getTokenAmount(user, challengeContract.getContractHash()));
+            challengeContract.setParticipateNum(ethereumService.getParticipateNum(challengeContract.getContractHash(), user));
+            challengeContractRepository.save(challengeContract);
 
         } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        } catch (Exception e){
             throw new RuntimeException(e);
         }
     }

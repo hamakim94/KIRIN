@@ -3,10 +3,7 @@ package com.ssafy.kirin.service;
 import com.ssafy.kirin.contracts.FundRaising;
 import com.ssafy.kirin.contracts.IERC20;
 import com.ssafy.kirin.dto.UserDTO;
-import com.ssafy.kirin.entity.ChallengeContract;
-import com.ssafy.kirin.entity.Transaction;
-import com.ssafy.kirin.entity.User;
-import com.ssafy.kirin.entity.Wallet;
+import com.ssafy.kirin.entity.*;
 import com.ssafy.kirin.repository.TransactionRepository;
 import com.ssafy.kirin.repository.UserRepository;
 import com.ssafy.kirin.repository.WalletRepository;
@@ -97,12 +94,17 @@ public class EthereumServiceImpl implements EthereumService {
         walletRepository.save(user.getWallet());
     }
     @Override
-    public void fundToken(User user, String fundContract, int amount) throws Exception {
+    public String fundToken(User user, String fundContract, int amount) throws Exception {
         Credentials credentials = web3jUtil.getCredentials(user.getWallet().getPrivateKey());
         gasCheck((credentials));
+        TransactionManager transactionManager = new RawTransactionManager(web3j, credentials, 97889218, 100, 100L);
         ContractGasProvider gasProvider = new DefaultGasProvider();
-        FundRaising fundRaising = FundRaising.load(fundContract, web3j, credentials, gasProvider);
-        transferToken(credentials, fundRaising.getContractAddress(), amount);
+        FundRaising fundRaising = FundRaising.load(fundContract, web3j, transactionManager, gasProvider);
+        Transaction transaction = transferToken(credentials, fundRaising.getContractAddress(), amount);
+        transactionRepository.save(transaction);
+        user.getWallet().subCash(amount);
+        walletRepository.save(user.getWallet());
+        return transaction.getHash();
     }
     @Override
     public void withdrawToken(String fundContract, int amount, String privatekey) throws Exception {
@@ -147,15 +149,7 @@ public class EthereumServiceImpl implements EthereumService {
         IERC20 ierc20 = IERC20.load(TOKENCONTRACTADDRESS, web3j, transactionManager, gasProvider);
         String hash = ierc20.transfer(toAddress, new BigInteger(String.valueOf(amount))).send().getTransactionHash();
         Transaction transaction = web3jUtil.makeTransactionEntity(web3j.ethGetTransactionByHash(hash).send().getResult());
-//        String transactionHash = transactionReceipts.getTransactionHash();
-//        Optional<TransactionReceipt> transactionReceipt = null;
-//        int i = 0;
-//        do {
-//            EthGetTransactionReceipt ethGetTransactionReceipt = web3j.ethGetTransactionReceipt(transactionHash).send();
-//            transactionReceipt = ethGetTransactionReceipt.getTransactionReceipt();
-//            Thread.sleep(1000);
-//            i++;
-//        } while (!transactionReceipt.isPresent() && i < 30);
+
         return transaction;
     }
     private void gasCheck(Credentials credentials) throws Exception {
@@ -165,6 +159,7 @@ public class EthereumServiceImpl implements EthereumService {
         }
     }
 
+    @Override
     public int getTokenAmount(User user) throws Exception {
         Credentials credentials = web3jUtil.getCredentials(user.getWallet().getPrivateKey());
         TransactionManager transactionManager = new RawTransactionManager(
@@ -172,6 +167,17 @@ public class EthereumServiceImpl implements EthereumService {
         ContractGasProvider gasProvider = new DefaultGasProvider();
         IERC20 ierc20 = IERC20.load(TOKENCONTRACTADDRESS, web3j, transactionManager, gasProvider);
         BigInteger tokenBalance = ierc20.balanceOf(credentials.getAddress()).send();
+        return tokenBalance.intValue();
+    }
+
+    @Override
+    public int getTokenAmount(User user, String address) throws Exception {
+        Credentials credentials = web3jUtil.getCredentials(user.getWallet().getPrivateKey());
+        TransactionManager transactionManager = new RawTransactionManager(
+                web3j, credentials, 97889218, 100, 100L);
+        ContractGasProvider gasProvider = new DefaultGasProvider();
+        IERC20 ierc20 = IERC20.load(TOKENCONTRACTADDRESS, web3j, transactionManager, gasProvider);
+        BigInteger tokenBalance = ierc20.balanceOf(address).send();
         return tokenBalance.intValue();
     }
 

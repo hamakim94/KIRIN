@@ -58,7 +58,7 @@ contract FundRaising {
      * 그냥 참여하는 함순데, 나중에 돈 보내는거랑 같이 하던가, 아니면 지금처럼 따로 두던가
      * 방식을 어떻게 나눠야할지 정해야할듯!
      */
-    function participate() external onlyInProgress {
+    function participate() private onlyInProgress {
         participatedNum++;
     }
 
@@ -74,6 +74,7 @@ contract FundRaising {
     function fundToken(uint256 _amount) external onlyInProgress {
         IERC20(token).transferFrom(msg.sender, address(this), _amount);
         addFunder(msg.sender);
+        participate();
         funderToAmount[msg.sender] += _amount;
     }
 

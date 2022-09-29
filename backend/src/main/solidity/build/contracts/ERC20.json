@@ -13879,10 +13879,10 @@
         747
       ],
       "IERC20": [
-        1127
+        1130
       ],
       "IERC20Metadata": [
-        1152
+        1155
       ]
     },
     "id": 748,
@@ -13907,7 +13907,7 @@
         "nameLocation": "-1:-1:-1",
         "nodeType": "ImportDirective",
         "scope": 748,
-        "sourceUnit": 1128,
+        "sourceUnit": 1131,
         "src": "135:22:1",
         "symbolAliases": [],
         "unitAlias": ""
@@ -13919,7 +13919,7 @@
         "nameLocation": "-1:-1:-1",
         "nodeType": "ImportDirective",
         "scope": 748,
-        "sourceUnit": 1153,
+        "sourceUnit": 1156,
         "src": "159:30:1",
         "symbolAliases": [],
         "unitAlias": ""
@@ -13962,7 +13962,7 @@
                 "1441:6:1"
               ],
               "nodeType": "IdentifierPath",
-              "referencedDeclaration": 1127,
+              "referencedDeclaration": 1130,
               "src": "1441:6:1"
             },
             "id": 31,
@@ -13977,7 +13977,7 @@
                 "1449:14:1"
               ],
               "nodeType": "IdentifierPath",
-              "referencedDeclaration": 1152,
+              "referencedDeclaration": 1155,
               "src": "1449:14:1"
             },
             "id": 33,
@@ -13998,8 +13998,8 @@
         "id": 747,
         "linearizedBaseContracts": [
           747,
-          1152,
-          1127,
+          1155,
+          1130,
           21
         ],
         "name": "ERC20",
@@ -14555,7 +14555,7 @@
           },
           {
             "baseFunctions": [
-              1139
+              1142
             ],
             "body": {
               "id": 87,
@@ -14650,7 +14650,7 @@
           },
           {
             "baseFunctions": [
-              1145
+              1148
             ],
             "body": {
               "id": 97,
@@ -14745,7 +14745,7 @@
           },
           {
             "baseFunctions": [
-              1151
+              1154
             ],
             "body": {
               "id": 107,
@@ -14844,7 +14844,7 @@
           },
           {
             "baseFunctions": [
-              1076
+              1079
             ],
             "body": {
               "id": 117,
@@ -14939,7 +14939,7 @@
           },
           {
             "baseFunctions": [
-              1084
+              1087
             ],
             "body": {
               "id": 131,
@@ -15088,7 +15088,7 @@
           },
           {
             "baseFunctions": [
-              1094
+              1097
             ],
             "body": {
               "id": 156,
@@ -15398,7 +15398,7 @@
           },
           {
             "baseFunctions": [
-              1104
+              1107
             ],
             "body": {
               "id": 174,
@@ -15600,7 +15600,7 @@
           },
           {
             "baseFunctions": [
-              1114
+              1117
             ],
             "body": {
               "id": 199,
@@ -15910,7 +15910,7 @@
           },
           {
             "baseFunctions": [
-              1126
+              1129
             ],
             "body": {
               "id": 237,
@@ -18150,7 +18150,7 @@
                       "name": "Transfer",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 1061,
+                      "referencedDeclaration": 1064,
                       "src": "9000:8:1",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_event_nonpayable$_t_address_$_t_address_$_t_uint256_$returns$__$",
@@ -18994,7 +18994,7 @@
                       "name": "Transfer",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 1061,
+                      "referencedDeclaration": 1064,
                       "src": "9878:8:1",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_event_nonpayable$_t_address_$_t_address_$_t_uint256_$returns$__$",
@@ -19979,7 +19979,7 @@
                       "name": "Transfer",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 1061,
+                      "referencedDeclaration": 1064,
                       "src": "10886:8:1",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_event_nonpayable$_t_address_$_t_address_$_t_uint256_$returns$__$",
@@ -20700,7 +20700,7 @@
                       "name": "Approval",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 1070,
+                      "referencedDeclaration": 1073,
                       "src": "11770:8:1",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_event_nonpayable$_t_address_$_t_address_$_t_uint256_$returns$__$",
@@ -22676,7 +22676,7 @@
                       "name": "Transfer",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 1061,
+                      "referencedDeclaration": 1064,
                       "src": "14861:8:1",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_event_nonpayable$_t_address_$_t_address_$_t_uint256_$returns$__$",
@@ -23230,7 +23230,7 @@
   },
   "networks": {},
   "schemaVersion": "3.4.9",
-  "updatedAt": "2022-09-27T08:50:02.244Z",
+  "updatedAt": "2022-09-29T08:04:11.890Z",
   "devdoc": {
     "details": "Implementation of the {IERC20} interface. This implementation is agnostic to the way tokens are created. This means that a supply mechanism has to be added in a derived contract using {_mint}. For a generic mechanism see {ERC20PresetMinterPauser}. TIP: For a detailed writeup see our guide https://forum.openzeppelin.com/t/how-to-implement-erc20-supply-mechanisms/226[How to implement supply mechanisms]. We have followed general OpenZeppelin Contracts guidelines: functions revert instead returning `false` on failure. This behavior is nonetheless conventional and does not conflict with the expectations of ERC20 applications. Additionally, an {Approval} event is emitted on calls to {transferFrom}. This allows applications to reconstruct the allowance for all accounts just by listening to said events. Other implementations of the EIP may not emit these events, as it isn't required by the specification. Finally, the non-standard {decreaseAllowance} and {increaseAllowance} functions have been added to mitigate the well-known issues around setting allowances. See {IERC20-approve}.",
     "kind": "dev",
