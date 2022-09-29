@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Context from '../../utils/Context';
+import WalletModal from '../wallet/WalletModal';
 
 function Profile(props) {
   const navigate = useNavigate();
@@ -18,9 +19,10 @@ function Profile(props) {
             className={props.styles.userImg}
           ></img>
           <div className={props.styles.userName}>{userData.nickname} </div>
-          <button onClick={() => navigate(`/mypage/wallet`)} className={props.styles.myWallet}>
+          <WalletModal buttonTitle={'내 지갑'}></WalletModal>
+          {/* <button onClick={() => navigate(`/mypage/wallet`)} className={props.styles.myWallet}>
             내지갑
-          </button>
+          </button> */}
         </div>
       ) : (
         ''

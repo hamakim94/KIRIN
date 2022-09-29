@@ -37,6 +37,7 @@ import SelectPage from './pages/SelectPage';
 import WalletPage from './pages/WalletPage';
 import SuccessPage from './pages/SuccessPage';
 import FailPage from './pages/FailPage';
+import WalletModal from './components/wallet/WalletModal';
 
 function App() {
   const [blob, setBlob] = useState(null);
