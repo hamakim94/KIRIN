@@ -16,4 +16,5 @@ public class CelebResponseDTO {
     String profileImg;
     String info;
     String coverImg;
+    Boolean isSubscribed;
 }

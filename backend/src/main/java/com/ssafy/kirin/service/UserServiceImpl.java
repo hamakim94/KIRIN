@@ -164,15 +164,15 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     }
 
     @Override
-    public void subscribe(long userId, long celebId) throws Exception {
-        if(userId == celebId) {
+    public void subscribe(long userId, long starId) throws Exception {
+        if(userId == starId) {
             log.error("본인 구독은 불가합니다.");
             throw new Exception();
         }
 
         // celebId가 celeb인지 확인
-        User celeb = userRepository.findById(celebId)
-                .orElseThrow(() -> new NoSuchElementException("Star : " + celebId + " was not found"));
+        User celeb = userRepository.findById(starId)
+                .orElseThrow(() -> new NoSuchElementException("Star : " + starId + " was not found"));
 
         if(!celeb.getIsCeleb()){
             log.error("celeb 구독이 아닙니다.");
@@ -180,14 +180,14 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         }
 
         // subscribe이 존재하는지 여부
-        Subscribe subscribe = subscribeRepository.findByUserIdAndCelebId(userId, celebId).orElse(null);
+        Subscribe subscribe = subscribeRepository.findByUserIdAndCelebId(userId, starId).orElse(null);
 
         if(subscribe != null){ // 구독 취소
             subscribeRepository.delete(subscribe);
         } else { // 구독
             Subscribe newSubscribe = Subscribe.builder()
                     .userId(userId)
-                    .celebId(celebId)
+                    .celebId(starId)
                     .build();
 
             subscribeRepository.save(newSubscribe);
@@ -221,7 +221,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     }
 
     @Override
-    public CelebResponseDTO getCelebInfo(long starId) {
+    public CelebResponseDTO getCelebInfo(long userId, long starId) {
         User user = userRepository.findById(starId)
                 .orElseThrow(() -> new NoSuchElementException("Star : " + starId + " was not found"));
 
@@ -230,13 +230,27 @@ public class UserServiceImpl implements UserDetailsService, UserService {
             return null;
         }
 
-        return CelebResponseDTO.builder()
-                .id(user.getId())
-                .nickname(user.getNickname())
-                .profileImg(user.getProfileImg())
-                .coverImg(user.getCelebInfo().getCoverImg())
-                .info(user.getCelebInfo().getInfo())
-                .build();
+        Subscribe subscribe = subscribeRepository.findByUserIdAndCelebId(userId, starId).orElse(null);
+
+        if(subscribe == null){
+            return CelebResponseDTO.builder()
+                    .id(user.getId())
+                    .nickname(user.getNickname())
+                    .profileImg(user.getProfileImg())
+                    .coverImg(user.getCelebInfo().getCoverImg())
+                    .info(user.getCelebInfo().getInfo())
+                    .isSubscribed(false)
+                    .build();
+        } else {
+            return CelebResponseDTO.builder()
+                    .id(user.getId())
+                    .nickname(user.getNickname())
+                    .profileImg(user.getProfileImg())
+                    .coverImg(user.getCelebInfo().getCoverImg())
+                    .info(user.getCelebInfo().getInfo())
+                    .isSubscribed(true)
+                    .build();
+        }
     }
 
     @Override

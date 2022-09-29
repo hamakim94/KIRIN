@@ -232,10 +232,10 @@ public class UserController {
 
     @GetMapping("/stars/{starId}")
     @ApiOperation(value = "스타 정보 조회")
-    public ResponseEntity<CelebResponseDTO> starInfoGet(@PathVariable long starId){
-        CelebResponseDTO user = userService.getCelebInfo(starId);
+    public ResponseEntity<CelebResponseDTO> starInfoGet(@ApiIgnore @AuthenticationPrincipal UserDTO user,@PathVariable long starId){
+        CelebResponseDTO celeb = userService.getCelebInfo(user.getId(), starId);
 
-        return new ResponseEntity<>(user, HttpStatus.OK);
+        return new ResponseEntity<>(celeb, HttpStatus.OK);
     }
 
     @GetMapping("/find-password")
