@@ -76,7 +76,9 @@ function PlusPage() {
     } else {
       mediaStream = await navigator.mediaDevices.getUserMedia({
         video: {
-          aspectRatio: 9 / 16,
+          width: { max: 360 },
+          height: { min: 480 },
+          //   aspectRatio: 9 / 16,
           facingMode: changeCam,
         },
         audio: false,
@@ -223,6 +225,7 @@ function PlusPage() {
     const start = async () => {
       mediaStream = await navigator.mediaDevices.getUserMedia({
         video: {
+          width: { min: 361 },
           aspectRatio: 16 / 9,
           //   frameRate: 30,
           facingMode: 'user',
