@@ -32,12 +32,6 @@ const theme = createTheme({
 function FindPasswordPage() {
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
-  const [change, setChange] = useState('');
-
-  let body = {
-    email,
-    name,
-  };
 
   const onChangeEmail = (e) => {
     setEmail(e.target.value);
@@ -47,17 +41,23 @@ function FindPasswordPage() {
     setName(e.target.value);
   };
 
-  useEffect(() => {
-    UseAxios.get('/users/find-password', body)
+  const onSubmit = (event) => {
+    event.preventDefault();
+    console.log(email);
+    console.log(name);
+    UseAxios.get(`/users/find-password`, {
+      params: {
+        email: email,
+        name: name,
+      },
+    })
       .then((res) => {
-        setChange(res.data);
-        swal('', '이메일주소로 임시 비밀번호를 보냈습니다.');
+        swal('이메일주소로 임시 비밀번호를 보냈습니다.');
       })
       .catch((err) => {
         console.log(err);
       });
-  }, []);
-
+  };
   return (
     <ThemeProvider theme={theme}>
       <div>
@@ -110,7 +110,7 @@ function FindPasswordPage() {
           sx={{ mt: 3, mb: 5 }}
           color="primary"
           size="large"
-          // onClick={onSubmit}
+          onClick={onSubmit}
         >
           다음
         </Button>

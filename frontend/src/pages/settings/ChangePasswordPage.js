@@ -35,17 +35,23 @@ const theme = createTheme({
 function ChangePasswordPage() {
   const navigate = useNavigate();
   const [password, setPassword] = useState('');
-  const [newPassword, setnewPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
   const [newPasswordCheck, setNewPasswordCheck] = useState('');
   const [canSubmit, setCanSubmit] = useState(false);
-  const { userData } = useContext(Context);
+  const [userData, setUserData] = useState(false);
+
+  useEffect(() => {
+    UseAxios.get(`/users/profiles`).then((res) => {
+      setUserData(res.data);
+    });
+  }, []);
 
   /*비밀번호 유효 검사 */
   const onChangePassword = (e) => {
     setPassword(e.target.value);
   };
   const onChangeNewPassword = (e) => {
-    setnewPassword(e.target.value);
+    setNewPassword(e.target.value);
   };
   const newPasswordValidation = () => {
     let space = /[~!@#$%";'^,&*()_+|</>=>`?:{[\}]/;
@@ -65,7 +71,8 @@ function ChangePasswordPage() {
   //   newPassword,
   // };
 
-  const onSubmit = (data) => {
+  const onSubmit = (event) => {
+    event.preventDefault();
     const check = () => {
       if (newPassword.length < 8) {
         swal('비밀번호는 8글자 이상이어야 합니다.');
@@ -73,7 +80,8 @@ function ChangePasswordPage() {
       } else if (newPassword !== newPasswordCheck) {
         swal('비밀번호 확인이 일치하지 않습니다');
         setCanSubmit(false);
-      }
+      } else setCanSubmit(true);
+
       // 현재 비밀번호가 틀렸을 경우 없음
     };
     check();
@@ -81,14 +89,14 @@ function ChangePasswordPage() {
     console.log(newPassword);
     if (canSubmit) {
       UseAxios.put(`/users/change-password`, {
-        password: data.password,
-        newPassword: data.newPassword,
-        userId: userData.userId,
+        password: password,
+        newPassword: newPassword,
+        userId: userData.id,
       })
         .then((res) => {
           swal('비밀번호 변경이 완료되었습니다.');
           console.log(res);
-          navigate('mypage/setting');
+          navigate('/mypage/setting');
         })
         .catch((err) => {
           console.log(err);
