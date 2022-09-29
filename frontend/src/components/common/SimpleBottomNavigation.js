@@ -4,6 +4,11 @@ import { Link, useLocation } from 'react-router-dom';
 import BottomNavigation from '@mui/material/BottomNavigation';
 import BottomNavigationAction from '@mui/material/BottomNavigationAction';
 import Context from '../../utils/Context';
+import { AiOutlineHome, AiFillPlusCircle } from 'react-icons/ai';
+import { MdGrass } from 'react-icons/md';
+import { BiBookHeart, BiDonateHeart } from 'react-icons/bi';
+import { IoPersonCircleOutline } from 'react-icons/io5';
+
 function SimpleBottomNavigation() {
   const [value, setValue] = useState(0);
   const [path, setPath] = useState(null);
@@ -39,17 +44,22 @@ function SimpleBottomNavigation() {
             '& .Mui-selected, .Mui-selected > svg': {
               color: '#FFC947',
             },
+            fontSize: 28,
           }}
         >
-          <BottomNavigationAction label='홈' LinkComponent={Link} to='/' />
-          <BottomNavigationAction label='사바나' LinkComponent={Link} to='/savana' />
+          <BottomNavigationAction icon={<AiOutlineHome />} LinkComponent={Link} to='/' />
+          <BottomNavigationAction icon={<MdGrass />} LinkComponent={Link} to='/savana' />
           <BottomNavigationAction
-            label='플러스'
+            icon={<AiFillPlusCircle />}
             LinkComponent={Link}
             to={selected ? '/plus' : '/select'}
           />
-          <BottomNavigationAction label='기부' LinkComponent={Link} to='/donation' />
-          <BottomNavigationAction label='마이' LinkComponent={Link} to='/mypage' />
+          <BottomNavigationAction icon={<BiDonateHeart />} LinkComponent={Link} to='/donation' />
+          <BottomNavigationAction
+            icon={<IoPersonCircleOutline />}
+            LinkComponent={Link}
+            to='/mypage'
+          />
         </BottomNavigation>
       </Box>
     );
