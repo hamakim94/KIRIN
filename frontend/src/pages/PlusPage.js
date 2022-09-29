@@ -484,7 +484,7 @@ function PlusPage() {
           </>
         )}
       </div>
-      <video playinline muted autoPlay ref={refVideo} style={{ width: '100%', height: '100%' }} />
+      <video playsInline muted autoPlay ref={refVideo} style={{ width: '100%', height: '100%' }} />
     </div>
   );
 }
