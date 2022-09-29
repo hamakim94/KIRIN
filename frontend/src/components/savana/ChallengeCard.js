@@ -48,6 +48,10 @@ function ChallengeCard(props) {
     setLike(!like);
   };
 
+  const currentNum = props.item.currentNum;
+  const targetNum = props.item.targetNum;
+  const parcent = currentNum % targetNum;
+
   return (
     <div
       className={props.styles.cardWrapper}
@@ -69,7 +73,7 @@ function ChallengeCard(props) {
                 <RiHeart2Fill className={props.styles.likeIcon}></RiHeart2Fill>
               )}
             </a>
-            <div className={props.styles.iconCount}>32</div>
+            <div className={props.styles.iconCount}>{props.item.likeCount}</div>
           </div>
           <div>
             <a onClick={() => setOpen(true)} class="button">
@@ -84,24 +88,20 @@ function ChallengeCard(props) {
                 <Sheet.Backdrop />
               </Sheet>
             </a>
-            <div className={props.styles.iconCount}>25</div>
+            <div className={props.styles.iconCount}>{props.item.commentCount}</div>
           </div>
-
           <a>
             <RiShareFill className={props.styles.clickIcon} onClick={copy}></RiShareFill>
-          </a>
-          <a href="/donation">
-            <RiBearSmileFill className={props.styles.clickIcon}></RiBearSmileFill>
           </a>
         </div>
         <div className={props.styles.infoBox}>
           <div className={props.styles.infoTop}>
-            <div className={props.styles.infoText}>나연이랑 연탄팝팝!</div>
+            <div className={props.styles.infoTitle}>{props.item.title}</div>
           </div>
-          <ProgressBar styles={props.styles} width={350} percent={0.7}></ProgressBar>
+          <ProgressBar styles={props.styles} width={'90vw'} percent={parcent}></ProgressBar>
           <div className={props.styles.infoBot}>
-            <span className={props.styles.infoText}>251명</span>
-            <span className={props.styles.infoText}>70%</span>
+            <span className={props.styles.infoText}>{props.item.currentNum}명</span>
+            <span className={props.styles.infoText}>{parcent}%</span>
           </div>
         </div>
       </div>
@@ -112,12 +112,13 @@ function ChallengeCard(props) {
             playerVars: { modestbranding: 1, mute: 1 },
           },
         }}
-        url="https://www.youtube.com/watch?v=fgaLAomg68c"
+        url={`${props.item.video}`}
         width="100%"
         height="100%"
         playing={hover}
+        mute={true}
         controls={false}
-        loop={true}
+        volume={1}
       />
     </div>
   );
