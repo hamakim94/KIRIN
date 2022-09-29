@@ -76,7 +76,8 @@ function PlusPage() {
     } else {
       mediaStream = await navigator.mediaDevices.getUserMedia({
         video: {
-          frameRate: 30,
+          aspectRatio: 16 / 9,
+          //   frameRate: 30,
           facingMode: changeCam,
         },
         audio: false,
@@ -88,7 +89,7 @@ function PlusPage() {
       setStream(mediaStream);
       recorderRef.current = new RecordRTC(mediaStream, {
         type: 'video',
-        mimeType: 'video/webm;codecs=vp8',
+        mimeType: 'video/mp4',
       });
       recorderRef.current.startRecording();
       audioRef.current.currentTime = 0;
@@ -177,7 +178,6 @@ function PlusPage() {
       const start = async () => {
         mediaStream = await navigator.mediaDevices.getUserMedia({
           video: {
-            aspectRatio: 3 / 4,
             // frameRate: 30,
             facingMode: { exact: 'environment' },
           },
@@ -194,7 +194,6 @@ function PlusPage() {
       const start = async () => {
         mediaStream = await navigator.mediaDevices.getUserMedia({
           video: {
-            aspectRatio: 9 / 16,
             // frameRate: 30,
             facingMode: 'user',
           },
@@ -225,7 +224,6 @@ function PlusPage() {
     const start = async () => {
       mediaStream = await navigator.mediaDevices.getUserMedia({
         video: {
-          aspectRatio: 9 / 22,
           //   frameRate: 30,
           facingMode: 'user',
         },
