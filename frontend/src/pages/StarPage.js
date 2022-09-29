@@ -7,6 +7,7 @@ import UseAxios from '../utils/UseAxios';
 import Context from '../utils/Context';
 import { Avatar } from '@mui/material';
 import StarPageModal from '../components/star/StarPageModal';
+import { useNavigate } from 'react-router-dom';
 
 function StarPage() {
   const [starInfo, setStarInfo] = useState({});
@@ -15,9 +16,10 @@ function StarPage() {
   const [coverImg, setCoverImg] = useState('');
   const [subscribed, setSubscribed] = useState(false);
   const [info, setInfo] = useState('');
+  const navigate = useNavigate();
+  const location = window.location.href.split('/');
+  const starId = Number(location[location.length - 1]);
   useEffect(() => {
-    const location = window.location.href.split('/');
-    const starId = Number(location[location.length - 1]);
     UseAxios.get(`/users/stars/${starId}`).then((res) => {
       setStarInfo(res.data);
       setCoverImg(`/files/${res.data.coverImg}`);
@@ -179,6 +181,17 @@ function StarPage() {
       <ChallengeList styles={styles}></ChallengeList>
       <div className={styles.titleBox}>
         <HomeCategory title={'커뮤니티'} styles={styles}></HomeCategory>
+        {userData ? (
+          userData.id == starId ? (
+            <div style={{ marginRight: 20 }} onClick={() => navigate('community/create')}>
+              작성
+            </div>
+          ) : (
+            ''
+          )
+        ) : (
+          ''
+        )}
       </div>
       <div className={styles.hScroll}>
         <CommunityItem styles={styles}></CommunityItem>
