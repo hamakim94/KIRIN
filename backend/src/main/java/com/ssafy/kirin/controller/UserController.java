@@ -285,9 +285,9 @@ public class UserController {
 
     @PutMapping("/change-star")
     @ApiOperation(value = "스타 소개글 변경")
-    public ResponseEntity<?> starInfoUpdate(@ApiIgnore @AuthenticationPrincipal UserDTO user, @RequestBody String info){
+    public ResponseEntity<?> starInfoUpdate(@ApiIgnore @AuthenticationPrincipal UserDTO user, @RequestBody Map<String, String> info){
         try{
-            userService.updateStarInfo(user.getId(), info);
+            userService.updateStarInfo(user.getId(), info.get("info"));
         } catch (Exception e){
             log.error("스타가 아닙니다: " + e);
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
