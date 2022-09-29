@@ -80,11 +80,12 @@ public class CommunityServiceImpl implements CommunityService {
 
         if(!image.isEmpty()) {
             // 파일 디렉토리 + UUID + 확장자로 Path 설정
-            String storeName = communityImageDirectory+ UUID.randomUUID() + image.getOriginalFilename();
+            String fileName = UUID.randomUUID() + image.getOriginalFilename();
+            String storeName = communityImageDirectory + fileName;
             Path dir = Paths.get(storeName);
             //지정된 디렉토리에 저장
             Files.copy(image.getInputStream(),dir);
-            community.setImg(storeName);
+            community.setImg(fileName);
         }
     }
 
