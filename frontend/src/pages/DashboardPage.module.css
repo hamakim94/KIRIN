@@ -1,8 +1,8 @@
 .wrapper {
   padding-top: 15px;
-  padding-bottom: 55px;     
-  padding-left:5px;
-  padding-right:5px;
+  padding-bottom: 55px;
+  padding-left: 5px;
+  padding-right: 5px;
 }
 .topBox {
   display: flex;
@@ -38,4 +38,3 @@
   padding-left: 10px;
   padding-right: 10px;
 }
-

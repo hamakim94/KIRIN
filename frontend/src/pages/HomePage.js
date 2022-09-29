@@ -21,7 +21,10 @@ function HomePage() {
   }, []);
   return (
     <div className='wrapper'>
-      <div className={styles.logo}>로고</div>
+      <img
+        src={require('../assets/img/kirin_font_logo_.png')}
+        style={{ width: 70, marginTop: 5, marginLeft: 15, marginBottom: 15 }}
+      ></img>
       <SubscribeList styles={styles}></SubscribeList>
       <HomeCategory title={'인기순'} styles={styles}></HomeCategory>
       <ChallengeList styles={styles} data={popularityData}></ChallengeList>
