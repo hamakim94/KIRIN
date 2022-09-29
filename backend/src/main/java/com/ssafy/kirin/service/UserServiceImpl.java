@@ -164,20 +164,6 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     }
 
     @Override
-    public UserDTO getUserById(long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new NoSuchElementException("User : " + userId + " was not found"));
-
-        return UserDTO.builder()
-                .id(user.getId())
-                .name(user.getName())
-                .nickname(user.getNickname())
-                .profileImg(user.getProfileImg())
-                .email(user.getEmail())
-                .build();
-    }
-
-    @Override
     public void subscribe(long userId, long celebId) throws Exception {
         if(userId == celebId) {
             log.error("본인 구독은 불가합니다.");
@@ -273,10 +259,19 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
     @Override
     public UserDTO loadUserByUsername(String userId) throws UsernameNotFoundException {
-        UserDTO userDTO = getUserById(Long.parseLong(userId));
+        User user = userRepository.findById(Long.parseLong(userId))
+                .orElseThrow(() -> new NoSuchElementException("User : " + userId + " was not found"));
+
         // 일반인, 스타 role 지정
 
-        return userDTO;
+        return UserDTO.builder()
+                .id(user.getId())
+                .name(user.getName())
+                .nickname(user.getNickname())
+                .profileImg(user.getProfileImg())
+                .email(user.getEmail())
+                .walletAddress(user.getWallet().getAddress())
+                .build();
     }
 
     @Transactional(readOnly = true)
@@ -362,6 +357,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
                 .id(userDTO.getId())
                 .nickname(userDTO.getNickname())
                 .profileImg(userDTO.getProfileImg())
+                .walletAddress(userDTO.getWalletAddress())
                 .build();
 
         return userResponseDTO;
@@ -386,6 +382,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
                 .id(user.getId())
                 .nickname(user.getNickname())
                 .profileImg(user.getProfileImg())
+                .walletAddress(user.getWallet().getAddress())
                 .build();
     }
 
