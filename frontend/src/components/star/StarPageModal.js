@@ -20,11 +20,8 @@ function StarPageModal(props) {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [info, setInfo] = useState(props.info);
-
   const revise = async () => {
-    await UseAxios.put(`/users/change-star`, info, {
-      headers: { 'Content-Type': 'application/json' },
-    })
+    await UseAxios.put(`/users/change-star`, { info: info }, {})
       .catch((err) => console.log(err))
       .then((res) => {
         console.log(res);

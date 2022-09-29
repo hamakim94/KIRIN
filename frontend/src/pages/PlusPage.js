@@ -47,6 +47,8 @@ function PlusPage() {
       setNumber((prev) => (prev = length));
       mediaStream = await navigator.mediaDevices.getUserMedia({
         video: {
+          width: window.innerWidth,
+          height: window.innerHeight,
           frameRate: 30,
           facingMode: changeCam,
         },
@@ -76,6 +78,8 @@ function PlusPage() {
     } else {
       mediaStream = await navigator.mediaDevices.getUserMedia({
         video: {
+          width: window.innerWidth,
+          height: window.innerHeight,
           frameRate: 30,
           facingMode: changeCam,
         },
@@ -154,6 +158,8 @@ function PlusPage() {
     const retry = async () => {
       mediaStream = await navigator.mediaDevices.getUserMedia({
         video: {
+          width: window.innerWidth,
+          height: window.innerHeight,
           frameRate: 30,
           facingMode: changeCam,
         },
@@ -484,7 +490,14 @@ function PlusPage() {
           </>
         )}
       </div>
-      <video playsInline muted autoPlay ref={refVideo} style={{ width: '100%', height: '100%' }} />
+      {/* <video playsInline autoPlay muted ref={refVideo} style={{ width: '100%', height: '100%' }} /> */}
+      <video
+        playsInline
+        autoPlay
+        muted
+        ref={refVideo}
+        style={{ width: window.innerWidth, height: window.innerHeight }}
+      />
     </div>
   );
 }

@@ -21,7 +21,7 @@ function StarPage() {
     UseAxios.get(`/users/stars/${starId}`).then((res) => {
       setStarInfo(res.data);
       setCoverImg(`/files/${res.data.coverImg}`);
-      setInfo(res.data.info.replaceAll('"', ''));
+      setInfo(res.data.info);
     });
     UseAxios.get(`/users/subscribes`).then((res) => {
       if (res.data.findIndex((stars) => stars.id === starId) > -1) {
