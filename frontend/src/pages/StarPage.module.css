@@ -53,6 +53,36 @@
   background-color: #cd9105;
   transition: 0.3s;
 }
+.subBtn {
+  background-color: #ffc947;
+  padding: 2px;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 4.5px;
+  border: 0;
+  font-family: 'SCD800';
+  color: #7e370c;
+  border-radius: 10%;
+}
+.subBtn:active {
+  background-color: #cd9105;
+  transition: 0.3s;
+}
+.unSubBtn {
+  background-color: #c9c9c9;
+  padding: 2px;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 4.5px;
+  border: 0;
+  font-family: 'SCD800';
+  color: #000000;
+  border-radius: 10%;
+}
+.subBtn:active {
+  background-color: #c9c9c9;
+  transition: 0.3s;
+}
 
 .contentBox {
   margin-left: 15px;
