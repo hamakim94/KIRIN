@@ -224,7 +224,7 @@ function PlusPage() {
       mediaStream = await navigator.mediaDevices.getUserMedia({
         video: {
           width: 1080,
-          height: 2640,
+          height: 1920,
           frameRate: 30,
           facingMode: 'user',
         },
