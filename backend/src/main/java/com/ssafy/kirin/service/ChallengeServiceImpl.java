@@ -50,60 +50,56 @@ public class ChallengeServiceImpl implements ChallengeService {
     @Value("${property.app.upload-path}")
     private String challengeDir;
 //    @Value("${kirin.stamp}")
-    private String kirinStamp = "/files/bd363c62-476d-4c29-aed6-8a5346fb41bfstamp.png";
+    private final String kirinStamp = "/files/bd363c62-476d-4c29-aed6-8a5346fb41bfstamp.png";
 
     @Override
-    public List<Challenge> listStarsByPopularity() {
-        return challengeRepository.findByIsOriginalAndIsProceeding(true, true, Sort.by(Sort.Direction.DESC, "likeCnt"));
+    public List<ChallengeDTO> listStarsByPopularity() {
+        return this.challegeListToChallengDTOList(challengeRepository.findByIsOriginalAndIsProceeding(true, true, Sort.by(Sort.Direction.DESC, "likeCnt")));
     }
 
     @Override
-    public List<Challenge> listStarsByLatest() {
-        return challengeRepository.findByIsOriginalAndIsProceeding(true, true, Sort.by(Sort.Direction.DESC, "id"));
+    public List<ChallengeDTO> listStarsByLatest() {
+        return this.challegeListToChallengDTOList(challengeRepository.findByIsOriginalAndIsProceeding(true, true, Sort.by(Sort.Direction.DESC, "id")));
     }
 
     @Override
-    public List<Challenge> listGeneralByPopularity() {
-        return challengeRepository.findByIsOriginalAndIsProceeding(false, true, Sort.by(Sort.Direction.DESC, "likeCnt"));
+    public List<ChallengeDTO> listGeneralByPopularity() {
+        return this.challegeListToChallengDTOList(challengeRepository.findByIsOriginalAndIsProceeding(false, true, Sort.by(Sort.Direction.DESC, "likeCnt")));
     }
 
     @Override
-    public List<Challenge> listGeneralByRandom() {
-        List<Challenge> challenges = challengeRepository.findByIsOriginalAndIsProceeding(false, true);
+    public List<ChallengeDTO> listGeneralByRandom() {
+        List<ChallengeDTO> challenges = this.challegeListToChallengDTOList(challengeRepository.findByIsOriginalAndIsProceeding(false, true));
         Collections.shuffle(challenges);
         return challenges;
     }
 
     @Override
-    public List<Challenge> listAllByRandom() {
-        List<Challenge> challenges = challengeRepository.findByIsProceeding(true);
+    public List<ChallengeDTO> listAllByRandom() {
+        List<ChallengeDTO> challenges = this.challegeListToChallengDTOList(challengeRepository.findByIsProceeding(true));
         Collections.shuffle(challenges);
         return challenges;
     }
 
     @Override
-    public List<Challenge> listAllByAlphabet() {
-        return challengeRepository.findAll(Sort.by(Sort.Direction.ASC, "title"));
+    public List<ChallengeDTO> listAllByAlphabet() {
+        return this.challegeListToChallengDTOList(challengeRepository.findAll(Sort.by(Sort.Direction.ASC, "title")));
     }
 
     @Override
-    public List<Challenge> listAllByChallenge(Long challengeId) {
-        return challengeRepository.findByChallengeId(challengeId);
+    public List<ChallengeDTO> listAllByChallenge(Long challengeId) {
+        return this.challegeListToChallengDTOList(challengeRepository.findByChallengeId(challengeId));
     }
 
     @Override
-    public List<Challenge> listAllByUser(Long userId) {
-        return challengeRepository.findByUserId(userId);
+    public List<ChallengeDTO> listAllByUser(Long userId) {
+        return this.challegeListToChallengDTOList(challengeRepository.findByUserId(userId));
     }
 
     @Override
     public List<ChallengeDTO> listUserLike(Long userId) {
         return challengeLikeRepository.findByUserId(userId).stream()
-                .map(ChallengeLike::getChallenge).map(o -> {
-                    ChallengeDTO dto = ChallengeMapStruct.INSTANCE.mapToChallengeDTO(o);
-                    dto.setUser(UserMapStruct.INSTANCE.mapToUserDTO(o.getUser()));
-                    return dto;
-                }).collect(Collectors.toList());
+                .map(ChallengeLike::getChallenge).map(this::mapChallengeDTO).collect(Collectors.toList());
     }
 
     @Override
@@ -205,6 +201,7 @@ public class ChallengeServiceImpl implements ChallengeService {
     @Override
     public void createChallenge(UserDTO userDTO, ChallengeRequestDTO challengeRequestDTO, MultipartFile video) throws IOException {
         try {
+            System.out.println("I'm in create challenge");
             // 원 챌린지 음악과 이미지 저장경로
             Challenge forChallenge = challengeRepository.getReferenceById(challengeRequestDTO.challengeId());
             CelebChallengeInfo celebChallengeInfo = celebChallengeInfoRepository.findByChallengeId(forChallenge.getId());
@@ -221,12 +218,21 @@ public class ChallengeServiceImpl implements ChallengeService {
             Process p = Runtime.getRuntime().exec(commandExtractThumbnail);
             p.waitFor();
             // insert Watermark
-            String outputPath = UUID.randomUUID() + videoExt;
-            String commandInsertWatermark = String.format("ffmpeg -y -i %s -i %s -i %s -filter_complex [1][0]scale2ref=w=oh*mdar:h=ih*0.08[logo][video];[logo]format=argb,geq=r='r(X,Y)':a='0.8*alpha(X,Y)'[soo];[video][soo]overlay=30:30 -map \"v\" -map 2:a -c:v libx264 -crf 17 -c:a copy -shortest %s"
-                    , videoTmpDir, kirinStamp, musicPath, (challengeDir+ outputPath));
-            p = Runtime.getRuntime().exec(commandInsertWatermark);
+            String mp4File = UUID.randomUUID() + ".mp4";
+            System.out.println("aaaaaaaaaaaaaaaaaaaaaa\n"+mp4File);
+            p=Runtime.getRuntime().exec(String.format("ffmpeg -y -i %s %s",videoTmpDir,(challengeDir+mp4File)));
+            String line;
+            BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            while ((line=br.readLine())!=null) System.out.println(line);
             p.waitFor();
-
+            String outputPath = UUID.randomUUID() + ".mp4";
+            String commandInsertWatermark = String.format("ffmpeg -y -i %s -i %s -i %s -filter_complex \"[1][0]scale2ref=w=oh*mdar:h=ih*0.08[logo][video];[logo]format=argb,geq=r='r(X,Y)':a='0.8*alpha(X,Y)'[soo];[video][soo]overlay=30:30\" -map \"v\" -map 2:a -c:v libx264 -crf 17 -c:a aac -strict experimental %s"
+                    , (challengeDir+mp4File), kirinStamp, musicPath, (challengeDir+outputPath));
+            p= Runtime.getRuntime().exec(commandInsertWatermark);
+            br = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            while ((line=br.readLine())!=null) System.out.println(line);
+            p.waitFor();
+            System.out.println("saving challenge");
             challengeRepository.save(
                     Challenge.builder().user(user).isProceeding(true).reg(LocalDateTime.now()).thumbnail(thumbDir)
                                .title(challengeRequestDTO.title()).isOriginal(false).challengeId(challengeRequestDTO.challengeId())
@@ -253,7 +259,7 @@ public class ChallengeServiceImpl implements ChallengeService {
             Process p = Runtime.getRuntime().exec(commandExtractThumbnail);
             p.waitFor();
             //extract music
-            String musicDir = UUID.randomUUID()+".mp3";
+            String musicDir = UUID.randomUUID()+".ogg";
             String commandExtractMusic = String.format("ffmpeg -i %s -q:a 0 -map a %s",videoTmpDir,challengeDir+musicDir);
             p = Runtime.getRuntime().exec(commandExtractMusic);
             p.waitFor();
@@ -263,7 +269,6 @@ public class ChallengeServiceImpl implements ChallengeService {
                     videoTmpDir, kirinStamp, challengeDir+videoDir);
             p = Runtime.getRuntime().exec(commandWatermark);
             BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
-            System.out.println("------------------------------\nwatermark inserted");
             String line;
             while((line =br.readLine())!=null) System.out.println(line);
             p.waitFor();
@@ -291,5 +296,19 @@ public class ChallengeServiceImpl implements ChallengeService {
             throw new RuntimeException(e);
         }
 
+    }
+
+    public ChallengeDTO mapChallengeDTO(Challenge challenge) {
+
+        CelebChallengeInfo celebChallengeInfo = celebChallengeInfoRepository.findByChallengeId(challenge.getId());
+        ChallengeDTO dto = ChallengeMapStruct.INSTANCE.mapToChallengeDTO(challenge,celebChallengeInfo);
+        dto.setUser(UserMapStruct.INSTANCE.mapToUserDTO(challenge.getUser()));
+        return dto;
+    }
+
+    public List<ChallengeDTO> challegeListToChallengDTOList(List<Challenge> challengeList){
+        return challengeList.stream()
+                .map(this::mapChallengeDTO)
+                .collect(Collectors.toList());
     }
 }

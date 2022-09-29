@@ -7,6 +7,7 @@ import com.ssafy.kirin.dto.request.StarChallengeRequestDTO;
 import com.ssafy.kirin.dto.response.ChallengeCommentDTO;
 import com.ssafy.kirin.dto.response.ChallengeDTO;
 import com.ssafy.kirin.dto.response.ChallengeSelectResponseDTO;
+import com.ssafy.kirin.entity.CelebChallengeInfo;
 import com.ssafy.kirin.entity.Challenge;
 import com.ssafy.kirin.entity.ChallengeComment;
 import com.ssafy.kirin.service.ChallengeService;
@@ -37,7 +38,7 @@ public class ChallengeController {
     @ApiOperation(value = "챌린지 리스트")
     public ResponseEntity<List<ChallengeDTO>> challengeList(@RequestParam(name = "scope",required = false, defaultValue = "") String scope, @RequestParam(name = "order",required = false, defaultValue = "") String order,
                                                             @RequestParam(name = "userid", required = false, defaultValue = "0") Long userId, @RequestParam(name = "challengeid", required = false,defaultValue = "0") Long challengeId){
-        List<Challenge> list = switch (scope){
+        List<ChallengeDTO> list = switch (scope){
             case "stars" -> switch (order){
                 case "popularity" -> challengeService.listStarsByPopularity();
                 case "latest" -> challengeService.listStarsByLatest();
@@ -63,13 +64,7 @@ public class ChallengeController {
 
 
 
-        return ResponseEntity.ok(list.stream()
-                .map(o->{
-                    ChallengeDTO dto = ChallengeMapStruct.INSTANCE.mapToChallengeDTO(o);
-                    dto.setUser(UserMapStruct.INSTANCE.mapToUserDTO(o.getUser()));
-                    return dto;
-                })
-                .collect(Collectors.toList()));
+        return ResponseEntity.ok(list);
         }
 
     @GetMapping("/user/{userId}")

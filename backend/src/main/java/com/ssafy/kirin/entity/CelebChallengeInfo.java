@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Formula;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -40,6 +41,12 @@ public class CelebChallengeInfo {
 
     @Column(name = "target_amount")
     Integer targetAmount;
+
+    @Formula("(SELECT COUNT(*) FROM donation d WHERE d.challenge_id=challenge_id)")
+    Integer currentNum;
+
+    @Formula("(SELECT SUM(d.amount) FROM donation d WHERE d.challenge_id=challenge_id)")
+    Integer currentAmount;
 
     @OneToOne
     @JoinColumn(name = "contract_id")
