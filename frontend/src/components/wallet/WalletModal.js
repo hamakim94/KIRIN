@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Modal } from '@mui/material';
 import styles from './WalletModal.module.css';
 import { Button, TextField } from '@mui/material/';
@@ -6,6 +6,7 @@ import { AiOutlineCopy } from 'react-icons/ai';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import ABI from '../../TokenABI.json';
 import CA from '../../TokenCA.json';
+import Context from '../../utils/Context';
 
 const theme = createTheme({
   palette: {
@@ -16,13 +17,14 @@ const theme = createTheme({
 });
 const isLetters = (str) => /^[0-9]*$/.test(str);
 
-function WalletModal(props) {
+// 사용법 :
+function WalletModal() {
+  const { userData } = useContext(Context);
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [web3, setWeb3] = useState(''); // web3 연결하는 부분, useEffect를 통해 초반에 생성된다.
-  const [address] = useState(process.env.REACT_APP_ADMINID); // 내 주소를 저장하는 부분, 추후에 상태관리 해야할 부분
-  // const [privateKey, setprivateKey] = useState(process.env.REACT_APP_USERKEY); // 내 비밀번호, 추후에 상태관리 해야할 부분 or db
+  const [address] = useState(userData.walletAddress); // 내 주소를 저장하는 부분, 추후에 상태관리 해야할 부분
   const [tokenBalance, setTokenBalance] = useState(''); // 토큰 잔액
   const [tokenContract, setTokenContract] = useState('');
   const [tokens, setTokens] = useState('');
@@ -127,7 +129,7 @@ function WalletModal(props) {
   return (
     <div>
       <button className={styles.myWallet} onClick={handleOpen}>
-        {props.buttonTitle}
+        내 지갑
       </button>
 
       <Modal
@@ -143,14 +145,13 @@ function WalletModal(props) {
               style={{
                 display: 'flex',
                 flexDirection: 'column',
-                margin: '2%',
                 padding: '2%',
                 backgroundColor: '#ffffff',
                 bottom: 0,
               }}
             >
               <div className={styles.topBox}>
-                <div className={styles.pageTitle}>{props.buttonTitle}</div>
+                <div className={styles.pageTitle}>내 지갑</div>
               </div>
               <div className={styles.groupBox}>
                 <div className={styles.group}>
