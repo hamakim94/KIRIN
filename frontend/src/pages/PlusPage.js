@@ -76,7 +76,6 @@ function PlusPage() {
     } else {
       mediaStream = await navigator.mediaDevices.getUserMedia({
         video: {
-          height: { min: 641 },
           aspectRatio: 9 / 16,
           facingMode: changeCam,
         },
