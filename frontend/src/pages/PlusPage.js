@@ -47,9 +47,8 @@ function PlusPage() {
       setNumber((prev) => (prev = length));
       mediaStream = await navigator.mediaDevices.getUserMedia({
         video: {
-          width: window.innerWidth,
-          height: window.innerHeight,
-          frameRate: 30,
+          width: { min: 361 },
+          aspectRatio: 16 / 9,
           facingMode: changeCam,
         },
         audio: false,
@@ -78,9 +77,8 @@ function PlusPage() {
     } else {
       mediaStream = await navigator.mediaDevices.getUserMedia({
         video: {
-          width: window.innerWidth,
-          height: window.innerHeight,
-          frameRate: 30,
+          width: { min: 361 },
+          aspectRatio: 16 / 9,
           facingMode: changeCam,
         },
         audio: false,
@@ -92,7 +90,7 @@ function PlusPage() {
       setStream(mediaStream);
       recorderRef.current = new RecordRTC(mediaStream, {
         type: 'video',
-        mimeType: 'video/webm;codecs=vp8',
+        mimeType: 'video/mp4',
       });
       recorderRef.current.startRecording();
       audioRef.current.currentTime = 0;
@@ -158,9 +156,8 @@ function PlusPage() {
     const retry = async () => {
       mediaStream = await navigator.mediaDevices.getUserMedia({
         video: {
-          width: window.innerWidth,
-          height: window.innerHeight,
-          frameRate: 30,
+          width: { min: 361 },
+          aspectRatio: 16 / 9,
           facingMode: changeCam,
         },
         audio: false,
@@ -183,7 +180,8 @@ function PlusPage() {
       const start = async () => {
         mediaStream = await navigator.mediaDevices.getUserMedia({
           video: {
-            frameRate: 30,
+            width: { min: 361 },
+            aspectRatio: 16 / 9,
             facingMode: { exact: 'environment' },
           },
           audio: false,
@@ -199,7 +197,8 @@ function PlusPage() {
       const start = async () => {
         mediaStream = await navigator.mediaDevices.getUserMedia({
           video: {
-            frameRate: 30,
+            width: { min: 361 },
+            aspectRatio: 16 / 9,
             facingMode: 'user',
           },
           audio: false,
@@ -229,7 +228,9 @@ function PlusPage() {
     const start = async () => {
       mediaStream = await navigator.mediaDevices.getUserMedia({
         video: {
-          frameRate: 30,
+          width: { min: 361 },
+          aspectRatio: 16 / 9,
+          //   frameRate: 30,
           facingMode: 'user',
         },
         audio: false,
@@ -491,13 +492,7 @@ function PlusPage() {
         )}
       </div>
       {/* <video playsInline autoPlay muted ref={refVideo} style={{ width: '100%', height: '100%' }} /> */}
-      <video
-        playsInline
-        autoPlay
-        muted
-        ref={refVideo}
-        style={{ width: window.innerWidth, height: window.innerHeight }}
-      />
+      <video playsInline autoPlay muted ref={refVideo} style={{ width: '100%', height: '100%' }} />
     </div>
   );
 }
