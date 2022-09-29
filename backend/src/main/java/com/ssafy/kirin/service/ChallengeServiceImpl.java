@@ -25,6 +25,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.math.BigInteger;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -47,6 +49,8 @@ public class ChallengeServiceImpl implements ChallengeService {
     private final NotificationService notificationService;
     private final CelebChallengeInfoRepository celebChallengeInfoRepository;
     private final DonationOrganizationRepository donationOrganizationRepository;
+    private final EthereumService ethereumService;
+    private final ChallengeContractRepository challengeContractRepository;
     @Value("${property.app.upload-path}")
     private String challengeDir;
 //    @Value("${kirin.stamp}")
@@ -248,6 +252,10 @@ public class ChallengeServiceImpl implements ChallengeService {
     public void createStarChallenge(UserDTO userDTO, StarChallengeRequestDTO starChallengeRequestDTO, MultipartFile video) {
         try {
             User user = userRepository.getReferenceById(userDTO.getId());
+            //토큰 충분한지 체크
+            if (ethereumService.getTokenAmount(user)<starChallengeRequestDTO.targetAmount()) throw new Exception();
+
+            DonationOrganization donationOrganization = donationOrganizationRepository.findById(starChallengeRequestDTO.donationOrganizationId()).get();
             //copy video file
             String videoExt = video.getOriginalFilename().substring(video.getOriginalFilename().lastIndexOf("."));
             String videoTmpDir = challengeDir+UUID.randomUUID()+videoExt;
@@ -275,6 +283,18 @@ public class ChallengeServiceImpl implements ChallengeService {
             //delete original videoFile
             Files.delete(videoTmp);
 
+            //Contract 생성 및 토큰 전송, 트랜잭션 저장
+            ChallengeContract challengeContract = ethereumService.createFundContract(
+                    user,
+                    starChallengeRequestDTO.targetAmount(),
+                    BigInteger.valueOf(Timestamp.valueOf(starChallengeRequestDTO.startDate()).getTime()),
+                    BigInteger.valueOf(Timestamp.valueOf(starChallengeRequestDTO.endDate()).getTime()),
+                    BigInteger.valueOf(starChallengeRequestDTO.targetNum()),
+                    donationOrganization.getWallet().getAddress()
+            );
+
+            challengeContractRepository.save(challengeContract);
+
             Challenge challenge = Challenge.builder().user(user).video(videoDir)
                     .isProceeding(true).reg(LocalDateTime.now()).isOriginal(true).thumbnail(thumbDir)
                     .title(starChallengeRequestDTO.title()).build();
@@ -285,7 +305,8 @@ public class ChallengeServiceImpl implements ChallengeService {
             CelebChallengeInfo celebChallengeInfo = CelebChallengeInfo.builder().info(starChallengeRequestDTO.info()).challenge(challenge).targetAmount(starChallengeRequestDTO.targetAmount())
                     .targetNum(starChallengeRequestDTO.targetNum()).music(musicDir).musicTitle(starChallengeRequestDTO.musicTitle()).length(starChallengeRequestDTO.length())
                     .endDate(starChallengeRequestDTO.endDate()).startDate(starChallengeRequestDTO.startDate())
-                    .donationOrganization(donationOrganizationRepository.getReferenceById(starChallengeRequestDTO.donationOrganizationId()))
+                    .donationOrganization(donationOrganization)
+                    .challengeContract(challengeContract)
                     .build();
 
             celebChallengeInfoRepository.save(celebChallengeInfo);
@@ -293,6 +314,8 @@ public class ChallengeServiceImpl implements ChallengeService {
         }catch (InterruptedException e) {
             throw new RuntimeException(e);
         } catch (IOException e) {
+            throw new RuntimeException(e);
+        }catch (Exception e) {
             throw new RuntimeException(e);
         }
 

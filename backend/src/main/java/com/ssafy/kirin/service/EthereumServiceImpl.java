@@ -2,9 +2,13 @@ package com.ssafy.kirin.service;
 
 import com.ssafy.kirin.contracts.FundRaising;
 import com.ssafy.kirin.contracts.IERC20;
+import com.ssafy.kirin.dto.UserDTO;
+import com.ssafy.kirin.entity.ChallengeContract;
 import com.ssafy.kirin.entity.Transaction;
+import com.ssafy.kirin.entity.User;
 import com.ssafy.kirin.entity.Wallet;
 import com.ssafy.kirin.repository.TransactionRepository;
+import com.ssafy.kirin.repository.UserRepository;
 import com.ssafy.kirin.repository.WalletRepository;
 import com.ssafy.kirin.util.Web3jUtil;
 import lombok.RequiredArgsConstructor;
@@ -22,15 +26,10 @@ import org.web3j.tx.RawTransactionManager;
 import org.web3j.tx.TransactionManager;
 import org.web3j.tx.gas.ContractGasProvider;
 import org.web3j.tx.gas.DefaultGasProvider;
-import org.web3j.utils.Convert;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.Optional;
-import java.util.TimeZone;
 import java.util.UUID;
 
 @Slf4j
@@ -41,20 +40,21 @@ public class EthereumServiceImpl implements EthereumService {
     private static Web3j web3j = web3jUtil.getWeb3J();
     private final WalletRepository walletRepository;
     private final TransactionRepository transactionRepository;
+    private final UserRepository userRepository;
     @Value("${TOKENCONTRACTADDRESS}")
     private String TOKENCONTRACTADDRESS ;
 
 
     @Override
-    public void createFundContract(String privatekey, int amount, BigInteger startTime, BigInteger endTime, BigInteger targetNum, String beneficiary) throws Exception {
-        Credentials credentials = web3jUtil.getCredentials(privatekey);
+    public ChallengeContract createFundContract(User user, int amount, BigInteger startTime, BigInteger endTime, BigInteger targetNum, String beneficiary) throws Exception {
+        Credentials credentials = web3jUtil.getCredentials(user.getWallet().getPrivateKey());
         TransactionManager transactionManager = new RawTransactionManager(
                 web3j, credentials, 97889218, 100, 100L);
         ContractGasProvider gasProvider = new DefaultGasProvider();
         IERC20 ierc20 = IERC20.load(TOKENCONTRACTADDRESS, web3j, transactionManager, gasProvider);
         BigInteger tokenBalance = ierc20.balanceOf(credentials.getAddress()).send();
-//        if (tokenBalance.intValue()>amount){
-            web3jUtil.gasCheck(credentials);
+        if (tokenBalance.intValue()>amount){
+            gasCheck(credentials);
             log.info("FundRaising deploy start");
             FundRaising fundRaising = FundRaising.deploy(
                     web3j,
@@ -66,30 +66,40 @@ public class EthereumServiceImpl implements EthereumService {
                     beneficiary,
                     TOKENCONTRACTADDRESS
             ).send();
-        String hash = fundRaising.getTransactionReceipt().get().getTransactionHash();
-        org.web3j.protocol.core.methods.response.Transaction transaction = web3j.ethGetTransactionByHash(hash).send().getResult();
-        Transaction newTransaction = web3jUtil.makeTransactionEntity(transaction);
-        transactionRepository.save(newTransaction);
-//        System.out.println(web3j.ethGetTransactionByHash(hash).send().getResult());
+            String hash = fundRaising.getTransactionReceipt().get().getTransactionHash();
+            org.web3j.protocol.core.methods.response.Transaction transaction = web3j.ethGetTransactionByHash(hash).send().getResult();
+            Transaction newTransaction = web3jUtil.makeTransactionEntity(transaction);
+            transactionRepository.save(newTransaction);
             log.info("FundRaising deploy end");
             String fundContractAddress = fundRaising.getContractAddress();
             log.info("transferToken start");
-//            transferToken(credentials, fundContractAddress, amount);
+            Transaction transferTransaction = transferToken(credentials, fundContractAddress, amount);
+            transactionRepository.save(transferTransaction);
             log.info("transferToken end");
-//        } else { throw new Exception();}
+
+            ChallengeContract challengeContract = ChallengeContract.builder()
+                    .amount((long)amount)
+                    .participateNum(0)
+                    .contractHash(fundContractAddress)
+                    .build();
+
+            return challengeContract;
+        } else { throw new Exception();}
     }
     @Override
-    public void addToken(String privatekey, int amount) throws Exception {
-        Credentials credentials = web3jUtil.getCredentials(privatekey);
-        web3jUtil.gasCheck(credentials);
-//        BigInteger gasLimit = BigInteger.valueOf(3000000);
-//        BigInteger gasPrice = Convert.toWei("1", Convert.Unit.MWEI).toBigInteger();
-        transferToken(web3jUtil.getAdminCredentials(), credentials.getAddress(), amount);
+    public void addToken(UserDTO userDTO, int amount) throws Exception {
+        User user = userRepository.findByEmail(userDTO.getEmail()).get();
+        Credentials credentials = web3jUtil.getCredentials(user.getWallet().getPrivateKey());
+        gasCheck(credentials);
+        Transaction transaction = transferToken(web3jUtil.getAdminCredentials(), credentials.getAddress(), amount);
+        transactionRepository.save(transaction);
+        user.getWallet().addCash(amount);
+        walletRepository.save(user.getWallet());
     }
     @Override
-    public void fundToken(String fundContract, int amount, String privatekey) throws Exception {
-        Credentials credentials = web3jUtil.getCredentials(privatekey);
-        web3jUtil.gasCheck((credentials));
+    public void fundToken(User user, String fundContract, int amount) throws Exception {
+        Credentials credentials = web3jUtil.getCredentials(user.getWallet().getPrivateKey());
+        gasCheck((credentials));
         ContractGasProvider gasProvider = new DefaultGasProvider();
         FundRaising fundRaising = FundRaising.load(fundContract, web3j, credentials, gasProvider);
         transferToken(credentials, fundRaising.getContractAddress(), amount);
@@ -97,7 +107,7 @@ public class EthereumServiceImpl implements EthereumService {
     @Override
     public void withdrawToken(String fundContract, int amount, String privatekey) throws Exception {
         Credentials credentials = web3jUtil.getCredentials(privatekey);
-        web3jUtil.gasCheck((credentials));
+        gasCheck((credentials));
         ContractGasProvider gasProvider = new DefaultGasProvider();
         TransactionManager transactionManager = new RawTransactionManager(web3j, credentials, 97889218, 100, 100L);
         FundRaising fundRaising = FundRaising.load(fundContract, web3j, transactionManager, gasProvider);
@@ -131,11 +141,12 @@ public class EthereumServiceImpl implements EthereumService {
         return newWallet;
     }
 
-    private void transferToken(Credentials fromCredentials, String toAddress, int amount) throws Exception {
+    private Transaction transferToken(Credentials fromCredentials, String toAddress, int amount) throws Exception {
         ContractGasProvider gasProvider = new DefaultGasProvider();
         TransactionManager transactionManager = new RawTransactionManager(web3j, fromCredentials, 97889218, 100, 100L);
         IERC20 ierc20 = IERC20.load(TOKENCONTRACTADDRESS, web3j, transactionManager, gasProvider);
-        TransactionReceipt transactionReceipts = ierc20.transfer(toAddress, new BigInteger(String.valueOf(amount))).send();
+        String hash = ierc20.transfer(toAddress, new BigInteger(String.valueOf(amount))).send().getTransactionHash();
+        Transaction transaction = web3jUtil.makeTransactionEntity(web3j.ethGetTransactionByHash(hash).send().getResult());
 //        String transactionHash = transactionReceipts.getTransactionHash();
 //        Optional<TransactionReceipt> transactionReceipt = null;
 //        int i = 0;
@@ -145,7 +156,33 @@ public class EthereumServiceImpl implements EthereumService {
 //            Thread.sleep(1000);
 //            i++;
 //        } while (!transactionReceipt.isPresent() && i < 30);
+        return transaction;
+    }
+    private void gasCheck(Credentials credentials) throws Exception {
+        Transaction transaction = web3jUtil.gasCheck(credentials);
+        if (transaction != null) {
+            transactionRepository.save(transaction);
+        }
     }
 
+    public int getTokenAmount(User user) throws Exception {
+        Credentials credentials = web3jUtil.getCredentials(user.getWallet().getPrivateKey());
+        TransactionManager transactionManager = new RawTransactionManager(
+                web3j, credentials, 97889218, 100, 100L);
+        ContractGasProvider gasProvider = new DefaultGasProvider();
+        IERC20 ierc20 = IERC20.load(TOKENCONTRACTADDRESS, web3j, transactionManager, gasProvider);
+        BigInteger tokenBalance = ierc20.balanceOf(credentials.getAddress()).send();
+        return tokenBalance.intValue();
+    }
+
+    public int getParticipateNum(String contractAddress, User user) throws Exception {
+        Credentials credentials = web3jUtil.getCredentials(user.getWallet().getPrivateKey());
+        TransactionManager transactionManager = new RawTransactionManager(
+                web3j, credentials, 97889218, 100, 100L);
+        ContractGasProvider gasProvider = new DefaultGasProvider();
+        FundRaising fundRaising = FundRaising.load(contractAddress, web3j, transactionManager, gasProvider);
+        BigInteger participatedNum = fundRaising.participatedNum().send();
+        return participatedNum.intValue();
+    }
 
 }

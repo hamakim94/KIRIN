@@ -22,4 +22,7 @@ public class ChallengeContract {
 
     @Column(name = "participate_num")
     Integer participateNum;
+
+    @Column(name = "contract_hash")
+    String contractHash;
 }

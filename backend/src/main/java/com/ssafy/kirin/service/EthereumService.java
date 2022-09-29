@@ -1,15 +1,18 @@
 package com.ssafy.kirin.service;
 
+import com.ssafy.kirin.dto.UserDTO;
+import com.ssafy.kirin.entity.ChallengeContract;
+import com.ssafy.kirin.entity.User;
 import com.ssafy.kirin.entity.Wallet;
-import org.springframework.stereotype.Service;
-import org.web3j.crypto.Credentials;
 
 import java.math.BigInteger;
 public interface EthereumService {
-    void createFundContract(String privatekey, int amount, BigInteger startTime, BigInteger endTime, BigInteger targetNum, String beneficiary) throws Exception;
-    void addToken(String privatekey, int amount) throws Exception;
-    void fundToken(String fundContract, int amount, String privatekey) throws Exception;
+    ChallengeContract createFundContract(User user, int amount, BigInteger startTime, BigInteger endTime, BigInteger targetNum, String beneficiary) throws Exception;
+    void addToken(UserDTO user, int amount) throws Exception;
+    void fundToken(User user, String fundContract, int amount) throws Exception;
     void withdrawToken(String fundContract, int amount, String privatekey) throws Exception;
+    int getTokenAmount(User user) throws Exception;
+    int getParticipateNum(String contractAddress, User user) throws Exception;
 
     Wallet createWallet() throws Exception;
 }

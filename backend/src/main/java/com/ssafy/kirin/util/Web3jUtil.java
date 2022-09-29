@@ -92,14 +92,16 @@ public class Web3jUtil {
     }
 
 
-    public void gasCheck(Credentials credentials) throws Exception {
+    public Transaction gasCheck(Credentials credentials) throws Exception {
         BigInteger balance = web3j.ethGetBalance(credentials.getAddress(), DefaultBlockParameterName.LATEST).send().getBalance();
         System.out.println("balance : "+ balance);
+        Transaction newTransaction = null;
         if (balance.compareTo(Convert.toWei("1", Convert.Unit.GWEI).toBigInteger())<=0 ){
             TransactionManager transactionManager = new RawTransactionManager(web3j, adminCredentials, 97889218, 100, 100L);
             Transfer transfer = new Transfer(web3j, transactionManager);
-            transfer.sendFunds(credentials.getAddress(), BigDecimal.valueOf(1.0), Unit.ETHER).send();
-//            Tran
+            String hash =  transfer.sendFunds(credentials.getAddress(), BigDecimal.valueOf(1.0), Unit.ETHER).send().getTransactionHash();
+            newTransaction = makeTransactionEntity(web3j.ethGetTransactionByHash(hash).send().getResult());
+
 //            String hexValue = signTransaction(adminCredentials, adminCredentials.getAddress(), credentials.getAddress(), "1000000000000000000");
 //            EthSendTransaction ethSendTransaction = web3j.ethSendRawTransaction(hexValue).send();
 //            String transactionHash = ethSendTransaction.getTransactionHash();
@@ -113,6 +115,7 @@ public class Web3jUtil {
 //                i++;
 //            } while (!transactionReceipt.isPresent()&&i<30);
         }
+        return newTransaction;
     }
 
     public Transaction makeTransactionEntity(org.web3j.protocol.core.methods.response.Transaction transaction) throws IOException {
