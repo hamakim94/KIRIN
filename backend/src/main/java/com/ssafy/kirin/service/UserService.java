@@ -26,8 +26,6 @@ public interface UserService {
 
     UserResponseDTO modifyUser(long userId, String nickname, MultipartFile profileImg) throws IOException;
 
-    UserDTO getUserById(long userId);
-
     void subscribe(long userId, long starId) throws Exception;
 
     List<UserResponseDTO> getCelebList();

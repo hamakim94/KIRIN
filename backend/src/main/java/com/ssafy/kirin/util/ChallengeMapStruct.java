@@ -26,5 +26,6 @@ public interface ChallengeMapStruct {
     @Mapping(source = "celebChallengeInfo.currentNum",target = "currentNum")
     @Mapping(source = "celebChallengeInfo.currentAmount",target = "currentAmount")
     @Mapping(source = "celebChallengeInfo.endDate",target = "endDate")
+    @Mapping(source = "challenge.user.wallet.address", target = "user.walletAddress")
     ChallengeDTO mapToChallengeDTO(Challenge challenge, CelebChallengeInfo celebChallengeInfo);
 }

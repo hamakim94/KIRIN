@@ -20,6 +20,7 @@ public class UserDTO implements UserDetails {
     private String nickname;
     private String profileImg;
     private String email;
+    private String walletAddress;
 //    private String password;
 //    private Long walletId;
 //    private Boolean isCeleb;
