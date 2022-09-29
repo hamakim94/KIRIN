@@ -47,8 +47,6 @@ function PlusPage() {
       setNumber((prev) => (prev = length));
       mediaStream = await navigator.mediaDevices.getUserMedia({
         video: {
-          width: window.innerWidth,
-          height: window.innerHeight,
           frameRate: 30,
           facingMode: changeCam,
         },
@@ -63,7 +61,7 @@ function PlusPage() {
       setStream(mediaStream);
       recorderRef.current = new RecordRTC(mediaStream, {
         type: 'video',
-        mimeType: 'video/mp4',
+        mimeType: 'video/webm;codecs=vp8',
       });
       recorderRef.current.startRecording();
 
@@ -78,8 +76,6 @@ function PlusPage() {
     } else {
       mediaStream = await navigator.mediaDevices.getUserMedia({
         video: {
-          width: window.innerWidth,
-          height: window.innerHeight,
           frameRate: 30,
           facingMode: changeCam,
         },
@@ -92,7 +88,7 @@ function PlusPage() {
       setStream(mediaStream);
       recorderRef.current = new RecordRTC(mediaStream, {
         type: 'video',
-        mimeType: 'video/mp4',
+        mimeType: 'video/webm;codecs=vp8',
       });
       recorderRef.current.startRecording();
       audioRef.current.currentTime = 0;
@@ -158,8 +154,6 @@ function PlusPage() {
     const retry = async () => {
       mediaStream = await navigator.mediaDevices.getUserMedia({
         video: {
-          width: window.innerWidth,
-          height: window.innerHeight,
           frameRate: 30,
           facingMode: changeCam,
         },
@@ -183,8 +177,6 @@ function PlusPage() {
       const start = async () => {
         mediaStream = await navigator.mediaDevices.getUserMedia({
           video: {
-            width: window.innerWidth,
-            height: window.innerHeight,
             frameRate: 30,
             facingMode: { exact: 'environment' },
           },
@@ -201,8 +193,6 @@ function PlusPage() {
       const start = async () => {
         mediaStream = await navigator.mediaDevices.getUserMedia({
           video: {
-            width: window.innerWidth,
-            height: window.innerHeight,
             frameRate: 30,
             facingMode: 'user',
           },
@@ -233,8 +223,6 @@ function PlusPage() {
     const start = async () => {
       mediaStream = await navigator.mediaDevices.getUserMedia({
         video: {
-          width: window.innerWidth,
-          height: window.innerHeight,
           frameRate: 30,
           facingMode: 'user',
         },
@@ -300,7 +288,203 @@ function PlusPage() {
     number < 0 ? null : 100
   );
   return (
-    <div style={{ padding: 0, width: window.innerWidth, height: window.innerHeight }}>
+    <div className={styles.wrapper}>
+      <div className={styles.coverBox}>
+        <div style={{ flex: 1, flexDirection: 'row' }}>
+          <div style={{ flex: 1 }}>
+            <ProgressBar
+              styles={styles}
+              width={window.innerWidth}
+              percent={length ? (length - number) / length : 0}
+            ></ProgressBar>
+          </div>
+          <div
+            style={{
+              display: 'flex',
+              flex: 1,
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              marginTop: 5,
+            }}
+          >
+            <div style={{ flex: 1, color: '#FFFFFF' }}>
+              <span style={{ marginLeft: 10 }} onClick={() => navigate(-1)}>
+                X
+              </span>
+            </div>
+            <div
+              style={{
+                display: 'flex',
+                flex: 8,
+                flexDirection: 'column',
+                justifyContent: 'center',
+                textAlign: 'center',
+                color: '#FFFFFF',
+              }}
+            >
+              <div
+                style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+                onClick={() => navigate('/select')}
+              >
+                <div
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    paddingRight: 25,
+                  }}
+                >
+                  <div>
+                    <MdOutlineQueueMusic style={{ marginRight: 2 }} size={30}></MdOutlineQueueMusic>
+                  </div>
+                  <div>
+                    <div>{challengeData ? challengeData.title : '챌린지선택'}</div>
+                    <div style={{ fontSize: '0.75em' }}>
+                      {challengeData ? challengeData.star + '-' + challengeData.musicTitle : ''}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              style={{
+                display: 'flex',
+                flex: 1,
+                justifyContent: 'flex-end',
+              }}
+            >
+              {pause || waitButton ? (
+                ''
+              ) : (
+                <MdOutlineFlipCameraAndroid
+                  style={{
+                    marginRight: 15,
+                    border: 0,
+                    outline: 0,
+                  }}
+                  color={'#FFFFFF'}
+                  size={23}
+                  onClick={handleDirection}
+                >
+                  전환
+                </MdOutlineFlipCameraAndroid>
+              )}
+            </div>
+          </div>
+        </div>
+        <div style={{ flex: 9, flexDirection: 'row', alignItems: 'center' }}></div>
+        {toggleBtn ? (
+          <>
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                flex: 2,
+                justifyContent: 'center',
+              }}
+            >
+              <div
+                style={{
+                  display: 'flex',
+                  flex: 1,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  flexDirection: 'column',
+                }}
+              >
+                <div
+                  style={{
+                    justifyContent: 'center',
+                    color: 'white',
+                    height: 30,
+                  }}
+                >
+                  {number}
+                </div>
+                <div style={{ display: 'flex', flex: 1 }}>
+                  <button className={styles.pauseBtn} onClick={handlePause}></button>
+                </div>
+              </div>
+            </div>
+            <div
+              style={{
+                display: 'flex',
+                flex: 1,
+              }}
+            ></div>
+          </>
+        ) : (
+          <>
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                flex: 2,
+                justifyContent: 'center',
+              }}
+            >
+              <div
+                style={{
+                  display: 'flex',
+                  flex: 1,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  color: 'white',
+                  paddingTop: 20,
+                }}
+              >
+                {blob || number < length ? <span onClick={handleRetry}>다시찍기</span> : ''}
+              </div>
+              <div
+                style={{
+                  display: 'flex',
+                  flex: 1,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  flexDirection: 'column',
+                }}
+              >
+                <div
+                  style={{
+                    justifyContent: 'center',
+                    color: 'white',
+                    height: 30,
+                  }}
+                >
+                  {number}
+                </div>
+                <div style={{ display: 'flex', flex: 1 }}>
+                  <button
+                    className={styles.recordBtn}
+                    onClick={pause ? handleResume : handleRecording}
+                  ></button>
+                </div>
+              </div>
+              <div
+                style={{
+                  display: 'flex',
+                  flex: 1,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  paddingTop: 20,
+                  color: 'white',
+                }}
+              >
+                {/* 영상이 있거나 시간 초를 썼다면 보내기 */}
+                {blob || number < length ? <span onClick={handleStop}>보내기</span> : ''}
+              </div>
+            </div>
+            <div
+              style={{
+                display: 'flex',
+                flex: 1,
+              }}
+            ></div>
+          </>
+        )}
+      </div>
+      {/* <video playsInline autoPlay muted ref={refVideo} style={{ width: '100%', height: '100%' }} /> */}
       <video playsInline autoPlay muted ref={refVideo} style={{ width: '100%', height: '100%' }} />
     </div>
   );
