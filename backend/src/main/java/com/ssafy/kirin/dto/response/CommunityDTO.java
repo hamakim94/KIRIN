@@ -14,7 +14,6 @@ import java.time.LocalDateTime;
 @ToString
 public class CommunityDTO {
     Long id;
-    String title;
     String content;
     String img;
     LocalDateTime reg;

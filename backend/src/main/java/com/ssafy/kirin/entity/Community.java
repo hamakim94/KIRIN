@@ -18,8 +18,6 @@ public class Community {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    String title;
-
     String content;
 
     String img;

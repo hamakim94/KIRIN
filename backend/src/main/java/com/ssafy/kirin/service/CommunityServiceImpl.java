@@ -72,7 +72,6 @@ public class CommunityServiceImpl implements CommunityService {
         User user = userRepository.getReferenceById(userDTO.getId());
         Community community = Community.builder()
                 .user(user)
-                .title(dto.title())
                 .content(dto.content())
                 .reg(LocalDateTime.now())
                 .build();
