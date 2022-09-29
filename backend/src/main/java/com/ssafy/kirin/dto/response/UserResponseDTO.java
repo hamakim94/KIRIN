@@ -13,4 +13,5 @@ public class UserResponseDTO {
     Long id;
     String nickname;
     String profileImg;
+    String walletAddress;
 }
