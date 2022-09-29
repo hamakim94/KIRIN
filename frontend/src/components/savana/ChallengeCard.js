@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import ReactPlayer from 'react-player';
 import {
   RiZoomInFill,
@@ -11,6 +11,8 @@ import {
 import swal from 'sweetalert';
 import Sheet from 'react-modal-sheet';
 import SavanaComment from './SavanaComment';
+import UseAxios from '../../utils/UseAxios';
+import Context from '../../utils/Context';
 
 function ProgressBar(props) {
   const [value, setValue] = useState(0);
@@ -31,7 +33,7 @@ function ChallengeCard(props) {
   const [hover, setHover] = useState(false);
   const [copied, setCopied] = useState(false);
   const [isOpen, setOpen] = useState(false);
-  const [like, setLike] = useState(false);
+  const [data, setData] = useState(null);
 
   function copy() {
     const el = document.createElement('input');
@@ -44,15 +46,52 @@ function ChallengeCard(props) {
     swal('링크 복사가 완료되었습니다');
   }
 
+  useEffect(() => {
+    if (props.item) {
+      setData(props.item);
+    }
+  }, [props.item]);
+
+  console.log(props.item);
   const likeButtonClick = () => {
-    setLike(!like);
+    if (!data.liked) {
+      UseAxios.post(`/challenges/like?challengeId=${data.challengeId}`, {
+        params: {
+          challengeId: data.challengeId,
+        },
+      })
+        .then((res) => {
+          setData((data) => ({
+            ...data,
+            liked: !data.liked,
+            likeCnt: data.likeCnt + 1,
+          }));
+          console.log('좋아용');
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else if (data.liked) {
+      UseAxios.delete(`/challenges/like?challengeId=${data.challengeId}`, {
+        params: {
+          challengeId: data.challengeId,
+        },
+      })
+        .then((res) => {
+          setData((data) => ({
+            ...data,
+            liked: !data.liked,
+            likeCnt: data.likeCnt - 1,
+          }));
+          console.log('싫어용');
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
   };
 
-  const currentNum = props.item.currentNum;
-  const targetNum = props.item.targetNum;
-  const parcent = currentNum % targetNum;
-
-  return (
+  return data ? (
     <div
       className={props.styles.cardWrapper}
       onMouseOver={() => setHover(true)}
@@ -67,13 +106,13 @@ function ChallengeCard(props) {
           </a>
           <div>
             <a onClick={likeButtonClick}>
-              {like ? (
+              {data.liked ? (
                 <RiHeart2Line className={props.styles.clickIcon}></RiHeart2Line>
               ) : (
                 <RiHeart2Fill className={props.styles.likeIcon}></RiHeart2Fill>
               )}
             </a>
-            <div className={props.styles.iconCount}>{props.item.likeCount}</div>
+            <div className={props.styles.iconCount}>{data.likeCnt}</div>
           </div>
           <div>
             <a onClick={() => setOpen(true)} class="button">
@@ -88,7 +127,7 @@ function ChallengeCard(props) {
                 <Sheet.Backdrop />
               </Sheet>
             </a>
-            <div className={props.styles.iconCount}>{props.item.commentCount}</div>
+            <div className={props.styles.iconCount}>{data.commentCount}</div>
           </div>
           <a>
             <RiShareFill className={props.styles.clickIcon} onClick={copy}></RiShareFill>
@@ -96,12 +135,16 @@ function ChallengeCard(props) {
         </div>
         <div className={props.styles.infoBox}>
           <div className={props.styles.infoTop}>
-            <div className={props.styles.infoTitle}>{props.item.title}</div>
+            <div className={props.styles.infoTitle}>{data.title}</div>
           </div>
-          <ProgressBar styles={props.styles} width={'90vw'} percent={parcent}></ProgressBar>
+          <ProgressBar
+            styles={props.styles}
+            width={'90vw'}
+            percent={data.currentNum / data.targetNum}
+          ></ProgressBar>
           <div className={props.styles.infoBot}>
-            <span className={props.styles.infoText}>{props.item.currentNum}명</span>
-            <span className={props.styles.infoText}>{parcent}%</span>
+            <span className={props.styles.infoText}>{data.currentNum}명</span>
+            <span className={props.styles.infoText}>{data.currentNum / data.targetNum}%</span>
           </div>
         </div>
       </div>
@@ -112,15 +155,16 @@ function ChallengeCard(props) {
             playerVars: { modestbranding: 1, mute: 1 },
           },
         }}
-        url={`${props.item.video}`}
+        url={`${data.video}`}
         width="100%"
         height="100%"
         playing={hover}
-        mute={true}
         controls={false}
         volume={1}
       />
     </div>
+  ) : (
+    ''
   );
 }
 
