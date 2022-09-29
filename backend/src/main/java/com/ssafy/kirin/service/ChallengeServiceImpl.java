@@ -19,8 +19,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.BufferedReader;
@@ -30,10 +33,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -47,6 +47,7 @@ public class ChallengeServiceImpl implements ChallengeService {
     private final NotificationService notificationService;
     private final CelebChallengeInfoRepository celebChallengeInfoRepository;
     private final DonationOrganizationRepository donationOrganizationRepository;
+    private final ChallengeCommentLikeRepository challengeCommentLikeRepository;
     @Value("${property.app.upload-path}")
     private String challengeDir;
 //    @Value("${kirin.stamp}")
@@ -104,6 +105,18 @@ public class ChallengeServiceImpl implements ChallengeService {
 
     @Override
     public List<ChallengeCommentDTO> getChallengeComment(Long challengeId) {
+        UserDTO userDTO = (UserDTO) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(userDTO!=null) {
+            Set<Long> set = challengeCommentLikeRepository.findByUserId(userDTO.getId())
+                    .stream().map(ChallengeCommentLike::getChallengeCommentId).collect(Collectors.toSet());
+
+            return challengeCommentRepository.findByChallengeId(challengeId).stream().map(o -> {
+                ChallengeCommentDTO dto = ChallengeCommentMapStruct.INSTANCE.mapToChallengeCommentDTO(o);
+                dto.setUser(UserMapStruct.INSTANCE.mapToUserDTO(o.getUser()));
+                if(set.contains(o.getId()))dto.setLiked(true);
+                return dto;
+            }).collect(Collectors.toList());
+        }
 
         return challengeCommentRepository.findByChallengeId(challengeId).stream().map(o -> {
             ChallengeCommentDTO dto = ChallengeCommentMapStruct.INSTANCE.mapToChallengeCommentDTO(o);
@@ -171,6 +184,38 @@ public class ChallengeServiceImpl implements ChallengeService {
 
         }
         return null;
+    }
+    @Transactional
+    @Override
+    public void likeChallenge(Long userId, Long challnegeId) {
+        challengeLikeRepository.save(ChallengeLike.builder()
+                .challenge(challengeRepository.getReferenceById(challnegeId))
+                .user(userRepository.getReferenceById(userId))
+                .build()
+        );
+    }
+    @Transactional
+    @Override
+    public void unlikeChallenge(Long userId, Long challnegeId) {
+
+
+        challengeLikeRepository.deleteByUserIdAndChallengeId(userId,challnegeId);
+    }
+    @Transactional
+    @Override
+    public void likeChallnegeComment(Long userId, Long challengeCommentId) {
+        challengeCommentLikeRepository.save(ChallengeCommentLike.builder()
+                                    .challengeCommentId(challengeCommentId)
+                                    .user(userRepository.getReferenceById(userId))
+                                    .build()
+                        );
+    }
+    @Transactional
+    @Override
+    public void unlikeChallnegeComment(Long userId, Long challengeCommentId) {
+
+
+        challengeCommentLikeRepository.deleteByUserIdAndChallengeCommentId(userId,challengeCommentId);
     }
 
     @Scheduled(initialDelay = 1000, fixedRateString = "${challenge.expiration.check-interval}")
@@ -338,6 +383,23 @@ public class ChallengeServiceImpl implements ChallengeService {
     }
 
     public List<ChallengeDTO> challegeListToChallengDTOList(List<Challenge> challengeList){
+
+        UserDTO userDTO = (UserDTO) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(userDTO!=null){
+            Set<Long> challengeIdSet = challengeLikeRepository.findByUserId(userDTO.getId())
+                                .stream().map(o->o.getChallenge().getId())
+                                .collect(Collectors.toSet());
+
+            return challengeList.stream()
+                    .map(o->{
+                        ChallengeDTO dto = this.mapChallengeDTO(o);
+                        if(challengeIdSet.contains(o.getId())) dto.setLiked(true);
+                        return dto;
+                    })
+                    .collect(Collectors.toList());
+
+        }
+
         return challengeList.stream()
                 .map(this::mapChallengeDTO)
                 .collect(Collectors.toList());

@@ -34,7 +34,6 @@ public class NotificationServiceImpl implements NotificationService {
             e.printStackTrace();
         }
         sseEmitters.put(userId, sseEmitter);
-
         sseEmitter.onCompletion(() -> sseEmitters.remove(userId));
         sseEmitter.onTimeout(() -> sseEmitters.remove(userId));
         sseEmitter.onError((e) -> sseEmitters.remove(userId));

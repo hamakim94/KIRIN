@@ -21,4 +21,5 @@ public class CommunityDTO {
     Integer likeCnt;
     Integer commentCnt;
     UserResponseDTO user;
+    Boolean liked;
 }
