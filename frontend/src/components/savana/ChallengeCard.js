@@ -86,12 +86,8 @@ function ChallengeCard(props) {
             </a>
             <div className={props.styles.iconCount}>25</div>
           </div>
-
           <a>
             <RiShareFill className={props.styles.clickIcon} onClick={copy}></RiShareFill>
-          </a>
-          <a href="/donation">
-            <RiBearSmileFill className={props.styles.clickIcon}></RiBearSmileFill>
           </a>
         </div>
         <div className={props.styles.infoBox}>
@@ -112,12 +108,12 @@ function ChallengeCard(props) {
             playerVars: { modestbranding: 1, mute: 1 },
           },
         }}
-        url="https://www.youtube.com/watch?v=fgaLAomg68c"
+        url={`${props.item.video}`}
         width="100%"
         height="100%"
         playing={hover}
         controls={false}
-        loop={true}
+        volume={1}
       />
     </div>
   );

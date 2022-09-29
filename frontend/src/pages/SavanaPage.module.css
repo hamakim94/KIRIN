@@ -28,11 +28,9 @@
   padding-bottom: 25px;
 }
 .cardWrapper {
-  position: relative;
-  width: 100vw;
-  height: calc(100vh - 55px);
-
-  overflow: hidden;
+  width: 100%;
+  height: 100vh;
+  height: calc(100vh-10px);
 }
 .reactPlayer {
   pointer-events: none;
