@@ -240,16 +240,11 @@ public class UserController {
 
     @GetMapping("/find-password")
     @ApiOperation(value = "비밀번호 찾기")
-    public ResponseEntity<?> passwordFind(@ApiIgnore @AuthenticationPrincipal UserDTO user, String email, String name){
-        if(user.getEmail().equals(email) && user.getName().equals(name)){
-            try {
-                userService.findPassword(email, name, passwordEncoder);
-                return new ResponseEntity<>(HttpStatus.OK);
-            } catch (Exception e){
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-            }
-        } else {
-            log.error("해당 유저의 이메일, 이름이 아닙니다.");
+    public ResponseEntity<?> passwordFind(String email, String name){
+        try {
+            userService.findPassword(email, name, passwordEncoder);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }

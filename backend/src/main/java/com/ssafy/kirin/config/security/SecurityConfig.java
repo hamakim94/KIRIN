@@ -18,11 +18,11 @@ public class SecurityConfig {
     private final JwtTokenProvider jwtTokenProvider;
 
     private static final String[] PUBLIC_API_URI = {
-            "/api/challenges","/api/users/signup", "/api/users/login", "/api/users/reissue", "/api/users/duplications/check", "/api/users/confirm-email", "/api/users/check-duplicate/**"
+            "/api/notify/**","/api/challenges","/api/users/signup", "/api/users/login", "/api/users/reissue", "/api/users/duplications/check", "/api/users/confirm-email", "/api/users/find-password", "/api/users/check-duplicate/**"
     };
 
     private static final String[] PUBLIC_WEB_URI = {
-            "/api/notify/**", "/swagger-ui/**", "/swagger-resources/**",
+            "/swagger-ui/**", "/swagger-resources/**",
             "/swagger-ui.html", "/webjars/**", "/swagger/**", "/v3/api-docs"
 //            "/js/**","/css/**","/images/**","/font/**","/html/**"
     };

@@ -18,9 +18,8 @@ public class ChallengeCommentLike {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "challenge_comment_id")
-    ChallengeComment challengeComment;
+    @Column(name = "challenge_comment_id")
+    Long challengeCommentId;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

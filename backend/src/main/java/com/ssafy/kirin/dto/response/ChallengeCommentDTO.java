@@ -21,4 +21,5 @@ public class ChallengeCommentDTO {
     Integer reCommentCnt;
     Integer likeCnt;
     UserResponseDTO user;
+    Boolean liked;
 }

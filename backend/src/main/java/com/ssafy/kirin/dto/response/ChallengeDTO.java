@@ -30,4 +30,5 @@ public class ChallengeDTO {
     Integer targetAmount;
     Integer currentNum;
     Integer currentAmount;
+    Boolean liked;
 }

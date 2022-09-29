@@ -14,11 +14,11 @@ import java.time.LocalDateTime;
 @ToString
 public class CommunityDTO {
     Long id;
-    String title;
     String content;
     String img;
     LocalDateTime reg;
     Integer likeCnt;
     Integer commentCnt;
     UserResponseDTO user;
+    Boolean liked;
 }

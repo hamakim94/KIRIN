@@ -32,4 +32,9 @@ public interface ChallengeService {
     List<ChallengeSelectResponseDTO> selectChallenge();
 
     ChallengeSelectResponseDTO selectOneChallenge(Long challengeId);
+
+    void likeChallenge(Long userId, Long challnegeId);
+    void unlikeChallenge(Long userId, Long challnegeId);
+    void likeChallnegeComment(Long userId, Long challengeCommentId);
+    void unlikeChallnegeComment(Long userId, Long challengeCommentId);
 }

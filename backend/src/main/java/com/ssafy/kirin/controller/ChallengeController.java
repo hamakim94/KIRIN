@@ -74,11 +74,10 @@ public class ChallengeController {
         return ResponseEntity.ok(challengeService.listUserLike(userId));
     }
 
-    @GetMapping("/")
 
-    @PostMapping("/comment/{challengeId}")
+    @PostMapping("/comments")
     @ApiOperation(value = "챌린지 댓글 등록")
-    public ResponseEntity<?> challengeCommentWrite(@PathVariable("challengeId") Long challengeId,
+    public ResponseEntity<?> challengeCommentWrite(@RequestParam("challengeId") Long challengeId,
                                                    @ApiIgnore @AuthenticationPrincipal UserDTO userDTO,
                                                    @RequestBody ChallengeCommentRequestDTO challengeCommentRequestDTO){
 
@@ -87,9 +86,9 @@ public class ChallengeController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/comment/{challengeId}")
-    @ApiOperation(value = "챌린지 댓글")
-    public ResponseEntity<List<ChallengeCommentDTO>> challengeCommentList(@PathVariable("challengeId") Long challengeId){
+    @GetMapping("/comments")
+    @ApiOperation(value = "챌린지 댓글 목록")
+    public ResponseEntity<List<ChallengeCommentDTO>> challengeCommentList(@RequestParam Long challengeId){
 
         return ResponseEntity.ok(challengeService.getChallengeComment(challengeId));
     }
@@ -135,5 +134,32 @@ public class ChallengeController {
     public ResponseEntity<ChallengeSelectResponseDTO> challengeSelectOne(@PathVariable Long challengeId){
 
         return ResponseEntity.ok(challengeService.selectOneChallenge(challengeId));
+    }
+
+    @PostMapping("/like")
+    @ApiOperation(value = "챌린지 좋아요")
+    public ResponseEntity<?> challengeLike(@AuthenticationPrincipal UserDTO userDTO, @RequestParam Long challengeId){
+        challengeService.likeChallenge(userDTO.getId(), challengeId);
+        return ResponseEntity.ok().build();
+    }
+    @DeleteMapping("/like")
+    @ApiOperation(value = "챌린지 좋아요 취소")
+    public ResponseEntity<?> challengeunLike(@AuthenticationPrincipal UserDTO userDTO, @RequestParam Long challengeId){
+        challengeService.unlikeChallenge(userDTO.getId(), challengeId);
+        return ResponseEntity.ok().build();
+    }
+    @PostMapping("/comments/{commentId}")
+    @ApiOperation(value = "챌린지 댓글 좋아요")
+    public ResponseEntity<?> challengeCommentLike(@AuthenticationPrincipal UserDTO userDTO,
+                                                  @PathVariable Long commentId){
+        challengeService.likeChallnegeComment(userDTO.getId(), commentId);
+        return ResponseEntity.ok().build();
+    }
+    @DeleteMapping("/comments/{commentId}")
+    @ApiOperation(value = "챌린지 댓글 좋아요 취소")
+    public ResponseEntity<?> challengeCommentunLike(@AuthenticationPrincipal UserDTO userDTO,
+                                                    @PathVariable Long commentId){
+        challengeService.unlikeChallnegeComment(userDTO.getId(), commentId);
+        return ResponseEntity.ok().build();
     }
 }
