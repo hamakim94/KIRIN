@@ -93,6 +93,13 @@ public class ChallengeController {
         return ResponseEntity.ok(challengeService.getChallengeComment(challengeId));
     }
 
+    @GetMapping("/comments/{commentId}")
+    @ApiOperation(value = "챌린지 대댓글 목록")
+    public ResponseEntity<List<ChallengeCommentDTO>> challengeRecommentList(@ApiIgnore @AuthenticationPrincipal UserDTO userDTO, @PathVariable Long commentId){
+
+        return ResponseEntity.ok(challengeService.getChallengeRecomment(userDTO.getId(), commentId));
+    }
+
 
     @PostMapping("")
     @ApiOperation(value = "챌린지 등록")

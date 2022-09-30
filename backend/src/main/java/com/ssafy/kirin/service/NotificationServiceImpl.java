@@ -51,6 +51,7 @@ public class NotificationServiceImpl implements NotificationService {
     @Override
     public void addNotification(Notification notification) {
         User user = userRepository.getReferenceById(notification.getUserId());
+
         notificationRepository.save(notification);
 
         if(sseEmitters.containsKey(user.getId())){
