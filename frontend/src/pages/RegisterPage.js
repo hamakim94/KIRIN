@@ -18,6 +18,7 @@ function RegisterPage() {
   const [title, setTitle] = useState(null);
   const [amount, setAmount] = useState(null);
   const { blob, setBlob } = useContext(Context);
+  const [check, setCheck] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -106,6 +107,7 @@ function RegisterPage() {
     }
   }, [blob]);
   const handleSubmit = (e) => {
+    setCheck(true);
     e.preventDefault();
     let body = {
       challengeId: location.state.id,
@@ -134,6 +136,7 @@ function RegisterPage() {
       })
       .catch((err) => {
         console.log(err);
+        setCheck(false);
       });
   };
   if (blob) console.log(URL.createObjectURL(blob));
@@ -194,6 +197,7 @@ function RegisterPage() {
             variant='contained'
             size='medium'
             className={styles.Btn}
+            disabled={check}
             style={{ height: 30, backgroundColor: title ? '#ffd046' : '#d2d2d2' }}
           >
             업로드

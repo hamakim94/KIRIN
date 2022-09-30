@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import ReactPlayer from 'react-player';
+import ReactPlayer from 'react-player/lazy';
 
 function ProgressBar(props) {
   const [value, setValue] = useState(0);
@@ -38,16 +38,13 @@ function ChallengeCard(props) {
       </div>
       <ReactPlayer
         className={props.styles.reactPlayer}
-        config={{
-          youtube: {
-            playerVars: { modestbranding: 1, mute: 1 },
-          },
-        }}
-        url={`${props.item.video}`}
-        width='100%'
-        height='100%'
+        height={256}
+        width={144}
+        url={`/files/${props.item.video}`}
+        fallback={<div>로딩</div>}
         playing={hover}
         controls={false}
+        playsinline
         volume={0}
       />
     </div>

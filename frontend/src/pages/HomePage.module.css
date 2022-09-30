@@ -97,8 +97,10 @@
   border-style: solid;
   overflow: hidden;
 }
-.reactPlayer {
+
+.reactPlayer > video {
   pointer-events: none;
+  object-fit: fill;
 }
 
 .infoTop {

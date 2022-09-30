@@ -32,7 +32,7 @@ function StarCreatePage() {
       title: title.trim(),
       info: info.trim(),
       musicTitle: musicTitle.trim(),
-      length: 3.0,
+      length: videoRef.current.duration.toFixed(1),
       startDate,
       endDate,
       targetNum,
@@ -184,6 +184,7 @@ function StarCreatePage() {
           src={URL.createObjectURL(video)}
           height={'100%'}
           width={'100%'}
+          styles={{ objectFit: 'contain' }}
         ></video>
       ) : (
         ''
