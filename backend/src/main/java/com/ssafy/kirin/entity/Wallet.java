@@ -5,6 +5,7 @@ import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 
 @Entity
 @Getter
@@ -27,4 +28,11 @@ public class Wallet {
 
     @Column(name = "private_key")
     String privateKey;
+
+    public void addCash(int amount) {
+        cash = cash.add(BigDecimal.valueOf(amount));
+    }
+    public void subCash(int amount) {
+        cash = cash.subtract(BigDecimal.valueOf(amount));
+    }
 }
