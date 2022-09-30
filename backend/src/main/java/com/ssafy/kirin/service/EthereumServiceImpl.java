@@ -56,7 +56,7 @@ public class EthereumServiceImpl implements EthereumService {
     }
 
     @Override
-    public StarChallengeDTO createFundContract(User user, int amount, BigInteger startTime, BigInteger endTime, BigInteger targetNum, String beneficiary) throws Exception {
+    public StarChallengeDTO createFundContract(User user, long amount, BigInteger startTime, BigInteger endTime, BigInteger targetNum, String beneficiary) throws Exception {
         Credentials credentials = web3jUtil.getCredentials(user.getWallet().getPrivateKey());
         TransactionManager transactionManager = new RawTransactionManager(
                 web3j, credentials, 97889218, 300, 100L);
@@ -113,7 +113,7 @@ public class EthereumServiceImpl implements EthereumService {
         walletRepository.save(user.getWallet());
     }
     @Override
-    public String fundToken(User user, String fundContract, int amount) throws Exception {
+    public String fundToken(User user, String fundContract, long amount) throws Exception {
         Credentials credentials = web3jUtil.getCredentials(user.getWallet().getPrivateKey());
         gasCheck((credentials));
         TransactionManager transactionManager = new RawTransactionManager(web3j, credentials, 97889218, 300, 100L);
@@ -169,7 +169,7 @@ public class EthereumServiceImpl implements EthereumService {
         return newWallet;
     }
 
-    private Transaction transferToken(Credentials fromCredentials, String toAddress, int amount) throws Exception {
+    private Transaction transferToken(Credentials fromCredentials, String toAddress, long amount) throws Exception {
         ContractGasProvider gasProvider = new DefaultGasProvider();
         TransactionManager transactionManager = new RawTransactionManager(web3j, fromCredentials, 97889218, 300, 100L);
         IERC20 ierc20 = IERC20.load(TOKENCONTRACTADDRESS, web3j, transactionManager, gasProvider);
