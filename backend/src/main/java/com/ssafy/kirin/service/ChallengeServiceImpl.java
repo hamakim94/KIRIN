@@ -168,7 +168,7 @@ public class ChallengeServiceImpl implements ChallengeService {
 
         // 챌린지 게시자에게 알림
         notificationService.addNotification(Notification.builder().userId(challenge.getUser().getId())
-                .event(String.format(NotificationEnum.CommentAdded.getContent(), challenge.getTitle(), user.getNickname()))
+                .event(String.format(NotificationEnum.ChallengeCommentAdded.getContent(), challenge.getTitle(), user.getNickname()))
                 .challenge(challenge).challengeComment(challengeComment).build());
 
         if (dto.parentId() != 0) { // 대댓글 등록시
@@ -398,6 +398,7 @@ public class ChallengeServiceImpl implements ChallengeService {
             throw new RuntimeException(e);
         }
     }
+
     @Transactional
     @Override
     public void createStarChallenge(UserDTO userDTO, StarChallengeRequestDTO starChallengeRequestDTO, MultipartFile video) {

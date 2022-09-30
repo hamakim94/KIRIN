@@ -35,6 +35,7 @@ public class CommunityServiceImpl implements CommunityService {
     private final CommunityCommentLikeRepository communityCommentLikeRepository;
     private final UserRepository userRepository;
     private final NotificationService notificationService;
+    private final SubscribeRepository subscribeRepository;
     @Value("${property.app.upload-path}")
     private String communityImageDirectory;
 
@@ -86,6 +87,10 @@ public class CommunityServiceImpl implements CommunityService {
             Files.copy(image.getInputStream(),dir);
             community.setImg(fileName);
         }
+        subscribeRepository.findByCelebId(userDTO.getId())
+                .stream().forEach(o->notificationService.addNotification(Notification.builder().userId(o.getUserId()).community(community)
+                        .event(String.format(NotificationEnum.CommunityUpload.getContent(), user.getNickname())).build()));
+
     }
 
     @Override
