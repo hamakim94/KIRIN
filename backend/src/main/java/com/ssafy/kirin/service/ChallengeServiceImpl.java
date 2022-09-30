@@ -56,7 +56,7 @@ public class ChallengeServiceImpl implements ChallengeService {
     @Value("${property.app.upload-path}")
     private String challengeDir;
 //    @Value("${kirin.stamp}")
-    private final String kirinStamp = "/files/bd363c62-476d-4c29-aed6-8a5346fb41bfstamp.png";
+    private final String kirinStamp = "C:/Users/dlwot/Desktop/Project/logo/kirin.png";
 
     @Override
     public List<ChallengeDTO> listStarsByPopularity() {
@@ -252,7 +252,6 @@ public class ChallengeServiceImpl implements ChallengeService {
     public void createChallenge(UserDTO userDTO, ChallengeRequestDTO challengeRequestDTO, MultipartFile video) throws IOException {
         try {
             StringBuilder sb = new StringBuilder();
-            String line;
             User user = userRepository.getReferenceById(userDTO.getId());
             //토큰 잔액 확인
             if (ethereumService.getTokenAmount(user)<challengeRequestDTO.amount()) throw new Exception();
@@ -270,10 +269,22 @@ public class ChallengeServiceImpl implements ChallengeService {
             String thumbDir = UUID.randomUUID()+".gif";
             String commandExtractThumbnail = String.format("ffmpeg -y -ss 2 -t 2 -i %s -r 10 -loop 0 %s", videoTmpDir,(challengeDir+thumbDir));
             Process p = Runtime.getRuntime().exec(commandExtractThumbnail);
+            String line;
+            sb = new StringBuilder();
+            BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
+//            System.out.println(5);
+//            while ((line=br.readLine())!=null) {
+//                System.out.println(line);
+//                sb.append(line+"\n");
+//            }
+            br = new BufferedReader(new InputStreamReader(p.getErrorStream()));
+            while ((line=br.readLine())!=null) sb.append(line+"\n");
             p.waitFor();
             // wegM to MP4
             String mp4File = UUID.randomUUID() + ".mp4";
             p=Runtime.getRuntime().exec(String.format("ffmpeg -y -i %s %s",videoTmpDir,(challengeDir+mp4File)));
+            br = new BufferedReader(new InputStreamReader(p.getErrorStream()));
+            while ((line=br.readLine())!=null) sb.append(line+"\n");
             p.waitFor();
             // insert Watermark
 //            String watermarkedVideo = UUID.randomUUID() + ".mp4";
@@ -296,7 +307,7 @@ public class ChallengeServiceImpl implements ChallengeService {
             sb.append("command for inserting music : \n" + commandInsertMusic+"\n");
             sb.append(LocalDateTime.now()+"\n");
             p = Runtime.getRuntime().exec(commandInsertMusic);
-            BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            br = new BufferedReader(new InputStreamReader(p.getInputStream()));
             while ((line=br.readLine())!=null) sb.append(line+"\n");
             br = new BufferedReader(new InputStreamReader(p.getErrorStream()));
             while ((line=br.readLine())!=null) sb.append(line+"\n");
@@ -358,23 +369,48 @@ public class ChallengeServiceImpl implements ChallengeService {
             String thumbDir = UUID.randomUUID()+".gif";
             String commandExtractThumbnail = String.format("ffmpeg -y -ss 2 -t 2 -i %s -r 10 -loop 0 %s", videoTmpDir,challengeDir+thumbDir);
             Process p = Runtime.getRuntime().exec(commandExtractThumbnail);
+            String line;
+            StringBuilder sb = new StringBuilder();
+            BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
+//            System.out.println(5);
+//            while ((line=br.readLine())!=null) {
+//                System.out.println(line);
+//                sb.append(line+"\n");
+//            }
+            br = new BufferedReader(new InputStreamReader(p.getErrorStream()));
+            while ((line=br.readLine())!=null) sb.append(line+"\n");
+//            System.out.println(sb.toString());
+//            System.out.println(9);
             p.waitFor();
+            System.out.println(10);
+
             //extract music
-            String musicDir = UUID.randomUUID()+".ogg";
+            String musicDir = UUID.randomUUID()+".mp3";
+            System.out.println(1);
             String commandExtractMusic = String.format("ffmpeg -i %s -q:a 0 -map a %s",videoTmpDir,challengeDir+musicDir);
+            System.out.println(2);
             p = Runtime.getRuntime().exec(commandExtractMusic);
+            System.out.println(3);
             p.waitFor();
+            System.out.println(4);
             // insert watermark
             String videoDir = UUID.randomUUID()+videoExt;
+            System.out.println(5);
             String commandWatermark = String.format("ffmpeg -y -i %s -i %s -filter_complex [1][0]scale2ref=w=oh*mdar:h=ih*0.08[logo][video];[logo]format=argb,geq=r='r(X,Y)':a='0.8*alpha(X,Y)'[soo];[video][soo]overlay=30:30 %s",
                     videoTmpDir, kirinStamp, challengeDir+videoDir);
+            System.out.println(6);
             p = Runtime.getRuntime().exec(commandWatermark);
-            BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
-            String line;
+            System.out.println(7);
+            br = new BufferedReader(new InputStreamReader(p.getErrorStream()));
+            System.out.println(8);
+//            String line;
             while((line =br.readLine())!=null) System.out.println(line);
+            System.out.println(9);
             p.waitFor();
+            System.out.println(10);
             //delete original videoFile
             Files.delete(videoTmp);
+            System.out.println(11);
 
             //Contract 생성 및 토큰 전송, 트랜잭션 저장
             ChallengeContract challengeContract = ethereumService.createFundContract(
