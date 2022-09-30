@@ -1,6 +1,7 @@
 package com.ssafy.kirin.controller;
 
 import com.ssafy.kirin.dto.UserDTO;
+import com.ssafy.kirin.dto.response.TransactionDTO;
 import com.ssafy.kirin.service.EthereumService;
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,7 @@ import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.List;
 
 @Slf4j
 @Api(value = "모금 API",tags = {"모금 API"})
@@ -34,6 +36,25 @@ public class FundController {
         }
         return new ResponseEntity<>(HttpStatus.OK);
     }
+    @GetMapping("/transactions")
+    public ResponseEntity<?> getTransactions() {
+        List<TransactionDTO> list;
+        try {
+            list = ethereumService.getTransactions();
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(list, HttpStatus.OK);
+    }
+//    @GetMapping("/makeWallet")
+//    public ResponseEntity<?> makeWallet() {
+//        try {
+//            ethereumService.createWallet();
+//        } catch (Exception e) {
+//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//        }
+//        return new ResponseEntity<>(HttpStatus.OK);
+//    }
 
 
 }
