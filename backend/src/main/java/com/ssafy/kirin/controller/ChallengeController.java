@@ -42,6 +42,7 @@ public class ChallengeController {
             case "stars" -> switch (order){
                 case "popularity" -> challengeService.listStarsByPopularity();
                 case "latest" -> challengeService.listStarsByLatest();
+                case "random" -> challengeService.listStarsByRandom();
                 default -> new ArrayList<>();
                 };
             case "general" -> switch (order){
@@ -91,6 +92,13 @@ public class ChallengeController {
     public ResponseEntity<List<ChallengeCommentDTO>> challengeCommentList(@RequestParam Long challengeId){
 
         return ResponseEntity.ok(challengeService.getChallengeComment(challengeId));
+    }
+
+    @GetMapping("/comments/{commentId}")
+    @ApiOperation(value = "챌린지 대댓글 목록")
+    public ResponseEntity<List<ChallengeCommentDTO>> challengeRecommentList(@ApiIgnore @AuthenticationPrincipal UserDTO userDTO, @PathVariable Long commentId){
+
+        return ResponseEntity.ok(challengeService.getChallengeRecomment(userDTO.getId(), commentId));
     }
 
 

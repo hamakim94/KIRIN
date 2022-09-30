@@ -3,7 +3,6 @@ package com.ssafy.kirin.service;
 import com.ssafy.kirin.dto.UserDTO;
 import com.ssafy.kirin.dto.request.CommunityCommentRequestDTO;
 import com.ssafy.kirin.dto.request.CommunityRequestDTO;
-import com.ssafy.kirin.dto.response.ChallengeCommentDTO;
 import com.ssafy.kirin.dto.response.CommunityCommentDTO;
 import com.ssafy.kirin.dto.response.CommunityDTO;
 import com.ssafy.kirin.dto.response.CommunityResponseDTO;
@@ -33,7 +32,7 @@ public class CommunityServiceImpl implements CommunityService {
     private final CommunityRepository communityRepository;
     private final CommunityCommentRepository communityCommentRepository;
     private final CommunityLikeRepository communityLikeRepository;
-    private final CommunityCommnetLikeRepository communityCommentLikeRepository;
+    private final CommunityCommentLikeRepository communityCommentLikeRepository;
     private final UserRepository userRepository;
     private final NotificationService notificationService;
     @Value("${property.app.upload-path}")
@@ -101,7 +100,7 @@ public class CommunityServiceImpl implements CommunityService {
             Set<Long> commentLikeSet = communityCommentLikeRepository.findByUserId(userDTO.getId())
                     .stream().map(CommunityCommentLike::getCommunityCommentId).collect(Collectors.toSet());
 
-            return  new CommunityResponseDTO(communityDTO,
+            return new CommunityResponseDTO(communityDTO,
                     communityCommentRepository.findByCommunityId(boardId).stream().map(o->{
                         CommunityCommentDTO dto = CommunityCommentMapStruct.INSTANCE.mapToCommunityCommentDTO(o);
                         dto.setUser(UserMapStruct.INSTANCE.mapToUserDTO(o.getUser()));
@@ -135,6 +134,37 @@ public class CommunityServiceImpl implements CommunityService {
 
         return true;
     }
+
+    @Override
+    public List<CommunityCommentDTO> getCommunityComment(Long userId, Long communityId) {
+        Set<Long> set = communityCommentLikeRepository.findByUserId(userId) // 본인이 좋아요 했는지 여부
+                .stream().map(CommunityCommentLike::getCommunityCommentId).collect(Collectors.toSet());
+
+        return communityCommentRepository.findByCommunityId(communityId).stream().map(o -> {
+            CommunityCommentDTO dto = CommunityCommentMapStruct.INSTANCE.mapToCommunityCommentDTO(o);
+            dto.setUser(UserMapStruct.INSTANCE.mapToUserDTO(o.getUser()));
+
+            if(set.contains(o.getId())) dto.setLiked(true);
+
+            return dto;
+        }).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<CommunityCommentDTO> getCommunityRecomment(Long userId, Long commentId) {
+        Set<Long> set = communityCommentLikeRepository.findByUserId(userId) // 본인이 좋아요 했는지 여부
+                .stream().map(CommunityCommentLike::getCommunityCommentId).collect(Collectors.toSet());
+
+        return communityCommentRepository.findByParentId(commentId).stream().map(o -> {
+            CommunityCommentDTO dto = CommunityCommentMapStruct.INSTANCE.mapToCommunityCommentDTO(o);
+            dto.setUser(UserMapStruct.INSTANCE.mapToUserDTO(o.getUser()));
+
+            if(set.contains(o.getId())) dto.setLiked(true);
+
+            return dto;
+        }).collect(Collectors.toList());
+    }
+
     @Override
     @Transactional
     public void writeComment(long userId, long communityId, CommunityCommentRequestDTO dto) {
@@ -142,21 +172,27 @@ public class CommunityServiceImpl implements CommunityService {
         User user = userRepository.getReferenceById(userId);
 
         CommunityComment communityComment = CommunityComment.builder()
-                .content(dto.content()).reg(LocalDateTime.now())
-                .communityId(communityId).user(user).parentId(dto.parentId())
-                .isComment(dto.isComment())
+                .content(dto.content())
+                .reg(LocalDateTime.now())
+                .communityId(communityId)
+                .user(user)
+                .parentId(dto.parentId())
                 .build();
-        // 댓글 게시자에게 알림
-        if(dto.parentId()!=null&&dto.parentId()>0){
-            communityComment.setParentId(dto.parentId());
 
+        communityCommentRepository.save(communityComment);
+
+        // 댓글 게시자에게 알림
+        if(dto.parentId() != 0){ // 대댓글 작성인 경우
             Community community = communityRepository.getReferenceById(communityId);
+
             Notification notification = Notification.builder().community(community)
                     .communityComment(communityComment).userId(community.getUser().getId())
                     .event(String.format(NotificationEnum.CommentReplied.getContent(), user.getNickname()))
                     .build();
+
             notificationService.addNotification(notification);
-            //대댓글 게시자에게 알림
+
+            // 대댓글 게시자에게 알림
             List<Long> list = communityCommentRepository.findByParentId(dto.parentId()).stream()
                     .map(o-> o.getUser().getId()).collect(Collectors.toSet()).stream().toList();
 
@@ -168,9 +204,6 @@ public class CommunityServiceImpl implements CommunityService {
                             .build());
             }
         }
-
-
-        communityCommentRepository.save(communityComment);
     }
 
     @Override

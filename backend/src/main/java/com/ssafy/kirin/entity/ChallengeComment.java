@@ -21,9 +21,6 @@ public class ChallengeComment {
     String content;
     LocalDateTime reg;
 
-    @Column(name = "is_comment")
-    Boolean isComment;
-
     @Column(name = "parent_id")
     Long parentId;
 

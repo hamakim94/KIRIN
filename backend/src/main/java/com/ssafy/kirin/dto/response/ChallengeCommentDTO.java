@@ -15,7 +15,6 @@ public class ChallengeCommentDTO {
     Long id;
     String content;
     LocalDateTime reg;
-    Boolean isComment;
     Long parentId;
     Long challengeId;
     Integer reCommentCnt;
