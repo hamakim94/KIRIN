@@ -16,7 +16,7 @@ function RegisterPage() {
   const [length, setLength] = useState(null);
   const [tip, setTip] = useState('비디오를 누를 시 영상이 재생됩니다.');
   const [title, setTitle] = useState(null);
-  const [amount, setAmount] = useState(null);
+  const [amount, setAmount] = useState(0);
   const { blob, setBlob } = useContext(Context);
   const [check, setCheck] = useState(false);
   const location = useLocation();
@@ -112,6 +112,7 @@ function RegisterPage() {
     let body = {
       challengeId: location.state.id,
       title: title.trim(),
+      amount,
     };
     function uuidv4() {
       return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
