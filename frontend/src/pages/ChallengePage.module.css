@@ -173,3 +173,7 @@ hr {
   flex-direction: row;
   justify-content: space-between;
 }
+.reactPlayer > video {
+  pointer-events: none;
+  object-fit: fill;
+}

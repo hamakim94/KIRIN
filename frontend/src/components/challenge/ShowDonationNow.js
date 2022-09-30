@@ -1,14 +1,23 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import UseAxios from '../../utils/UseAxios';
 
 function ShowDonationNow(props) {
+  const [challenges, setChallenges] = useState([]);
+
+  useEffect(() => {
+    UseAxios.get(`/challenges/star`, { params: { challengeId: props.data.challengeId } }).then(
+      (res) => {
+        setChallenges(res.data);
+        console.log(props.data);
+      }
+    );
+  }, []);
+
   return (
     <div className={props.styles.nowTop}>
       <div className={props.styles.nowList}>
         <div className={props.styles.medalBox}>
-          <img
-            className={props.styles.nowImg}
-            src="https://mblogthumb-phinf.pstatic.net/20120604_42/shwbsmbe_13388133572436P5qK_JPEG/naver_com_20120604_161317.jpg?type=w2"
-          ></img>
+          <img className={props.styles.nowImg} src={props.data.profileImg}></img>
 
           <div className={props.styles.nameTocken}>
             <div>임나연 채고</div>
