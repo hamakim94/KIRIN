@@ -24,6 +24,9 @@ function MyPage() {
       <button onClick={() => navigate(`/create/deploy`)} className={styles.myWallet}>
         컨트랙트 배포하기
       </button>
+      <button onClick={() => navigate(`/create`)} className={styles.myWallet}>
+        등록하기
+      </button>
     </div>
   );
 }

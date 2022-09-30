@@ -3,6 +3,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { ko } from 'date-fns/esm/locale';
 import UseAxios from '../utils/UseAxios';
+import WalletModal from '../components/wallet/WalletModal';
 
 function StarCreatePage() {
   const videoRef = useRef(null);
@@ -16,8 +17,9 @@ function StarCreatePage() {
   const [targetNum, setTargetNum] = useState(null);
   const [targetAmount, setTargetAmount] = useState(null);
   const [buttonDisable, setButtonDisable] = useState(false);
+  const [token, setToken] = useState(null);
   //state 하나 만들어 : disalble
-
+  console.log(token);
   const onChangeVideo = (e) => {
     if (e.target.files[0]) {
       setVideo(e.target.files[0]);
@@ -177,6 +179,7 @@ function StarCreatePage() {
           업로드
         </button>
       </form>
+      <WalletModal setData={setToken} buttonTitle={'내 지갑'}></WalletModal>
       {video ? (
         <video
           ref={videoRef}
