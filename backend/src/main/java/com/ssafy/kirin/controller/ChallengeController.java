@@ -6,13 +6,9 @@ import com.ssafy.kirin.dto.request.ChallengeRequestDTO;
 import com.ssafy.kirin.dto.request.StarChallengeRequestDTO;
 import com.ssafy.kirin.dto.response.ChallengeCommentDTO;
 import com.ssafy.kirin.dto.response.ChallengeDTO;
+import com.ssafy.kirin.dto.response.ChallengeDetailDTO;
 import com.ssafy.kirin.dto.response.ChallengeSelectResponseDTO;
-import com.ssafy.kirin.entity.CelebChallengeInfo;
-import com.ssafy.kirin.entity.Challenge;
-import com.ssafy.kirin.entity.ChallengeComment;
 import com.ssafy.kirin.service.ChallengeService;
-import com.ssafy.kirin.util.ChallengeMapStruct;
-import com.ssafy.kirin.util.UserMapStruct;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +21,6 @@ import springfox.documentation.annotations.ApiIgnore;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Api(value = "챌린지 API",tags = {"챌린지 API"})
 @RestController
@@ -130,9 +125,14 @@ public class ChallengeController {
 
     }
 
-//    @GetMapping("/star")
-//    @ApiOperation(value = "스타 챌린지 정보")
-//    public ResponseEntity<?> startChallengeInfo(@)
+    @GetMapping("/star")
+    @ApiOperation(value = "스타 챌린지 상세정보")
+    public ResponseEntity<ChallengeDetailDTO> ChallengeDetail(@RequestParam Long challengeId){
+
+
+
+        return ResponseEntity.ok(challengeService.getChallengeDetail(challengeId));
+    }
 
     @GetMapping("/select")
     @ApiOperation(value = "진행 중 챌린지 목록 조회 - 등록용")
@@ -174,4 +174,5 @@ public class ChallengeController {
         challengeService.unlikeChallnegeComment(userDTO.getId(), commentId);
         return ResponseEntity.ok().build();
     }
+
 }

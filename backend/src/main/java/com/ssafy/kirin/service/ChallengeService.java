@@ -6,6 +6,7 @@ import com.ssafy.kirin.dto.request.ChallengeCommentRequestDTO;
 import com.ssafy.kirin.dto.request.StarChallengeRequestDTO;
 import com.ssafy.kirin.dto.response.ChallengeCommentDTO;
 import com.ssafy.kirin.dto.response.ChallengeDTO;
+import com.ssafy.kirin.dto.response.ChallengeDetailDTO;
 import com.ssafy.kirin.dto.response.ChallengeSelectResponseDTO;
 import com.ssafy.kirin.entity.Challenge;
 import com.ssafy.kirin.entity.User;
@@ -39,4 +40,6 @@ public interface ChallengeService {
     void unlikeChallenge(Long userId, Long challnegeId);
     void likeChallnegeComment(Long userId, Long challengeCommentId);
     void unlikeChallnegeComment(Long userId, Long challengeCommentId);
+
+    ChallengeDetailDTO getChallengeDetail(Long challengeId);
 }

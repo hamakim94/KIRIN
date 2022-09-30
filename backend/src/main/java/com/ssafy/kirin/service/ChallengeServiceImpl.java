@@ -5,9 +5,7 @@ import com.ssafy.kirin.dto.UserDTO;
 import com.ssafy.kirin.dto.request.ChallengeRequestDTO;
 import com.ssafy.kirin.dto.request.ChallengeCommentRequestDTO;
 import com.ssafy.kirin.dto.request.StarChallengeRequestDTO;
-import com.ssafy.kirin.dto.response.ChallengeCommentDTO;
-import com.ssafy.kirin.dto.response.ChallengeDTO;
-import com.ssafy.kirin.dto.response.ChallengeSelectResponseDTO;
+import com.ssafy.kirin.dto.response.*;
 import com.ssafy.kirin.entity.*;
 import com.ssafy.kirin.repository.*;
 import com.ssafy.kirin.entity.User;
@@ -247,6 +245,23 @@ public class ChallengeServiceImpl implements ChallengeService {
 
 
         challengeCommentLikeRepository.deleteByUserIdAndChallengeCommentId(userId,challengeCommentId);
+    }
+
+    @Override
+    public ChallengeDetailDTO getChallengeDetail(Long challengeId) {
+
+        boolean existsChallenge = challengeRepository.existsById(challengeId);
+        if(existsChallenge){
+
+            CelebChallengeInfo celebChallengeInfo = celebChallengeInfoRepository.findByChallengeId(challengeId);
+            List<DonationDTO> donationList = donationRepository.findByChallenge_challengeId(challengeId)
+                    .stream().sorted((o1, o2) -> o2.getAmount()-o1.getAmount())
+                    .map(d->new DonationDTO(d.getAmount(),d.getChallenge().getUser().getNickname())).collect(Collectors.toList());
+            return new ChallengeDetailDTO(celebChallengeInfo.getInfo(),donationList,celebChallengeInfo.getDonationOrganization().getName(),
+                    celebChallengeInfo.getStartDate(), celebChallengeInfo.getEndDate(), celebChallengeInfo.getTargetAmount(),
+                    celebChallengeInfo.getTargetNum(), celebChallengeInfo.getCurrentNum(), celebChallengeInfo.getCurrentAmount());
+        }else return null;
+
     }
 
     @Scheduled(initialDelay = 1000, fixedRateString = "${challenge.expiration.check-interval}")
