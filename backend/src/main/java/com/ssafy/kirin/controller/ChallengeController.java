@@ -37,7 +37,7 @@ public class ChallengeController {
     @GetMapping("")
     @ApiOperation(value = "챌린지 리스트")
     public ResponseEntity<List<ChallengeDTO>> challengeList(@RequestParam(name = "scope",required = false, defaultValue = "") String scope, @RequestParam(name = "order",required = false, defaultValue = "") String order,
-                                                            @RequestParam(name = "userid", required = false, defaultValue = "0") Long userId, @RequestParam(name = "challengeid", required = false,defaultValue = "0") Long challengeId){
+                                                            @RequestParam(name = "userId", required = false, defaultValue = "0") Long userId, @RequestParam(name = "challengeId", required = false,defaultValue = "0") Long challengeId){
         List<ChallengeDTO> list = switch (scope){
             case "stars" -> switch (order){
                 case "popularity" -> challengeService.listStarsByPopularity();
@@ -121,6 +121,10 @@ public class ChallengeController {
         return ResponseEntity.ok().build();
 
     }
+
+//    @GetMapping("/star")
+//    @ApiOperation(value = "스타 챌린지 정보")
+//    public ResponseEntity<?> startChallengeInfo(@)
 
     @GetMapping("/select")
     @ApiOperation(value = "진행 중 챌린지 목록 조회 - 등록용")

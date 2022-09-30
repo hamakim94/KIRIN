@@ -26,24 +26,31 @@ public class NotificationServiceImpl implements NotificationService {
     private final CommunityCommentRepository communityCommentRepository;
     @Override
     public SseEmitter subscribe(Long userId) {
+        System.out.println("subscribe accepted for userID : " + userId);
         SseEmitter sseEmitter = new SseEmitter(Long.MAX_VALUE);
+        System.out.println("new sseEmitter created");
+        sseEmitters.put(userId, sseEmitter);
+        System.out.println("new sseEmitter inserted to map");
         try {
             // 연결!!
             sseEmitter.send(SseEmitter.event().name("connect"));
+            System.out.println("event.connect sent");
+            List<Notification> list = notificationRepository.findByUserIdAndIsRead(userId, false);
+            try {
+                sseEmitter.send(list);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        sseEmitters.put(userId, sseEmitter);
         sseEmitter.onCompletion(() -> sseEmitters.remove(userId));
+        System.out.println("SseEmitter on completion");
         sseEmitter.onTimeout(() -> sseEmitters.remove(userId));
+        System.out.println("SseEmitter on Timeout");
         sseEmitter.onError((e) -> sseEmitters.remove(userId));
+        System.out.println("SseEmitter on Error");
 
-        List<Notification> list = notificationRepository.findByUserIdAndIsRead(userId, false);
-        try {
-            sseEmitter.send(list);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
         return sseEmitter;
     }
 
