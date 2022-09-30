@@ -301,9 +301,6 @@ public class ChallengeServiceImpl implements ChallengeService {
             User user = userRepository.getReferenceById(userDTO.getId());
             //토큰 잔액 확인
             if (ethereumService.getTokenAmount(user)<challengeRequestDTO.amount()) throw new Exception();
-            System.out.println("I'm in create challenge");
-            System.out.println("---------------------------------------------");
-            System.out.println(LocalDateTime.now());
             // 원 챌린지 음악과 이미지 저장경로
             Challenge forChallenge = challengeRepository.getReferenceById(challengeRequestDTO.challengeId());
             CelebChallengeInfo celebChallengeInfo = celebChallengeInfoRepository.findByChallengeId(forChallenge.getId());
@@ -317,22 +314,15 @@ public class ChallengeServiceImpl implements ChallengeService {
             String thumbDir = UUID.randomUUID()+".gif";
             String commandExtractThumbnail = String.format("ffmpeg -y -ss 2 -t 2 -i %s -r 10 -loop 0 %s", videoTmpDir,(challengeDir+thumbDir));
             Process p = Runtime.getRuntime().exec(commandExtractThumbnail);
-            String line;
-            sb = new StringBuilder();
-            BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
 //            System.out.println(5);
 //            while ((line=br.readLine())!=null) {
 //                System.out.println(line);
 //                sb.append(line+"\n");
 //            }
-            br = new BufferedReader(new InputStreamReader(p.getErrorStream()));
-            while ((line=br.readLine())!=null) sb.append(line+"\n");
             p.waitFor();
             // wegM to MP4
             String mp4File = UUID.randomUUID() + ".mp4";
             p=Runtime.getRuntime().exec(String.format("ffmpeg -y -i %s %s",videoTmpDir,(challengeDir+mp4File)));
-            br = new BufferedReader(new InputStreamReader(p.getErrorStream()));
-            while ((line=br.readLine())!=null) sb.append(line+"\n");
             p.waitFor();
             // insert Watermark
 //            String watermarkedVideo = UUID.randomUUID() + ".mp4";
@@ -352,15 +342,8 @@ public class ChallengeServiceImpl implements ChallengeService {
             String outputPath = UUID.randomUUID() + ".mp4";
             String commandInsertMusic = String.format("ffmpeg -y -i %s -i %s -map 0:v -map 1:a -c:v copy -shortest %s",
                     (challengeDir+mp4File),musicPath,(challengeDir+outputPath));
-            sb.append("command for inserting music : \n" + commandInsertMusic+"\n");
-            sb.append(LocalDateTime.now()+"\n");
             p = Runtime.getRuntime().exec(commandInsertMusic);
-            br = new BufferedReader(new InputStreamReader(p.getInputStream()));
-            while ((line=br.readLine())!=null) sb.append(line+"\n");
-            br = new BufferedReader(new InputStreamReader(p.getErrorStream()));
-            while ((line=br.readLine())!=null) sb.append(line+"\n");
             p.waitFor();
-            sb.append("music inserted~~~~~~~~~~~~~~~`\n");
             sb.append(LocalDateTime.now());
 //            String commandInsertWatermark = String.format("ffmpeg -y -i %s -i %s -i %s -filter_complex \"[1][0]scale2ref=w=oh*mdar:h=ih*0.08[logo][video];[logo]format=argb,geq=r='r(X,Y)':a='0.8*alpha(X,Y)'[soo];[video][soo]overlay=30:30\" -map \"v\" -map 2:a -c:v libx264 -crf 17 -c:a aac -strict experimental %s"
 //                    , (challengeDir+mp4File), kirinStamp, musicPath, (challengeDir+outputPath));
@@ -373,12 +356,8 @@ public class ChallengeServiceImpl implements ChallengeService {
 //            while ((line=br.readLine())!=null) sb.append(line+"\n");
 //            br = new BufferedReader(new InputStreamReader(p.getErrorStream()));
 //            while ((line=br.readLine())!=null) sb.append(line+"\n");
-            System.out.println(sb.toString());
-            System.out.println("---------------------------------------------");
-            System.out.println(LocalDateTime.now());
             ChallengeContract challengeContract = celebChallengeInfo.getChallengeContract();
             String transactionHash = ethereumService.fundToken(user, challengeContract.getContractHash(), challengeRequestDTO.amount());
-            System.out.println("saving challenge");
             Challenge challenge = challengeRepository.save(
                     Challenge.builder().user(user).isProceeding(true).reg(LocalDateTime.now()).thumbnail(thumbDir)
                                .title(challengeRequestDTO.title()).isOriginal(false).challengeId(challengeRequestDTO.challengeId())
