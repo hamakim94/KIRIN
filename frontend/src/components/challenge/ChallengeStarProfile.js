@@ -1,6 +1,17 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import UseAxios from '../../utils/UseAxios';
 
 function ChallengeStarProfile(props) {
+  const [challenges, setChallenges] = useState([]);
+
+  useEffect(() => {
+    UseAxios.get(`/challenges/star`, { params: { challengeId: props.data.challengeId } }).then(
+      (res) => {
+        setChallenges(res.data);
+      }
+    );
+  }, []);
+
   return (
     <div>
       <div className={props.styles.profileBox}>
@@ -10,7 +21,7 @@ function ChallengeStarProfile(props) {
           <div className={props.styles.starName}>{props.data.user.nickname}</div>
         </div>
 
-        <div className={props.styles.starInfo}> 스타 글</div>
+        <div className={props.styles.starInfo}>{props.data.info}</div>
       </div>
     </div>
   );
