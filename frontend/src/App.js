@@ -46,38 +46,34 @@ function App() {
   const cookies = new Cookies();
   const value = cookies.get('accesstoken');
   useEffect(() => {
+    let sseEvents;
     if (value) {
       UseAxios.get(`/users/profiles`).then((res) => {
         setUserData(res.data);
       });
+      sseEvents = new EventSource(`/api/notify/subscribe?userId=30`, {
+        withCredentials: true,
+      });
+
+      sseEvents.onopen = () => {
+        console.log('연결');
+        // 연결 됐을 때
+      };
+      sseEvents.onerror = (event) => {
+        console.log(event);
+        // 에러 났을 때
+      };
+      sseEvents.onmessage = (event) => {
+        // 메세지 받았을 때
+        console.log(event);
+      };
     }
-    // let sseEvents;
-    // if (value) {
-    //   UseAxios.get(`/users/profiles`).then((res) => {
-    //     setUserData(res.data);
-    //   });
-
-    //   sseEvents = new EventSource(`/api/notify/subscribe?userId=30`, { withCredentials: true });
-
-    //   sseEvents.onopen = () => {
-    //     console.log('연결');
-    //     // 연결 됐을 때
-    //   };
-    //   sseEvents.onerror = (event) => {
-    //     console.log(event);
-    //     // 에러 났을 때
-    //   };
-    //   sseEvents.onmessage = (event) => {
-    //     // 메세지 받았을 때
-    //     console.log(event);
-    //   };
-    // }
-    // return () => {
-    //   if (sseEvents) {
-    //     sseEvents.close();
-    //     console.log('eventsource closed');
-    //   }
-    // };
+    return () => {
+      if (sseEvents) {
+        sseEvents.close();
+        console.log('eventsource closed');
+      }
+    };
   }, []);
   return (
     <>
