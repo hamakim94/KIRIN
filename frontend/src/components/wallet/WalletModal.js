@@ -4,6 +4,7 @@ import styles from './WalletModal.module.css';
 import { Button, TextField } from '@mui/material/';
 import { AiOutlineCopy } from 'react-icons/ai';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import UseAxios from '../../utils/UseAxios';
 import ABI from '../../TokenABI.json';
 import CA from '../../TokenCA.json';
 import Context from '../../utils/Context';
@@ -18,7 +19,7 @@ const theme = createTheme({
 const isLetters = (str) => /^[0-9]*$/.test(str);
 
 // 사용법 :
-function WalletModal() {
+function WalletModal(props) {
   const { userData } = useContext(Context);
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
@@ -30,8 +31,8 @@ function WalletModal() {
   const [tokens, setTokens] = useState('');
   const [balance, setBalance] = useState(''); // 잔액
   const [loading, setLoading] = React.useState(false);
-
-  // 페이지가 실행되면, web3 이용 네트워크 연결)
+  console.log(props);
+  // 페이지가 실행되면, web3  이용 네트워크 연결)
   useEffect(() => {
     var Web3 = require('web3');
     var web3 = new Web3(new Web3.providers.HttpProvider(`${process.env.REACT_APP_BASEURL}/bc/`));
@@ -47,6 +48,9 @@ function WalletModal() {
       .call()
       .then((balance) => {
         setTokenBalance(balance);
+        if (props.setData) {
+          props.setData(balance);
+        }
       });
   }, [address]);
   // 로딩 관련
@@ -81,39 +85,13 @@ function WalletModal() {
    * encodeIBI를 통해, ABI,CA를 활용한 Contract 자체를 transaction의 data에 넣어서 실행이 가능
    * 준비물 : AdminAddress, Admin AdminPrivateKey, tokenContractCA
    */
-  const getToken = async () => {
+  const getToken = () => {
     loadingToggle();
-    var test = tokenContract.methods
-      .transferFrom(process.env.REACT_APP_ADMINID, address, Number(tokens)) // num개 충전
-      .encodeABI(); // Contract Method를 ABI로 만들기
-    var tx = {
-      data: test,
-      from: process.env.REACT_APP_ADMINID, // 관리자 계정에서
-      to: tokenContract.options.address, // CA로 보내겠다.
-      value: 0,
-      gas: 2000000,
-      chainId: 97889218,
-    };
-    // 인증을 위해 signTransaction 사용
-    web3.eth.accounts.signTransaction(tx, process.env.REACT_APP_ADMINKEY, (err, b) => {
-      if (err) {
-        console.log(err);
-      } else {
-        web3.eth
-          .sendSignedTransaction(b.rawTransaction, (err, transactionHash) => {
-            if (!err) {
-              console.log(transactionHash + ' success');
-            } else {
-              console.log(err);
-            }
-          })
-          .then(() => {
-            setTokens('');
-            viewTokenBalance();
-            alert('충전 완료!');
-            loadingClose();
-          });
-      }
+    UseAxios.post(`/blockchain/charge`, null, { params: { amount: tokens } }).then((res) => {
+      setTokens('');
+      viewTokenBalance();
+      alert('충전 완료!');
+      loadingClose();
     });
   };
 

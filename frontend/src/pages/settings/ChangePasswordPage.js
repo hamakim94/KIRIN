@@ -1,26 +1,10 @@
 import React, { useEffect, useState, useRef, useContext } from 'react';
-import styles from './ChangePasswordPage.module.css';
-import { AiFillSetting } from 'react-icons/ai';
-import { BiArrowBack } from 'react-icons/bi';
-import {
-  Avatar,
-  Button,
-  CssBaseline,
-  TextField,
-  FormControl,
-  FormControlLabel,
-  Checkbox,
-  FormHelperText,
-  Grid,
-  Box,
-  Typography,
-  Container,
-} from '@mui/material/';
+import { Button, TextField, Grid, Typography, Container } from '@mui/material/';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import UseAxios from '../../utils/UseAxios';
 import swal from 'sweetalert';
 import { useNavigate } from 'react-router-dom';
-import Context from '../../utils/Context';
+import Header from '../../components/common/Header';
 
 const theme = createTheme({
   palette: {
@@ -105,90 +89,84 @@ function ChangePasswordPage() {
   };
 
   return (
-    <ThemeProvider theme={theme}>
-      <div className={styles.topBox}>
-        <a href="/mypage/setting">
-          <BiArrowBack className={styles.back}></BiArrowBack>
-        </a>
-        <div className={styles.pageTitle}>비밀번호 변경</div>
-        <div className={styles.fakeSetting}>
-          <AiFillSetting className={styles.fakeSetting}></AiFillSetting>
-        </div>
-      </div>
-      <Container component="main" maxWidth="sm">
-        <form>
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <Typography sx={{ ml: 1, mb: 0.5 }}>현재 비밀번호*</Typography>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                type="password"
-                id="password"
-                name="password"
-                placeholder="현재 비밀번호"
-                onChange={onChangePassword}
-                size="small"
-                value={password}
-              />
+    <div className='wrapper'>
+      <ThemeProvider theme={theme}>
+        <Header title={'비밀번호 변경'}></Header>
+        <Container component='main' maxWidth='sm'>
+          <form>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <Typography sx={{ ml: 1, mb: 0.5 }}>현재 비밀번호*</Typography>
+                <TextField
+                  variant='outlined'
+                  required
+                  fullWidth
+                  type='password'
+                  id='password'
+                  name='password'
+                  placeholder='현재 비밀번호'
+                  onChange={onChangePassword}
+                  size='small'
+                  value={password}
+                />
+              </Grid>
+
+              <Grid item xs={12}>
+                <Typography sx={{ ml: 1, mt: 1.5, mb: 0.5 }}>새 비밀번호*</Typography>
+                <TextField
+                  variant='outlined'
+                  required
+                  fullWidth
+                  type='password'
+                  id='newPassword'
+                  name='newPassword'
+                  placeholder='새 비밀번호 입력'
+                  size='small'
+                  onChange={onChangeNewPassword}
+                  error={newPasswordValidation()}
+                  helperText={
+                    newPasswordValidation()
+                      ? '영문, 숫자, 특수문자를 조합해 8글자 이상 입력하세요'
+                      : ''
+                  }
+                  value={newPassword}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  variant='outlined'
+                  fullWidth
+                  type='password'
+                  id='newPasswordCheck'
+                  name='newPasswordCheck'
+                  placeholder='새 비밀번호 확인'
+                  size='small'
+                  onChange={onChangeNewPasswordCheck}
+                  error={newPasswordCheckValidation()}
+                  helperText={newPasswordCheckValidation() ? '비밀번호가 일치하지 않습니다' : ''}
+                  value={newPasswordCheck}
+                />
+              </Grid>
             </Grid>
 
-            <Grid item xs={12}>
-              <Typography sx={{ ml: 1, mt: 1.5, mb: 0.5 }}>새 비밀번호*</Typography>
-              <TextField
-                variant="outlined"
-                required
+            <div>
+              <Button
+                type='submit'
                 fullWidth
-                type="password"
-                id="newPassword"
-                name="newPassword"
-                placeholder="새 비밀번호 입력"
-                size="small"
-                onChange={onChangeNewPassword}
-                error={newPasswordValidation()}
-                helperText={
-                  newPasswordValidation()
-                    ? '영문, 숫자, 특수문자를 조합해 8글자 이상 입력하세요'
-                    : ''
-                }
-                value={newPassword}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                required
-                variant="outlined"
-                fullWidth
-                type="password"
-                id="newPasswordCheck"
-                name="newPasswordCheck"
-                placeholder="새 비밀번호 확인"
-                size="small"
-                onChange={onChangeNewPasswordCheck}
-                error={newPasswordCheckValidation()}
-                helperText={newPasswordCheckValidation() ? '비밀번호가 일치하지 않습니다' : ''}
-                value={newPasswordCheck}
-              />
-            </Grid>
-          </Grid>
-
-          <div>
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 5 }}
-              size="large"
-              color="primary"
-              onClick={onSubmit}
-            >
-              비밀번호 변경
-            </Button>
-          </div>
-        </form>
-      </Container>
-    </ThemeProvider>
+                variant='contained'
+                sx={{ mt: 5 }}
+                size='large'
+                color='primary'
+                onClick={onSubmit}
+              >
+                비밀번호 변경
+              </Button>
+            </div>
+          </form>
+        </Container>
+      </ThemeProvider>
+    </div>
   );
 }
 

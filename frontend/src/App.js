@@ -37,7 +37,6 @@ import SelectPage from './pages/SelectPage';
 import WalletPage from './pages/WalletPage';
 import SuccessPage from './pages/SuccessPage';
 import FailPage from './pages/FailPage';
-import WalletModal from './components/wallet/WalletModal';
 import CommunityCreatePage from './pages/CommunityCreatePage';
 
 function App() {
@@ -48,11 +47,6 @@ function App() {
   const value = cookies.get('accesstoken');
   useEffect(() => {
     let sseEvents;
-    // if (value) {
-    //   UseAxios.get(`/users/profiles`).then((res) => {
-    //     setUserData(res.data);
-    //   });
-    // }
     if (value) {
       UseAxios.get(`/users/profiles`).then((res) => {
         setUserData(res.data);

@@ -53,7 +53,6 @@ function ChallengeCard(props) {
     }
   }, [props.item]);
 
-  console.log(props.item);
   const likeButtonClick = () => {
     if (!data.liked) {
       UseAxios.post(`/challenges/like?challengeId=${data.challengeId}`, {
@@ -124,7 +123,7 @@ function ChallengeCard(props) {
             <div className={props.styles.iconCount}>{data.likeCnt}</div>
           </div>
           <div>
-            <a onClick={() => setOpen(true)} class='button'>
+            <a onClick={() => setOpen(true)} className='button'>
               <RiMessage3Line className={props.styles.clickIcon}></RiMessage3Line>
               <Sheet isOpen={isOpen} onClose={() => setOpen(false)}>
                 <Sheet.Container style={{ height: '500px' }}>
@@ -159,12 +158,7 @@ function ChallengeCard(props) {
       </div>
       <ReactPlayer
         className={props.styles.reactPlayer}
-        config={{
-          youtube: {
-            playerVars: { modestbranding: 1, mute: 1 },
-          },
-        }}
-        url={`${data.video}`}
+        url={`/files/${data.video}`}
         width='100%'
         height='100%'
         playing={hover}

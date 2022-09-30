@@ -1,20 +1,10 @@
 import React from 'react';
-import { AiFillSetting } from 'react-icons/ai';
-import { BiArrowBack } from 'react-icons/bi';
-import styles from './SettingsPage.module.css';
+import Header from '../../components/common/Header';
 
 function AskPage() {
   return (
-    <div>
-      <div className={styles.topBox}>
-        <a href="/mypage/setting">
-          <BiArrowBack className={styles.back}></BiArrowBack>
-        </a>
-        <div className={styles.pageTitle}>문의하기</div>
-        <div>
-          <AiFillSetting className={styles.fakeSetting}></AiFillSetting>
-        </div>
-      </div>
+    <div className='wrapper'>
+      <Header title={'문의하기'}></Header>
       <div style={{ textAlign: 'center' }}>급한 용무는 개인적으로 연락 부탁드립니다.</div>
     </div>
   );

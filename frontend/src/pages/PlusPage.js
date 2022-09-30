@@ -243,7 +243,8 @@ function PlusPage() {
       setChallengeData(res.data);
       setNumber(res.data.length);
       setLength(res.data.length);
-      audioRef.current = new Audio(res.data.music);
+      audioRef.current = new Audio(`/files/${res.data.music}`);
+      console.log(res.data);
     });
 
     return () => {
@@ -492,7 +493,13 @@ function PlusPage() {
         )}
       </div>
       {/* <video playsInline autoPlay muted ref={refVideo} style={{ width: '100%', height: '100%' }} /> */}
-      <video playsInline autoPlay muted ref={refVideo} style={{ width: '100%', height: '100%' }} />
+      <video
+        playsInline
+        autoPlay
+        muted
+        ref={refVideo}
+        style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+      />
     </div>
   );
 }

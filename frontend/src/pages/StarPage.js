@@ -16,10 +16,14 @@ function StarPage() {
   const [coverImg, setCoverImg] = useState('');
   const [subscribed, setSubscribed] = useState(false);
   const [info, setInfo] = useState('');
+  const [popularityData, setPopularityData] = useState(null);
+  const [latestData, setLatestData] = useState(null);
+  const [isPopular, setIsPopular] = useState(true);
   const [communityData, setCommunityData] = useState(null);
   const navigate = useNavigate();
   const location = window.location.href.split('/');
   const starId = Number(location[location.length - 1]);
+
   useEffect(() => {
     UseAxios.get(`/users/stars/${starId}`).then((res) => {
       setStarInfo(res.data);
@@ -34,6 +38,14 @@ function StarPage() {
     UseAxios.get(`/communities/stars/${starId}`).then((res) => {
       setCommunityData(res.data);
     });
+    UseAxios.get(`/challenges?scope=stars&order=latest&userid=${starId}`)
+      .then((res) => setLatestData(res.data))
+      .catch((err) => console.log(err));
+    UseAxios.get(`/challenges?scope=stars&order=popularity&userid=${starId}`)
+      .then((res) => {
+        setPopularityData(res.data);
+      })
+      .catch((err) => console.log(err));
   }, []);
 
   const onChange = (e) => {
@@ -83,7 +95,7 @@ function StarPage() {
       .catch((err) => console.log(err));
   };
 
-  return (
+  return userData ? (
     <div className='wrapper'>
       <div className={styles.topWrapper}>
         {/* 커버사진 */}
@@ -178,11 +190,23 @@ function StarPage() {
       <div className={styles.titleBox}>
         <HomeCategory title={'챌린지'} styles={styles}></HomeCategory>
         <div className={styles.sortTab}>
-          <span>최신순</span>
-          <span>인기순</span>
+          {isPopular ? (
+            <span style={{ color: '#ffc947' }}>최신순</span>
+          ) : (
+            <span onClick={() => setIsPopular(true)}>최신순</span>
+          )}
+          {isPopular ? (
+            <span onClick={() => setIsPopular(false)}>인기순</span>
+          ) : (
+            <span style={{ color: '#ffc947' }}>인기순</span>
+          )}
         </div>
       </div>
-      <ChallengeList styles={styles}></ChallengeList>
+      {isPopular ? (
+        <ChallengeList styles={styles} data={latestData}></ChallengeList>
+      ) : (
+        <ChallengeList styles={styles} data={popularityData}></ChallengeList>
+      )}
       <div className={styles.titleBox}>
         <HomeCategory title={'커뮤니티'} styles={styles}></HomeCategory>
         {userData ? (
@@ -199,6 +223,8 @@ function StarPage() {
       </div>
       <CommunityList data={communityData} styles={styles}></CommunityList>
     </div>
+  ) : (
+    ''
   );
 }
 

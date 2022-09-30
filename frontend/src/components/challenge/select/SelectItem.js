@@ -18,7 +18,7 @@ function SelectItem(props) {
         setPlaying(true);
       }
     } else {
-      props.audioRef.current = new Audio(props.item.music);
+      props.audioRef.current = new Audio(`/files/${props.item.music}`);
       props.audioRef.current.volume = 0.2;
       props.audioRef.current.play();
       setPlaying(true);
