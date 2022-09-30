@@ -111,4 +111,17 @@ public class CommunityController {
         return ResponseEntity.ok(null);
     }
 
+    @GetMapping("/stars/{starId}/boards/{boardId}/comments")
+    @ApiOperation(value = "커뮤니티 댓글 목록")
+    public ResponseEntity<?> communityCommentList(@ApiIgnore @AuthenticationPrincipal UserDTO userDTO, @PathVariable Long boardId){
+
+        return ResponseEntity.ok(communityService.getCommunityComment(userDTO.getId(), boardId));
+    }
+
+    @GetMapping("/stars/{starId}/boards/{boardId}/comments/{commentId}")
+    @ApiOperation(value = "커뮤니티 대댓글 목록")
+    public ResponseEntity<?> communityRecommentList(@ApiIgnore @AuthenticationPrincipal UserDTO userDTO, @PathVariable Long commentId){
+
+        return ResponseEntity.ok(communityService.getCommunityRecomment(userDTO.getId(), commentId));
+    }
 }

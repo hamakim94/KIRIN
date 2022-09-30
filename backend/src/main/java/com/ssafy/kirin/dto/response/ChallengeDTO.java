@@ -25,6 +25,7 @@ public class ChallengeDTO {
     Integer commentCnt;
     Integer viewCnt;
     Boolean isProceeding;
+    LocalDateTime startDate;
     LocalDateTime endDate;
     Integer targetNum;
     Integer targetAmount;

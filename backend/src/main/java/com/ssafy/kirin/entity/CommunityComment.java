@@ -22,9 +22,6 @@ public class CommunityComment {
     String content;
     LocalDateTime reg;
 
-    @Column(name = "is_comment")
-    Boolean isComment;
-
     @Column(name = "parent_id")
     Long parentId; // 대댓글인 경우, 해당하는 댓글의 id
 

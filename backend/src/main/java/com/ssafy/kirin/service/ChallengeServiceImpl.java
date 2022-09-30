@@ -105,7 +105,7 @@ public class ChallengeServiceImpl implements ChallengeService {
     public List<ChallengeCommentDTO> getChallengeComment(Long challengeId) {
         UserDTO userDTO = (UserDTO) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if(userDTO!=null) {
-            Set<Long> set = challengeCommentLikeRepository.findByUserId(userDTO.getId())
+            Set<Long> set = challengeCommentLikeRepository.findByUserId(userDTO.getId()) // 본인이 좋아요 했는지 여부
                     .stream().map(ChallengeCommentLike::getChallengeCommentId).collect(Collectors.toSet());
 
             return challengeCommentRepository.findByChallengeId(challengeId).stream().map(o -> {
@@ -124,35 +124,55 @@ public class ChallengeServiceImpl implements ChallengeService {
     }
 
     @Override
+    public List<ChallengeCommentDTO> getChallengeRecomment(Long userId, Long commentId) {
+        Set<Long> set = challengeCommentLikeRepository.findByUserId(userId) // 본인이 좋아요 했는지 여부
+                .stream().map(ChallengeCommentLike::getChallengeCommentId).collect(Collectors.toSet());
+
+        return challengeCommentRepository.findByParentId(commentId).stream().map(o -> {
+            ChallengeCommentDTO dto = ChallengeCommentMapStruct.INSTANCE.mapToChallengeCommentDTO(o);
+            dto.setUser(UserMapStruct.INSTANCE.mapToUserDTO(o.getUser()));
+
+            if(set.contains(o.getId())) dto.setLiked(true);
+
+            return dto;
+        }).collect(Collectors.toList());
+    }
+
+
+    @Override
     public void writeChallengeComment(Long userId, Long challengeId, ChallengeCommentRequestDTO dto) {
-        User user = userRepository.getReferenceById(userId);
-        Challenge challenge = challengeRepository.getReferenceById(challengeId);
-        ChallengeComment challengeComment = ChallengeComment.builder().parentId(dto.parentId())
-                .challengeId(challengeId).user(user).isComment(dto.isComment())
-                .content(dto.content()).reg(LocalDateTime.now())
-                .build();
+        User user = userRepository.getReferenceById(userId); // 작성자
+        Challenge challenge = challengeRepository.getReferenceById(challengeId); // 챌린지
+
+        ChallengeComment challengeComment = ChallengeComment.builder()
+                                            .challengeId(challengeId)
+                                            .user(user)
+                                            .content(dto.content())
+                                            .reg(LocalDateTime.now())
+                                            .parentId(dto.parentId())
+                                            .build();
+
         challengeCommentRepository.save(challengeComment);
+
         // 챌린지 게시자에게 알림
         notificationService.addNotification(Notification.builder().userId(challenge.getUser().getId())
                 .event(String.format(NotificationEnum.CommentAdded.getContent(), challenge.getTitle(), user.getNickname()))
                 .challenge(challenge).challengeComment(challengeComment).build());
 
-        if (dto.parentId() != null && dto.parentId() > 0) {
-            //부모댓글 설정
-            challengeComment.setParentId(dto.parentId());
+        if (dto.parentId() != 0) { // 대댓글 등록시
             // 챌린지 내 댓글 게시자에게 알림
             Optional<ChallengeComment> tmp = challengeCommentRepository.findById(dto.parentId());
             tmp.ifPresent(comment -> notificationService.addNotification(Notification.builder().userId(comment.getUser().getId())
                     .event(String.format(NotificationEnum.CommentReplied.getContent(), user.getNickname()))
                     .challengeComment(challengeComment).challenge(challenge).build()));
-            //해당 댓굴의 대댓글 게시자 모두에게 알림
+            // 해당 댓글의 대댓글 게시자 모두에게 알림
             List<Long> list = challengeCommentRepository.findByParentId(dto.parentId()).stream()
                     .map(o -> o.getUser().getId()).collect(Collectors.toSet()).stream().toList();
 
             for (Long id : list) {
                 notificationService.addNotification(Notification.builder()
                         .event(String.format(NotificationEnum.CommentReplied.getContent(), user.getNickname()))
-                        .challenge(challenge).challengeComment(challengeComment)
+                        .challenge(challenge).challengeComment(challengeComment).userId(id)
                         .build());
             }
         }
