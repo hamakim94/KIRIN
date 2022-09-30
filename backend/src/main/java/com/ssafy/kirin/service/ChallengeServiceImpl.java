@@ -441,9 +441,14 @@ public class ChallengeServiceImpl implements ChallengeService {
             String commandWatermark = String.format("ffmpeg -y -i %s -i %s -filter_complex [1][0]scale2ref=w=oh*mdar:h=ih*0.08[logo][video];[logo]format=argb,geq=r='r(X,Y)':a='0.8*alpha(X,Y)'[soo];[video][soo]overlay=30:30 %s",
                     videoTmpDir, kirinStamp, challengeDir+videoDir);
             p = Runtime.getRuntime().exec(commandWatermark);
-            br = new BufferedReader(new InputStreamReader(p.getErrorStream()));
+            sb = new StringBuilder();
+            br = new BufferedReader(new InputStreamReader(p.getInputStream()));
 //            String line;
-            while((line =br.readLine())!=null) System.out.println(line);
+            while((line =br.readLine())!=null) sb.append(line+"\n");
+            br = new BufferedReader(new InputStreamReader(p.getErrorStream()));
+            while ((line=br.readLine())!=null) sb.append(line+"\n");
+            br.close();
+            System.out.println(sb);
             p.waitFor();
             //delete original videoFile
             Files.delete(videoTmp);
