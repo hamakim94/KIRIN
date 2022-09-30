@@ -32,7 +32,7 @@ public interface UserService {
 
     List<UserResponseDTO> getCelebListById(long userId);
 
-    CelebResponseDTO getCelebInfo(long starId);
+    CelebResponseDTO getCelebInfo(long userId, long starId);
 
     boolean checkEmailDuplicate(String email);
 
