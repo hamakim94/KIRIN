@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import UseAxios from '../../utils/UseAxios';
+import Context from '../../utils/Context';
 
 function CommentInput(props) {
   const [newComment, setNewComment] = useState('');
+  const { userData } = useContext(Context);
   const location = useLocation();
   const onCreate = () => {
     if (newComment.length === 0) {
@@ -11,16 +13,18 @@ function CommentInput(props) {
     } else {
       const communityCommentRequestDTO = {
         content: newComment,
-        isComment: false,
+        isComment: true,
         parentId: 0,
       };
       UseAxios.post(
         `/communities/stars/${location.state.starId}/boards/${location.state.boardId}/comments`,
         communityCommentRequestDTO
-      ).then((res) => {
-        console.log(res);
-        setNewComment('');
-      });
+      )
+        .then((res) => {
+          console.log(res);
+          setNewComment('');
+        })
+        .catch((err) => console.log(err));
 
       //   props.setCommentData(props.commentData.concat(comment));
     }
@@ -35,7 +39,7 @@ function CommentInput(props) {
         <img
           alt='star'
           className={props.styles.commentImg}
-          src='https://cdn.pixabay.com/photo/2022/05/06/17/15/cartoon-giraffe-7178753_960_720.jpg'
+          src={`files/${userData.profileImg}`}
         ></img>
       </div>
       <div
