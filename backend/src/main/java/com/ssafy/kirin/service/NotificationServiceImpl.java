@@ -30,7 +30,7 @@ public class NotificationServiceImpl implements NotificationService {
     private final CommunityCommentRepository communityCommentRepository;
     @Override
     public SseEmitter subscribe(Long userId) {
-
+        System.out.println(userId + " has requested subscription");
         SseEmitter sseEmitter = new SseEmitter(Long.MAX_VALUE);
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(()->{
