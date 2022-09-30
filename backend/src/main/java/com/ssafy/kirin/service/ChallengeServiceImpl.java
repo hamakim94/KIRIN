@@ -81,6 +81,13 @@ public class ChallengeServiceImpl implements ChallengeService {
     }
 
     @Override
+    public List<ChallengeDTO> listStarsByRandom() {
+        List<ChallengeDTO> challenges = this.challegeListToChallengDTOList(challengeRepository.findByIsOriginalAndIsProceeding(true, true));
+        Collections.shuffle(challenges);
+        return challenges;
+    }
+
+    @Override
     public List<ChallengeDTO> listAllByAlphabet() {
         return this.challegeListToChallengDTOList(challengeRepository.findAll(Sort.by(Sort.Direction.ASC, "title")));
     }

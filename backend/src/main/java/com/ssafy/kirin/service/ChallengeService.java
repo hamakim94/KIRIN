@@ -20,6 +20,7 @@ public interface ChallengeService {
     List<ChallengeDTO> listGeneralByPopularity();
     List<ChallengeDTO> listGeneralByRandom();
     List<ChallengeDTO> listAllByRandom();
+    List<ChallengeDTO> listStarsByRandom();
     List<ChallengeDTO> listAllByAlphabet();
     List<ChallengeDTO> listAllByChallenge(Long challengeId);
     List<ChallengeDTO> listAllByUser(Long userId);

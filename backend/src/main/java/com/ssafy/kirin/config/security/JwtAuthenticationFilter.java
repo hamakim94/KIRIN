@@ -33,9 +33,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter { // 요청당
             Authentication authentication = jwtTokenProvider.getAuthentication(accessToken); // 인증처리된 Authentication을 생성
             SecurityContextHolder.getContext().setAuthentication(authentication); // 생성한 Authentication을 SecurityContextHolder에 저장
         }
-        else {
-            log.info("no valid JWT token found, uri: {}", request.getRequestURI());
-        }
+//        else {
+//            log.info("no valid JWT token found, uri: {}", request.getRequestURI());
+//        }
 
         filterChain.doFilter(request, response); // 스프링의 나머지 FilterChain들을 수행
     }
