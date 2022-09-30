@@ -61,7 +61,7 @@ public class Web3jUtil {
         BigInteger value = Convert.toWei(valueString, Unit.ETHER).toBigInteger();
         BigInteger gasLimit = BigInteger.valueOf(3000000);
         BigInteger gasPrice = Convert.toWei("1", Unit.GWEI).toBigInteger();
-        TransactionManager transactionManager = new RawTransactionManager(web3j, credentials, 97889218, 100, 100L);
+        TransactionManager transactionManager = new RawTransactionManager(web3j, credentials, 97889218, 300, 100L);
         RawTransaction rawTransaction = RawTransaction.createEtherTransaction(
                 nonce,
                 gasPrice,
@@ -101,7 +101,7 @@ public class Web3jUtil {
         Transaction newTransaction = null;
         if (balance.compareTo(Convert.toWei("1", Convert.Unit.GWEI).toBigInteger())<=0 ){
             System.out.println(ADMIN_PRIVATE_KEY);
-            TransactionManager transactionManager = new RawTransactionManager(web3j, Credentials.create(ADMIN_PRIVATE_KEY), 97889218, 100, 100L);
+            TransactionManager transactionManager = new RawTransactionManager(web3j, Credentials.create(ADMIN_PRIVATE_KEY), 97889218, 300, 100L);
             Transfer transfer = new Transfer(web3j, transactionManager);
             String hash =  transfer.sendFunds(credentials.getAddress(), BigDecimal.valueOf(1.0), Unit.ETHER).send().getTransactionHash();
             newTransaction = makeTransactionEntity(web3j.ethGetTransactionByHash(hash).send().getResult());

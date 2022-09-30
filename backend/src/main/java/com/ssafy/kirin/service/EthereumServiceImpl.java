@@ -58,7 +58,7 @@ public class EthereumServiceImpl implements EthereumService {
     public StarChallengeDTO createFundContract(User user, int amount, BigInteger startTime, BigInteger endTime, BigInteger targetNum, String beneficiary) throws Exception {
         Credentials credentials = web3jUtil.getCredentials(user.getWallet().getPrivateKey());
         TransactionManager transactionManager = new RawTransactionManager(
-                web3j, credentials, 97889218, 100, 100L);
+                web3j, credentials, 97889218, 300, 100L);
         ContractGasProvider gasProvider = new DefaultGasProvider();
         IERC20 ierc20 = IERC20.load(TOKENCONTRACTADDRESS, web3j, transactionManager, gasProvider);
         BigInteger tokenBalance = ierc20.balanceOf(credentials.getAddress()).send();
@@ -115,7 +115,7 @@ public class EthereumServiceImpl implements EthereumService {
     public String fundToken(User user, String fundContract, int amount) throws Exception {
         Credentials credentials = web3jUtil.getCredentials(user.getWallet().getPrivateKey());
         gasCheck((credentials));
-        TransactionManager transactionManager = new RawTransactionManager(web3j, credentials, 97889218, 100, 100L);
+        TransactionManager transactionManager = new RawTransactionManager(web3j, credentials, 97889218, 300, 100L);
         ContractGasProvider gasProvider = new DefaultGasProvider();
         FundRaising fundRaising = FundRaising.load(fundContract, web3j, transactionManager, gasProvider);
         String trasactionHash = fundRaising.fundToken(BigInteger.valueOf(amount)).send().getTransactionHash();
@@ -130,7 +130,7 @@ public class EthereumServiceImpl implements EthereumService {
         Credentials credentials = web3jUtil.getCredentials(privatekey);
         gasCheck((credentials));
         ContractGasProvider gasProvider = new DefaultGasProvider();
-        TransactionManager transactionManager = new RawTransactionManager(web3j, credentials, 97889218, 100, 100L);
+        TransactionManager transactionManager = new RawTransactionManager(web3j, credentials, 97889218, 300, 100L);
         FundRaising fundRaising = FundRaising.load(fundContract, web3j, transactionManager, gasProvider);
         TransactionReceipt transactionReceipts = fundRaising.withdrawToken().send();
         String transactionHash = transactionReceipts.getTransactionHash();
@@ -164,7 +164,7 @@ public class EthereumServiceImpl implements EthereumService {
 
     private Transaction transferToken(Credentials fromCredentials, String toAddress, int amount) throws Exception {
         ContractGasProvider gasProvider = new DefaultGasProvider();
-        TransactionManager transactionManager = new RawTransactionManager(web3j, fromCredentials, 97889218, 100, 100L);
+        TransactionManager transactionManager = new RawTransactionManager(web3j, fromCredentials, 97889218, 300, 100L);
         IERC20 ierc20 = IERC20.load(TOKENCONTRACTADDRESS, web3j, transactionManager, gasProvider);
         String hash = ierc20.transfer(toAddress, new BigInteger(String.valueOf(amount))).send().getTransactionHash();
         Transaction transaction = web3jUtil.makeTransactionEntity(web3j.ethGetTransactionByHash(hash).send().getResult());
