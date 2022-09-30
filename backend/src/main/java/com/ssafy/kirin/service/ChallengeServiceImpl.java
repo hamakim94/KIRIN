@@ -302,6 +302,8 @@ public class ChallengeServiceImpl implements ChallengeService {
             //토큰 잔액 확인
             if (ethereumService.getTokenAmount(user)<challengeRequestDTO.amount()) throw new Exception();
             System.out.println("I'm in create challenge");
+            System.out.println("---------------------------------------------");
+            System.out.println(LocalDateTime.now());
             // 원 챌린지 음악과 이미지 저장경로
             Challenge forChallenge = challengeRepository.getReferenceById(challengeRequestDTO.challengeId());
             CelebChallengeInfo celebChallengeInfo = celebChallengeInfoRepository.findByChallengeId(forChallenge.getId());
@@ -372,6 +374,8 @@ public class ChallengeServiceImpl implements ChallengeService {
 //            br = new BufferedReader(new InputStreamReader(p.getErrorStream()));
 //            while ((line=br.readLine())!=null) sb.append(line+"\n");
             System.out.println(sb.toString());
+            System.out.println("---------------------------------------------");
+            System.out.println(LocalDateTime.now());
             ChallengeContract challengeContract = celebChallengeInfo.getChallengeContract();
             String transactionHash = ethereumService.fundToken(user, challengeContract.getContractHash(), challengeRequestDTO.amount());
             System.out.println("saving challenge");
