@@ -1,21 +1,31 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import TimeForToday from '../common/TimeForToday';
 
 function CommentItem(props) {
-  return (
+  const [item, setItem] = useState(null);
+  const newDate = new Date(props.item.reg);
+  useEffect(() => {
+    if (props.item) {
+      setItem(props.item);
+      console.log(props.item);
+    }
+  }, [props.item]);
+
+  return item ? (
     <div style={{ display: 'flex', alignItems: 'center' }}>
       <div>
         <img
           alt='writer'
           className={props.styles.commentImg}
-          src='https://cdn.pixabay.com/photo/2022/05/06/17/15/cartoon-giraffe-7178753_960_720.jpg'
+          src={`/files/${item.user.profileImg}`}
         ></img>
       </div>
       <div style={{ flex: 10, alignItems: 'center', marginLeft: 10 }}>
         <div>
-          이름 <span className={props.styles.writeDate}>{TimeForToday(Date.now())}</span>
+          {item.user.nickname}{' '}
+          <span className={props.styles.writeDate}>{TimeForToday(newDate)}</span>
         </div>
-        <div>{props.item.content}</div>
+        <div>{item.content}</div>
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <span className={props.styles.writeDate}>답글 달기</span>
           <span className={props.styles.writeDate}>답글 보기</span>
@@ -26,6 +36,8 @@ function CommentItem(props) {
         <div>숫자</div>
       </div>
     </div>
+  ) : (
+    ''
   );
 }
 

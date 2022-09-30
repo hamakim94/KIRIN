@@ -39,7 +39,7 @@ function CommentInput(props) {
         <img
           alt='star'
           className={props.styles.commentImg}
-          src={`files/${userData.profileImg}`}
+          src={`/files/${userData.profileImg}`}
         ></img>
       </div>
       <div

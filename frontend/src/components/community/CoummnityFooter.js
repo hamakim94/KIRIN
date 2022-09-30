@@ -3,6 +3,7 @@ import { RiMessage3Line, RiHeart2Fill, RiHeart2Line } from 'react-icons/ri';
 import CommentInput from './CommentInput';
 import UseAxios from '../../utils/UseAxios';
 import { useLocation } from 'react-router-dom';
+import CommentList from './CommentList';
 function CoummnityFooter(props) {
   const location = useLocation();
   const [commentData, setCommentData] = useState(null);
@@ -52,7 +53,7 @@ function CoummnityFooter(props) {
     }
   };
 
-  return (
+  return commentData ? (
     <>
       <div className={props.styles.footerWrapper}>
         <RiMessage3Line></RiMessage3Line>
@@ -68,9 +69,11 @@ function CoummnityFooter(props) {
           commentData={commentData}
           setCommentData={setCommentData}
         ></CommentInput>
-        {/* <CommentList styles={props.styles} commentData={commentData}></CommentList> */}
+        <CommentList styles={props.styles} commentData={commentData}></CommentList>
       </div>
     </>
+  ) : (
+    ''
   );
 }
 
