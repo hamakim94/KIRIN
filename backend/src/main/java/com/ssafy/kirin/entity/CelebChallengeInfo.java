@@ -42,10 +42,10 @@ public class CelebChallengeInfo {
     @Column(name = "target_amount")
     Long targetAmount;
 
-    @Formula("(SELECT participate_num FROM challenge_contract d WHERE d.id=contract_id)")
+    @Formula("(SELECT d.participate_num FROM challenge_contract d WHERE d.id=contract_id)")
     Integer currentNum;
 
-    @Formula("(SELECT amount FROM challenge_contract d WHERE d.id=contract_id)")
+    @Formula("(SELECT d.amount FROM challenge_contract d WHERE d.id=contract_id)")
     Long currentAmount;
 
     @OneToOne
