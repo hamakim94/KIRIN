@@ -27,12 +27,26 @@ function ChallengeCard(props) {
         <div className={props.styles.infoBox}>
           <div className={props.styles.infoTop}>
             <span className={props.styles.infoText}>{props.item.title}</span>
-            <span className={props.styles.infoText}>D-21</span>
+            <span className={props.styles.infoText}>
+              {props.item.isProceeding ? '진행중' : '끝남'}
+            </span>
+            <div className={props.styles.infoBot}>
+              <span className={props.styles.infoText}>
+                D-{Math.ceil((new Date(props.item.endDate) - new Date()) / 86400000)}
+              </span>
+              <span className={props.styles.infoText}>{props.item.donationOrganizationName}</span>
+            </div>
           </div>
-          <ProgressBar styles={props.styles} width={134} percent={0.7}></ProgressBar>
+          <ProgressBar
+            styles={props.styles}
+            width={134}
+            percent={Math.floor((props.item.currentNum / props.item.targetNum) * 100) / 100}
+          ></ProgressBar>
           <div className={props.styles.infoBot}>
-            <span className={props.styles.infoText}>251명</span>
-            <span className={props.styles.infoText}>70%</span>
+            <span className={props.styles.infoText}>{props.item.currentNum}명</span>
+            <span className={props.styles.infoText}>
+              {Math.floor((props.item.currentNum / props.item.targetNum) * 100)}%
+            </span>
           </div>
         </div>
       </div>
