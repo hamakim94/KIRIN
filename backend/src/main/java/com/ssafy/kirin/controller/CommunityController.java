@@ -84,7 +84,7 @@ public class CommunityController {
     @ApiOperation(value = "커뮤니티 댓글 작성")
     public ResponseEntity<?> communityCommentWrite(@ApiIgnore @AuthenticationPrincipal UserDTO userDTO,
                                                    @PathVariable Long boardId,
-                                                   CommunityCommentRequestDTO communityCommentRequestDTO){
+                                                   @RequestBody CommunityCommentRequestDTO communityCommentRequestDTO){
 
         communityService.writeComment(userDTO.getId(), boardId, communityCommentRequestDTO);
 
