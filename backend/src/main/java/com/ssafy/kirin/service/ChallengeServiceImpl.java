@@ -1,5 +1,6 @@
 package com.ssafy.kirin.service;
 
+import com.ssafy.kirin.dto.StarChallengeDTO;
 import com.ssafy.kirin.dto.UserDTO;
 import com.ssafy.kirin.dto.request.ChallengeRequestDTO;
 import com.ssafy.kirin.dto.request.ChallengeCommentRequestDTO;
@@ -407,38 +408,26 @@ public class ChallengeServiceImpl implements ChallengeService {
 //            System.out.println(sb.toString());
 //            System.out.println(9);
             p.waitFor();
-            System.out.println(10);
 
             //extract music
             String musicDir = UUID.randomUUID()+".mp3";
-            System.out.println(1);
             String commandExtractMusic = String.format("ffmpeg -i %s -q:a 0 -map a %s",videoTmpDir,challengeDir+musicDir);
-            System.out.println(2);
             p = Runtime.getRuntime().exec(commandExtractMusic);
-            System.out.println(3);
             p.waitFor();
-            System.out.println(4);
             // insert watermark
             String videoDir = UUID.randomUUID()+videoExt;
-            System.out.println(5);
             String commandWatermark = String.format("ffmpeg -y -i %s -i %s -filter_complex [1][0]scale2ref=w=oh*mdar:h=ih*0.08[logo][video];[logo]format=argb,geq=r='r(X,Y)':a='0.8*alpha(X,Y)'[soo];[video][soo]overlay=30:30 %s",
                     videoTmpDir, kirinStamp, challengeDir+videoDir);
-            System.out.println(6);
             p = Runtime.getRuntime().exec(commandWatermark);
-            System.out.println(7);
             br = new BufferedReader(new InputStreamReader(p.getErrorStream()));
-            System.out.println(8);
 //            String line;
             while((line =br.readLine())!=null) System.out.println(line);
-            System.out.println(9);
             p.waitFor();
-            System.out.println(10);
             //delete original videoFile
             Files.delete(videoTmp);
-            System.out.println(11);
 
             //Contract 생성 및 토큰 전송, 트랜잭션 저장
-            ChallengeContract challengeContract = ethereumService.createFundContract(
+            StarChallengeDTO starChallengeDTO = ethereumService.createFundContract(
                     user,
                     starChallengeRequestDTO.targetAmount(),
                     BigInteger.valueOf(Timestamp.valueOf(starChallengeRequestDTO.startDate()).getTime()),
@@ -446,6 +435,7 @@ public class ChallengeServiceImpl implements ChallengeService {
                     BigInteger.valueOf(starChallengeRequestDTO.targetNum()),
                     donationOrganization.getWallet().getAddress()
             );
+            ChallengeContract challengeContract = starChallengeDTO.challengeContract;
 
             challengeContractRepository.save(challengeContract);
 
@@ -454,6 +444,15 @@ public class ChallengeServiceImpl implements ChallengeService {
                     .title(starChallengeRequestDTO.title()).build();
 
             challengeRepository.save(challenge);
+
+            Donation donation = Donation.builder()
+                    .amount(starChallengeRequestDTO.targetAmount())
+                    .reg(LocalDateTime.now())
+                    .transactionHash(starChallengeDTO.donationHash)
+                    .challenge(challenge)
+                    .build();
+            donationRepository.save(donation);
+
             challenge.setChallengeId(challenge.getId());
 
             CelebChallengeInfo celebChallengeInfo = CelebChallengeInfo.builder().info(starChallengeRequestDTO.info()).challenge(challenge).targetAmount(starChallengeRequestDTO.targetAmount())

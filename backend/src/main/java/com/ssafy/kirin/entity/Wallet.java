@@ -35,4 +35,7 @@ public class Wallet {
     public void subCash(int amount) {
         cash = cash.subtract(BigDecimal.valueOf(amount));
     }
+    public void setCash(int cash) {
+        this.cash = BigDecimal.valueOf(cash);
+    }
 }

@@ -2,8 +2,10 @@ package com.ssafy.kirin.service;
 
 import com.ssafy.kirin.contracts.FundRaising;
 import com.ssafy.kirin.contracts.IERC20;
+import com.ssafy.kirin.dto.StarChallengeDTO;
 import com.ssafy.kirin.dto.UserDTO;
 import com.ssafy.kirin.entity.*;
+import com.ssafy.kirin.repository.DonationRepository;
 import com.ssafy.kirin.repository.TransactionRepository;
 import com.ssafy.kirin.repository.UserRepository;
 import com.ssafy.kirin.repository.WalletRepository;
@@ -26,24 +28,34 @@ import org.web3j.tx.gas.DefaultGasProvider;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
 @Service
 public class EthereumServiceImpl implements EthereumService {
-    private static Web3jUtil web3jUtil = new Web3jUtil();;
-    private static Web3j web3j = web3jUtil.getWeb3J();
+    private final Web3jUtil web3jUtil;;
+    private Web3j web3j;
     private final WalletRepository walletRepository;
     private final TransactionRepository transactionRepository;
     private final UserRepository userRepository;
     @Value("${TOKENCONTRACTADDRESS}")
     private String TOKENCONTRACTADDRESS ;
+    @Value("${ADMIN_PRIVATE_KEY}")
+    private String ADMIN_PRIVATE_KEY;
 
+    public EthereumServiceImpl(Web3jUtil web3jUtil, WalletRepository walletRepository, TransactionRepository transactionRepository, UserRepository userRepository, DonationRepository donationRepository) {
+        this.web3jUtil = web3jUtil;
+        this.walletRepository = walletRepository;
+        this.transactionRepository = transactionRepository;
+        this.userRepository = userRepository;
+        web3j = web3jUtil.getWeb3J();
+    }
 
     @Override
-    public ChallengeContract createFundContract(User user, int amount, BigInteger startTime, BigInteger endTime, BigInteger targetNum, String beneficiary) throws Exception {
+    public StarChallengeDTO createFundContract(User user, int amount, BigInteger startTime, BigInteger endTime, BigInteger targetNum, String beneficiary) throws Exception {
         Credentials credentials = web3jUtil.getCredentials(user.getWallet().getPrivateKey());
         TransactionManager transactionManager = new RawTransactionManager(
                 web3j, credentials, 97889218, 100, 100L);
@@ -70,8 +82,11 @@ public class EthereumServiceImpl implements EthereumService {
             log.info("FundRaising deploy end");
             String fundContractAddress = fundRaising.getContractAddress();
             log.info("transferToken start");
+
             Transaction transferTransaction = transferToken(credentials, fundContractAddress, amount);
             transactionRepository.save(transferTransaction);
+            user.getWallet().setCash(getTokenAmount(user));
+            walletRepository.save(user.getWallet());
             log.info("transferToken end");
 
             ChallengeContract challengeContract = ChallengeContract.builder()
@@ -79,8 +94,11 @@ public class EthereumServiceImpl implements EthereumService {
                     .participateNum(0)
                     .contractHash(fundContractAddress)
                     .build();
-
-            return challengeContract;
+            StarChallengeDTO starChallengeDTO = StarChallengeDTO.builder()
+                    .challengeContract(challengeContract)
+                    .donationHash(transferTransaction.getHash())
+                    .build();
+            return starChallengeDTO;
         } else { throw new Exception();}
     }
     @Override
@@ -88,9 +106,9 @@ public class EthereumServiceImpl implements EthereumService {
         User user = userRepository.findByEmail(userDTO.getEmail()).get();
         Credentials credentials = web3jUtil.getCredentials(user.getWallet().getPrivateKey());
         gasCheck(credentials);
-        Transaction transaction = transferToken(web3jUtil.getAdminCredentials(), credentials.getAddress(), amount);
+        Transaction transaction = transferToken(web3jUtil.getAdminCredentials(ADMIN_PRIVATE_KEY), credentials.getAddress(), amount);
         transactionRepository.save(transaction);
-        user.getWallet().addCash(amount);
+        user.getWallet().addCash(getTokenAmount(user));
         walletRepository.save(user.getWallet());
     }
     @Override
@@ -100,9 +118,10 @@ public class EthereumServiceImpl implements EthereumService {
         TransactionManager transactionManager = new RawTransactionManager(web3j, credentials, 97889218, 100, 100L);
         ContractGasProvider gasProvider = new DefaultGasProvider();
         FundRaising fundRaising = FundRaising.load(fundContract, web3j, transactionManager, gasProvider);
-        Transaction transaction = transferToken(credentials, fundRaising.getContractAddress(), amount);
+        String trasactionHash = fundRaising.fundToken(BigInteger.valueOf(amount)).send().getTransactionHash();
+        Transaction transaction = web3jUtil.makeTransactionEntity(web3j.ethGetTransactionByHash(trasactionHash).send().getResult());
         transactionRepository.save(transaction);
-        user.getWallet().subCash(amount);
+        user.getWallet().setCash(getTokenAmount(user));
         walletRepository.save(user.getWallet());
         return transaction.getHash();
     }
