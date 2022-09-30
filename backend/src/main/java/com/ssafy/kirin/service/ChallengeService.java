@@ -4,10 +4,7 @@ import com.ssafy.kirin.dto.UserDTO;
 import com.ssafy.kirin.dto.request.ChallengeRequestDTO;
 import com.ssafy.kirin.dto.request.ChallengeCommentRequestDTO;
 import com.ssafy.kirin.dto.request.StarChallengeRequestDTO;
-import com.ssafy.kirin.dto.response.ChallengeCommentDTO;
-import com.ssafy.kirin.dto.response.ChallengeDTO;
-import com.ssafy.kirin.dto.response.ChallengeDetailDTO;
-import com.ssafy.kirin.dto.response.ChallengeSelectResponseDTO;
+import com.ssafy.kirin.dto.response.*;
 import com.ssafy.kirin.entity.Challenge;
 import com.ssafy.kirin.entity.User;
 import org.springframework.web.multipart.MultipartFile;
@@ -42,4 +39,6 @@ public interface ChallengeService {
     void unlikeChallnegeComment(Long userId, Long challengeCommentId);
 
     ChallengeDetailDTO getChallengeDetail(Long challengeId);
+
+    List<MyChallengeResponseDTO> getMyChallengelist(Long userId);
 }
