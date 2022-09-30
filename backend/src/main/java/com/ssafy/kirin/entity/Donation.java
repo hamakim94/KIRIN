@@ -21,7 +21,8 @@ public class Donation {
 
     Integer amount;
     LocalDateTime reg;
-
+    @Column(name = "transaction_hash")
+    String transactionHash;
     @ManyToOne
     @JoinColumn(name = "challenge_id")
     Challenge challenge;

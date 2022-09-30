@@ -7,11 +7,9 @@ import com.ssafy.kirin.dto.request.UserModifyRequestDTO;
 import com.ssafy.kirin.dto.request.UserSignupRequestDTO;
 import com.ssafy.kirin.dto.response.CelebResponseDTO;
 import com.ssafy.kirin.dto.response.UserResponseDTO;
-import com.ssafy.kirin.entity.CelebInfo;
-import com.ssafy.kirin.entity.EmailAuth;
-import com.ssafy.kirin.entity.Subscribe;
-import com.ssafy.kirin.entity.User;
+import com.ssafy.kirin.entity.*;
 import com.ssafy.kirin.repository.*;
+import com.ssafy.kirin.util.Web3jUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import lombok.extern.slf4j.Slf4j;
@@ -44,6 +42,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     private final EmailAuthRepositoryCustom emailAuthRepositoryCustom;
     private final EmailService emailService;
     private final SubscribeRepository subscribeRepository;
+    private final EthereumService ethereumService;
 
     @Value("${property.app.upload-path}")
     private String uploadPath;
@@ -64,11 +63,12 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         }
 
         userSignupRequestDTO.setPassword(passwordEncoder.encode(userSignupRequestDTO.getPassword()));
-
+        // wallet 만들어서 넣어줘야됨.
+        Wallet wallet = ethereumService.createWallet();
         if(userSignupRequestDTO.getIsCeleb()){ // 스타일 경우
             CelebInfo celebInfo = new CelebInfo(); // info, coverImg는 따로 등록
 
-            // wallet 만들어서 넣어줘야됨.
+
 
             user = User.builder()
                     .name(userSignupRequestDTO.getName())
@@ -78,6 +78,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
                     .password(userSignupRequestDTO.getPassword())
                     .isCeleb(userSignupRequestDTO.getIsCeleb())
                     .reg(LocalDateTime.now())
+                    .wallet(wallet)
                     .build();
 
             user.setCelebInfo(celebInfoRepository.save(celebInfo));
@@ -94,6 +95,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
                     .password(userSignupRequestDTO.getPassword())
                     .isCeleb(userSignupRequestDTO.getIsCeleb())
                     .reg(LocalDateTime.now())
+                    .wallet(wallet)
                     .build();
         }
         userRepository.save(user);

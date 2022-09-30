@@ -95,6 +95,8 @@ dependencies {
 	// Entity to DTO Mapper
 	implementation 'org.mapstruct:mapstruct:1.5.2.Final'
 	annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.2.Final'
+	// web3j
+	implementation "org.web3j:core:5.0.0"
 }
 
 dependencyManagement {
