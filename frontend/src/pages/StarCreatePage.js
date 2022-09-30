@@ -15,6 +15,8 @@ function StarCreatePage() {
   const [endDate, setEndDate] = useState(null);
   const [targetNum, setTargetNum] = useState(null);
   const [targetAmount, setTargetAmount] = useState(null);
+  const [buttonDisable, setButtonDisable] = useState(false);
+  //state 하나 만들어 : disalble
 
   const onChangeVideo = (e) => {
     if (e.target.files[0]) {
@@ -25,6 +27,7 @@ function StarCreatePage() {
   };
   const handleSubmit = (e) => {
     e.preventDefault();
+    setButtonDisable(true);
     let body = {
       title: title.trim(),
       info: info.trim(),
@@ -47,8 +50,13 @@ function StarCreatePage() {
     })
       .then((res) => {
         console.log(res);
+        setButtonDisable(false);
+        alert('성공');
       })
       .catch((err) => {
+        // disalble 풀려, alert
+        setButtonDisable(false);
+        alert('실패');
         console.log(err);
       });
   };
@@ -163,6 +171,7 @@ function StarCreatePage() {
             backgroundColor: '#FFC947',
             color: 'white',
           }}
+          disabled={buttonDisable}
           type='submit'
         >
           업로드
