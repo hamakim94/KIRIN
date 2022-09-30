@@ -113,3 +113,63 @@ hr {
   margin-left: 10px;
   align-self: center;
 }
+
+.progressDiv {
+  height: 25px;
+  background-color: white;
+  border-bottom-left-radius: 0.1rem;
+  border-top-left-radius: 0.1rem;
+  border-bottom-right-radius: 0.1rem;
+  border-top-right-radius: 0.1rem;
+  border-width: 1px;
+  border-color: black;
+  border-style: solid;
+}
+
+.progressBox {
+  display: flex;
+  flex-direction: row;
+  margin-top: 5px;
+}
+
+.progress {
+  background-color: #ffc947;
+  height: 25px;
+  border-bottom-left-radius: 0.1rem;
+  border-top-left-radius: 0.1rem;
+  border-bottom-right-radius: 0.1rem;
+  border-top-right-radius: 0.1rem;
+  transition: 1s ease;
+  transition-delay: 0.5s;
+  margin-right: 5px;
+  border-right-width: 1px;
+  border-right-color: black;
+  border-right-style: solid;
+}
+.donateIng {
+  display: flex;
+  align-items: center;
+  font-size: x-small;
+  margin-left: 5px;
+  margin-right: 7.5px;
+  width: 30px;
+}
+
+.donateEnd {
+  display: flex;
+  align-items: center;
+  font-size: x-small;
+  margin-left: 10px;
+  margin-right: 7.5px;
+  width: 30px;
+}
+.infoText {
+  font-size: 15px;
+  margin-right: 0px;
+  margin-top: 5px;
+}
+.infoBot {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
