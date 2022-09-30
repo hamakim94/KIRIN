@@ -19,7 +19,7 @@ public class Donation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    Integer amount;
+    Long amount;
     LocalDateTime reg;
     @Column(name = "transaction_hash")
     String transactionHash;

@@ -4,10 +4,7 @@ import com.ssafy.kirin.dto.UserDTO;
 import com.ssafy.kirin.dto.request.ChallengeCommentRequestDTO;
 import com.ssafy.kirin.dto.request.ChallengeRequestDTO;
 import com.ssafy.kirin.dto.request.StarChallengeRequestDTO;
-import com.ssafy.kirin.dto.response.ChallengeCommentDTO;
-import com.ssafy.kirin.dto.response.ChallengeDTO;
-import com.ssafy.kirin.dto.response.ChallengeDetailDTO;
-import com.ssafy.kirin.dto.response.ChallengeSelectResponseDTO;
+import com.ssafy.kirin.dto.response.*;
 import com.ssafy.kirin.service.ChallengeService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -57,11 +54,14 @@ public class ChallengeController {
                 };
             default -> new ArrayList<>();
             };
-
-
-
         return ResponseEntity.ok(list);
-        }
+    }
+
+    @GetMapping("/participate")
+    @ApiOperation(value = "내가 참여한 챌린지 리스트")
+    public ResponseEntity<List<MyChallengeResponseDTO>> myChallengeList(@ApiIgnore @AuthenticationPrincipal UserDTO userDTO){
+        return ResponseEntity.ok(challengeService.getMyChallengelist(userDTO.getId()));
+    }
 
     @GetMapping("/user/{userId}")
     @ApiOperation(value = "내가 좋아요한 챌린지 리스트")
@@ -174,5 +174,4 @@ public class ChallengeController {
         challengeService.unlikeChallnegeComment(userDTO.getId(), commentId);
         return ResponseEntity.ok().build();
     }
-
 }

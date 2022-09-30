@@ -8,9 +8,9 @@ import com.ssafy.kirin.entity.Wallet;
 
 import java.math.BigInteger;
 public interface EthereumService {
-    StarChallengeDTO createFundContract(User user, int amount, BigInteger startTime, BigInteger endTime, BigInteger targetNum, String beneficiary) throws Exception;
+    StarChallengeDTO createFundContract(User user, long amount, BigInteger startTime, BigInteger endTime, BigInteger targetNum, String beneficiary) throws Exception;
     void addToken(UserDTO user, int amount) throws Exception;
-    String fundToken(User user, String fundContract, int amount) throws Exception;
+    String fundToken(User user, String fundContract, long amount) throws Exception;
     void withdrawToken(String fundContract, int amount, String privatekey) throws Exception;
     int getTokenAmount(User user) throws Exception;
 

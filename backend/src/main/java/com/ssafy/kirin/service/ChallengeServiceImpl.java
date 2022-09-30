@@ -50,6 +50,7 @@ public class ChallengeServiceImpl implements ChallengeService {
     private final ChallengeContractRepository challengeContractRepository;
     private final DonationRepository donationRepository;
     private final ChallengeCommentLikeRepository challengeCommentLikeRepository;
+    private final ChallengeRepositoryCustom challengeRepositoryCustom;
     @Value("${property.app.upload-path}")
     private String challengeDir;
 //    @Value("${kirin.stamp}")
@@ -255,13 +256,18 @@ public class ChallengeServiceImpl implements ChallengeService {
 
             CelebChallengeInfo celebChallengeInfo = celebChallengeInfoRepository.findByChallengeId(challengeId);
             List<DonationDTO> donationList = donationRepository.findByChallenge_challengeId(challengeId)
-                    .stream().sorted((o1, o2) -> o2.getAmount()-o1.getAmount())
+                    .stream().sorted((o1, o2) -> (int) (o2.getAmount()-o1.getAmount()))
                     .map(d->new DonationDTO(d.getAmount(),d.getChallenge().getUser().getNickname())).collect(Collectors.toList());
             return new ChallengeDetailDTO(celebChallengeInfo.getInfo(),donationList,celebChallengeInfo.getDonationOrganization().getName(),
                     celebChallengeInfo.getStartDate(), celebChallengeInfo.getEndDate(), celebChallengeInfo.getTargetAmount(),
                     celebChallengeInfo.getTargetNum(), celebChallengeInfo.getCurrentNum(), celebChallengeInfo.getCurrentAmount());
         }else return null;
 
+    }
+
+    @Override
+    public List<MyChallengeResponseDTO> getMyChallengelist(Long userId) {
+        return challengeRepositoryCustom.findMyChallengesByUserId(userId);
     }
 
     @Scheduled(initialDelay = 1000, fixedRateString = "${challenge.expiration.check-interval}")
@@ -486,7 +492,6 @@ public class ChallengeServiceImpl implements ChallengeService {
         }catch (Exception e) {
             throw new RuntimeException(e);
         }
-
     }
 
     public ChallengeDTO mapChallengeDTO(Challenge challenge) {
