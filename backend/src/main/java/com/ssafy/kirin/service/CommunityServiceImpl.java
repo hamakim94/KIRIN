@@ -143,7 +143,7 @@ public class CommunityServiceImpl implements CommunityService {
 
         CommunityComment communityComment = CommunityComment.builder()
                 .content(dto.content()).reg(LocalDateTime.now())
-                .communityId(communityId).user(user).parentId(null)
+                .communityId(communityId).user(user).parentId(dto.parentId())
                 .isComment(dto.isComment())
                 .build();
         // 댓글 게시자에게 알림
