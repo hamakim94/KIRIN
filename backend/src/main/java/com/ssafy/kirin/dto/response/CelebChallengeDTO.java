@@ -1,19 +1,8 @@
 package com.ssafy.kirin.dto.response;
 
-import com.ssafy.kirin.entity.User;
-import io.swagger.models.auth.In;
-import lombok.*;
-
 import java.time.LocalDateTime;
 
-@Getter
-@Setter
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
-@ToString
-public class ChallengeDTO {
+public class CelebChallengeDTO {
     Long id;
     String title;
     String video;
@@ -32,4 +21,5 @@ public class ChallengeDTO {
     Integer currentNum;
     Integer currentAmount;
     Boolean liked;
+
 }
