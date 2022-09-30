@@ -42,6 +42,7 @@ public class ChallengeController {
             case "stars" -> switch (order){
                 case "popularity" -> challengeService.listStarsByPopularity();
                 case "latest" -> challengeService.listStarsByLatest();
+                case "random" -> challengeService.listStarsByRandom();
                 default -> new ArrayList<>();
                 };
             case "general" -> switch (order){

@@ -5,7 +5,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -16,5 +15,4 @@ public interface ChallengeRepository extends JpaRepository<Challenge, Long> {
     List<Challenge> findByIsOriginalAndIsProceedingAndChallengeId(boolean isOriginal, boolean isProceeding, long challengeId);
     List<Challenge> findByChallengeId(long challengeId);
     List<Challenge> findByUserId(long userId);
-
 }
