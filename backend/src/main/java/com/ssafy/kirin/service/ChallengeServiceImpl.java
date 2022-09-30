@@ -441,6 +441,8 @@ public class ChallengeServiceImpl implements ChallengeService {
             //delete original videoFile
             Files.delete(videoTmp);
 
+            System.out.println("start date : " + BigInteger.valueOf(Timestamp.valueOf(starChallengeRequestDTO.startDate()).getTime()));
+            System.out.println("start date : " + BigInteger.valueOf(Timestamp.valueOf(starChallengeRequestDTO.endDate()).getTime()));
             //Contract 생성 및 토큰 전송, 트랜잭션 저장
             StarChallengeDTO starChallengeDTO = ethereumService.createFundContract(
                     user,
