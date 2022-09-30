@@ -9,17 +9,39 @@ function CoummnityFooter(props) {
   const [commentData, setCommentData] = useState(null);
   const [like, setLike] = useState(null);
   const [commentCnt, setCommentCnt] = useState(null);
+  const [checkWrite, setCheckWrite] = useState(false);
   const [replyCheck, setReplyCheck] = useState(null);
   useEffect(() => {
+    UseAxios.get(
+      `/communities/stars/${location.state.starId}/boards/${location.state.boardId}/comments`
+    ).then((res) => {
+      setCommentData(res.data);
+    });
     if (props.data) {
-      setCommentData(props.data.commentList);
       setLike({
         likeCnt: props.data.communityDTO.likeCnt,
         liked: props.data.communityDTO.liked,
       });
       setCommentCnt(props.data.communityDTO.commentCnt);
     }
-  }, [props.data]);
+  }, []);
+
+  useEffect(() => {
+    if (checkWrite) {
+      UseAxios.get(
+        `/communities/stars/${location.state.starId}/boards/${location.state.boardId}/comments`
+      ).then((res) => {
+        setCommentData(res.data);
+      });
+      if (props.data) {
+        setLike({
+          likeCnt: props.data.communityDTO.likeCnt,
+          liked: props.data.communityDTO.liked,
+        });
+        setCommentCnt(props.data.communityDTO.commentCnt);
+      }
+    }
+  }, [checkWrite]);
 
   const likeButtonClick = () => {
     if (!like.liked) {
@@ -68,6 +90,10 @@ function CoummnityFooter(props) {
           styles={props.styles}
           commentData={commentData}
           setCommentData={setCommentData}
+          commentCnt={commentCnt}
+          setCommentCnt={setCommentCnt}
+          checkWrite={checkWrite}
+          setCheckWrite={setCheckWrite}
         ></CommentInput>
         <CommentList styles={props.styles} commentData={commentData}></CommentList>
       </div>

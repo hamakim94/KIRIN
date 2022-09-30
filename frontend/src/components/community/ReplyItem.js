@@ -4,7 +4,7 @@ import UseAxios from '../../utils/UseAxios';
 import TimeForToday from '../common/TimeForToday';
 import { useLocation } from 'react-router-dom';
 
-function CommentItem(props) {
+function ReplyItem(props) {
   const location = useLocation();
   const [item, setItem] = useState(null);
   const [like, setLike] = useState(null);
@@ -85,4 +85,4 @@ function CommentItem(props) {
   );
 }
 
-export default CommentItem;
+export default ReplyItem;
