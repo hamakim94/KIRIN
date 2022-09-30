@@ -19,11 +19,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.BufferedReader;
@@ -403,6 +401,10 @@ public class ChallengeServiceImpl implements ChallengeService {
     }
 
     public List<ChallengeDTO> challegeListToChallengDTOList(List<Challenge> challengeList){
+        Map<Long,Long> celebChallengeInfos = celebChallengeInfoRepository.findAll().stream()
+                .collect(Collectors.toMap(o->o.getChallenge().getId(),d->d.getDonationOrganization().getId()));
+        Map<Long, String> donaOrganMap = donationOrganizationRepository.findAll().stream()
+                .collect(Collectors.toMap(DonationOrganization::getId,DonationOrganization::getName));
 
         UserDTO userDTO = (UserDTO) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if(userDTO!=null){
@@ -414,6 +416,7 @@ public class ChallengeServiceImpl implements ChallengeService {
                     .map(o->{
                         ChallengeDTO dto = this.mapChallengeDTO(o);
                         if(challengeIdSet.contains(o.getId())) dto.setLiked(true);
+                        dto.setDonationOrganizationName(donaOrganMap.get(celebChallengeInfos.get(o.getChallengeId())));
                         return dto;
                     })
                     .collect(Collectors.toList());
@@ -421,7 +424,11 @@ public class ChallengeServiceImpl implements ChallengeService {
         }
 
         return challengeList.stream()
-                .map(this::mapChallengeDTO)
+                .map(o->{
+                        ChallengeDTO dto = this.mapChallengeDTO(o);
+                        dto.setDonationOrganizationName(donaOrganMap.get(celebChallengeInfos.get(o.getChallengeId())));
+                        return dto;
+                })
                 .collect(Collectors.toList());
     }
 }

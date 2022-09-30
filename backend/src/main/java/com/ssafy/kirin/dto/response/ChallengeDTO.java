@@ -32,4 +32,5 @@ public class ChallengeDTO {
     Integer currentNum;
     Integer currentAmount;
     Boolean liked;
+    String donationOrganizationName;
 }
