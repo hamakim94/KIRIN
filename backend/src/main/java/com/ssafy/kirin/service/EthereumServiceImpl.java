@@ -108,7 +108,7 @@ public class EthereumServiceImpl implements EthereumService {
         gasCheck(credentials);
         Transaction transaction = transferToken(web3jUtil.getAdminCredentials(ADMIN_PRIVATE_KEY), credentials.getAddress(), amount);
         transactionRepository.save(transaction);
-        user.getWallet().addCash(getTokenAmount(user));
+        user.getWallet().setCash(getTokenAmount(user));
         walletRepository.save(user.getWallet());
     }
     @Override
