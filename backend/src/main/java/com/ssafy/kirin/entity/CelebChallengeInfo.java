@@ -40,13 +40,13 @@ public class CelebChallengeInfo {
     Integer targetNum;
 
     @Column(name = "target_amount")
-    Integer targetAmount;
+    Long targetAmount;
 
     @Formula("(SELECT COUNT(*) FROM donation d WHERE d.challenge_id=challenge_id)")
     Integer currentNum;
 
     @Formula("(SELECT SUM(d.amount) FROM donation d WHERE d.challenge_id=challenge_id)")
-    Integer currentAmount;
+    Long currentAmount;
 
     @OneToOne
     @JoinColumn(name = "contract_id")
