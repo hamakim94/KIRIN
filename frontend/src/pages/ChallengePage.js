@@ -5,8 +5,10 @@ import styles from './ChallengePage.module.css';
 import ShowChallenge from '../components/challenge/ShowChallenge';
 import ShowDonationNow from '../components/challenge/ShowDonationNow';
 import ShowDonationInfo from '../components/challenge/ShowDonationInfo';
-
+import { useLocation } from 'react-router-dom';
 function ChallengePage() {
+  const location = useLocation();
+  console.log(location);
   const data = [
     {
       id: 0,
@@ -29,7 +31,7 @@ function ChallengePage() {
   return (
     <div>
       <ChallengeTop styles={styles}></ChallengeTop>
-      <ChallengeStarProfile styles={styles}> </ChallengeStarProfile>
+      <ChallengeStarProfile data={location.state.data} styles={styles}></ChallengeStarProfile>
       <ul className={styles.tabMenu}>
         {data.map((item) => (
           <li

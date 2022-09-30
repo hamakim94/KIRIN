@@ -1,9 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import styles from './MyChallenge.module.css';
 import LikeChallenge from './LikeChallenge';
 import DoChallenge from './DoChallenge';
+import UseAxios from '../../utils/UseAxios';
+import Context from '../../utils/Context';
 
-function ChallengeList(props) {
+function ChallengeList() {
+  const { userData } = useContext(Context);
+  useEffect(() => {
+    UseAxios.get(`challenges/user/${userData.id}`).then((res) => console.log(res));
+  }, []);
+
   const data = [
     {
       id: 0,

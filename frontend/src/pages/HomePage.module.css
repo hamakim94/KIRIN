@@ -8,6 +8,9 @@
   height: 75px;
   object-fit: cover;
   border-radius: 100%;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #c9c9c9;
   margin-right: 10px;
 }
 

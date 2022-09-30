@@ -1,12 +1,12 @@
 import React from 'react';
 import SettingMenu from '../components/setting/SettingMenu';
-import SettingTop from '../components/setting/SettingTop';
+import Header from '../components/common/Header';
 import styles from './SettingPage.module.css';
 
 function SettingPage() {
   return (
-    <div>
-      <SettingTop styles={styles}></SettingTop>
+    <div className='wrapper'>
+      <Header title={'설정'}></Header>
       <SettingMenu styles={styles}></SettingMenu>
     </div>
   );
