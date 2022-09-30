@@ -4,6 +4,7 @@ import com.ssafy.kirin.entity.Transaction;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 import org.web3j.crypto.Credentials;
 import org.web3j.crypto.RawTransaction;
 import org.web3j.crypto.TransactionEncoder;
@@ -31,17 +32,20 @@ import java.util.Optional;
 import java.util.TimeZone;
 import java.util.concurrent.ScheduledExecutorService;
 
+@Service
 public class Web3jUtil {
     public final Web3j web3j = Web3j.build(new HttpService("http://j7a708.p.ssafy.io:8888"));
-    @Value("${ADMIN_PRIVATE_KEY}")
+//    @Value("${ADMIN_PRIVATE_KEY}")
     private String ADMIN_PRIVATE_KEY;
 
-//    public Web3jUtil() {
-//        adminCredentials = Credentials.create(ADMIN_PRIVATE_KEY);
-//    }
+//    public Web3jUtil() {}
+//
+    public Web3jUtil(@Value("${ADMIN_PRIVATE_KEY}") String privatekey) {
+        ADMIN_PRIVATE_KEY = privatekey;
+    }
 
-    public Credentials getAdminCredentials() {
-        return Credentials.create(ADMIN_PRIVATE_KEY);
+    public Credentials getAdminCredentials(String adminPrivatekey) {
+        return Credentials.create(adminPrivatekey);
     }
 
     public Web3j getWeb3J() {
@@ -96,6 +100,7 @@ public class Web3jUtil {
         System.out.println("balance : "+ balance);
         Transaction newTransaction = null;
         if (balance.compareTo(Convert.toWei("1", Convert.Unit.GWEI).toBigInteger())<=0 ){
+            System.out.println(ADMIN_PRIVATE_KEY);
             TransactionManager transactionManager = new RawTransactionManager(web3j, Credentials.create(ADMIN_PRIVATE_KEY), 97889218, 100, 100L);
             Transfer transfer = new Transfer(web3j, transactionManager);
             String hash =  transfer.sendFunds(credentials.getAddress(), BigDecimal.valueOf(1.0), Unit.ETHER).send().getTransactionHash();
