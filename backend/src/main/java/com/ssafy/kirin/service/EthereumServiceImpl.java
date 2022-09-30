@@ -1,5 +1,6 @@
 package com.ssafy.kirin.service;
 
+import com.ssafy.kirin.contracts.ERC20;
 import com.ssafy.kirin.contracts.FundRaising;
 import com.ssafy.kirin.contracts.IERC20;
 import com.ssafy.kirin.dto.StarChallengeDTO;
@@ -117,9 +118,15 @@ public class EthereumServiceImpl implements EthereumService {
         gasCheck((credentials));
         TransactionManager transactionManager = new RawTransactionManager(web3j, credentials, 97889218, 300, 100L);
         ContractGasProvider gasProvider = new DefaultGasProvider();
-        FundRaising fundRaising = FundRaising.load(fundContract, web3j, transactionManager, gasProvider);
-        String trasactionHash = fundRaising.fundToken(BigInteger.valueOf(amount)).send().getTransactionHash();
+        //increase Allowance
+        ERC20 erc20 = ERC20.load(TOKENCONTRACTADDRESS, web3j, transactionManager, gasProvider);
+        String trasactionHash = erc20.increaseAllowance(fundContract, BigInteger.valueOf(amount)).send().getTransactionHash();
         Transaction transaction = web3jUtil.makeTransactionEntity(web3j.ethGetTransactionByHash(trasactionHash).send().getResult());
+        transactionRepository.save(transaction);
+        //funToken
+        FundRaising fundRaising = FundRaising.load(fundContract, web3j, transactionManager, gasProvider);
+        trasactionHash = fundRaising.fundToken(BigInteger.valueOf(amount)).send().getTransactionHash();
+        transaction = web3jUtil.makeTransactionEntity(web3j.ethGetTransactionByHash(trasactionHash).send().getResult());
         transactionRepository.save(transaction);
         user.getWallet().setCash(getTokenAmount(user));
         walletRepository.save(user.getWallet());
