@@ -5,6 +5,7 @@ import com.ssafy.kirin.contracts.FundRaising;
 import com.ssafy.kirin.contracts.IERC20;
 import com.ssafy.kirin.dto.StarChallengeDTO;
 import com.ssafy.kirin.dto.UserDTO;
+import com.ssafy.kirin.dto.response.TransactionDTO;
 import com.ssafy.kirin.entity.*;
 import com.ssafy.kirin.repository.DonationRepository;
 import com.ssafy.kirin.repository.TransactionRepository;
@@ -30,6 +31,8 @@ import org.web3j.tx.gas.DefaultGasProvider;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -217,4 +220,20 @@ public class EthereumServiceImpl implements EthereumService {
         return participatedNum.intValue();
     }
 
+    @Override
+    public List<TransactionDTO> getTransactions() {
+        List<Transaction> list = transactionRepository.findAll();
+        List<TransactionDTO> DTOList = new ArrayList<>();
+        for (Transaction item: list) {
+            DTOList.add(TransactionDTO.builder()
+                    .hash(item.getHash())
+                    .fromHash(item.getFromHash())
+                    .toHash(item.getToHash())
+                    .reg(item.getReg())
+                    .build()
+            );
+        }
+
+        return DTOList;
+    }
 }
