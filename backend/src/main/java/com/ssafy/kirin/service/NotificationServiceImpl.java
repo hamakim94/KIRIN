@@ -13,6 +13,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 @Service
 @RequiredArgsConstructor
 public class NotificationServiceImpl implements NotificationService {
@@ -26,31 +30,25 @@ public class NotificationServiceImpl implements NotificationService {
     private final CommunityCommentRepository communityCommentRepository;
     @Override
     public SseEmitter subscribe(Long userId) {
-        System.out.println("subscribe accepted for userID : " + userId);
+
         SseEmitter sseEmitter = new SseEmitter(Long.MAX_VALUE);
-        System.out.println("new sseEmitter created");
-        sseEmitters.put(userId, sseEmitter);
-        System.out.println("new sseEmitter inserted to map");
-        try {
-            // 연결!!
-            sseEmitter.send(SseEmitter.event().name("connect"));
-            System.out.println("event.connect sent");
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.execute(()->{
+
+            sseEmitters.put(userId, sseEmitter);
             List<Notification> list = notificationRepository.findByUserIdAndIsRead(userId, false);
-            try {
+            try{
+                sseEmitter.send(SseEmitter.event().name("connect"));
                 sseEmitter.send(list);
+                sseEmitter.onCompletion(() -> sseEmitters.remove(userId));
+                sseEmitter.onTimeout(() -> sseEmitters.remove(userId));
+                sseEmitter.onError((e) -> sseEmitters.remove(userId));
+
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        sseEmitter.onCompletion(() -> sseEmitters.remove(userId));
-        System.out.println("SseEmitter on completion");
-        sseEmitter.onTimeout(() -> sseEmitters.remove(userId));
-        System.out.println("SseEmitter on Timeout");
-        sseEmitter.onError((e) -> sseEmitters.remove(userId));
-        System.out.println("SseEmitter on Error");
-
+        });
+        executor.shutdown();
         return sseEmitter;
     }
 
@@ -83,5 +81,12 @@ public class NotificationServiceImpl implements NotificationService {
         List<Notification> list = notificationRepository.findByUserIdAndIsRead(userID, true);
         for(Notification notification : list)
             notification.setIsRead(true);
+    }
+    private void randomDelay() {
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
     }
 }
