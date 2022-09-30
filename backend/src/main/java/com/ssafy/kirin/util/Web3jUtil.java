@@ -35,14 +35,13 @@ public class Web3jUtil {
     public final Web3j web3j = Web3j.build(new HttpService("http://j7a708.p.ssafy.io:8888"));
     @Value("${ADMIN_PRIVATE_KEY}")
     private String ADMIN_PRIVATE_KEY;
-    public final Credentials adminCredentials = Credentials.create("0x6d08bfd0c97215c9e7eda22005053fa9e4a90840f2d3759d420c3dc7e7c88d4c");
 
 //    public Web3jUtil() {
 //        adminCredentials = Credentials.create(ADMIN_PRIVATE_KEY);
 //    }
 
     public Credentials getAdminCredentials() {
-        return adminCredentials;
+        return Credentials.create(ADMIN_PRIVATE_KEY);
     }
 
     public Web3j getWeb3J() {
@@ -97,7 +96,7 @@ public class Web3jUtil {
         System.out.println("balance : "+ balance);
         Transaction newTransaction = null;
         if (balance.compareTo(Convert.toWei("1", Convert.Unit.GWEI).toBigInteger())<=0 ){
-            TransactionManager transactionManager = new RawTransactionManager(web3j, adminCredentials, 97889218, 100, 100L);
+            TransactionManager transactionManager = new RawTransactionManager(web3j, Credentials.create(ADMIN_PRIVATE_KEY), 97889218, 100, 100L);
             Transfer transfer = new Transfer(web3j, transactionManager);
             String hash =  transfer.sendFunds(credentials.getAddress(), BigDecimal.valueOf(1.0), Unit.ETHER).send().getTransactionHash();
             newTransaction = makeTransactionEntity(web3j.ethGetTransactionByHash(hash).send().getResult());
