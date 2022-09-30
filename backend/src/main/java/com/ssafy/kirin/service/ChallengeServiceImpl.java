@@ -272,7 +272,7 @@ public class ChallengeServiceImpl implements ChallengeService {
         challengeRepository.findAllById(celebChallengeInfoRepository.findByEndDateBefore(LocalDateTime.now())
                         .stream().map(o->o.getChallenge().getChallengeId())
                         .collect(Collectors.toList()))
-                .forEach(o -> {o.setIsProceeding(false);
+                .stream().filter(Challenge::getIsProceeding).forEach(o -> {o.setIsProceeding(false);
                                 //get list of following challenges
                                 challengeRepository.findByChallengeId(o.getId())
                                         .forEach(c -> {
