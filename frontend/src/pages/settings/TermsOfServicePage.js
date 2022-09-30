@@ -1,20 +1,11 @@
 import React from 'react';
-import { AiFillSetting } from 'react-icons/ai';
-import { BiArrowBack } from 'react-icons/bi';
+import Header from '../../components/common/Header';
 import styles from './SettingsPage.module.css';
 
 function TermsOfServicePage() {
   return (
-    <div>
-      <div className={styles.topBox}>
-        <a href="/mypage/setting">
-          <BiArrowBack className={styles.back}></BiArrowBack>
-        </a>
-        <div className={styles.pageTitle}>서비스 이용약관</div>
-        <div>
-          <AiFillSetting className={styles.fakeSetting}></AiFillSetting>
-        </div>
-      </div>
+    <div className='wrapper'>
+      <Header title={'서비스 이용약관'}></Header>
       <div className={styles.contentBox}>
         <div style={{ padding: 10 }}>
           제1장 총칙 제1조(목적) 이 약관은 회사가 온라인으로 제공하는 디지털콘텐츠(이하 "콘텐츠"라고

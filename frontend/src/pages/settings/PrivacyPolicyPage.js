@@ -1,20 +1,11 @@
 import React from 'react';
-import { AiFillSetting } from 'react-icons/ai';
-import { BiArrowBack } from 'react-icons/bi';
+import Header from '../../components/common/Header';
 import styles from './SettingsPage.module.css';
 
 function PrivacyPolicyPage() {
   return (
-    <div>
-      <div className={styles.topBox}>
-        <a href="/mypage/setting">
-          <BiArrowBack className={styles.back}></BiArrowBack>
-        </a>
-        <div className={styles.pageTitle}>개인정보 처리방침</div>
-        <div>
-          <AiFillSetting className={styles.fakeSetting}></AiFillSetting>
-        </div>
-      </div>
+    <div className='wrapper'>
+      <Header title={'개인정보 처리방침'}></Header>
       <div className={styles.contentBox}>
         <div style={{ padding: 10 }}>
           1 개인정보의 처리 목적 ① 기린은(는) 다음의 목적을 위하여 개인정보를 처리하고 있으며,
