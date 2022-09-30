@@ -3,7 +3,7 @@ import ChallengeCard from './ChallengeCard';
 
 function ChallengeList(props) {
   return (
-    <div className={`${props.styles.challengeContainer} ${props.styles.hScroll}`}>
+    <div className={props.styles.challengeContainer}>
       <div>
         {props.data
           ? props.data.map((item, index) => (

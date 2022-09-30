@@ -38,6 +38,7 @@ import WalletPage from './pages/WalletPage';
 import SuccessPage from './pages/SuccessPage';
 import FailPage from './pages/FailPage';
 import WalletModal from './components/wallet/WalletModal';
+import CommunityCreatePage from './pages/CommunityCreatePage';
 
 function App() {
   const [blob, setBlob] = useState(null);
@@ -46,10 +47,33 @@ function App() {
   const cookies = new Cookies();
   const value = cookies.get('accesstoken');
   useEffect(() => {
+    let sseEvents;
     if (value) {
       UseAxios.get(`/users/profiles`).then((res) => {
         setUserData(res.data);
       });
+
+      //   sseEvents = new EventSource(`/api/notify/subscribe?userId=30`, { withCredentials: true });
+
+      //   sseEvents.onopen = () => {
+      //     console.log('연결');
+      //     // 연결 됐을 때
+      //   };
+      //   sseEvents.onerror = (event) => {
+      //     console.log(event);
+      //     // 에러 났을 때
+      //   };
+      //   sseEvents.onmessage = (event) => {
+      //     // 메세지 받았을 때
+      //     console.log(event);
+      //   };
+      // }
+      // return () => {
+      //   if (sseEvents) {
+      //     sseEvents.close();
+      //     console.log('eventsource closed');
+      //   }
+      // };
     }
   }, []);
   return (
@@ -70,8 +94,12 @@ function App() {
                 <Route path='/register' element={<RegisterPage></RegisterPage>}></Route>
                 <Route path='/star/:starId' element={<StarPage></StarPage>}></Route>
                 <Route
-                  path='/star/:starId/community'
+                  path='/star/:starId/community/:communityId'
                   element={<CommunityPage></CommunityPage>}
+                ></Route>
+                <Route
+                  path='/star/:starId/community/create'
+                  element={<CommunityCreatePage></CommunityCreatePage>}
                 ></Route>
                 <Route
                   path='/challenge/:challengeId'
@@ -80,16 +108,6 @@ function App() {
                 <Route path='*' element={<NotFoundPage></NotFoundPage>}></Route>
                 <Route path='/mypage' element={<MyPage></MyPage>}></Route>
                 <Route path='/mypage/setting' element={<SettingPage></SettingPage>}></Route>
-                <Route path='/dashboard' element={<DashboardPage></DashboardPage>}></Route>
-                <Route
-                  path='/dashboard/blockchain'
-                  element={<BlockchainPage></BlockchainPage>}
-                ></Route>
-                <Route
-                  path='/dashboard/transaction'
-                  element={<TransactionPage></TransactionPage>}
-                ></Route>
-                <Route path='/create/deploy' element={<ContractDeploy></ContractDeploy>}></Route>
                 <Route
                   path='/mypage/setting/editprofile'
                   element={<EditProfilePage></EditProfilePage>}
@@ -108,6 +126,16 @@ function App() {
                   element={<PrivacyPolicyPage></PrivacyPolicyPage>}
                 ></Route>
                 <Route path='/mypage/wallet' element={<WalletPage></WalletPage>}></Route>
+                <Route path='/dashboard' element={<DashboardPage></DashboardPage>}></Route>
+                <Route
+                  path='/dashboard/blockchain'
+                  element={<BlockchainPage></BlockchainPage>}
+                ></Route>
+                <Route
+                  path='/dashboard/transaction'
+                  element={<TransactionPage></TransactionPage>}
+                ></Route>
+                <Route path='/create/deploy' element={<ContractDeploy></ContractDeploy>}></Route>
                 <Route path='/signup' element={<SignupPage></SignupPage>}></Route>
                 <Route path='/login' element={<LoginPage></LoginPage>}></Route>
                 <Route path='/finishsignup' element={<FinishSignupPage></FinishSignupPage>}></Route>

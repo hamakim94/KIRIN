@@ -1,13 +1,14 @@
-import React from "react";
-import CommunityItem from "./CommunityItem";
+import React from 'react';
+import CommunityItem from './CommunityItem';
 
-function CommunityList() {
+function CommunityList(props) {
   return (
-    <div className={styles.hScroll}>
-      <CommunityItem styles={styles}></CommunityItem>
-      <CommunityItem styles={styles}></CommunityItem>
-      <CommunityItem styles={styles}></CommunityItem>
-      <CommunityItem styles={styles}></CommunityItem>
+    <div className={props.styles.hScroll}>
+      {props.data
+        ? props.data.map((item, index) => (
+            <CommunityItem styles={props.styles} item={item} index={index} key={item.id} />
+          ))
+        : ''}
     </div>
   );
 }

@@ -12,7 +12,7 @@ import swal from 'sweetalert';
 import Sheet from 'react-modal-sheet';
 import SavanaComment from './SavanaComment';
 import UseAxios from '../../utils/UseAxios';
-import Context from '../../utils/Context';
+import { useNavigate } from 'react-router-dom';
 
 function ProgressBar(props) {
   const [value, setValue] = useState(0);
@@ -34,6 +34,7 @@ function ChallengeCard(props) {
   const [copied, setCopied] = useState(false);
   const [isOpen, setOpen] = useState(false);
   const [data, setData] = useState(null);
+  const navigate = useNavigate();
 
   function copy() {
     const el = document.createElement('input');
@@ -101,12 +102,20 @@ function ChallengeCard(props) {
         <div className={props.styles.blankBox}></div>
 
         <div className={props.styles.iconBox}>
-          <a href="/challenge/${challengeId}">
+          <a
+            onClick={() =>
+              navigate(`/challenge/${data.challengeId}`, {
+                state: {
+                  data,
+                },
+              })
+            }
+          >
             <RiZoomInFill className={props.styles.clickIcon}></RiZoomInFill>
           </a>
           <div>
             <a onClick={likeButtonClick}>
-              {data.liked ? (
+              {!data.liked ? (
                 <RiHeart2Line className={props.styles.clickIcon}></RiHeart2Line>
               ) : (
                 <RiHeart2Fill className={props.styles.likeIcon}></RiHeart2Fill>
@@ -115,7 +124,7 @@ function ChallengeCard(props) {
             <div className={props.styles.iconCount}>{data.likeCnt}</div>
           </div>
           <div>
-            <a onClick={() => setOpen(true)} class="button">
+            <a onClick={() => setOpen(true)} class='button'>
               <RiMessage3Line className={props.styles.clickIcon}></RiMessage3Line>
               <Sheet isOpen={isOpen} onClose={() => setOpen(false)}>
                 <Sheet.Container style={{ height: '500px' }}>
@@ -156,11 +165,11 @@ function ChallengeCard(props) {
           },
         }}
         url={`${data.video}`}
-        width="100%"
-        height="100%"
+        width='100%'
+        height='100%'
         playing={hover}
         controls={false}
-        volume={1}
+        volume={0.1}
       />
     </div>
   ) : (

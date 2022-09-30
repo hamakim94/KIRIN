@@ -1,19 +1,31 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import Header from '../components/common/Header';
-import CommunityComment from '../components/community/CommunityComment';
 import CommunityContent from '../components/community/CommunityContent';
 import CommunityWriter from '../components/community/CommunityWriter';
 import CoummnityFooter from '../components/community/CoummnityFooter';
+import UseAxios from '../utils/UseAxios';
 import styles from './CommunityPage.module.css';
 function CommunityPage() {
-  return (
+  const [data, setData] = useState(null);
+  const location = useLocation();
+  useEffect(() => {
+    UseAxios.get(
+      `/communities/stars/${location.state.starId}/boards/${location.state.boardId}`
+    ).then((res) => {
+      setData(res.data);
+    });
+  }, []);
+  return data ? (
     <div className='wrapper'>
-      <Header title={'새콤달콤'}></Header>
-      <CommunityWriter styles={styles}></CommunityWriter>
-      <CommunityContent styles={styles}></CommunityContent>
-      <CoummnityFooter styles={styles}></CoummnityFooter>
-      <CommunityComment styles={styles}></CommunityComment>
+      <Header title={data.communityDTO.user.nickname}></Header>
+      <CommunityWriter data={data.communityDTO} styles={styles}></CommunityWriter>
+      <CommunityContent data={data.communityDTO} styles={styles}></CommunityContent>
+      <CoummnityFooter data={data} styles={styles}></CoummnityFooter>
     </div>
+  ) : (
+    '로딩로딩'
   );
 }
 

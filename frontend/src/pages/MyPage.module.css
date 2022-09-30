@@ -1,9 +1,7 @@
 .topBox {
   display: flex;
   flex-direction: row;
-  margin-top: 20px;
   margin-bottom: 40px;
-
   justify-content: space-between;
 }
 
@@ -87,6 +85,9 @@
   height: 60px;
   object-fit: cover;
   border-radius: 100%;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #c9c9c9;
 }
 
 .starName {

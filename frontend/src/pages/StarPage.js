@@ -1,12 +1,13 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import ChallengeList from '../components/home/ChallengeList';
 import HomeCategory from '../components/home/HomeCategory';
-import CommunityItem from '../components/star/CommunityItem';
 import styles from './StarPage.module.css';
 import UseAxios from '../utils/UseAxios';
 import Context from '../utils/Context';
 import { Avatar } from '@mui/material';
 import StarPageModal from '../components/star/StarPageModal';
+import { useNavigate } from 'react-router-dom';
+import CommunityList from '../components/star/CommunityList';
 
 function StarPage() {
   const [starInfo, setStarInfo] = useState({});
@@ -15,9 +16,11 @@ function StarPage() {
   const [coverImg, setCoverImg] = useState('');
   const [subscribed, setSubscribed] = useState(false);
   const [info, setInfo] = useState('');
+  const [communityData, setCommunityData] = useState(null);
+  const navigate = useNavigate();
+  const location = window.location.href.split('/');
+  const starId = Number(location[location.length - 1]);
   useEffect(() => {
-    const location = window.location.href.split('/');
-    const starId = Number(location[location.length - 1]);
     UseAxios.get(`/users/stars/${starId}`).then((res) => {
       setStarInfo(res.data);
       setCoverImg(`/files/${res.data.coverImg}`);
@@ -27,6 +30,9 @@ function StarPage() {
       if (res.data.findIndex((stars) => stars.id === starId) > -1) {
         setSubscribed(true);
       }
+    });
+    UseAxios.get(`/communities/stars/${starId}`).then((res) => {
+      setCommunityData(res.data);
     });
   }, []);
 
@@ -138,7 +144,7 @@ function StarPage() {
             borderRadius: '100%',
             width: '100px',
             height: '100px',
-            border: '1px solid rgba(0,0,0)',
+            border: '1px solid rgba(0,0,0, 0.3)',
           }}
         ></div>{' '}
         {/* 프로필사진 */}
@@ -179,13 +185,19 @@ function StarPage() {
       <ChallengeList styles={styles}></ChallengeList>
       <div className={styles.titleBox}>
         <HomeCategory title={'커뮤니티'} styles={styles}></HomeCategory>
+        {userData ? (
+          userData.id === starId ? (
+            <div style={{ marginRight: 20 }} onClick={() => navigate('community/create')}>
+              작성
+            </div>
+          ) : (
+            ''
+          )
+        ) : (
+          ''
+        )}
       </div>
-      <div className={styles.hScroll}>
-        <CommunityItem styles={styles}></CommunityItem>
-        <CommunityItem styles={styles}></CommunityItem>
-        <CommunityItem styles={styles}></CommunityItem>
-        <CommunityItem styles={styles}></CommunityItem>
-      </div>
+      <CommunityList data={communityData} styles={styles}></CommunityList>
     </div>
   );
 }

@@ -1,10 +1,10 @@
-import React from "react";
-import { RiHeart2Fill } from "react-icons/ri";
-function LikeIcon() {
+import React from 'react';
+import { RiHeart2Fill } from 'react-icons/ri';
+function LikeIcon(props) {
   return (
     <>
       <RiHeart2Fill></RiHeart2Fill>
-      <span>12</span>
+      <span>{props.cnt}</span>
     </>
   );
 }
