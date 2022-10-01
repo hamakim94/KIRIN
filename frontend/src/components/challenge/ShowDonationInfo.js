@@ -36,6 +36,7 @@ function ShowDonationInfo(props) {
       }
     );
   }, []);
+
   return (
     <ThemeProvider theme={theme}>
       <div className={props.styles.infoTop}>
@@ -55,7 +56,7 @@ function ShowDonationInfo(props) {
         </div>
         <div className={props.styles.infoSet}>
           <div className={props.styles.donationInfo}>챌린지 참여</div>
-          {props.data.currentNum}명({props.data.currentNum / props.data.targetNum}%)
+          {props.data.currentNum}명({(props.data.currentNum / props.data.targetNum).toFixed(1)}%)
         </div>
         <div className={props.styles.infoSet}>
           <div className={props.styles.donationInfo}>기부 참여</div>
@@ -80,7 +81,7 @@ function ShowDonationInfo(props) {
         <div className={props.styles.infoBot}>
           <span className={props.styles.infoText}>{props.data.currentNum}명</span>
           <span className={props.styles.infoText}>
-            {props.data.currentNum / props.data.targetNum}%
+            {(props.data.currentNum / props.data.targetNum).toFixed(1)}%
           </span>
         </div>
       </div>

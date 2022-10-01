@@ -93,24 +93,32 @@ hr {
 }
 
 .nowTop {
-  margin-top: 30px;
-  margin-left: 30px;
-  margin-right: 30px;
+  margin-top: 40px;
+  margin-left: 40px;
+  margin-right: 40px;
 }
 .nowList {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
 }
 .medalBox {
   display: flex;
   flex-direction: row;
+  justify-content: space-between;
+  margin-top: 25px;
 }
+
+.medalmedal {
+  display: flex;
+  flex-direction: row;
+}
+
 .number {
   align-self: center;
 }
+.cmcm {
+  justify-content: space-around;
+}
 .nameTocken {
-  margin-left: 10px;
+  margin-left: 20px;
   align-self: center;
 }
 
@@ -172,4 +180,8 @@ hr {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+}
+.reactPlayer > video {
+  pointer-events: none;
+  object-fit: fill;
 }
