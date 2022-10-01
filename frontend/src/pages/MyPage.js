@@ -1,22 +1,61 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import styles from './MyPage.module.css';
 import MyTop from '../components/my/MyTop';
 import Profile from '../components/my/Profile';
 import MyStar from '../components/my/MyStar';
-import MyChallenge from '../components/my/MyChallenge';
-import ChallengeList from '../components/my/ChallengeList';
 import { useNavigate } from 'react-router-dom';
+import HomeCategory from '../components/home/HomeCategory';
+import UseAxios from '../utils/UseAxios';
+import Context from '../utils/Context';
+import ChallengeList from '../components/home/ChallengeList';
 
 function MyPage() {
+  const [isParticipated, setIsParticipated] = useState(true);
+  const [participatedData, setParticipatedData] = useState(null);
+  const [likedData, setLikedData] = useState(null);
+  const { userData } = useContext(Context);
   const navigate = useNavigate();
-  return (
+
+  useEffect(() => {
+    UseAxios.get(`/challenges/participate`).then((res) => {
+      setParticipatedData(res.data);
+    });
+  }, []);
+  useEffect(() => {
+    if (userData) {
+      UseAxios.get(`/challenges/user/${userData.id}`).then((res) => {
+        setLikedData(res.data);
+      });
+    }
+  }, [userData]);
+
+  return userData ? (
     <div className='wrapper'>
       <MyTop styles={styles}></MyTop>
       <Profile styles={styles}></Profile>
       <hr></hr>
       <MyStar styles={styles}></MyStar>
       <hr></hr>
-      <ChallengeList></ChallengeList>
+      <div className={styles.titleBox}>
+        <HomeCategory title={'챌린지'} styles={styles}></HomeCategory>
+        <div className={styles.sortTab}>
+          {isParticipated ? (
+            <span style={{ color: '#ffc947' }}>참여</span>
+          ) : (
+            <span onClick={() => setIsParticipated(true)}>참여</span>
+          )}
+          {isParticipated ? (
+            <span onClick={() => setIsParticipated(false)}>좋아요</span>
+          ) : (
+            <span style={{ color: '#ffc947' }}>좋아요</span>
+          )}
+        </div>
+      </div>
+      {isParticipated ? (
+        <ChallengeList styles={styles} data={participatedData}></ChallengeList>
+      ) : (
+        <ChallengeList styles={styles} data={likedData}></ChallengeList>
+      )}
       <hr></hr>
       <button onClick={() => navigate(`/dashboard`)} className={styles.myWallet}>
         블록체인 대시보드
@@ -28,6 +67,8 @@ function MyPage() {
         등록하기
       </button>
     </div>
+  ) : (
+    ''
   );
 }
 

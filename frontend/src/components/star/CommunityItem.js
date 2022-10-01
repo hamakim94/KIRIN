@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import CommentIcon from '../common/CommentIcon';
-import LikeIcon from '../common/LikeIcon';
+import { RiMessage3Line, RiHeart2Fill, RiHeart2Line } from 'react-icons/ri';
 import { useNavigate } from 'react-router-dom';
 import CommunityWriter from '../community/CommunityWriter';
 function CommunityItem(props) {
@@ -9,6 +8,7 @@ function CommunityItem(props) {
   useEffect(() => {
     if (props.item) {
       setItemData(props.item);
+      console.log(props.item);
     }
   }, [props.item]);
   return itemData ? (
@@ -70,8 +70,10 @@ function CommunityItem(props) {
           ></img>
         </div>
         <div>
-          <CommentIcon cnt={itemData.commentCnt}></CommentIcon>
-          <LikeIcon cnt={itemData.likeCnt}></LikeIcon>
+          <RiMessage3Line></RiMessage3Line>
+          {itemData.commentCnt}
+          {itemData.liked ? <RiHeart2Fill></RiHeart2Fill> : <RiHeart2Line></RiHeart2Line>}
+          {itemData.likeCnt}
         </div>
       </div>
     </div>
