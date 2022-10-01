@@ -2,8 +2,9 @@ import Donation from './Donation.json';
 import { Stack, Pagination, Divider } from '@mui/material';
 import { useLocation } from 'react-router-dom';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import UseAxios from '../../utils/UseAxios';
+import Context from '../../utils/Context';
 
 const theme = createTheme({
   palette: {
@@ -33,7 +34,7 @@ function DonationList(props) {
   const [donations, setDonations] = useState([]);
 
   useEffect(() => {
-    UseAxios.get(`/challenges?scope=all&order=latest&userid={userid}`, {}).then((res) => {
+    UseAxios.get(`/challenges/participate`, {}).then((res) => {
       setDonations(res.data);
       console.log(res);
     });
@@ -55,7 +56,7 @@ function DonationList(props) {
     } else {
       setData(donations.slice(5 * (page - 1), 5 * (page - 1) + 5));
     }
-  }, [page]);
+  }, [page, donations]);
 
   const handlePage = (event) => {
     const nowPageInt = parseInt(event.target.outerText);
@@ -71,31 +72,36 @@ function DonationList(props) {
               참여한 챌린지가 없습니다.
             </div>
           ) : (
-            donations.map((donation) => {
+            data.map((donation) => {
               return (
-                <Stack>
+                <Stack key={donation.id}>
                   <hr style={{ width: '100%', marginBottom: 7.5, marginTop: 7.5 }}></hr>
                   <div className={props.styles.donationBox}>
                     <div className={props.styles.profileImgName}>
-                      <img src={donation.profileImg} className={props.styles.starImg}></img>
-                      <div className={props.styles.starName}>{donation.nickname}</div>
+                      <img
+                        src={`/files/${donation.starProfile}`}
+                        className={props.styles.starImg}
+                      ></img>
+                      <div className={props.styles.starName}>{donation.starName}</div>
                     </div>
                     <div>
                       <div className={props.styles.participateBox}>
-                        <div className={props.styles.participateChallenge}>
-                          {' '}
-                          <span>챌린지 참여</span>
-                        </div>
-                        {donation.didDonate === 1 ? (
-                          <div className={props.styles.participateDonation}>기부참여</div>
-                        ) : null}
+                        {donation.myDonation === 0 ? (
+                          <div className={props.styles.participateChallenge}>
+                            <span>챌린지 참여</span>
+                          </div>
+                        ) : (
+                          <div className={props.styles.participateDonation}>
+                            {donation.myDonation}KRT
+                          </div>
+                        )}
                       </div>
                       <div className={props.styles.challengeTitle}>{donation.title}</div>
-                      {donation.didDonate === 1 ? (
-                        <div className={props.styles.donateAmount}>{donation.donateAmount}KRT</div>
-                      ) : (
-                        <div className={props.styles.donateAmountZero}>쿠쿠루삥뽕</div>
-                      )}
+
+                      <div className={props.styles.donateAmount}>
+                        {donation.donationOrganizationName}
+                      </div>
+
                       <div className={props.styles.progressBox}>
                         <ProgressBar
                           styles={props.styles}
@@ -112,7 +118,7 @@ function DonationList(props) {
                         <div className={props.styles.infoBot}>
                           <span className={props.styles.donateNumber}>{donation.currentNum}명</span>
                           <span className={props.styles.donatePercent}>
-                            {donation.currentNum / donation.targetNum}%
+                            {(donation.currentNum / donation.targetNum).toFixed(1)}%
                           </span>
                         </div>
                       </div>
@@ -122,9 +128,6 @@ function DonationList(props) {
               );
             })
           )}
-          <div style={{ height: '50px', marginLeft: '10px', marginTop: '20PX' }}>
-            구독한 스타가 없습니다.
-          </div>
         </Stack>
         <hr style={{ width: '94%', marginBottom: 7.5, marginTop: 7.5 }}></hr>
         <Pagination
