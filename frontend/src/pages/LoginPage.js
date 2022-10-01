@@ -18,6 +18,9 @@ const theme = createTheme({
       main: '#11cb5f',
     },
   },
+  typography: {
+    fontFamily: 'SCD400',
+  },
 });
 
 function LoginPage() {
@@ -99,7 +102,7 @@ function LoginPage() {
         >
           로그인
         </Button>
-        <div className={styles.bottomText}>
+        <div>
           <a href='/findpassword'>비밀번호 찾기</a>
           <span> / </span>
           <a href='/signup'>회원가입</a>

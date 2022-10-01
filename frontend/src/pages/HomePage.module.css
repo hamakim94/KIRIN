@@ -37,11 +37,16 @@
   color: #ffffff;
   font-size: 30px;
 }
+
 .category {
   margin-left: 15px;
-  font-family: 'SCD500';
+  font-weight: bold;
+  /* font-family: 'SCD500'; */
   font-size: 20px;
+  margin-top: 10px;
   margin-bottom: 10px;
+  display: flex;
+  align-items: center;
 }
 
 .img {
@@ -106,12 +111,33 @@
 .infoTop {
   display: flex;
   flex-direction: column;
+  margin-bottom: 5px;
 }
-.infoBot {
+
+/* .infoBot1 {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  margin-bottom: 10px;
+} */
+
+.infoBot2 {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
+
+.infoTitle {
+  color: #ffffff;
+  font-size: 12px;
+  margin-bottom: 5px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .infoText {
   color: #ffffff;
   font-size: 10px;
@@ -120,11 +146,26 @@
 
 .progressDiv {
   background-color: #ffffff;
+  border: solid 1px #808080;
   border-radius: 0.5rem;
 }
+
 .progress {
-  background-color: rgba(41, 47, 51, 0.68);
-  height: 15px;
+  /* background-color: rgba(41, 47, 51, 0.68); */
+  background-color: #ffd046;
+  height: 8px;
+  border-right: solid 1px #808080;
+  border-bottom-left-radius: 0.5rem;
+  border-top-left-radius: 0.5rem;
+  transition: 1s ease;
+  transition-delay: 0.5s;
+}
+
+.progressEnd {
+  /* background-color: rgba(41, 47, 51, 0.68); */
+  background-color: #808080;
+  height: 8px;
+  border-right: solid 1px #808080;
   border-bottom-left-radius: 0.5rem;
   border-top-left-radius: 0.5rem;
   transition: 1s ease;

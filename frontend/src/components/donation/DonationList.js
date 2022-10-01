@@ -15,6 +15,9 @@ const theme = createTheme({
       main: '#11cb5f',
     },
   },
+  typography: {
+    fontFamily: 'SCD400',
+  },
 });
 function ProgressBar(props) {
   const [value, setValue] = useState(0);
@@ -65,8 +68,8 @@ function DonationList(props) {
 
   return (
     <ThemeProvider theme={theme}>
-      <Stack alignItems="center">
-        <Stack direction="row" justifyContent="center" sx={{ flexWrap: 'wrap' }}>
+      <Stack alignItems='center'>
+        <Stack direction='row' justifyContent='center' sx={{ flexWrap: 'wrap' }}>
           {donations.length === 0 ? (
             <div style={{ height: '50px', marginLeft: '10px', marginTop: '20PX' }}>
               참여한 챌린지가 없습니다.
@@ -134,7 +137,7 @@ function DonationList(props) {
           count={LAST_PAGE}
           defaultPage={1}
           boundaryCount={2}
-          size="medium"
+          size='medium'
           sx={{ mt: 3, mb: 3 }}
           onChange={(e) => handlePage(e)}
           className={props.styles.pagination}

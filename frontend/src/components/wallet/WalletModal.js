@@ -15,6 +15,9 @@ const theme = createTheme({
       main: '#ffc947',
     },
   },
+  typography: {
+    fontFamily: 'SCD400',
+  },
 });
 const isLetters = (str) => /^[0-9]*$/.test(str);
 

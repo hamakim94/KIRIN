@@ -4,6 +4,7 @@ import SubscribeList from '../components/home/SubscribeList';
 import HomeCategory from '../components/home/HomeCategory';
 import ChallengeList from '../components/home/ChallengeList';
 import UseAxios from '../utils/UseAxios';
+
 function HomePage() {
   const [popularityData, setPopularityData] = useState(null);
   const [latestData, setLatestData] = useState(null);
@@ -27,11 +28,13 @@ function HomePage() {
         style={{ width: 70, marginTop: 5, marginLeft: 15, marginBottom: 15 }}
       ></img>
       <SubscribeList styles={styles}></SubscribeList>
+      <hr style={{ border: 'solid 0.5px lightgray' }} />
       <HomeCategory title={'인기순'} styles={styles}></HomeCategory>
       <ChallengeList styles={styles} data={popularityData}></ChallengeList>
       <img className={styles.img} alt='함께' src={require('../assets/img/together.png')}></img>
       <HomeCategory title={'최신순'} styles={styles}></HomeCategory>
       <ChallengeList styles={styles} data={latestData}></ChallengeList>
+      <img className={styles.img} alt='함께' src={require('../assets/img/together.png')}></img>
       <HomeCategory title={'기린기린'} styles={styles}></HomeCategory>
       <ChallengeList styles={styles} data={randomData}></ChallengeList>
     </div>

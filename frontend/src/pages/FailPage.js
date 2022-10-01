@@ -8,6 +8,9 @@ const theme = createTheme({
       main: '#FFD046',
     },
   },
+  typography: {
+    fontFamily: 'SCD400',
+  },
 });
 
 function FailPage() {

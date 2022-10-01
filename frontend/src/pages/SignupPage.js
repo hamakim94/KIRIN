@@ -30,6 +30,9 @@ const theme = createTheme({
       main: '#11cb5f',
     },
   },
+  typography: {
+    fontFamily: 'SCD400',
+  },
 });
 
 function SignupPage({ parentCallback }) {
@@ -220,7 +223,7 @@ function SignupPage({ parentCallback }) {
   return (
     <ThemeProvider theme={theme}>
       <SignupTop styles={styles}></SignupTop>
-      <Container component="main" maxWidth="sm">
+      <Container component='main' maxWidth='sm'>
         <Box
           sx={{
             display: 'flex',
@@ -244,10 +247,10 @@ function SignupPage({ parentCallback }) {
           ></Avatar>
           <form>
             <input
-              type="file"
+              type='file'
               style={{ display: 'none' }}
-              accept="image/*"
-              name="profile_img"
+              accept='image/*'
+              name='profile_img'
               onChange={onChange}
               ref={fileInput}
             ></input>
@@ -257,27 +260,27 @@ function SignupPage({ parentCallback }) {
               <Grid container spacing={2}>
                 <Grid item xs={9} sm={9}>
                   <TextField
-                    variant="outlined"
+                    variant='outlined'
                     required
                     fullWidth
-                    id="email"
-                    type="email"
+                    id='email'
+                    type='email'
                     onChange={onChangeEmail}
                     value={email}
                     error={emailValidation()}
                     helperText={emailValidation() ? '올바른 이메일형식이 아닙니다' : ''}
-                    label="이메일 주소 입력"
-                    name="email"
+                    label='이메일 주소 입력'
+                    name='email'
                     autoFocus
-                    size="small"
+                    size='small'
                   />
                 </Grid>
                 <Grid item xs={3} sm={3}>
                   <Button
-                    type="button"
+                    type='button'
                     fullWidth
-                    variant="contained"
-                    color="primary"
+                    variant='contained'
+                    color='primary'
                     onClick={emailDup}
                     value={email}
                     size={width < 600 ? 'small' : 'large'}
@@ -288,24 +291,24 @@ function SignupPage({ parentCallback }) {
                 </Grid>
                 <Grid item xs={9} sm={9}>
                   <TextField
-                    variant="outlined"
+                    variant='outlined'
                     required
                     fullWidth
-                    id="nickname"
+                    id='nickname'
                     onChange={onChangeNickname}
                     value={nickname}
                     error={nicknameValidation()}
                     helperText={nicknameValidation() ? '닉네임은 한글자 이상이여야 합니다' : ''}
-                    label="닉네임 입력"
-                    size="small"
+                    label='닉네임 입력'
+                    size='small'
                   />
                 </Grid>
                 <Grid item xs={3} sm={3}>
                   <Button
-                    type="button"
+                    type='button'
                     fullWidth
-                    variant="contained"
-                    color="primary"
+                    variant='contained'
+                    color='primary'
                     onClick={nicknameDup}
                     value={nickname}
                     size={width < 600 ? 'small' : 'large'}
@@ -317,20 +320,20 @@ function SignupPage({ parentCallback }) {
                 <Grid item xs={12}>
                   <TextField
                     sx={{ mb: 1 }}
-                    variant="outlined"
+                    variant='outlined'
                     required
                     onChange={onChangeName}
                     fullWidth
-                    id="name"
+                    id='name'
                     value={name}
-                    label="이름 입력"
-                    size="small"
+                    label='이름 입력'
+                    size='small'
                   />
                 </Grid>
 
                 <Grid item xs={12}>
                   <TextField
-                    variant="outlined"
+                    variant='outlined'
                     required
                     fullWidth
                     onChange={onChangePassword}
@@ -341,28 +344,28 @@ function SignupPage({ parentCallback }) {
                         ? '영문, 숫자, 특수문자를 조합해 8글자 이상 입력하세요'
                         : ''
                     }
-                    name="password"
-                    label="비밀번호 입력"
-                    type="password"
-                    id="password"
-                    autoComplete="current-password"
-                    size="small"
+                    name='password'
+                    label='비밀번호 입력'
+                    type='password'
+                    id='password'
+                    autoComplete='current-password'
+                    size='small'
                   />
                 </Grid>
                 <Grid item xs={12}>
                   <TextField
-                    variant="outlined"
+                    variant='outlined'
                     required
                     fullWidth
                     onChange={onChangePasswordCheck}
                     value={passwordCheck}
                     error={passwordCheckValidation()}
                     helperText={passwordCheckValidation() ? '비밀번호가 일치하지 않습니다' : ''}
-                    name="passwordCheck"
-                    label="비밀번호 확인"
-                    type="password"
-                    id="passwordCheck"
-                    size="small"
+                    name='passwordCheck'
+                    label='비밀번호 확인'
+                    type='password'
+                    id='passwordCheck'
+                    size='small'
                   />
                 </Grid>
                 <Grid item xs={12}>
@@ -371,20 +374,20 @@ function SignupPage({ parentCallback }) {
                     control={
                       <Checkbox
                         value={agreement}
-                        color="primary"
+                        color='primary'
                         onChange={agreementCheck}
                         sx={{ ml: 0.5 }}
                       />
                     }
-                    label="개인정보 수집 및 이용 동의"
+                    label='개인정보 수집 및 이용 동의'
                   ></FormControlLabel>
                 </Grid>
               </Grid>
               <Button
-                type="submit"
+                type='submit'
                 fullWidth
-                variant="contained"
-                color="primary"
+                variant='contained'
+                color='primary'
                 sx={{ py: 1 }}
                 onClick={onSubmit}
                 size={width < 600 ? 'small' : 'large'}

@@ -28,6 +28,9 @@ const theme = createTheme({
       main: '#11cb5f',
     },
   },
+  typography: {
+    fontFamily: 'SCD400',
+  },
 });
 function FindPasswordPage() {
   const [email, setEmail] = useState('');
@@ -64,9 +67,9 @@ function FindPasswordPage() {
         <FindPasswordTop styles={styles}></FindPasswordTop>
         <img
           src={require('../assets/img/lock.png')}
-          alt=""
-          width="100"
-          height="100"
+          alt=''
+          width='100'
+          height='100'
           style={{ display: 'block', margin: 'auto' }}
         ></img>
 
@@ -79,11 +82,11 @@ function FindPasswordPage() {
             required
             autoFocus
             fullWidth
-            type="email"
-            id="email"
-            name="email"
-            placeholder="이메일"
-            size="small"
+            type='email'
+            id='email'
+            name='email'
+            placeholder='이메일'
+            size='small'
             onChange={onChangeEmail}
           />
         </Grid>
@@ -95,21 +98,21 @@ function FindPasswordPage() {
             value={name}
             required
             fullWidth
-            type="name"
-            id="name"
-            name="name"
-            placeholder="이름"
-            size="small"
+            type='name'
+            id='name'
+            name='name'
+            placeholder='이름'
+            size='small'
             onChange={onChangeName}
           />
         </Grid>
         <Button
-          type="submit"
+          type='submit'
           fullWidth
-          variant="contained"
+          variant='contained'
           sx={{ mt: 3, mb: 5 }}
-          color="primary"
-          size="large"
+          color='primary'
+          size='large'
           onClick={onSubmit}
         >
           다음
