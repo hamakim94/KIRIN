@@ -13,24 +13,24 @@ function ChallengePage() {
     {
       id: 0,
       title: '챌린지',
-      description: <ShowChallenge styles={styles}></ShowChallenge>,
+      description: <ShowChallenge styles={styles} data={location.state.data}></ShowChallenge>,
     },
     {
       id: 1,
       title: '기부현황',
-      description: <ShowDonationNow styles={styles}></ShowDonationNow>,
+      description: <ShowDonationNow styles={styles} data={location.state.data}></ShowDonationNow>,
     },
     {
       id: 2,
       title: '기부정보',
-      description: <ShowDonationInfo styles={styles}></ShowDonationInfo>,
+      description: <ShowDonationInfo styles={styles} data={location.state.data}></ShowDonationInfo>,
     },
   ];
   const [index, setIndex] = useState(0);
 
   return (
     <div>
-      <ChallengeTop styles={styles}></ChallengeTop>
+      <ChallengeTop styles={styles} data={location.state.data}></ChallengeTop>
       <ChallengeStarProfile data={location.state.data} styles={styles}></ChallengeStarProfile>
       <ul className={styles.tabMenu}>
         {data.map((item) => (
