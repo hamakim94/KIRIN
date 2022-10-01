@@ -10,7 +10,7 @@ function ShowChallenge(props) {
       params: { challengeId: props.data.challengeId },
     }).then((res) => {
       setChallenges(res.data);
-      console.log(props.data);
+      console.log(res.data);
     });
   }, []);
   return (
