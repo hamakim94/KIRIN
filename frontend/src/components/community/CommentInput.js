@@ -16,7 +16,7 @@ function CommentInput(props) {
         content: newComment,
         parentId: 0,
       };
-      props.setCheckWrite(false);
+      props.setCheckWrite(true);
       UseAxios.post(
         `/communities/stars/${location.state.starId}/boards/${location.state.boardId}/comments`,
         communityCommentRequestDTO
@@ -24,7 +24,7 @@ function CommentInput(props) {
         .then((res) => {
           console.log(res);
           setNewComment('');
-          props.setCheckWrite(true);
+          props.setCheckWrite(false);
         })
         .catch((err) => console.log(err));
     }
@@ -64,7 +64,7 @@ function CommentInput(props) {
           ></input>
         </div>
         <button
-          disabled={props ? !props.checkWrite : true}
+          disabled={props ? props.checkWrite : true}
           style={{ color: '#7E370C', fontSize: 14, backgroundColor: '#FFFFFF', borderWidth: 0 }}
           onClick={onCreate}
         >

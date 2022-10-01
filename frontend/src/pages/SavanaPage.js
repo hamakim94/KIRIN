@@ -23,7 +23,8 @@ function SavanaPage() {
     }
   };
   useEffect(() => {
-    UseAxios.get('/challenges?scope=stars&order=popularity').then((res) => {
+    UseAxios.get(`/challenges?scope=all&order=latest&challengeId=2`).then((res) => {
+      console.log(res.data);
       setPopularityData(res.data);
       for (let i = 0; i < res.data.length; i++) {
         setHeightArr([...heightArr, i * windowHeight]);
