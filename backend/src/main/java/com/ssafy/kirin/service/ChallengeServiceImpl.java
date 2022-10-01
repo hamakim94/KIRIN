@@ -473,7 +473,8 @@ public class ChallengeServiceImpl implements ChallengeService {
 
             subscribeRepository.findByCelebId(userDTO.getId())
                     .stream().forEach(o->notificationService.addNotification(Notification.builder().isRead(false).userId(o.getUserId())
-                            .event(String.format(NotificationEnum.CommunityUpload.getContent(), user.getNickname(),challenge.getTitle())).build()));
+                            .event(String.format(NotificationEnum.ChallengeUpload.getContent(), user.getNickname(),challenge.getTitle()))
+                            .challenge(challenge).build()));
 
         }catch (InterruptedException e) {
             throw new RuntimeException(e);
