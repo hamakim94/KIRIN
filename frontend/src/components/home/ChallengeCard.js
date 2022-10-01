@@ -45,9 +45,17 @@ function ChallengeCard(props) {
               <span className={props.styles.infoText}>{props.item.donationOrganizationName}</span>
             </div> */}
             <div className={props.styles.infoText}>{props.item.donationOrganizationName}</div>
-            <div className={props.styles.infoText}>
-              D-{Math.ceil((new Date(props.item.endDate) - new Date()) / 86400000)}
-            </div>
+            {(() => {
+              if (props.item.isProceeding) {
+                return (
+                  <div className={props.styles.infoText}>
+                    D-{Math.ceil((new Date(props.item.endDate) - new Date()) / 86400000)}
+                  </div>
+                );
+              } else {
+                <div className={props.styles.infoText}>{'끝'}</div>;
+              }
+            })()}
           </div>
           <ProgressBar
             styles={props.styles}
