@@ -16,6 +16,9 @@ const theme = createTheme({
       main: '#11cb5f',
     },
   },
+  typography: {
+    fontFamily: 'SCD400',
+  },
 });
 
 function EditProfilePage({ parentCallback }) {
