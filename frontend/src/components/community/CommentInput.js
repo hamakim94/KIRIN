@@ -1,28 +1,32 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import UseAxios from '../../utils/UseAxios';
+import Context from '../../utils/Context';
 
 function CommentInput(props) {
   const [newComment, setNewComment] = useState('');
+  const { userData } = useContext(Context);
   const location = useLocation();
+  let toggle = false;
   const onCreate = () => {
     if (newComment.length === 0) {
       alert('글자를 입력해주세요.');
     } else {
       const communityCommentRequestDTO = {
         content: newComment,
-        isComment: false,
         parentId: 0,
       };
+      props.setCheckWrite(false);
       UseAxios.post(
         `/communities/stars/${location.state.starId}/boards/${location.state.boardId}/comments`,
         communityCommentRequestDTO
-      ).then((res) => {
-        console.log(res);
-        setNewComment('');
-      });
-
-      //   props.setCommentData(props.commentData.concat(comment));
+      )
+        .then((res) => {
+          console.log(res);
+          setNewComment('');
+          props.setCheckWrite(true);
+        })
+        .catch((err) => console.log(err));
     }
   };
   return (
@@ -35,7 +39,7 @@ function CommentInput(props) {
         <img
           alt='star'
           className={props.styles.commentImg}
-          src='https://cdn.pixabay.com/photo/2022/05/06/17/15/cartoon-giraffe-7178753_960_720.jpg'
+          src={`/files/${userData.profileImg}`}
         ></img>
       </div>
       <div
@@ -59,9 +63,13 @@ function CommentInput(props) {
             placeholder={'댓글 추가...'}
           ></input>
         </div>
-        <div style={{ color: '#7E370C', fontSize: 14 }} onClick={onCreate}>
+        <button
+          disabled={props ? !props.checkWrite : true}
+          style={{ color: '#7E370C', fontSize: 14, backgroundColor: '#FFFFFF', borderWidth: 0 }}
+          onClick={onCreate}
+        >
           게시
-        </div>
+        </button>
       </div>
     </div>
   );

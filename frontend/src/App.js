@@ -37,7 +37,6 @@ import SelectPage from './pages/SelectPage';
 import WalletPage from './pages/WalletPage';
 import SuccessPage from './pages/SuccessPage';
 import FailPage from './pages/FailPage';
-import WalletModal from './components/wallet/WalletModal';
 import CommunityCreatePage from './pages/CommunityCreatePage';
 
 function App() {
@@ -52,29 +51,29 @@ function App() {
       UseAxios.get(`/users/profiles`).then((res) => {
         setUserData(res.data);
       });
+      sseEvents = new EventSource(`/api/notify/subscribe?userId=30`, {
+        withCredentials: true,
+      });
 
-      //   sseEvents = new EventSource(`/api/notify/subscribe?userId=30`, { withCredentials: true });
-
-      //   sseEvents.onopen = () => {
-      //     console.log('연결');
-      //     // 연결 됐을 때
-      //   };
-      //   sseEvents.onerror = (event) => {
-      //     console.log(event);
-      //     // 에러 났을 때
-      //   };
-      //   sseEvents.onmessage = (event) => {
-      //     // 메세지 받았을 때
-      //     console.log(event);
-      //   };
-      // }
-      // return () => {
-      //   if (sseEvents) {
-      //     sseEvents.close();
-      //     console.log('eventsource closed');
-      //   }
-      // };
+      sseEvents.onopen = () => {
+        console.log('연결');
+        // 연결 됐을 때
+      };
+      sseEvents.onerror = (event) => {
+        console.log(event);
+        // 에러 났을 때
+      };
+      sseEvents.onmessage = (event) => {
+        // 메세지 받았을 때
+        console.log(event);
+      };
     }
+    return () => {
+      if (sseEvents) {
+        sseEvents.close();
+        console.log('eventsource closed');
+      }
+    };
   }, []);
   return (
     <>

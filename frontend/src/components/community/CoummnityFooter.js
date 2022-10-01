@@ -1,31 +1,105 @@
 import React, { useState, useEffect } from 'react';
-import CommentIcon from '../common/CommentIcon';
-import LikeIcon from '../common/LikeIcon';
+import { RiMessage3Line, RiHeart2Fill, RiHeart2Line } from 'react-icons/ri';
 import CommentInput from './CommentInput';
+import UseAxios from '../../utils/UseAxios';
+import { useLocation } from 'react-router-dom';
 import CommentList from './CommentList';
 function CoummnityFooter(props) {
+  const location = useLocation();
   const [commentData, setCommentData] = useState(null);
+  const [like, setLike] = useState(null);
+  const [commentCnt, setCommentCnt] = useState(null);
+  const [checkWrite, setCheckWrite] = useState(false);
+  const [replyCheck, setReplyCheck] = useState(null);
   useEffect(() => {
+    UseAxios.get(
+      `/communities/stars/${location.state.starId}/boards/${location.state.boardId}/comments`
+    ).then((res) => {
+      setCommentData(res.data);
+    });
     if (props.data) {
-      setCommentData(props.data.commentList);
+      setLike({
+        likeCnt: props.data.communityDTO.likeCnt,
+        liked: props.data.communityDTO.liked,
+      });
+      setCommentCnt(props.data.communityDTO.commentCnt);
     }
-  }, [props.data]);
-  console.log(props);
-  return (
+  }, []);
+
+  useEffect(() => {
+    if (checkWrite) {
+      UseAxios.get(
+        `/communities/stars/${location.state.starId}/boards/${location.state.boardId}/comments`
+      ).then((res) => {
+        setCommentData(res.data);
+      });
+      if (props.data) {
+        setLike({
+          likeCnt: props.data.communityDTO.likeCnt,
+          liked: props.data.communityDTO.liked,
+        });
+        setCommentCnt(props.data.communityDTO.commentCnt);
+      }
+    }
+  }, [checkWrite]);
+
+  const likeButtonClick = () => {
+    if (!like.liked) {
+      UseAxios.post(`/communities/stars/${location.state.starId}/boards/${location.state.boardId}`)
+        .then((res) => {
+          setLike((like) => ({
+            ...like,
+            liked: !like.liked,
+            likeCnt: like.likeCnt + 1,
+          }));
+          console.log('좋아용');
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else if (like.liked) {
+      UseAxios.delete(
+        `/communities/stars/${location.state.starId}/boards/${location.state.boardId}`
+      )
+        .then((res) => {
+          setLike((like) => ({
+            ...like,
+            liked: !like.liked,
+            likeCnt: like.likeCnt - 1,
+          }));
+          console.log('싫어용');
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  };
+
+  return commentData ? (
     <>
       <div className={props.styles.footerWrapper}>
-        <LikeIcon cnt={props.data.communityDTO.likeCnt}></LikeIcon>
-        <CommentIcon cnt={props.data.communityDTO.commentCnt}></CommentIcon>
+        <RiMessage3Line></RiMessage3Line>
+        {commentCnt ? commentCnt : 0}
+        <span onClick={likeButtonClick}>
+          {like ? like.liked ? <RiHeart2Fill></RiHeart2Fill> : <RiHeart2Line></RiHeart2Line> : ''}
+        </span>
+        {like ? like.likeCnt : 0}
       </div>
       <div>
         <CommentInput
           styles={props.styles}
           commentData={commentData}
           setCommentData={setCommentData}
+          commentCnt={commentCnt}
+          setCommentCnt={setCommentCnt}
+          checkWrite={checkWrite}
+          setCheckWrite={setCheckWrite}
         ></CommentInput>
-        {/* <CommentList styles={props.styles} commentData={commentData}></CommentList> */}
+        <CommentList styles={props.styles} commentData={commentData}></CommentList>
       </div>
     </>
+  ) : (
+    ''
   );
 }
 

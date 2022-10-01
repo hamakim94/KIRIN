@@ -4,6 +4,7 @@ import styles from './WalletModal.module.css';
 import { Button, TextField } from '@mui/material/';
 import { AiOutlineCopy } from 'react-icons/ai';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import UseAxios from '../../utils/UseAxios';
 import ABI from '../../TokenABI.json';
 import CA from '../../TokenCA.json';
 import Context from '../../utils/Context';
@@ -21,37 +22,40 @@ const theme = createTheme({
 const isLetters = (str) => /^[0-9]*$/.test(str);
 
 // 사용법 :
-function WalletModal() {
+function WalletModal(props) {
   const { userData } = useContext(Context);
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [web3, setWeb3] = useState(''); // web3 연결하는 부분, useEffect를 통해 초반에 생성된다.
-  const [address] = useState(userData.walletAddress); // 내 주소를 저장하는 부분, 추후에 상태관리 해야할 부분
   const [tokenBalance, setTokenBalance] = useState(''); // 토큰 잔액
   const [tokenContract, setTokenContract] = useState('');
   const [tokens, setTokens] = useState('');
   const [balance, setBalance] = useState(''); // 잔액
   const [loading, setLoading] = React.useState(false);
-
-  // 페이지가 실행되면, web3 이용 네트워크 연결)
+  // 페이지가 실행되면, web3  이용 네트워크 연결)
   useEffect(() => {
-    var Web3 = require('web3');
-    var web3 = new Web3(new Web3.providers.HttpProvider(`${process.env.REACT_APP_BASEURL}/bc/`));
-    // var web3 = new Web3(process.env.REACT_APP_TESTURL);
-    var contract = new web3.eth.Contract(ABI, CA); // ABI, CA를 통해 contract 객체를 만들어서 보관한다. 나중에 활용함
-    setWeb3(web3);
-    setTokenContract(contract);
-    web3.eth
-      .getBalance(address)
-      .then((e) => setBalance(Math.round((e / Math.pow(10, 18)) * 10000) / 10000));
-    contract.methods // ABI, CA를 이용해 함수 접근
-      .balanceOf(address)
-      .call()
-      .then((balance) => {
-        setTokenBalance(balance);
-      });
-  }, [address]);
+    if (userData) {
+      var Web3 = require('web3');
+      var web3 = new Web3(new Web3.providers.HttpProvider(`${process.env.REACT_APP_BASEURL}/bc/`));
+      // var web3 = new Web3(process.env.REACT_APP_TESTURL);
+      var contract = new web3.eth.Contract(ABI, CA); // ABI, CA를 통해 contract 객체를 만들어서 보관한다. 나중에 활용함
+      setWeb3(web3);
+      setTokenContract(contract);
+      web3.eth
+        .getBalance(userData.walletAddress)
+        .then((e) => setBalance(Math.round((e / Math.pow(10, 18)) * 10000) / 10000));
+      contract.methods // ABI, CA를 이용해 함수 접근
+        .balanceOf(userData.walletAddress)
+        .call()
+        .then((balance) => {
+          setTokenBalance(balance);
+          if (props.setData) {
+            props.setData(balance);
+          }
+        });
+    }
+  }, [userData]);
   // 로딩 관련
   const loadingClose = () => {
     setLoading(false);
@@ -72,7 +76,7 @@ function WalletModal() {
    */
   const viewTokenBalance = () => {
     tokenContract.methods // ABI, CA를 이용해 함수 접근
-      .balanceOf(address)
+      .balanceOf(userData.walletAddress)
       .call()
       .then((balance) => {
         setTokenBalance(balance);
@@ -82,54 +86,28 @@ function WalletModal() {
    * contract를 배포한 admin 계정으로부터 1000 토큰을 받아오는 함수
    * 1000을 나중에 폼으로 수정해, 얼마 충전할지 정할 수 있음
    * encodeIBI를 통해, ABI,CA를 활용한 Contract 자체를 transaction의 data에 넣어서 실행이 가능
-   * 준비물 : AdminAddress, Admin AdminPrivateKey, tokenContractCA
+   * 준비물 : AdminuserData.walletAddress, Admin AdminPrivateKey, tokenContractCA
    */
-  const getToken = async () => {
+  const getToken = () => {
     loadingToggle();
-    var test = tokenContract.methods
-      .transferFrom(process.env.REACT_APP_ADMINID, address, Number(tokens)) // num개 충전
-      .encodeABI(); // Contract Method를 ABI로 만들기
-    var tx = {
-      data: test,
-      from: process.env.REACT_APP_ADMINID, // 관리자 계정에서
-      to: tokenContract.options.address, // CA로 보내겠다.
-      value: 0,
-      gas: 2000000,
-      chainId: 97889218,
-    };
-    // 인증을 위해 signTransaction 사용
-    web3.eth.accounts.signTransaction(tx, process.env.REACT_APP_ADMINKEY, (err, b) => {
-      if (err) {
-        console.log(err);
-      } else {
-        web3.eth
-          .sendSignedTransaction(b.rawTransaction, (err, transactionHash) => {
-            if (!err) {
-              console.log(transactionHash + ' success');
-            } else {
-              console.log(err);
-            }
-          })
-          .then(() => {
-            setTokens('');
-            viewTokenBalance();
-            alert('충전 완료!');
-            loadingClose();
-          });
-      }
+    UseAxios.post(`/blockchain/charge`, null, { params: { amount: tokens } }).then((res) => {
+      setTokens('');
+      viewTokenBalance();
+      alert('충전 완료!');
+      loadingClose();
     });
   };
 
   const handleCopyClipBoard = async (obj) => {
     try {
-      await navigator.clipboard.writeText(obj.address);
+      await navigator.clipboard.writeText(obj.userData.walletAddress);
       console.log('복사 성공');
     } catch (error) {
       console.log('복사 실패 ' + error);
     }
   };
 
-  return (
+  return userData ? (
     <div>
       <button className={styles.myWallet} onClick={handleOpen}>
         내 지갑
@@ -160,8 +138,13 @@ function WalletModal() {
                 <div className={styles.group}>
                   <div className={styles.title}>지갑 주소</div>
                   <div style={{ display: 'flex', justifyContent: 'space-evenly' }}>
-                    <div className={`${styles.ellipsis} ${styles.content}`}>{address}</div>
-                    <button className={styles.btn} onClick={() => handleCopyClipBoard({ address })}>
+                    <div className={`${styles.ellipsis} ${styles.content}`}>
+                      {userData.walletAddress}
+                    </div>
+                    <button
+                      className={styles.btn}
+                      onClick={() => handleCopyClipBoard(userData.walletAddress)}
+                    >
                       <AiOutlineCopy size={25}></AiOutlineCopy>
                     </button>
                   </div>
@@ -209,6 +192,8 @@ function WalletModal() {
         </div>
       </Modal>
     </div>
+  ) : (
+    ''
   );
 }
 

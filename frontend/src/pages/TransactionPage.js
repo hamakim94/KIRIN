@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import Web3 from 'web3';
 import styles from './TransactionPage.module.css';
-import { BiArrowBack } from 'react-icons/bi';
+import UseAxios from '../utils/UseAxios';
+import Header from '../components/common/Header';
 
 function TransactionPage() {
   const [transactions, setTransactions] = useState([]);
@@ -15,9 +15,9 @@ function TransactionPage() {
       // <tr style={{ height: `${rowHeight}px` }} className={styles.row}>
       <tr style={{ height: `60px` }} className={styles.row}>
         <td className={styles.ellipsis}>{tx.hash}</td>
-        <td>{tx.timeSince}</td>
+        <td>{tx.reg}</td>
         <td>
-          <FromTo from={tx.from} to={tx.to} />
+          <FromTo from={tx.fromHash} to={tx.toHash} />
         </td>
       </tr>
     );
@@ -47,45 +47,27 @@ function TransactionPage() {
   }
 
   useEffect(() => {
-    const asyncCall = async () => {
-      var web3 = new Web3(new Web3.providers.HttpProvider(`${process.env.REACT_APP_BASEURL}/bc/`));
-      // var web3 = new Web3(process.env.REACT_APP_TESTURL);
-      const blockNum = await web3.eth.getBlockNumber();
-
-      // 전체 가져오기
-      let block;
-      let i;
-      let txArr = [];
-      for (i = 0; i < blockNum; i++) {
-        block = await web3.eth.getBlock(blockNum - i);
-        block.transactions.forEach((tx) => {
-          var txInfo = {
-            hash: tx,
-            from: null,
-            to: null,
-            timeSince: timeSince(block.timestamp),
-            timeStamp: block.timestamp,
-          };
-          txArr.push(txInfo);
-          web3.eth
-            .getTransaction(tx)
-            .then((txDetail) => {
-              txInfo.from = txDetail.from;
-              txInfo.to = txDetail.to;
-            })
-            .catch(console.error);
+    const interval = setInterval(() => {
+      const asyncCall = async () => {
+        const res = await UseAxios.get(`/blockchain/transactions`);
+        const txArr = res.data;
+        txArr.forEach((tx) => {
+          tx.reg = timeSince(new Date(tx.reg));
         });
-      }
-      setTransactions(txArr);
-      // console.log(txArr);
-    };
-    asyncCall();
+        txArr.reverse();
+        setTransactions(txArr);
+      };
+      asyncCall();
+    }, 1000);
+    return () => clearInterval(interval);
   }, []);
 
   // timestamp 포맷을 사람이 읽을 수 있는 형태로 변환한다.
   function timeSince(date) {
-    var seconds = Math.floor((new Date() - date * 1000) / 1000);
+    var seconds = Math.floor(new Date() - date);
+    seconds /= 1000;
     var interval = Math.floor(seconds / 31536000);
+
     if (interval > 1) {
       return interval + '년 전';
     }
@@ -109,14 +91,8 @@ function TransactionPage() {
   }
 
   return (
-    <div style={{ paddingBottom: 55 }}>
-      <div className={styles.topBox}>
-        <a>
-          <BiArrowBack className={styles.back}></BiArrowBack>
-        </a>
-        <div className={styles.pageTitle}>트랜잭션 정보</div>
-        <div style={{ width: 25 }}></div>
-      </div>
+    <div className='wrapper'>
+      <Header title={'트랜잭션 정보'}></Header>
       <table className={styles.table}>
         <colgroup>
           <col width='30%' />

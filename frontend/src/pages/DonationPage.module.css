@@ -58,7 +58,7 @@
   padding-right: 5px;
   padding-top: 3.5px;
   padding-bottom: 1.5px;
-  font-size: 7.5px;
+  font-size: 6px;
   border-width: 5;
   background-color: #ffffcc;
   border-radius: 5%;
@@ -71,7 +71,7 @@
   padding-right: 5px;
   padding-top: 3.5px;
   padding-bottom: 1.5px;
-  font-size: 7.5px;
+  font-size: 6px;
   border-width: 5;
   background-color: #ffe5cc;
   border-radius: 5%;
@@ -81,7 +81,7 @@
 
 .challengeTitle {
   font-weight: bold;
-  margin-bottom: 5px;
+  margin-bottom: 2.5px;
   font-size: small;
 }
 
@@ -95,7 +95,7 @@
 }
 
 .progressDiv {
-  height: 15px;
+  height: 10px;
   background-color: white;
   border-bottom-left-radius: 0.1rem;
   border-top-left-radius: 0.1rem;
@@ -114,7 +114,7 @@
 
 .progress {
   background-color: #ffc947;
-  height: 15px;
+  height: 10px;
   border-bottom-left-radius: 0.1rem;
   border-top-left-radius: 0.1rem;
   border-bottom-right-radius: 0.1rem;
