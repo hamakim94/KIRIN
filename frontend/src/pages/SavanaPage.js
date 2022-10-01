@@ -8,7 +8,8 @@ function SavanaPage() {
   const [popularityData, setPopularityData] = useState(null);
 
   useEffect(() => {
-    UseAxios.get('/challenges?scope=stars&order=popularity').then((res) => {
+    UseAxios.get(`/challenges?scope=all&order=latest&challengeId=2`).then((res) => {
+      console.log(res.data);
       setPopularityData(res.data);
     });
   }, []);

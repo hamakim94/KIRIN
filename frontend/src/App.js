@@ -43,15 +43,21 @@ function App() {
   const [blob, setBlob] = useState(null);
   const [userData, setUserData] = useState(null);
   const [selected, setSelected] = useState(null);
+  const [userId, setuserId] = useState(null);
   const cookies = new Cookies();
   const value = cookies.get('accesstoken');
   useEffect(() => {
-    let sseEvents;
     if (value) {
       UseAxios.get(`/users/profiles`).then((res) => {
         setUserData(res.data);
+        setuserId(res.data.id);
       });
-      sseEvents = new EventSource(`/api/notify/subscribe?userId=30`, {
+    }
+  }, [value]);
+  useEffect(() => {
+    let sseEvents;
+    if (userId) {
+      sseEvents = new EventSource(`/api/notify/subscribe?userId=${userId}`, {
         withCredentials: true,
       });
 
@@ -65,7 +71,7 @@ function App() {
       };
       sseEvents.onmessage = (event) => {
         // 메세지 받았을 때
-        console.log(event);
+        console.log(event.data);
       };
     }
     return () => {
@@ -74,7 +80,7 @@ function App() {
         console.log('eventsource closed');
       }
     };
-  }, []);
+  }, [userId]);
   return (
     <>
       {isMobile ? (
