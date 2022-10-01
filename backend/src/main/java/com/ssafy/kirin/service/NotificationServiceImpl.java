@@ -40,7 +40,10 @@ public class NotificationServiceImpl implements NotificationService {
             try{
                 sseEmitter.send(SseEmitter.event().name("connect"));
                 sseEmitter.send(list);
-                sseEmitter.onCompletion(() -> sseEmitters.remove(userId));
+                sseEmitter.onCompletion(() ->{
+                    System.out.println("user ");
+                            sseEmitters.remove(userId);
+                } );
                 sseEmitter.onTimeout(() -> sseEmitters.remove(userId));
                 sseEmitter.onError((e) -> sseEmitters.remove(userId));
 
@@ -58,7 +61,10 @@ public class NotificationServiceImpl implements NotificationService {
         User user = userRepository.getReferenceById(notification.getUserId());
 
         notificationRepository.save(notification);
-
+        System.out.println("Adding Notification");
+        for(Long id: sseEmitters.keySet()){
+            System.out.println(id);
+        }
         if(sseEmitters.containsKey(user.getId())){
             SseEmitter sseEmitter = sseEmitters.get(user.getId());
             try {
