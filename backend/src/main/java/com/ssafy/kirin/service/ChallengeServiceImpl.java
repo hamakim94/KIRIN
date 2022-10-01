@@ -257,7 +257,7 @@ public class ChallengeServiceImpl implements ChallengeService {
             CelebChallengeInfo celebChallengeInfo = celebChallengeInfoRepository.findByChallengeId(challengeId);
             List<DonationDTO> donationList = donationRepository.findByChallenge_challengeId(challengeId)
                     .stream().sorted((o1, o2) -> (int) (o2.getAmount()-o1.getAmount()))
-                    .map(d->new DonationDTO(d.getAmount(),d.getChallenge().getUser().getNickname())).collect(Collectors.toList());
+                    .map(d->new DonationDTO(d.getAmount(),d.getChallenge().getUser().getNickname(),d.getChallenge().getUser().getProfileImg())).collect(Collectors.toList());
             return new ChallengeDetailDTO(celebChallengeInfo.getInfo(),donationList,celebChallengeInfo.getDonationOrganization().getName(),
                     celebChallengeInfo.getStartDate(), celebChallengeInfo.getEndDate(), celebChallengeInfo.getTargetAmount(),
                     celebChallengeInfo.getTargetNum(), celebChallengeInfo.getCurrentNum(), celebChallengeInfo.getCurrentAmount());
