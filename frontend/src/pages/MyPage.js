@@ -20,10 +20,14 @@ function MyPage() {
     UseAxios.get(`/challenges/participate`).then((res) => {
       setParticipatedData(res.data);
     });
-    UseAxios.get(`/challenges/user/${userData.id}`).then((res) => {
-      setLikedData(res.data);
-    });
-  });
+  }, []);
+  useEffect(() => {
+    if (userData) {
+      UseAxios.get(`/challenges/user/${userData.id}`).then((res) => {
+        setLikedData(res.data);
+      });
+    }
+  }, [userData]);
 
   return userData ? (
     <div className='wrapper'>
