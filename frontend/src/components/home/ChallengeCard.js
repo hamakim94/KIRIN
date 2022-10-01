@@ -35,15 +35,6 @@ function ChallengeCard(props) {
         <div className={props.styles.infoBox}>
           <div className={props.styles.infoTop}>
             <div className={props.styles.infoTitle}>{props.item.title}</div>
-            {/* <span className={props.styles.infoText}>
-              {props.item.isProceeding ? '진행중' : '끝남'}
-            </span> */}
-            {/* <div className={props.styles.infoBot1}>
-              <span className={props.styles.infoText}>
-                D-{Math.ceil((new Date(props.item.endDate) - new Date()) / 86400000)}
-              </span>
-              <span className={props.styles.infoText}>{props.item.donationOrganizationName}</span>
-            </div> */}
             <div className={props.styles.infoText}>{props.item.donationOrganizationName}</div>
             {(() => {
               if (props.item.isProceeding) {
@@ -53,7 +44,7 @@ function ChallengeCard(props) {
                   </div>
                 );
               } else {
-                <div className={props.styles.infoText}>{'끝'}</div>;
+                return <div className={props.styles.infoText}>{'끝'}</div>;
               }
             })()}
           </div>
