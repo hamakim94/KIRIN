@@ -341,17 +341,13 @@ public class ChallengeServiceImpl implements ChallengeService {
                     (challengeDir+mp4File),(challengeDir+musicPath),(challengeDir+outputPath));
             p = Runtime.getRuntime().exec(commandInsertMusic);
             p.waitFor();
-//            String commandInsertWatermark = String.format("ffmpeg -y -i %s -i %s -i %s -filter_complex \"[1][0]scale2ref=w=oh*mdar:h=ih*0.08[logo][video];[logo]format=argb,geq=r='r(X,Y)':a='0.8*alpha(X,Y)'[soo];[video][soo]overlay=30:30\" -map \"v\" -map 2:a -c:v libx264 -crf 17 -c:a aac -strict experimental %s"
-//                    , (challengeDir+mp4File), kirinStamp, musicPath, (challengeDir+outputPath));
-
+            String realOutput = UUID.randomUUID() + ".mp4";
+            String commandInsertWatermark = String.format("ffmpeg -y -i %s -i %s -filter_complex [1][0]scale2ref=w=oh*mdar:h=ih*0.08[logo][video];[logo]format=argb,geq=r='r(X,Y)':a='0.7*alpha(X,Y)'[soo];[video][soo]overlay=30:30 -map v -map 0:a -c:v libx264 -preset ultrafast -r 17 %s"
+                    , (challengeDir+outputPath), kirinStamp, (challengeDir+realOutput));
+            p.waitFor();
 
 //            p= Runtime.getRuntime().exec(commandInsertWatermark);
-//            String line;
-//            StringBuilder sb = new StringBuilder();
-//            BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
-//            while ((line=br.readLine())!=null) sb.append(line+"\n");
-//            br = new BufferedReader(new InputStreamReader(p.getErrorStream()));
-//            while ((line=br.readLine())!=null) sb.append(line+"\n");
+//
             ChallengeContract challengeContract = celebChallengeInfo.getChallengeContract();
             String transactionHash = ethereumService.fundToken(user, challengeContract.getContractHash(), challengeRequestDTO.amount());
             Challenge challenge = challengeRepository.save(
