@@ -30,7 +30,7 @@ function ChallengeCard(props) {
             <span className={props.styles.infoText}>
               {props.item.isProceeding ? '진행중' : '끝남'}
             </span>
-            <div className={props.styles.infoBot}>
+            <div className={props.styles.infoBot1}>
               <span className={props.styles.infoText}>
                 D-{Math.ceil((new Date(props.item.endDate) - new Date()) / 86400000)}
               </span>
@@ -42,7 +42,7 @@ function ChallengeCard(props) {
             width={134}
             percent={Math.floor((props.item.currentNum / props.item.targetNum) * 100) / 100}
           ></ProgressBar>
-          <div className={props.styles.infoBot}>
+          <div className={props.styles.infoBot2}>
             <span className={props.styles.infoText}>{props.item.currentNum}명</span>
             <span className={props.styles.infoText}>
               {Math.floor((props.item.currentNum / props.item.targetNum) * 100)}%
