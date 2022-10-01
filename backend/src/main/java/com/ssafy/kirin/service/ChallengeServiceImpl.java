@@ -353,7 +353,7 @@ public class ChallengeServiceImpl implements ChallengeService {
             Challenge challenge = challengeRepository.save(
                     Challenge.builder().user(user).isProceeding(true).reg(LocalDateTime.now()).thumbnail(thumbDir)
                                .title(challengeRequestDTO.title()).isOriginal(false).challengeId(challengeRequestDTO.challengeId())
-                               .video(outputPath).build()
+                               .video(realOutput).build()
             );
             Donation donation = Donation.builder()
                     .challenge(challenge)
