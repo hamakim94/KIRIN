@@ -494,8 +494,10 @@ public class ChallengeServiceImpl implements ChallengeService {
     }
 
     public List<ChallengeDTO> challegeListToChallengDTOList(List<Challenge> challengeList){
-        Map<Long,Long> celebChallengeInfos = celebChallengeInfoRepository.findAll().stream()
+        Map<Long,Long> celebChallengeDonationInfos = celebChallengeInfoRepository.findAll().stream()
                 .collect(Collectors.toMap(o->o.getChallenge().getId(),d->d.getDonationOrganization().getId()));
+        Map<Long,CelebChallengeInfo> celebChallengeInfos = celebChallengeInfoRepository.findAll().stream()
+                .collect(Collectors.toMap(o->(o.getChallenge().getId()),o->o));
         Map<Long, String> donaOrganMap = donationOrganizationRepository.findAll().stream()
                 .collect(Collectors.toMap(DonationOrganization::getId,DonationOrganization::getName));
 
@@ -509,8 +511,14 @@ public class ChallengeServiceImpl implements ChallengeService {
             return challengeList.stream()
                     .map(o->{
                         ChallengeDTO dto = this.mapChallengeDTO(o);
+                        CelebChallengeInfo celebChallengeInfo = celebChallengeInfos.get(dto.getChallengeId());
                         if(challengeIdSet.contains(o.getId())) dto.setLiked(true);
-                        dto.setDonationOrganizationName(donaOrganMap.get(celebChallengeInfos.get(o.getChallengeId())));
+                        dto.setDonationOrganizationName(donaOrganMap.get(celebChallengeDonationInfos.get(o.getChallengeId())));
+                        dto.setCurrentAmount(celebChallengeInfo.getCurrentAmount());
+                        dto.setCurrentNum(celebChallengeInfo.getCurrentNum());
+                        dto.setTargetAmount(celebChallengeInfo.getTargetAmount());
+                        dto.setTargetNum(celebChallengeInfo.getTargetNum());
+                        dto.setEndDate(celebChallengeInfo.getEndDate());
                         return dto;
                     })
                     .collect(Collectors.toList());
@@ -520,7 +528,7 @@ public class ChallengeServiceImpl implements ChallengeService {
         return challengeList.stream()
                 .map(o->{
                         ChallengeDTO dto = this.mapChallengeDTO(o);
-                        dto.setDonationOrganizationName(donaOrganMap.get(celebChallengeInfos.get(o.getChallengeId())));
+                        dto.setDonationOrganizationName(donaOrganMap.get(celebChallengeDonationInfos.get(o.getChallengeId())));
                         return dto;
                 })
                 .collect(Collectors.toList());
