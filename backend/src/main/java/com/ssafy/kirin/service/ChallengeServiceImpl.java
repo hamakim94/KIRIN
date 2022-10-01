@@ -51,6 +51,7 @@ public class ChallengeServiceImpl implements ChallengeService {
     private final DonationRepository donationRepository;
     private final ChallengeCommentLikeRepository challengeCommentLikeRepository;
     private final ChallengeRepositoryCustom challengeRepositoryCustom;
+    private final SubscribeRepository subscribeRepository;
     @Value("${property.app.upload-path}")
     private String challengeDir;
     private final String kirinStamp = "/files/a243a275-9d79-42d8-8ae4-c25465e56ee4기린_로고_4.png";
@@ -167,14 +168,14 @@ public class ChallengeServiceImpl implements ChallengeService {
 
         // 챌린지 게시자에게 알림
         notificationService.addNotification(Notification.builder().userId(challenge.getUser().getId())
-                .event(String.format(NotificationEnum.ChallengeCommentAdded.getContent(), challenge.getTitle(), user.getNickname()))
+                .event(String.format(NotificationEnum.ChallengeCommentAdded.getContent(), challenge.getTitle(), user.getNickname())).isRead(false)
                 .challenge(challenge).challengeComment(challengeComment).build());
 
         if (dto.parentId() != 0) { // 대댓글 등록시
             // 챌린지 내 댓글 게시자에게 알림
             Optional<ChallengeComment> tmp = challengeCommentRepository.findById(dto.parentId());
             tmp.ifPresent(comment -> notificationService.addNotification(Notification.builder().userId(comment.getUser().getId())
-                    .event(String.format(NotificationEnum.CommentReplied.getContent(), user.getNickname()))
+                    .event(String.format(NotificationEnum.CommentReplied.getContent(), user.getNickname())).isRead(false)
                     .challengeComment(challengeComment).challenge(challenge).build()));
             // 해당 댓글의 대댓글 게시자 모두에게 알림
             List<Long> list = challengeCommentRepository.findByParentId(dto.parentId()).stream()
@@ -183,7 +184,7 @@ public class ChallengeServiceImpl implements ChallengeService {
             for (Long id : list) {
                 notificationService.addNotification(Notification.builder()
                         .event(String.format(NotificationEnum.CommentReplied.getContent(), user.getNickname()))
-                        .challenge(challenge).challengeComment(challengeComment).userId(id)
+                        .challenge(challenge).challengeComment(challengeComment).userId(id).isRead(false)
                         .build());
             }
         }
@@ -285,7 +286,7 @@ public class ChallengeServiceImpl implements ChallengeService {
                                             c.setIsProceeding(false);
                                             //send notifiaction
                                             notificationService.addNotification(Notification.builder()
-                                                    .userId(c.getUser().getId()).challenge(o).event(String.format(NotificationEnum.ChallengeEnd.getContent(), o.getTitle()))
+                                                    .userId(c.getUser().getId()).challenge(o).isRead(false).event(String.format(NotificationEnum.ChallengeEnd.getContent(), o.getTitle()))
                                                     .build());
                     });
         });
@@ -431,6 +432,7 @@ public class ChallengeServiceImpl implements ChallengeService {
             //delete original videoFile
             Files.delete(videoTmp);
 
+
             //Contract 생성 및 토큰 전송, 트랜잭션 저장
             StarChallengeDTO starChallengeDTO = ethereumService.createFundContract(
                     user,
@@ -468,6 +470,10 @@ public class ChallengeServiceImpl implements ChallengeService {
                     .build();
 
             celebChallengeInfoRepository.save(celebChallengeInfo);
+
+            subscribeRepository.findByCelebId(userDTO.getId())
+                    .stream().forEach(o->notificationService.addNotification(Notification.builder().isRead(false).userId(o.getUserId())
+                            .event(String.format(NotificationEnum.CommunityUpload.getContent(), user.getNickname(),challenge.getTitle())).build()));
 
         }catch (InterruptedException e) {
             throw new RuntimeException(e);

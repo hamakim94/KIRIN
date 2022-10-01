@@ -88,7 +88,7 @@ public class CommunityServiceImpl implements CommunityService {
             community.setImg(fileName);
         }
         subscribeRepository.findByCelebId(userDTO.getId())
-                .stream().forEach(o->notificationService.addNotification(Notification.builder().userId(o.getUserId()).community(community)
+                .stream().forEach(o->notificationService.addNotification(Notification.builder().isRead(false).userId(o.getUserId()).community(community)
                         .event(String.format(NotificationEnum.CommunityUpload.getContent(), user.getNickname())).build()));
 
     }
@@ -191,7 +191,7 @@ public class CommunityServiceImpl implements CommunityService {
             Community community = communityRepository.getReferenceById(communityId);
 
             Notification notification = Notification.builder().community(community)
-                    .communityComment(communityComment).userId(community.getUser().getId())
+                    .communityComment(communityComment).userId(community.getUser().getId()).isRead(false)
                     .event(String.format(NotificationEnum.CommentReplied.getContent(), user.getNickname()))
                     .build();
 
@@ -202,7 +202,7 @@ public class CommunityServiceImpl implements CommunityService {
                     .map(o-> o.getUser().getId()).collect(Collectors.toSet()).stream().toList();
 
             for(Long id: list){
-                notificationService.addNotification(Notification.builder()
+                notificationService.addNotification(Notification.builder().isRead(false)
                                 .event(String.format(NotificationEnum.CommentReplied.getContent(), user.getNickname()))
                                 .communityComment(communityComment)
                                 .community(community).userId(id)
