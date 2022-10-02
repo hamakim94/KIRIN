@@ -170,7 +170,7 @@ public class ChallengeServiceImpl implements ChallengeService {
         if(!(userId.equals(challenge.getUser().getId())))
                 notificationService.addNotification(Notification.builder().userId(challenge.getUser().getId())
                 .event(String.format(NotificationEnum.ChallengeCommentAdded.getContent(), challenge.getTitle(), user.getNickname())).isRead(false)
-                .image(user.getProfileImg()).link(String.format("savana/challenge/%s",challenge.getId())).build());
+                .image(user.getProfileImg()).link(String.format("/savana/challenge/%s",challenge.getId())).build());
 
         if (dto.parentId() != 0) { // 대댓글 등록시
             // 챌린지 내 댓글 게시자에게 알림
@@ -178,7 +178,7 @@ public class ChallengeServiceImpl implements ChallengeService {
             tmp.ifPresent(comment -> {
                 if(!(comment.getUser().getId().equals(userId)))notificationService.addNotification(Notification.builder().userId(comment.getUser().getId())
                         .event(String.format(NotificationEnum.CommentReplied.getContent(), user.getNickname())).isRead(false)
-                        .image(user.getProfileImg()).link(String.format("savana/challenge/%s",challenge.getId())).build());
+                        .image(user.getProfileImg()).link(String.format("/savana/challenge/%s",challenge.getId())).build());
             });
             // 해당 댓글의 대댓글 게시자 모두에게 알림
             List<Long> list = challengeCommentRepository.findByParentId(dto.parentId()).stream()
@@ -187,7 +187,7 @@ public class ChallengeServiceImpl implements ChallengeService {
             for (Long id : list) {
                 notificationService.addNotification(Notification.builder()
                         .event(String.format(NotificationEnum.CommentReplied.getContent(), user.getNickname()))
-                        .image(user.getProfileImg()).link(String.format("savana/challenge/%s",challenge.getId())).userId(id).isRead(false)
+                        .image(user.getProfileImg()).link(String.format("/savana/challenge/%s",challenge.getId())).userId(id).isRead(false)
                         .build());
             }
         }
@@ -296,7 +296,7 @@ public class ChallengeServiceImpl implements ChallengeService {
                                             notificationService.addNotification(Notification.builder()
                                                     .userId(c.getUser().getId()).image(o.getUser().getProfileImg()).isRead(false)
                                                     .event(String.format(NotificationEnum.ChallengeEnd.getContent(), o.getTitle()))
-                                                            .link(String.format("savana/challenge/%s",o.getId()))
+                                                            .link(String.format("/savana/challenge/%s",o.getId()))
                                                     .build()
                                             );
                     });
@@ -488,7 +488,7 @@ public class ChallengeServiceImpl implements ChallengeService {
             subscribeRepository.findByCelebId(userDTO.getId())
                             .forEach(o->notificationService.addNotification(Notification.builder().isRead(false).userId(o.getUserId())
                             .event(String.format(NotificationEnum.ChallengeUpload.getContent(), user.getNickname(),challenge.getTitle()))
-                            .image(user.getProfileImg()).link(String.format("savana/challenge/%s",o.getId())).build()));
+                            .image(user.getProfileImg()).link(String.format("/savana/challenge/%s",o.getId())).build()));
 
         }catch (InterruptedException e) {
             throw new RuntimeException(e);
