@@ -13,14 +13,13 @@ function ShowDonationNow(props) {
   }, [challenges]);
 
   const donor = challenges.donors;
-  console.log(donor);
 
   return (
     <div className={props.styles.nowTop}>
       {donor ? (
         <div className={props.styles.nowList}>
           <div>
-            {donor[0] ? (
+            {donor[0].amount > 0 ? (
               <div className={props.styles.medalBox}>
                 <div className={props.styles.medalmedal}>
                   <img className={props.styles.nowImg} src={`/files/${donor[0].profile}`}></img>
@@ -32,7 +31,7 @@ function ShowDonationNow(props) {
                 <div className={props.styles.number}>1위</div>
               </div>
             ) : null}
-            {donor[1] ? (
+            {donor[1].amount > 0 ? (
               <div className={props.styles.medalBox}>
                 <div className={props.styles.medalmedal}>
                   <img className={props.styles.nowImg} src={`/files/${donor[1].profile}`}></img>
@@ -46,7 +45,7 @@ function ShowDonationNow(props) {
               </div>
             ) : null}
 
-            {donor[2] ? (
+            {donor[2].amount > 0 ? (
               <div className={props.styles.medalBox}>
                 <div className={props.styles.medalmedal}>
                   <img className={props.styles.nowImg} src={`/files/${donor[2].profile}`}></img>
@@ -59,7 +58,7 @@ function ShowDonationNow(props) {
               </div>
             ) : null}
 
-            {donor[3] ? (
+            {donor[3].amount > 0 ? (
               <div className={props.styles.medalBox}>
                 <div className={props.styles.medalmedal}>
                   <img className={props.styles.nowImg} src={`/files/${donor[3].profile}`}></img>
@@ -72,7 +71,7 @@ function ShowDonationNow(props) {
               </div>
             ) : null}
 
-            {donor[4] ? (
+            {donor[4].amount > 0 ? (
               <div className={props.styles.medalBox}>
                 <div className={props.styles.medalmedal}>
                   <img className={props.styles.nowImg} src={`/files/${donor[4].profile}`}></img>
