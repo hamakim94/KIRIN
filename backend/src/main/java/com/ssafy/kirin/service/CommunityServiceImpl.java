@@ -88,8 +88,8 @@ public class CommunityServiceImpl implements CommunityService {
             community.setImg(fileName);
         }
         subscribeRepository.findByCelebId(userDTO.getId())
-                .stream().forEach(o->notificationService.addNotification(Notification.builder().isRead(false).userId(o.getUserId()).image(user.getProfileImg())
-                        .event(String.format(NotificationEnum.CommunityUpload.getContent(), user.getNickname())).link("/star/{starId}/community/{communityId}").build()));
+                .forEach(o->notificationService.addNotification(Notification.builder().isRead(false).userId(o.getUserId()).image(user.getProfileImg())
+                        .event(String.format(NotificationEnum.CommunityUpload.getContent(), user.getNickname())).link(String.format("/star/%s/community/%s", user.getId(), community.getId())).build()));
 
     }
 
@@ -186,24 +186,23 @@ public class CommunityServiceImpl implements CommunityService {
 
         communityCommentRepository.save(communityComment);
 
-        // 댓글 게시자에게 알림
         if(dto.parentId() != 0){ // 대댓글 작성인 경우
             Community community = communityRepository.getReferenceById(communityId);
-
-            Notification notification = Notification.builder().image(user.getProfileImg()).userId(community.getUser().getId()).isRead(false)
-                    .event(String.format(NotificationEnum.CommentReplied.getContent(), user.getNickname())).link("/star/{starId}/community/{communityId}")
-                    .build();
-
-            notificationService.addNotification(notification);
+            CommunityComment communityComment1 = communityCommentRepository.getReferenceById(dto.parentId());
+            // 댓글 게시자에게 알림
+            if(userId != community.getUser().getId())
+                    notificationService.addNotification(Notification.builder().image(user.getProfileImg()).userId(community.getUser().getId()).isRead(false)
+                    .event(String.format(NotificationEnum.CommentReplied.getContent(), user.getNickname())).link(String.format("/star/%s/community/%s", community.getUser().getId(), communityId))
+                    .build());
 
             // 대댓글 게시자에게 알림
             List<Long> list = communityCommentRepository.findByParentId(dto.parentId()).stream()
-                    .map(o-> o.getUser().getId()).collect(Collectors.toSet()).stream().toList();
+                    .map(o-> o.getUser().getId()).collect(Collectors.toSet()).stream().filter(o->o!=userId).toList();
 
             for(Long id: list){
                 notificationService.addNotification(Notification.builder().isRead(false)
                                 .event(String.format(NotificationEnum.CommentReplied.getContent(), user.getNickname()))
-                                .image(user.getProfileImg()).userId(id).link("/star/{starId}/community/{communityId}")
+                                .image(user.getProfileImg()).userId(id).link(String.format("/star/%s/community/%s", community.getUser().getId(), communityId))
                             .build());
             }
         }

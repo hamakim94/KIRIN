@@ -167,24 +167,27 @@ public class ChallengeServiceImpl implements ChallengeService {
         challengeCommentRepository.save(challengeComment);
 
         // 챌린지 게시자에게 알림
-        notificationService.addNotification(Notification.builder().userId(challenge.getUser().getId())
+        if(!(userId.equals(challenge.getUser().getId())))
+                notificationService.addNotification(Notification.builder().userId(challenge.getUser().getId())
                 .event(String.format(NotificationEnum.ChallengeCommentAdded.getContent(), challenge.getTitle(), user.getNickname())).isRead(false)
-                .image(user.getProfileImg()).link("savana/challenge/{challengeId}").build());
+                .image(user.getProfileImg()).link(String.format("savana/challenge/%s",challenge.getId())).build());
 
         if (dto.parentId() != 0) { // 대댓글 등록시
             // 챌린지 내 댓글 게시자에게 알림
             Optional<ChallengeComment> tmp = challengeCommentRepository.findById(dto.parentId());
-            tmp.ifPresent(comment -> notificationService.addNotification(Notification.builder().userId(comment.getUser().getId())
-                    .event(String.format(NotificationEnum.CommentReplied.getContent(), user.getNickname())).isRead(false)
-                    .image(user.getProfileImg()).link("savana/challenge/{challengeId}").build()));
+            tmp.ifPresent(comment -> {
+                if(!(comment.getUser().getId().equals(userId)))notificationService.addNotification(Notification.builder().userId(comment.getUser().getId())
+                        .event(String.format(NotificationEnum.CommentReplied.getContent(), user.getNickname())).isRead(false)
+                        .image(user.getProfileImg()).link(String.format("savana/challenge/%s",challenge.getId())).build());
+            });
             // 해당 댓글의 대댓글 게시자 모두에게 알림
             List<Long> list = challengeCommentRepository.findByParentId(dto.parentId()).stream()
-                    .map(o -> o.getUser().getId()).collect(Collectors.toSet()).stream().toList();
+                    .map(o -> o.getUser().getId()).collect(Collectors.toSet()).stream().filter(o->!(o.equals(userId))).toList();
 
             for (Long id : list) {
                 notificationService.addNotification(Notification.builder()
                         .event(String.format(NotificationEnum.CommentReplied.getContent(), user.getNickname()))
-                        .image(user.getProfileImg()).link("savana/challenge/{challengeId}").userId(id).isRead(false)
+                        .image(user.getProfileImg()).link(String.format("savana/challenge/%s",challenge.getId())).userId(id).isRead(false)
                         .build());
             }
         }
@@ -286,8 +289,11 @@ public class ChallengeServiceImpl implements ChallengeService {
                                             c.setIsProceeding(false);
                                             //send notifiaction
                                             notificationService.addNotification(Notification.builder()
-                                                    .userId(c.getUser().getId()).image(o.getUser().getProfileImg()).isRead(false).event(String.format(NotificationEnum.ChallengeEnd.getContent(), o.getTitle()))
-                                                    .build());
+                                                    .userId(c.getUser().getId()).image(o.getUser().getProfileImg()).isRead(false)
+                                                    .event(String.format(NotificationEnum.ChallengeEnd.getContent(), o.getTitle()))
+                                                            .link(String.format("savana/challenge/%s",o.getId()))
+                                                    .build()
+                                            );
                     });
         });
 
@@ -475,9 +481,9 @@ public class ChallengeServiceImpl implements ChallengeService {
             celebChallengeInfoRepository.save(celebChallengeInfo);
 
             subscribeRepository.findByCelebId(userDTO.getId())
-                    .stream().forEach(o->notificationService.addNotification(Notification.builder().isRead(false).userId(o.getUserId())
+                            .forEach(o->notificationService.addNotification(Notification.builder().isRead(false).userId(o.getUserId())
                             .event(String.format(NotificationEnum.ChallengeUpload.getContent(), user.getNickname(),challenge.getTitle()))
-                            .image(user.getProfileImg()).link("/challenge/{challengeId}").build()));
+                            .image(user.getProfileImg()).link(String.format("savana/challenge/%s",o.getId())).build()));
 
         }catch (InterruptedException e) {
             throw new RuntimeException(e);
