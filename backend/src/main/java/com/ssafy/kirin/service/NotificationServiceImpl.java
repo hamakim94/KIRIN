@@ -1,25 +1,24 @@
 package com.ssafy.kirin.service;
 
-import com.fasterxml.jackson.core.io.JsonStringEncoder;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.JsonObject;
+import com.google.gson.*;
 import com.ssafy.kirin.entity.Notification;
 import com.ssafy.kirin.entity.User;
 import com.ssafy.kirin.repository.*;
+import com.ssafy.kirin.util.HibernateProxyTypeAdapter;
 import lombok.RequiredArgsConstructor;
-import net.minidev.json.JSONObject;
-import org.mapstruct.ap.internal.model.Mapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
-import springfox.documentation.spring.web.json.Json;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -61,21 +60,26 @@ public class NotificationServiceImpl implements NotificationService {
         return sseEmitter;
     }
 
-
+    @Transactional
     @Override
     public void addNotification(Notification notification) {
         User user = userRepository.getReferenceById(notification.getUserId());
 
         notificationRepository.save(notification);
-        System.out.println("Adding Notification");
         if(sseEmitters.containsKey(user.getId())){
             SseEmitter sseEmitter = sseEmitters.get(user.getId());
             try {
-                ObjectMapper mapper = new ObjectMapper();
-                System.out.println(mapper.writeValueAsString(notification));
-                sseEmitter.send(mapper.writeValueAsString(notification)+"\n");
-                System.out.println("notification sent");
+                Gson gson = new GsonBuilder().
+                        registerTypeAdapterFactory(HibernateProxyTypeAdapter.FACTORY).registerTypeAdapter(LocalDateTime.class, new JsonSerializer<LocalDateTime>() {
+                    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+                    @Override
+                    public JsonElement serialize(LocalDateTime src, Type typeOfSrc, JsonSerializationContext context) {
+                        return new JsonPrimitive(formatter.format(src));
+                    }
+                }).create();
+                sseEmitter.send(gson.toJson(notification));
             } catch (Exception e){
+                e.printStackTrace();
                 sseEmitters.remove(user.getId());
             }
         }
