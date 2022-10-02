@@ -88,8 +88,8 @@ public class CommunityServiceImpl implements CommunityService {
             community.setImg(fileName);
         }
         subscribeRepository.findByCelebId(userDTO.getId())
-                .stream().forEach(o->notificationService.addNotification(Notification.builder().isRead(false).userId(o.getUserId()).community(community)
-                        .event(String.format(NotificationEnum.CommunityUpload.getContent(), user.getNickname())).build()));
+                .stream().forEach(o->notificationService.addNotification(Notification.builder().isRead(false).userId(o.getUserId()).image(user.getProfileImg())
+                        .event(String.format(NotificationEnum.CommunityUpload.getContent(), user.getNickname())).link("/star/{starId}/community/{communityId}").build()));
 
     }
 
@@ -190,9 +190,8 @@ public class CommunityServiceImpl implements CommunityService {
         if(dto.parentId() != 0){ // 대댓글 작성인 경우
             Community community = communityRepository.getReferenceById(communityId);
 
-            Notification notification = Notification.builder().community(community)
-                    .communityComment(communityComment).userId(community.getUser().getId()).isRead(false)
-                    .event(String.format(NotificationEnum.CommentReplied.getContent(), user.getNickname()))
+            Notification notification = Notification.builder().image(user.getProfileImg()).userId(community.getUser().getId()).isRead(false)
+                    .event(String.format(NotificationEnum.CommentReplied.getContent(), user.getNickname())).link("/star/{starId}/community/{communityId}")
                     .build();
 
             notificationService.addNotification(notification);
@@ -204,8 +203,7 @@ public class CommunityServiceImpl implements CommunityService {
             for(Long id: list){
                 notificationService.addNotification(Notification.builder().isRead(false)
                                 .event(String.format(NotificationEnum.CommentReplied.getContent(), user.getNickname()))
-                                .communityComment(communityComment)
-                                .community(community).userId(id)
+                                .image(user.getProfileImg()).userId(id).link("/star/{starId}/community/{communityId}")
                             .build());
             }
         }

@@ -169,14 +169,14 @@ public class ChallengeServiceImpl implements ChallengeService {
         // 챌린지 게시자에게 알림
         notificationService.addNotification(Notification.builder().userId(challenge.getUser().getId())
                 .event(String.format(NotificationEnum.ChallengeCommentAdded.getContent(), challenge.getTitle(), user.getNickname())).isRead(false)
-                .challenge(challenge).challengeComment(challengeComment).build());
+                .image(user.getProfileImg()).link("savana/challenge/{challengeId}").build());
 
         if (dto.parentId() != 0) { // 대댓글 등록시
             // 챌린지 내 댓글 게시자에게 알림
             Optional<ChallengeComment> tmp = challengeCommentRepository.findById(dto.parentId());
             tmp.ifPresent(comment -> notificationService.addNotification(Notification.builder().userId(comment.getUser().getId())
                     .event(String.format(NotificationEnum.CommentReplied.getContent(), user.getNickname())).isRead(false)
-                    .challengeComment(challengeComment).challenge(challenge).build()));
+                    .image(user.getProfileImg()).link("savana/challenge/{challengeId}").build()));
             // 해당 댓글의 대댓글 게시자 모두에게 알림
             List<Long> list = challengeCommentRepository.findByParentId(dto.parentId()).stream()
                     .map(o -> o.getUser().getId()).collect(Collectors.toSet()).stream().toList();
@@ -184,7 +184,7 @@ public class ChallengeServiceImpl implements ChallengeService {
             for (Long id : list) {
                 notificationService.addNotification(Notification.builder()
                         .event(String.format(NotificationEnum.CommentReplied.getContent(), user.getNickname()))
-                        .challenge(challenge).challengeComment(challengeComment).userId(id).isRead(false)
+                        .image(user.getProfileImg()).link("savana/challenge/{challengeId}").userId(id).isRead(false)
                         .build());
             }
         }
@@ -286,7 +286,7 @@ public class ChallengeServiceImpl implements ChallengeService {
                                             c.setIsProceeding(false);
                                             //send notifiaction
                                             notificationService.addNotification(Notification.builder()
-                                                    .userId(c.getUser().getId()).challenge(o).isRead(false).event(String.format(NotificationEnum.ChallengeEnd.getContent(), o.getTitle()))
+                                                    .userId(c.getUser().getId()).image(o.getUser().getProfileImg()).isRead(false).event(String.format(NotificationEnum.ChallengeEnd.getContent(), o.getTitle()))
                                                     .build());
                     });
         });
@@ -317,12 +317,13 @@ public class ChallengeServiceImpl implements ChallengeService {
             String commandExtractThumbnail = String.format("ffmpeg -y -ss 2 -t 2 -i %s -r 10 -loop 0 %s", videoTmpDir,(challengeDir+thumbDir));
             Process p = Runtime.getRuntime().exec(commandExtractThumbnail);
 //            System.out.println(5);
-//
+            System.out.println("thunbnail extracted!!!!!!!!!!\n"+LocalDateTime.now());
             p.waitFor();
             // wegM to MP4
             String mp4File = UUID.randomUUID() + ".mp4";
             p=Runtime.getRuntime().exec(String.format("ffmpeg -y -i %s %s",videoTmpDir,(challengeDir+mp4File)));
             p.waitFor();
+            System.out.println("video converted!!!!!!!!!!!!!!!!!!!!!\n"+LocalDateTime.now());
             // insert Watermark
 //            String watermarkedVideo = UUID.randomUUID() + ".mp4";
 //            String commandWatermark = String.format("ffmpeg -y -i %s -i %s -filter_complex [1][0]scale2ref=w=oh*mdar:h=ih*0.08[logo][video];[logo]format=argb,geq=r='r(X,Y)':a='0.8*alpha(X,Y)'[soo];[video][soo]overlay=30:30 %s",
@@ -343,6 +344,7 @@ public class ChallengeServiceImpl implements ChallengeService {
                     (challengeDir+mp4File),(challengeDir+musicPath),(challengeDir+outputPath));
             p = Runtime.getRuntime().exec(commandInsertMusic);
             p.waitFor();
+            System.out.println("music inserted!!!!!!!!!!!!!!!!!!!!!\n"+LocalDateTime.now());
             String realOutput = UUID.randomUUID() + ".mp4";
             String commandInsertWatermark = String.format("ffmpeg -y -i %s -i %s -filter_complex [1][0]scale2ref=w=oh*mdar:h=ih*0.08[logo][video];[logo]format=argb,geq=r='r(X,Y)':a='0.7*alpha(X,Y)'[soo];[video][soo]overlay=30:30 -map v -map 0:a -c:v libx264 -preset ultrafast -r 17 %s"
                     , (challengeDir+outputPath), kirinStamp, (challengeDir+realOutput));
@@ -475,7 +477,7 @@ public class ChallengeServiceImpl implements ChallengeService {
             subscribeRepository.findByCelebId(userDTO.getId())
                     .stream().forEach(o->notificationService.addNotification(Notification.builder().isRead(false).userId(o.getUserId())
                             .event(String.format(NotificationEnum.ChallengeUpload.getContent(), user.getNickname(),challenge.getTitle()))
-                            .challenge(challenge).build()));
+                            .image(user.getProfileImg()).link("/challenge/{challengeId}").build()));
 
         }catch (InterruptedException e) {
             throw new RuntimeException(e);

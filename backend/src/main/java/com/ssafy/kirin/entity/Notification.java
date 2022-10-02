@@ -1,5 +1,9 @@
 package com.ssafy.kirin.entity;
 
+import com.ssafy.kirin.dto.response.ChallengeCommentDTO;
+import com.ssafy.kirin.dto.response.ChallengeDTO;
+import com.ssafy.kirin.dto.response.CommunityCommentDTO;
+import com.ssafy.kirin.dto.response.CommunityDTO;
 import lombok.*;
 
 import javax.persistence.*;
@@ -27,19 +31,9 @@ public class Notification {
     @Column(name = "event")
     String event;
 
-    @ManyToOne
-    @JoinColumn(name = "challenge_id")
-    Challenge challenge;
+    @Column(name = "link")
+    String link;
 
-    @ManyToOne
-    @JoinColumn(name = "challenge_comment_id")
-    ChallengeComment challengeComment;
-
-    @ManyToOne
-    @JoinColumn(name = "community_id")
-    Community community;
-
-    @ManyToOne
-    @JoinColumn(name = "community_comment_id")
-    CommunityComment communityComment;
+    @Column(name = "image")
+    String image;
 }
