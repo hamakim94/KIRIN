@@ -17,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Sort;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -306,6 +307,7 @@ public class ChallengeServiceImpl implements ChallengeService {
     }
 
     @Transactional
+    @Async
     @Override
     public void createChallenge(UserDTO userDTO, ChallengeRequestDTO challengeRequestDTO, MultipartFile video) throws IOException {
         try {
@@ -384,6 +386,9 @@ public class ChallengeServiceImpl implements ChallengeService {
             challengeContract.setAmount((long)ethereumService.getTokenAmount(user, challengeContract.getContractHash()));
             challengeContract.setParticipateNum(ethereumService.getParticipateNum(challengeContract.getContractHash(), user));
             challengeContractRepository.save(challengeContract);
+            notificationService.addNotification(Notification.builder().userId(user.getId())
+                                        .image(user.getProfileImg()).isRead(false).link(String.format("/savana/challenge/%s",challenge.getId()))
+                    .event(String.format(NotificationEnum.ChallengeUploadCompleted.getContent(), challenge.getTitle())).build());
 
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
