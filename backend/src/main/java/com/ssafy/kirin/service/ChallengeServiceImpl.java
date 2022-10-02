@@ -337,14 +337,14 @@ public class ChallengeServiceImpl implements ChallengeService {
 //            Files.copy(video.getInputStream(), videoTmp);
             //make thumbnail
             String thumbDir = UUID.randomUUID()+".gif";
-            String commandExtractThumbnail = String.format("ffmpeg -y -ss 2 -t 2 -i %s -r 10 -loop 0 %s", videoTmpDir,(challengeDir+thumbDir));
+            String commandExtractThumbnail = String.format("ffmpeg -y -ss 2 -t 2 -i %s -r 10 -loop 0 %s", (challengeDir+videoTmpDir),(challengeDir+thumbDir));
             Process p = Runtime.getRuntime().exec(commandExtractThumbnail);
 //            System.out.println(5);
             System.out.println("thunbnail extracted!!!!!!!!!!\n"+LocalDateTime.now());
             p.waitFor();
             // wegM to MP4
             String mp4File = UUID.randomUUID() + ".mp4";
-            p=Runtime.getRuntime().exec(String.format("ffmpeg -y -i %s %s",videoTmpDir,(challengeDir+mp4File)));
+            p=Runtime.getRuntime().exec(String.format("ffmpeg -y -i %s %s",(challengeDir+videoTmpDir),(challengeDir+mp4File)));
             p.waitFor();
             System.out.println("video converted!!!!!!!!!!!!!!!!!!!!!\n"+LocalDateTime.now());
             // insert Watermark
