@@ -19,7 +19,7 @@
 }
 
 .starImgMain {
-  position:absolute;
+  position: absolute;
   left: 15px;
   bottom: 0;
   width: 100px;
@@ -150,10 +150,21 @@
   width: calc(100vw - 60px);
   height: 450px;
   overflow: hidden;
+  scroll-snap-align: center;
 }
 
 .communityImg {
   width: 100%;
   object-fit: cover;
   margin-top: 10px;
+}
+
+.hScroll {
+  padding-left: 15px;
+  overflow: auto;
+  scroll-snap-type: x mandatory;
+  white-space: nowrap;
+  -ms-overflow-style: none; /* IE, Edge */
+  scrollbar-width: none; /* Firefox */
+  margin-bottom: 10px;
 }
