@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { RiMessage3Line, RiHeart2Fill, RiHeart2Line } from 'react-icons/ri';
 import { useNavigate } from 'react-router-dom';
 import CommunityWriter from '../community/CommunityWriter';
+
 function CommunityItem(props) {
   const [itemData, setItemData] = useState(null);
   const navigate = useNavigate();
@@ -11,6 +12,7 @@ function CommunityItem(props) {
       console.log(props.item);
     }
   }, [props.item]);
+
   return itemData ? (
     <div
       className={props.styles.communityItem}
@@ -23,23 +25,8 @@ function CommunityItem(props) {
         })
       }
     >
-      <div style={{ display: 'flex', alignItems: 'center', marginBottom: 10 }}>
-        {/* <div
-          style={{
-            display: 'inline-block',
-            borderRadius: '100%',
-            width: 50,
-            height: 50,
-            backgroundImage: `url(/files/${itemData.user.profileImg}`,
-            backgroundRepeat: 'no-repeat',
-            backgroundPosition: 'center',
-            backgroundSize: 'cover',
-          }}
-        ></div>
-        <span style={{ fontFamily: 'SCD500', marginLeft: 10 }}>{itemData.user.nickname}</span> */}
+      <div style={{ margin: 15 }}>
         <CommunityWriter styles={props.styles} data={props.item}></CommunityWriter>
-      </div>
-      <div style={{ display: 'flex', flexDirection: 'column' }}>
         <div
           style={{
             display: 'flex',
@@ -62,6 +49,8 @@ function CommunityItem(props) {
             {itemData.content.length > 15 ? '자세히보기' : ''}
           </span>
         </div>
+      </div>
+      <div style={{ display: 'flex', flexDirection: 'column' }}>
         <div>
           <img
             alt='star'
