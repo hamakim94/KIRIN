@@ -6,7 +6,7 @@ WORKDIR /usr/src/app
 
 # package*.json에 등록되어있는 라이브러리들을 npm install으로 설치
 COPY package*.json ./
-RUN npm install 
+# RUN npm install 
 
 # 프로젝트 폴더를 이미지에 복사, npm run build를 통해 build폴더에 빌드한 프로젝트(static 파일)가 저장됨
 COPY . . 
