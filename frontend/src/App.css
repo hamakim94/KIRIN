@@ -4,7 +4,7 @@
   font-family: 'SCD400';
   width: 100vw;
   height: 100vh;
-  height: var(--vh, 1vh) * 100;
+  height: calc(var(--vh, 1vh) * 100);
 }
 
 .wrapper {

@@ -62,7 +62,13 @@ function ChallengeCard(props) {
           </div>
         </div>
       </div>
-      <ReactPlayer
+      <img
+        src={`files/${props.item.thumbnail}`}
+        width={144}
+        height={256}
+        style={{ objectFit: 'contain' }}
+      ></img>
+      {/* <ReactPlayer
         className={props.styles.reactPlayer}
         height={256}
         width={144}
@@ -72,7 +78,7 @@ function ChallengeCard(props) {
         controls={false}
         playsinline
         volume={0}
-      />
+      /> */}
     </div>
   );
 }

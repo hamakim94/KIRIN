@@ -493,13 +493,7 @@ function PlusPage() {
         )}
       </div>
       {/* <video playsInline autoPlay muted ref={refVideo} style={{ width: '100%', height: '100%' }} /> */}
-      <video
-        playsInline
-        autoPlay
-        muted
-        ref={refVideo}
-        style={{ width: '100%', height: '100%', objectFit: 'contain' }}
-      />
+      <video playsInline autoPlay muted ref={refVideo} style={{ width: '100%', height: '100%' }} />
     </div>
   );
 }
