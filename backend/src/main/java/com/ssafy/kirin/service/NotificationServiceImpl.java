@@ -1,12 +1,16 @@
 package com.ssafy.kirin.service;
 
+import com.fasterxml.jackson.core.io.JsonStringEncoder;
+import com.google.gson.JsonObject;
 import com.ssafy.kirin.entity.Notification;
 import com.ssafy.kirin.entity.User;
 import com.ssafy.kirin.repository.*;
 import lombok.RequiredArgsConstructor;
+import net.minidev.json.JSONObject;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
+import springfox.documentation.spring.web.json.Json;
 
 import java.io.IOException;
 import java.util.List;
@@ -65,7 +69,7 @@ public class NotificationServiceImpl implements NotificationService {
         if(sseEmitters.containsKey(user.getId())){
             SseEmitter sseEmitter = sseEmitters.get(user.getId());
             try {
-                sseEmitter.send(notification+"\n");
+                sseEmitter.send(notification);
             } catch (Exception e){
                 sseEmitters.remove(user.getId());
             }
