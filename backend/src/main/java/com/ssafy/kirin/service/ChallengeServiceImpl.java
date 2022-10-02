@@ -280,6 +280,7 @@ public class ChallengeServiceImpl implements ChallengeService {
     }
 
     @Scheduled(initialDelay = 1000, fixedRateString = "${challenge.expiration.check-interval}")
+    @Async
     @Transactional
     public void scheduleChallenge() {
         // get list of expired stars' challeges
