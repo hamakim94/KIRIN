@@ -39,6 +39,9 @@ public class Challenge {
     @Formula("(SELECT COUNT(*) FROM challenge_comment c WHERE c.challenge_id = id)")
     Integer commentCnt;
 
+    @Formula("(SELECT COUNT(*)-1 FROM challenge c WHERE c.chellenge_id = challenge_id)")
+    Integer participants;
+
     @Column(name = "view_cnt")
     Integer viewCnt;
 

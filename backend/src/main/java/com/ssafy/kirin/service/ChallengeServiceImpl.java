@@ -59,7 +59,7 @@ public class ChallengeServiceImpl implements ChallengeService {
 
     @Override
     public List<ChallengeDTO> listStarsByPopularity() {
-        return this.challegeListToChallengDTOList(challengeRepository.findByIsOriginalAndIsProceeding(true, true, Sort.by(Sort.Direction.DESC, "likeCnt")));
+        return this.challegeListToChallengDTOList(challengeRepository.findByIsOriginalAndIsProceeding(true, true, Sort.by(Sort.Direction.DESC, "participants")));
     }
 
     @Override
@@ -69,7 +69,7 @@ public class ChallengeServiceImpl implements ChallengeService {
 
     @Override
     public List<ChallengeDTO> listGeneralByPopularity() {
-        return this.challegeListToChallengDTOList(challengeRepository.findByIsOriginalAndIsProceeding(false, true, Sort.by(Sort.Direction.DESC, "likeCnt")));
+        return this.challegeListToChallengDTOList(challengeRepository.findByIsOriginalAndIsProceeding(false, true, Sort.by(Sort.Direction.DESC, "participants")));
     }
 
     @Override
