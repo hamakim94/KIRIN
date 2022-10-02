@@ -8,8 +8,6 @@ function ChallengeStarProfile(props) {
     UseAxios.get(`/challenges/star`, { params: { challengeId: props.data.challengeId } }).then(
       (res) => {
         setChallenges(res.data);
-        console.log(res.data);
-        console.log(props.data);
       }
     );
   }, []);

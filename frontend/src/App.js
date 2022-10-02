@@ -71,6 +71,7 @@ function App() {
       };
       sseEvents.onmessage = (event) => {
         // 메세지 받았을 때
+        console.log(event);
         console.log(event.data);
       };
     }

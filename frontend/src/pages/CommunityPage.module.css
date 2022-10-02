@@ -17,8 +17,8 @@
   border-radius: 10px;
   padding: 15px;
   margin-bottom: 10px;
-  max-height: 50vh;
-  max-height: var(--vh, 1vh) * 50;
+  /* max-height: 50vh; */
+  max-height: calc(var(--vh, 1vh) * 50);
   overflow: scroll;
 }
 

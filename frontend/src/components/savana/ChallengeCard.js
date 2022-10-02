@@ -53,6 +53,11 @@ function ChallengeCard(props) {
     }
   }, [props.item]);
 
+  useEffect(() => {
+    if (props.check) {
+    }
+  }, [props.check]);
+
   const likeButtonClick = () => {
     if (!data.liked) {
       UseAxios.post(`/challenges/like?challengeId=${data.challengeId}`, {
@@ -90,13 +95,18 @@ function ChallengeCard(props) {
         });
     }
   };
-
+  const check = () => {
+    if (props.check) {
+      // props.check.current[props.index + 1].volume = 0.1;
+      // props.check.current[props.index + 1].play();
+      // if (!props.check.current[props.index].paused) {
+      //   props.check.current[props.index].pause();
+      // }
+      // props.check.current[props.index].onL
+    }
+  };
   return data ? (
-    <div
-      className={props.styles.cardWrapper}
-      onMouseOver={() => setHover(true)}
-      onMouseOut={() => setHover(false)}
-    >
+    <div className={props.styles.cardWrapper} onMouseOut={() => setHover(false)} onTouchEnd={check}>
       <div className={props.styles.coverBox}>
         <div className={props.styles.blankBox}></div>
 
@@ -126,13 +136,15 @@ function ChallengeCard(props) {
             <a onClick={() => setOpen(true)} className='button'>
               <RiMessage3Line className={props.styles.clickIcon}></RiMessage3Line>
               <Sheet isOpen={isOpen} onClose={() => setOpen(false)}>
-                <Sheet.Container style={{ height: '500px' }}>
+                <Sheet.Container
+                  style={{ height: '500px', zIndex: 10000002, position: 'absolute' }}
+                >
                   <Sheet.Header />
                   <Sheet.Content style={{ margin: '20px' }}>
                     <SavanaComment></SavanaComment>
                   </Sheet.Content>
                 </Sheet.Container>
-                <Sheet.Backdrop />
+                <Sheet.Backdrop style={{ zIndex: 10000001 }} />
               </Sheet>
             </a>
             <div className={props.styles.iconCount}>{data.commentCount}</div>
@@ -156,7 +168,7 @@ function ChallengeCard(props) {
           </div>
         </div>
       </div>
-      <ReactPlayer
+      {/* <ReactPlayer
         className={props.styles.reactPlayer}
         url={`/files/${data.video}`}
         width='100%'
@@ -164,6 +176,15 @@ function ChallengeCard(props) {
         playing={hover}
         controls={false}
         volume={0.1}
+        playsinline
+        ref={(el) => (props.check ? (props.check.current[props.index] = el) : '')}
+      /> */}
+      <video
+        src={`/files/${data.video}`}
+        ref={(el) => (props.check ? (props.check.current[props.index] = el) : '')}
+        playsInline
+        style={{ width: '100%', height: '100%' }}
+        onCanPlayThrough={() => console.log('중단없이 재생가능')}
       />
     </div>
   ) : (
