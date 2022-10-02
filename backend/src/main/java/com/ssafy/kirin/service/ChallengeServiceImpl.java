@@ -273,6 +273,11 @@ public class ChallengeServiceImpl implements ChallengeService {
         return challengeRepositoryCustom.findMyChallengesByUserId(userId);
     }
 
+    @Override
+    public ChallengeDTO getChallengeSavana(Long challengeId) {
+        return mapChallengeDTO(challengeRepository.findById(challengeId).get());
+    }
+
     @Scheduled(initialDelay = 1000, fixedRateString = "${challenge.expiration.check-interval}")
     @Transactional
     public void scheduleChallenge() {

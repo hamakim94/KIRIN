@@ -174,4 +174,11 @@ public class ChallengeController {
         challengeService.unlikeChallnegeComment(userDTO.getId(), commentId);
         return ResponseEntity.ok().build();
     }
+
+    @GetMapping("savana/challenge/{challengeId}")
+    @ApiOperation(value = "사바나용 챌린지 하나")
+    public ResponseEntity<ChallengeDTO> challengeSavana(@PathVariable(name = "challengeId") Long challengeId){
+
+        return ResponseEntity.ok(challengeService.getChallengeSavana(challengeId));
+    }
 }

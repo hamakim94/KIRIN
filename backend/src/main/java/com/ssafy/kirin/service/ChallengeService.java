@@ -41,4 +41,6 @@ public interface ChallengeService {
     ChallengeDetailDTO getChallengeDetail(Long challengeId);
 
     List<MyChallengeResponseDTO> getMyChallengelist(Long userId);
+
+    ChallengeDTO getChallengeSavana(Long challengeId);
 }
