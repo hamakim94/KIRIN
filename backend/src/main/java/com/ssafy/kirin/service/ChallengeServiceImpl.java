@@ -99,7 +99,7 @@ public class ChallengeServiceImpl implements ChallengeService {
 
     @Override
     public List<ChallengeDTO> listAllByChallenge(Long challengeId) {
-        return this.challegeListToChallengDTOList(challengeRepository.findByChallengeId(challengeId));
+        return this.challegeListToChallengDTOList(challengeRepository.findByChallengeIdOrderByIsOriginalDesc(challengeId));
     }
 
     @Override
@@ -288,7 +288,7 @@ public class ChallengeServiceImpl implements ChallengeService {
                         .collect(Collectors.toList()))
                 .stream().filter(Challenge::getIsProceeding).forEach(o -> {o.setIsProceeding(false);
                                 //get list of following challenges
-                                challengeRepository.findByChallengeId(o.getId())
+                                challengeRepository.findByChallengeIdOrderByIsOriginalDesc(o.getId())
                                         .forEach(c -> {
                                             //expire following challenge
                                             c.setIsProceeding(false);

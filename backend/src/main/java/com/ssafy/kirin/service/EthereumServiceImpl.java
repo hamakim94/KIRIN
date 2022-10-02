@@ -119,7 +119,7 @@ public class EthereumServiceImpl implements EthereumService {
     public String fundToken(User user, String fundContract, long amount) throws Exception {
         Credentials credentials = web3jUtil.getCredentials(user.getWallet().getPrivateKey());
         gasCheck((credentials));
-        TransactionManager transactionManager = new RawTransactionManager(web3j, credentials, 97889218, 300, 100L);
+        TransactionManager transactionManager = new RawTransactionManager(web3j, credentials, 97889218, 400, 500L);
         ContractGasProvider gasProvider = new DefaultGasProvider();
         //increase Allowance
         ERC20 erc20 = ERC20.load(TOKENCONTRACTADDRESS, web3j, transactionManager, gasProvider);
@@ -140,7 +140,7 @@ public class EthereumServiceImpl implements EthereumService {
         Credentials credentials = web3jUtil.getCredentials(privatekey);
         gasCheck((credentials));
         ContractGasProvider gasProvider = new DefaultGasProvider();
-        TransactionManager transactionManager = new RawTransactionManager(web3j, credentials, 97889218, 300, 100L);
+        TransactionManager transactionManager = new RawTransactionManager(web3j, credentials, 97889218, 400, 500L);
         FundRaising fundRaising = FundRaising.load(fundContract, web3j, transactionManager, gasProvider);
         TransactionReceipt transactionReceipts = fundRaising.withdrawToken().send();
         String transactionHash = transactionReceipts.getTransactionHash();
@@ -174,7 +174,7 @@ public class EthereumServiceImpl implements EthereumService {
 
     private Transaction transferToken(Credentials fromCredentials, String toAddress, long amount) throws Exception {
         ContractGasProvider gasProvider = new DefaultGasProvider();
-        TransactionManager transactionManager = new RawTransactionManager(web3j, fromCredentials, 97889218, 300, 100L);
+        TransactionManager transactionManager = new RawTransactionManager(web3j, fromCredentials, 97889218, 400, 500L);
         IERC20 ierc20 = IERC20.load(TOKENCONTRACTADDRESS, web3j, transactionManager, gasProvider);
         String hash = ierc20.transfer(toAddress, new BigInteger(String.valueOf(amount))).send().getTransactionHash();
         Transaction transaction = web3jUtil.makeTransactionEntity(web3j.ethGetTransactionByHash(hash).send().getResult());
