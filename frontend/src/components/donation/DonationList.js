@@ -80,8 +80,8 @@ function DonationList(props) {
           ) : (
             data.map((donation) => {
               return (
-                <Stack key={donation.id}>
-                  <hr style={{ width: '100%', marginBottom: 7.5, marginTop: 7.5 }}></hr>
+                <Stack key={donation.id} style={{ width: '100%' }}>
+                  <hr style={{ margin: 0 }} />
                   <div className={props.styles.donationBox}>
                     <div className={props.styles.profileImgName}>
                       <ProfileImg
@@ -110,11 +110,9 @@ function DonationList(props) {
                         )}
                       </div>
                       <div className={props.styles.challengeTitle}>{donation.title}</div>
-
                       <div className={props.styles.donationName}>
                         {donation.donationOrganizationName}
                       </div>
-
                       <div className={props.styles.progressBox}>
                         <ProgressBar
                           styles={props.styles}
@@ -142,7 +140,7 @@ function DonationList(props) {
             })
           )}
         </Stack>
-        <hr style={{ width: '94%', marginBottom: 7.5, marginTop: 7.5 }}></hr>
+        <hr style={{ width: '100%' }} />
         <Pagination
           count={LAST_PAGE}
           defaultPage={1}
