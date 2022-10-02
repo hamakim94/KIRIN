@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styles from './HomePage.module.css';
 import SubscribeList from '../components/home/SubscribeList';
-import HomeCategory from '../components/home/HomeCategory';
+import Category from '../components/common/Category';
 import ChallengeList from '../components/home/ChallengeList';
 import UseAxios from '../utils/UseAxios';
 
@@ -29,13 +29,13 @@ function HomePage() {
       ></img>
       <SubscribeList styles={styles}></SubscribeList>
       <hr style={{ border: 'solid 0.5px lightgray' }} />
-      <HomeCategory title={'인기순'} styles={styles}></HomeCategory>
+      <Category title={'인기순'}></Category>
       <ChallengeList styles={styles} data={popularityData}></ChallengeList>
       <img className={styles.img} alt='함께' src={require('../assets/img/together.png')}></img>
-      <HomeCategory title={'최신순'} styles={styles}></HomeCategory>
+      <Category title={'최신순'}></Category>
       <ChallengeList styles={styles} data={latestData}></ChallengeList>
       <img className={styles.img} alt='함께' src={require('../assets/img/together.png')}></img>
-      <HomeCategory title={'기린기린'} styles={styles}></HomeCategory>
+      <Category title={'기린기린'}></Category>
       <ChallengeList styles={styles} data={randomData}></ChallengeList>
     </div>
   );
