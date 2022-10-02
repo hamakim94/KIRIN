@@ -153,7 +153,9 @@ function ChallengeCard(props) {
           ></ProgressBar>
           <div className={props.styles.infoBot}>
             <span className={props.styles.infoText}>{data.currentNum}명</span>
-            <span className={props.styles.infoText}>{data.currentNum / data.targetNum}%</span>
+            <span className={props.styles.infoText}>
+              {Math.floor(data.currentNum / data.targetNum) * 100}%
+            </span>
           </div>
         </div>
       </div>
@@ -173,7 +175,7 @@ function ChallengeCard(props) {
         ref={(el) => (props.check ? (props.check.current[props.index] = el) : '')}
         playsInline
         style={{ width: '100%', height: '100%' }}
-        onCanPlayThrough={props.index === 0 ? onLoaded : ''}
+        onCanPlayThrough={props.index === 0 ? onLoaded : () => {}}
       />
     </div>
   ) : (

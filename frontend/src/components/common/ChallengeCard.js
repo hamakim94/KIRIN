@@ -58,7 +58,7 @@ function ChallengeCard(props) {
           <div className={styles.infoBot}>
             <span className={styles.infoText}>{props.item.currentNum}명</span>
             <span className={styles.infoText}>
-              {Math.floor((props.item.currentNum / props.item.targetNum) * 100)}%
+              {((props.item.currentNum / props.item.targetNum) * 100).toFixed(1)}%
             </span>
           </div>
         </div>

@@ -86,11 +86,13 @@ function CommentItem(props) {
 function SavanaCommentList(props) {
   return (
     <div>
-      {props.commentData.map((item) => (
-        <CommentItem styles={props.styles} item={item} key={item.id} />
-      ))}
+      {props.commentData
+        ? props.commentData.map((item) => (
+            <CommentItem styles={props.styles} item={item} key={item.id} />
+          ))
+        : ''}
     </div>
   );
 }
 
-export default SavanaCommentItem;
+export default SavanaCommentList;

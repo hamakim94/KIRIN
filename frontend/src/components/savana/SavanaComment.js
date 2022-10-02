@@ -1,43 +1,46 @@
-import React, { useContext, useRef, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import SavanaCommentList from './SavanaCommentList';
 import styles from './Savana.module.css';
 import Context from '../../utils/Context';
 import ProfileImg from '../common/ProfileImg';
+import UseAxios from '../../utils/UseAxios';
+
 function SavanaComment(props) {
   const [newComment, setNewComment] = useState('');
-  const [checkWrite, setCheckWrite] = useState(false);
   const { userData } = useContext(Context);
-  const [commentData, setCommentData] = useState([
-    {
-      id: 1,
-      content: '하잉',
-    },
-  ]);
+  const [commentData, setCommentData] = useState(null);
+  const [checkWrite, setCheckWrite] = useState(false);
+  const [replyCheck, setReplyCheck] = useState(null);
 
   useEffect(() => {
-    UseAxios.get(`/challenges/comments`, { params: { challengeId: props.challengeId } }).then(
-      (res) => {
-        setCommentData(res.data);
-      }
-    );
-    if (props.data) {
-      setLike({
-        likeCnt: props.data.communityDTO.likeCnt,
-        liked: props.data.communityDTO.liked,
-      });
-      setCommentCnt(props.data.communityDTO.commentCnt);
-    }
+    UseAxios.get(`/challenges/comments`, {
+      params: {
+        challengeId: props.challengeId,
+      },
+    }).then((res) => {
+      setCommentData(res.data);
+    });
   }, []);
-  const nextId = useRef(commentData[0].id + 1);
-  const onCreate = () => {
-    const comment = {
-      id: nextId.current,
-      content: newComment,
-    };
-    setCommentData(commentData.concat(comment));
 
-    setNewComment('');
-    nextId.current += 1;
+  const onCreate = () => {
+    if (newComment.length === 0) {
+      alert('글자를 입력해주세요.');
+    } else {
+      const ChallengeCommentRequestDTO = {
+        content: newComment,
+        parentId: 0,
+      };
+      setCheckWrite(true);
+      UseAxios.post(`/challenges/comments`, ChallengeCommentRequestDTO, {
+        params: { challengeId: props.challengeId },
+      })
+        .then((res) => {
+          console.log(res);
+          setNewComment('');
+          setCheckWrite(false);
+        })
+        .catch((err) => console.log(err));
+    }
   };
   return (
     <div>

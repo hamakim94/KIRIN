@@ -7,6 +7,7 @@ function ChallengeList(props) {
   const [touchPosition, setTouchPosition] = useState(null);
   const [distanceY, setdistanceY] = useState(null);
   const [loading, setLoading] = useState(null);
+  const [isOpen, setIsOpen] = useState(false);
   useEffect(() => {
     if (idxRef.current[0] && loading) {
       idxRef.current[0].volume = 0.1;
@@ -59,6 +60,8 @@ function ChallengeList(props) {
               index={index}
               key={index}
               setLoading={index === 0 ? setLoading : false}
+              isOpen={isOpen}
+              setIsOpen={setIsOpen}
             />
           ))
         : ''}
