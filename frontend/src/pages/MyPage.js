@@ -17,14 +17,12 @@ function MyPage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    UseAxios.get(`/challenges/participate`).then((res) => {
-      setParticipatedData(res.data);
-    });
-  }, []);
-  useEffect(() => {
     if (userData) {
       UseAxios.get(`/challenges/user/${userData.id}`).then((res) => {
         setLikedData(res.data);
+      });
+      UseAxios.get(`/challenges?scope=all&order=latest&userId=${userData.id}`).then((res) => {
+        setParticipatedData(res.data);
       });
     }
   }, [userData]);
