@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import styles from './SearchPage.module.css';
-import BackButton from '../components/common/BackButton';
 import SearchList from '../components/search/SearchList';
-
 import UseAxios from '../utils/UseAxios';
+import Header from '../components/common/Header';
 function SearchPage() {
   const [starName, setStarName] = useState('');
   const [starList, setStarList] = useState([]);
@@ -35,9 +34,9 @@ function SearchPage() {
   };
 
   return (
-    <div>
+    <div className='wrapper'>
+      <Header title={'스타 검색'}></Header>
       <div className={styles.topContainer}>
-        <BackButton></BackButton>
         <input
           className={styles.searchBox}
           value={starName}
