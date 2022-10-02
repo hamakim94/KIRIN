@@ -45,7 +45,6 @@
   display: flex;
   align-items: center;
   margin-bottom: 10px;
-  padding-left: 10px;
 }
 
 .nameWrapper {
@@ -68,18 +67,12 @@
   text-align: center;
 }
 .btnWrapper {
-  display: flex;
-  flex: 1;
-  justify-content: flex-end;
-  padding-right: 15px;
+  margin: 35px 0px 20px 0px;
 }
 .subBtn {
   background-color: #ffc947;
-  padding: 2px;
-  padding-left: 10px;
-  padding-right: 10px;
-  padding-top: 4.5px;
-  border: 0;
+  width: 100px;
+  height: 30px;
   font-family: 'SCD800';
   color: #7e370c;
   border-radius: 10%;
@@ -88,21 +81,7 @@
   background-color: #cd9105;
   transition: 0.3s;
 }
-.subBtn {
-  background-color: #ffc947;
-  padding: 2px;
-  padding-left: 10px;
-  padding-right: 10px;
-  padding-top: 4.5px;
-  border: 0;
-  font-family: 'SCD800';
-  color: #7e370c;
-  border-radius: 10%;
-}
-.subBtn:active {
-  background-color: #cd9105;
-  transition: 0.3s;
-}
+
 .unSubBtn {
   background-color: #c9c9c9;
   padding: 2px;
@@ -114,15 +93,13 @@
   color: #000000;
   border-radius: 10%;
 }
-.subBtn:active {
+.unSubBtn:active {
   background-color: #c9c9c9;
   transition: 0.3s;
 }
 
 .contentBox {
-  margin-left: 15px;
-  width: 50%;
-  margin-bottom: 25px;
+  margin-top: 25px;
 }
 
 .titleBox {
@@ -135,14 +112,12 @@
   display: flex;
   align-items: flex-end;
   font-size: 12px;
-  margin-right: 15px;
   gap: 8px;
 }
 
 .communityItem {
   display: inline-block;
   vertical-align: top;
-  padding: 15px;
   border-style: solid;
   border-width: 1px;
   border-radius: 5%;
@@ -156,4 +131,17 @@
   width: 100%;
   object-fit: cover;
   margin-top: 10px;
+}
+
+.hScroll {
+  padding-left: 15px;
+  overflow: auto;
+  white-space: nowrap;
+  -ms-overflow-style: none; /* IE, Edge */
+  scrollbar-width: none; /* Firefox */
+  margin-bottom: 10px;
+}
+
+.hScroll::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
 }
