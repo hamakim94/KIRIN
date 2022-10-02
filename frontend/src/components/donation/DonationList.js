@@ -86,7 +86,7 @@ function DonationList(props) {
                     <div className={props.styles.profileImgName}>
                       <ProfileImg
                         src={donation.starProfile}
-                        size={'65px'}
+                        size={'55px'}
                         onClick={() => navigate(`/star/${donation.starId}`)}
                       />
                       <div className={props.styles.starName}>{donation.starNickname}</div>
@@ -94,18 +94,24 @@ function DonationList(props) {
                     <div>
                       <div className={props.styles.participateBox}>
                         {donation.myDonation === 0 ? (
-                          <div className={props.styles.participateChallenge}>
+                          <div
+                            className={props.styles.participateKind}
+                            style={{ backgroundColor: '#ffffcc' }}
+                          >
                             <span>챌린지 참여</span>
                           </div>
                         ) : (
-                          <div className={props.styles.participateDonation}>
+                          <div
+                            className={props.styles.participateKind}
+                            style={{ backgroundColor: '#ffe5cc' }}
+                          >
                             {donation.myDonation}KRT
                           </div>
                         )}
                       </div>
                       <div className={props.styles.challengeTitle}>{donation.title}</div>
 
-                      <div className={props.styles.donateAmount}>
+                      <div className={props.styles.donationName}>
                         {donation.donationOrganizationName}
                       </div>
 
