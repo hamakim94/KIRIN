@@ -90,7 +90,7 @@ function PlusPage() {
       setStream(mediaStream);
       recorderRef.current = new RecordRTC(mediaStream, {
         type: 'video',
-        mimeType: 'video/mp4',
+        mimeType: 'video/webm;codecs=vp8',
       });
       recorderRef.current.startRecording();
       audioRef.current.currentTime = 0;

@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './ProfileImg.module.css';
 
-function Profile(props) {
+function ProfileImg(props) {
   return (
     <img
       alt='profileImg'
@@ -17,4 +17,4 @@ function Profile(props) {
   );
 }
 
-export default Profile;
+export default ProfileImg;

@@ -1,39 +1,56 @@
-import React, { useRef, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import SavanaCommentList from './SavanaCommentList';
 import styles from './Savana.module.css';
+import Context from '../../utils/Context';
+import ProfileImg from '../common/ProfileImg';
+import UseAxios from '../../utils/UseAxios';
 
-function SavanaComment() {
+function SavanaComment(props) {
   const [newComment, setNewComment] = useState('');
-  const [commentData, setCommentData] = useState([
-    {
-      id: 1,
-      content: '하잉',
-    },
-  ]);
-  const nextId = useRef(commentData[0].id + 1);
-  const onCreate = () => {
-    const comment = {
-      id: nextId.current,
-      content: newComment,
-    };
-    setCommentData(commentData.concat(comment));
+  const { userData } = useContext(Context);
+  const [commentData, setCommentData] = useState(null);
+  const [checkWrite, setCheckWrite] = useState(false);
+  const [replyCheck, setReplyCheck] = useState(null);
 
-    setNewComment('');
-    nextId.current += 1;
+  useEffect(() => {
+    UseAxios.get(`/challenges/comments`, {
+      params: {
+        challengeId: props.challengeId,
+      },
+    }).then((res) => {
+      setCommentData(res.data);
+    });
+  }, []);
+
+  const onCreate = () => {
+    if (newComment.length === 0) {
+      alert('글자를 입력해주세요.');
+    } else {
+      const ChallengeCommentRequestDTO = {
+        content: newComment,
+        parentId: 0,
+      };
+      setCheckWrite(true);
+      UseAxios.post(`/challenges/comments`, ChallengeCommentRequestDTO, {
+        params: { challengeId: props.challengeId },
+      })
+        .then((res) => {
+          console.log(res);
+          setNewComment('');
+          setCheckWrite(false);
+        })
+        .catch((err) => console.log(err));
+    }
   };
   return (
     <div>
-      <div style={{ display: 'flex', alignItems: 'center', marginBottom: 15 }}>
+      <div style={{ display: 'flex', alignItems: 'center', marginBottom: 15, marginTop: 15 }}>
         <div
           style={{
-            height: 35,
+            height: 50,
           }}
         >
-          <img
-            alt="star"
-            className={styles.commentImg}
-            src="https://cdn.pixabay.com/photo/2022/05/06/17/15/cartoon-giraffe-7178753_960_720.jpg"
-          ></img>
+          <ProfileImg src={userData.profileImg} size={'40px'} />
         </div>
         <div
           style={{
@@ -51,14 +68,18 @@ function SavanaComment() {
             <input
               className={styles.inputBox}
               value={newComment}
-              onChange={(e) => setNewComment(e.target.value)}
+              onChange={(e) => setNewComment(e.target.value.replace(/^\s*/, ''))}
               type={'text'}
               placeholder={'댓글 추가...'}
             ></input>
           </div>
-          <div style={{ color: '#7E370C', fontSize: 14 }} onClick={onCreate}>
+          <button
+            disabled={checkWrite}
+            style={{ fontSize: 14, backgroundColor: '#FFFFFF', borderWidth: 0 }}
+            onClick={onCreate}
+          >
             게시
-          </div>
+          </button>
         </div>
       </div>
       <SavanaCommentList styles={styles} commentData={commentData}></SavanaCommentList>

@@ -4,6 +4,11 @@
   height: calc((var(--vh, 1vh) * 100) - 56px);
   overflow: auto;
   scroll-snap-type: y mandatory;
+  -ms-overflow-style: none;
+}
+
+.challengeContainer::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
 }
 
 #savana {

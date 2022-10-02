@@ -29,11 +29,10 @@ function ProgressBar(props) {
 }
 
 function ChallengeCard(props) {
-  // 마우스 오버 상태
-  const [hover, setHover] = useState(false);
   const [copied, setCopied] = useState(false);
   const [isOpen, setOpen] = useState(false);
   const [data, setData] = useState(null);
+
   const navigate = useNavigate();
 
   function copy() {
@@ -52,11 +51,6 @@ function ChallengeCard(props) {
       setData(props.item);
     }
   }, [props.item]);
-
-  useEffect(() => {
-    if (props.check) {
-    }
-  }, [props.check]);
 
   const likeButtonClick = () => {
     if (!data.liked) {
@@ -95,18 +89,15 @@ function ChallengeCard(props) {
         });
     }
   };
-  const check = () => {
-    if (props.check) {
-      // props.check.current[props.index + 1].volume = 0.1;
-      // props.check.current[props.index + 1].play();
-      // if (!props.check.current[props.index].paused) {
-      //   props.check.current[props.index].pause();
-      // }
-      // props.check.current[props.index].onL
+
+  const onLoaded = () => {
+    if (props.setLoading) {
+      props.setLoading(true);
     }
   };
+
   return data ? (
-    <div className={props.styles.cardWrapper} onMouseOut={() => setHover(false)} onTouchEnd={check}>
+    <div className={props.styles.cardWrapper}>
       <div className={props.styles.coverBox}>
         <div className={props.styles.blankBox}></div>
 
@@ -133,18 +124,16 @@ function ChallengeCard(props) {
             <div className={props.styles.iconCount}>{data.likeCnt}</div>
           </div>
           <div>
-            <a onClick={() => setOpen(true)} className='button'>
+            <a onClick={() => setOpen(true)} className='button' onMouseOut={() => setOpen(false)}>
               <RiMessage3Line className={props.styles.clickIcon}></RiMessage3Line>
               <Sheet isOpen={isOpen} onClose={() => setOpen(false)}>
-                <Sheet.Container
-                  style={{ height: '500px', zIndex: 10000002, position: 'absolute' }}
-                >
+                <Sheet.Container style={{ height: '500px', zIndex: 4, position: 'absolute' }}>
                   <Sheet.Header />
                   <Sheet.Content style={{ margin: '20px' }}>
-                    <SavanaComment></SavanaComment>
+                    <SavanaComment challengeId={data ? data.challengeId : ''}></SavanaComment>
                   </Sheet.Content>
                 </Sheet.Container>
-                <Sheet.Backdrop style={{ zIndex: 10000001 }} />
+                <Sheet.Backdrop style={{ zIndex: 3 }} />
               </Sheet>
             </a>
             <div className={props.styles.iconCount}>{data.commentCount}</div>
@@ -164,7 +153,9 @@ function ChallengeCard(props) {
           ></ProgressBar>
           <div className={props.styles.infoBot}>
             <span className={props.styles.infoText}>{data.currentNum}명</span>
-            <span className={props.styles.infoText}>{data.currentNum / data.targetNum}%</span>
+            <span className={props.styles.infoText}>
+              {Math.floor(data.currentNum / data.targetNum) * 100}%
+            </span>
           </div>
         </div>
       </div>
@@ -184,7 +175,7 @@ function ChallengeCard(props) {
         ref={(el) => (props.check ? (props.check.current[props.index] = el) : '')}
         playsInline
         style={{ width: '100%', height: '100%' }}
-        onCanPlayThrough={() => console.log('중단없이 재생가능')}
+        onCanPlayThrough={props.index === 0 ? onLoaded : () => {}}
       />
     </div>
   ) : (
