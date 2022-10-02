@@ -298,6 +298,7 @@ public class ChallengeServiceImpl implements ChallengeService {
     @Override
     public void createChallenge(UserDTO userDTO, ChallengeRequestDTO challengeRequestDTO, MultipartFile video) throws IOException {
         try {
+            System.out.println("Creating Challenge!!!!!!!!!!!!!!!!!!\n"+LocalDateTime.now());
             StringBuilder sb = new StringBuilder();
             User user = userRepository.getReferenceById(userDTO.getId());
             //토큰 잔액 확인
@@ -350,7 +351,7 @@ public class ChallengeServiceImpl implements ChallengeService {
             String line;
             while((line=br.readLine())!=null) System.out.println(line);
             p.waitFor();
-
+            System.out.println("Created Challenge!!!!!!!!!!!!!!!!!!\n"+LocalDateTime.now());
 //            p= Runtime.getRuntime().exec(commandInsertWatermark);
 //
             ChallengeContract challengeContract = celebChallengeInfo.getChallengeContract();
