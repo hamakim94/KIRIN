@@ -3,6 +3,7 @@
   font-size: 24px;
   margin-bottom: 10px;
 }
+
 .starImg {
   width: 75px;
   height: 75px;
@@ -38,136 +39,7 @@
   font-size: 30px;
 }
 
-.category {
-  margin-left: 15px;
-  font-weight: bold;
-  /* font-family: 'SCD500'; */
-  font-size: 20px;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  display: flex;
-  align-items: center;
-}
-
 .img {
   width: 100%;
   object-fit: cover;
-}
-
-/* 챌린지 영상들 css */
-
-.hScroll {
-  padding-left: 15px;
-  overflow: auto;
-  white-space: nowrap;
-  -ms-overflow-style: none; /* IE, Edge */
-  scrollbar-width: none; /* Firefox */
-  margin-bottom: 10px;
-}
-.hScroll::-webkit-scrollbar {
-  display: none; /* Chrome, Safari, Opera */
-}
-.challengeContainer {
-  overflow: auto;
-  white-space: nowrap;
-}
-.coverBox {
-  display: flex;
-  flex-direction: column;
-  background-color: rgba(0, 0, 0, 0.3);
-  position: absolute;
-  width: 144px;
-  height: 256px;
-  opacity: 1;
-}
-.blankBox {
-  flex: 3;
-}
-.infoBox {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  padding-left: 5px;
-  padding-right: 5px;
-  padding-bottom: 5px;
-}
-.cardWrapper {
-  position: relative;
-  display: inline-block;
-  margin-right: 10px;
-  border-radius: 5%;
-  width: 144px;
-  height: 256px;
-  border-width: 1px;
-  border-style: solid;
-  overflow: hidden;
-}
-
-.reactPlayer > video {
-  pointer-events: none;
-  object-fit: fill;
-}
-
-.infoTop {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 5px;
-}
-
-/* .infoBot1 {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  margin-bottom: 10px;
-} */
-
-.infoBot2 {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  margin-top: 5px;
-  margin-bottom: 5px;
-}
-
-.infoTitle {
-  color: #ffffff;
-  font-size: 12px;
-  margin-bottom: 5px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.infoText {
-  color: #ffffff;
-  font-size: 10px;
-  margin-bottom: 2px;
-}
-
-.progressDiv {
-  background-color: #ffffff;
-  border: solid 1px #808080;
-  border-radius: 0.5rem;
-}
-
-.progress {
-  /* background-color: rgba(41, 47, 51, 0.68); */
-  background-color: #ffd046;
-  height: 8px;
-  border-right: solid 1px #808080;
-  border-bottom-left-radius: 0.5rem;
-  border-top-left-radius: 0.5rem;
-  transition: 1s ease;
-  transition-delay: 0.5s;
-}
-
-.progressEnd {
-  /* background-color: rgba(41, 47, 51, 0.68); */
-  background-color: #808080;
-  height: 8px;
-  border-right: solid 1px #808080;
-  border-bottom-left-radius: 0.5rem;
-  border-top-left-radius: 0.5rem;
-  transition: 1s ease;
-  transition-delay: 0.5s;
 }

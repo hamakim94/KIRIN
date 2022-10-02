@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import ChallengeList from '../components/home/ChallengeList';
-import HomeCategory from '../components/home/HomeCategory';
+import Category from '../components/common/Category';
 import styles from './StarPage.module.css';
 import UseAxios from '../utils/UseAxios';
 import Context from '../utils/Context';
@@ -27,6 +27,7 @@ function StarPage() {
   useEffect(() => {
     UseAxios.get(`/users/stars/${starId}`).then((res) => {
       setStarInfo(res.data);
+      console.log(starInfo.profileImg);
       setCoverImg(`/files/${res.data.coverImg}`);
       setInfo(res.data.info);
     });
@@ -95,7 +96,7 @@ function StarPage() {
       .catch((err) => console.log(err));
   };
 
-  return userData ? (
+  return userData && starInfo ? (
     <div className='wrapper'>
       <div className={styles.topWrapper}>
         {/* 커버사진 */}
@@ -144,7 +145,8 @@ function StarPage() {
             ></Avatar>
           </div>
         )}
-        <div
+        <img src={`/files/${starInfo.profileImg}`} className={styles.starImgMain}></img>
+        {/* <div
           style={{
             position: 'absolute',
             left: '15px',
@@ -158,7 +160,7 @@ function StarPage() {
             height: '100px',
             border: '1px solid rgba(0,0,0, 0.3)',
           }}
-        ></div>{' '}
+        ></div>{' '} */}
         {/* 프로필사진 */}
       </div>
       <div className={styles.topTitle}>
@@ -188,7 +190,7 @@ function StarPage() {
       )}
 
       <div className={styles.titleBox}>
-        <HomeCategory title={'챌린지'} styles={styles}></HomeCategory>
+        <Category title={'챌린지'}></Category>
         <div className={styles.sortTab}>
           {isPopular ? (
             <span style={{ color: '#ffc947' }}>최신순</span>
@@ -203,12 +205,12 @@ function StarPage() {
         </div>
       </div>
       {isPopular ? (
-        <ChallengeList styles={styles} data={latestData}></ChallengeList>
+        <ChallengeList data={latestData}></ChallengeList>
       ) : (
-        <ChallengeList styles={styles} data={popularityData}></ChallengeList>
+        <ChallengeList data={popularityData}></ChallengeList>
       )}
       <div className={styles.titleBox}>
-        <HomeCategory title={'커뮤니티'} styles={styles}></HomeCategory>
+        <Category title={'커뮤니티'}></Category>
         {userData ? (
           userData.id === starId ? (
             <div style={{ marginRight: 20 }} onClick={() => navigate('community/create')}>

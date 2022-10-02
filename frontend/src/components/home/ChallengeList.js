@@ -1,13 +1,13 @@
 import React from 'react';
-import ChallengeCard from './ChallengeCard';
+import ChallengeCard from '../common/ChallengeCard';
+import styles from './ChallengeList.module.css';
+
 function ChallengeList(props) {
   return (
-    <div className={`${props.styles.challengeContainer} ${props.styles.hScroll}`}>
+    <div className={`${styles.challengeContainer} ${styles.hScroll}`}>
       <div>
         {props.data
-          ? props.data.map((item, index) => (
-              <ChallengeCard styles={props.styles} item={item} index={index} key={index} />
-            ))
+          ? props.data.map((item, index) => <ChallengeCard item={item} index={index} key={index} />)
           : ''}
       </div>
     </div>
