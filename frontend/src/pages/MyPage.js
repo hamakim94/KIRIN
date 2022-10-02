@@ -4,7 +4,7 @@ import MyTop from '../components/my/MyTop';
 import Profile from '../components/my/Profile';
 import MyStar from '../components/my/MyStar';
 import { useNavigate } from 'react-router-dom';
-import HomeCategory from '../components/home/HomeCategory';
+import Category from '../components/common/Category';
 import UseAxios from '../utils/UseAxios';
 import Context from '../utils/Context';
 import ChallengeList from '../components/home/ChallengeList';
@@ -37,7 +37,7 @@ function MyPage() {
       <MyStar styles={styles}></MyStar>
       <hr></hr>
       <div className={styles.titleBox}>
-        <HomeCategory title={'챌린지'} styles={styles}></HomeCategory>
+        <Category title={'챌린지'}></Category>
         <div className={styles.sortTab}>
           {isParticipated ? (
             <span style={{ color: '#ffc947' }}>참여</span>

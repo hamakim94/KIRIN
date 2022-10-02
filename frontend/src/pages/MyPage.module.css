@@ -119,12 +119,6 @@
   margin-bottom: 15px;
 }
 
-.category {
-  font-family: 'SCD500';
-  font-size: 20px;
-  margin-bottom: 10px;
-}
-
 .sortTab {
   display: flex;
   align-items: flex-end;

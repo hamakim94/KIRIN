@@ -119,13 +119,6 @@
   margin-bottom: 15px;
 }
 
-.category {
-  display: inline-block;
-  margin-left: 15px;
-  font-family: 'SCD500';
-  font-size: 20px;
-}
-
 .sortTab {
   display: flex;
   align-items: flex-end;

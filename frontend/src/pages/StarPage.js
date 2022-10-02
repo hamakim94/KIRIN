@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import ChallengeList from '../components/home/ChallengeList';
-import HomeCategory from '../components/home/HomeCategory';
+import Category from '../components/common/Category';
 import styles from './StarPage.module.css';
 import UseAxios from '../utils/UseAxios';
 import Context from '../utils/Context';
@@ -188,7 +188,7 @@ function StarPage() {
       )}
 
       <div className={styles.titleBox}>
-        <HomeCategory title={'챌린지'} styles={styles}></HomeCategory>
+        <Category title={'챌린지'}></Category>
         <div className={styles.sortTab}>
           {isPopular ? (
             <span style={{ color: '#ffc947' }}>최신순</span>
@@ -208,7 +208,7 @@ function StarPage() {
         <ChallengeList data={popularityData}></ChallengeList>
       )}
       <div className={styles.titleBox}>
-        <HomeCategory title={'커뮤니티'} styles={styles}></HomeCategory>
+        <Category title={'커뮤니티'}></Category>
         {userData ? (
           userData.id === starId ? (
             <div style={{ marginRight: 20 }} onClick={() => navigate('community/create')}>
