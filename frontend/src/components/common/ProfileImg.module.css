@@ -1,0 +1,5 @@
+.img {
+  object-fit: cover;
+  border-radius: 100%;
+  border: solid 1px #c9c9c9;
+}

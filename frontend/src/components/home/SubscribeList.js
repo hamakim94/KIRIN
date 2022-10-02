@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import MyStar from './MyStar';
+import ProfileImg from '../common/ProfileImg';
 import { useNavigate } from 'react-router-dom';
 import UseAxios from '../../utils/UseAxios';
 
@@ -25,7 +26,12 @@ function SubscribeList(props) {
       </div>
       {starData
         ? starData.map((item, index) => (
-            <MyStar styles={props.styles} item={item} index={index} key={item.id} />
+            <ProfileImg
+              src={item.profileImg}
+              onClick={() => navigate(`/star/${item.id}`)}
+              size={'75px'}
+            />
+            // <MyStar styles={props.styles} item={item} index={index} key={item.id} />
           ))
         : ''}
     </div>

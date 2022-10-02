@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import ProfileImg from '../../common/ProfileImg';
 
 function SelectItem(props) {
   const navigate = useNavigate();
@@ -32,7 +33,7 @@ function SelectItem(props) {
   return (
     <div id={props.styles.listWrapper}>
       <div className={props.styles.leftWrapper}>
-        <img className={props.styles.coverImg} src={`/files/${props.item.profile}`}></img>
+        <ProfileImg src={props.item.profile} size={'50px'} />
       </div>
       <div className={props.styles.midWrapper}>
         <div className={props.styles.topText}>{props.item.title}</div>
