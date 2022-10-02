@@ -6,6 +6,9 @@ import getBlobDuration from 'get-blob-duration';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '@mui/material/';
 import UseAxios from '../utils/UseAxios';
+import WalletModal from '../components/wallet/WalletModal';
+import ABI from '../TokenABI.json';
+import CA from '../TokenCA.json';
 
 function RegisterPage() {
   const videoRef = useRef(null);
@@ -21,6 +24,23 @@ function RegisterPage() {
   const [check, setCheck] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
+  const [data, setData] = useState(''); // 토큰 잔액
+  const { userData } = useContext(Context);
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    if (userData) {
+      var Web3 = require('web3');
+      var web3 = new Web3(new Web3.providers.HttpProvider(`${process.env.REACT_APP_BASEURL}/bc/`));
+      var contract = new web3.eth.Contract(ABI, CA); // ABI, CA를 통해 contract 객체를 만들어서 보관한다. 나중에 활용함
+      contract.methods // ABI, CA를 이용해 함수 접근
+        .balanceOf(userData.walletAddress)
+        .call()
+        .then((balance) => {
+          setData(balance);
+        });
+    }
+  }, []);
 
   const handleClick = () => {
     if (videoRef.current) {
@@ -190,6 +210,11 @@ function RegisterPage() {
             }}
           ></input>
           KRT
+        </div>
+        <div>보유 토큰</div>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div>{data} KRT</div>
+          <WalletModal buttonTitle={'충전하기'} setData={setData}></WalletModal>
         </div>
         <div>
           <Button

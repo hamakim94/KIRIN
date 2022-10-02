@@ -110,7 +110,7 @@ function WalletModal(props) {
   return userData ? (
     <div>
       <button className={styles.myWallet} onClick={handleOpen}>
-        내 지갑
+        {props.buttonTitle}
       </button>
 
       <Modal
