@@ -72,7 +72,9 @@ public class NotificationServiceImpl implements NotificationService {
             SseEmitter sseEmitter = sseEmitters.get(user.getId());
             try {
                 ObjectMapper mapper = new ObjectMapper();
+                System.out.println(mapper.writeValueAsString(notification));
                 sseEmitter.send(mapper.writeValueAsString(notification)+"\n");
+                System.out.println("notification sent");
             } catch (Exception e){
                 sseEmitters.remove(user.getId());
             }
