@@ -306,13 +306,23 @@ public class ChallengeServiceImpl implements ChallengeService {
 
     }
 
+    @Override
+    public String sessionToDisk(MultipartFile video) throws IOException {
+        //copy video file
+        String videoExt = video.getOriginalFilename().substring(video.getOriginalFilename().lastIndexOf("."));
+        String videoTmpDir = challengeDir+UUID.randomUUID()+videoExt;
+        Path videoTmp = Paths.get(videoTmpDir);
+        Files.copy(video.getInputStream(), videoTmp);
+
+        return videoTmpDir;
+    }
+
     @Transactional
     @Async
     @Override
-    public void createChallenge(UserDTO userDTO, ChallengeRequestDTO challengeRequestDTO, MultipartFile video) throws IOException {
+    public void createChallenge(UserDTO userDTO, ChallengeRequestDTO challengeRequestDTO, String videoTmpDir) {
         try {
             System.out.println("Creating Challenge!!!!!!!!!!!!!!!!!!\n"+LocalDateTime.now());
-            StringBuilder sb = new StringBuilder();
             User user = userRepository.getReferenceById(userDTO.getId());
             //토큰 잔액 확인
             if (ethereumService.getTokenAmount(user)<challengeRequestDTO.amount()) throw new Exception();
@@ -321,10 +331,10 @@ public class ChallengeServiceImpl implements ChallengeService {
             CelebChallengeInfo celebChallengeInfo = celebChallengeInfoRepository.findByChallengeId(forChallenge.getId());
             String musicPath = celebChallengeInfo.getMusic();
             //copy video file
-            String videoExt = video.getOriginalFilename().substring(video.getOriginalFilename().lastIndexOf("."));
-            String videoTmpDir = challengeDir+UUID.randomUUID()+videoExt;
-            Path videoTmp = Paths.get(videoTmpDir);
-            Files.copy(video.getInputStream(), videoTmp);
+//            String videoExt = video.getOriginalFilename().substring(video.getOriginalFilename().lastIndexOf("."));
+//            String videoTmpDir = challengeDir+UUID.randomUUID()+videoExt;
+//            Path videoTmp = Paths.get(videoTmpDir);
+//            Files.copy(video.getInputStream(), videoTmp);
             //make thumbnail
             String thumbDir = UUID.randomUUID()+".gif";
             String commandExtractThumbnail = String.format("ffmpeg -y -ss 2 -t 2 -i %s -r 10 -loop 0 %s", videoTmpDir,(challengeDir+thumbDir));
@@ -417,7 +427,7 @@ public class ChallengeServiceImpl implements ChallengeService {
             Process p = Runtime.getRuntime().exec(commandExtractThumbnail);
             String line;
             StringBuilder sb = new StringBuilder();
-            BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            BufferedReader br;
 //            System.out.println(5);
 //            while ((line=br.readLine())!=null) {
 //                System.out.println(line);

@@ -101,13 +101,19 @@ public class ChallengeController {
     @ApiOperation(value = "챌린지 등록")
     public ResponseEntity<?> challengeUpload(@ApiIgnore @AuthenticationPrincipal UserDTO userDTO,
                                              @RequestPart MultipartFile video,
-                                             @RequestPart ChallengeRequestDTO challengeRequestDTO){
-
+                                             @RequestPart ChallengeRequestDTO challengeRequestDTO) {
+        String videoTmp;
         try {
-            challengeService.createChallenge(userDTO, challengeRequestDTO, video);
+            videoTmp = challengeService.sessionToDisk(video);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        try {
+            challengeService.createChallenge(userDTO, challengeRequestDTO, videoTmp);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
 
         return ResponseEntity.ok().build();
     }
