@@ -1,8 +1,9 @@
 import React from 'react';
+import styles from './Category.module.css';
 
-function HomeCategory(props) {
+function Category(props) {
   return (
-    <div className={props.styles.category}>
+    <div className={styles.category}>
       <img
         src={require('../../assets/img/kirin_logo_nobackground.png')}
         style={{ width: 30, marginRight: 5 }}
@@ -12,4 +13,4 @@ function HomeCategory(props) {
   );
 }
 
-export default HomeCategory;
+export default Category;
