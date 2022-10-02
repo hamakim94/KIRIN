@@ -52,9 +52,9 @@ function MyPage() {
         </div>
       </div>
       {isParticipated ? (
-        <ChallengeList styles={styles} data={participatedData}></ChallengeList>
+        <ChallengeList data={participatedData}></ChallengeList>
       ) : (
-        <ChallengeList styles={styles} data={likedData}></ChallengeList>
+        <ChallengeList data={likedData}></ChallengeList>
       )}
       <hr></hr>
       <button onClick={() => navigate(`/dashboard`)} className={styles.myWallet}>

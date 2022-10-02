@@ -203,9 +203,9 @@ function StarPage() {
         </div>
       </div>
       {isPopular ? (
-        <ChallengeList styles={styles} data={latestData}></ChallengeList>
+        <ChallengeList data={latestData}></ChallengeList>
       ) : (
-        <ChallengeList styles={styles} data={popularityData}></ChallengeList>
+        <ChallengeList data={popularityData}></ChallengeList>
       )}
       <div className={styles.titleBox}>
         <HomeCategory title={'커뮤니티'} styles={styles}></HomeCategory>
