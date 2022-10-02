@@ -54,13 +54,6 @@
   flex: 3;
 }
 
-.coverImg {
-  border-radius: 100%;
-  border: solid rgba(0, 0, 0, 0.2) 1px;
-  width: 50px;
-  height: 50px;
-}
-
 .play {
   width: 0px;
   height: 0px;

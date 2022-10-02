@@ -5,6 +5,8 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import React, { useContext, useEffect, useState } from 'react';
 import UseAxios from '../../utils/UseAxios';
 import Context from '../../utils/Context';
+import ProfileImg from '../common/ProfileImg';
+import { useNavigate } from 'react-router-dom';
 
 const theme = createTheme({
   palette: {
@@ -35,6 +37,7 @@ function ProgressBar(props) {
 function DonationList(props) {
   const { pathname } = useLocation();
   const [donations, setDonations] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     UseAxios.get(`/challenges/participate`, {}).then((res) => {
@@ -81,11 +84,12 @@ function DonationList(props) {
                   <hr style={{ width: '100%', marginBottom: 7.5, marginTop: 7.5 }}></hr>
                   <div className={props.styles.donationBox}>
                     <div className={props.styles.profileImgName}>
-                      <img
-                        src={`/files/${donation.starProfile}`}
-                        className={props.styles.starImg}
-                      ></img>
-                      <div className={props.styles.starName}>{donation.starName}</div>
+                      <ProfileImg
+                        src={donation.starProfile}
+                        size={'65px'}
+                        onClick={() => navigate(`/star/${donation.starId}`)}
+                      />
+                      <div className={props.styles.starName}>{donation.starNickname}</div>
                     </div>
                     <div>
                       <div className={props.styles.participateBox}>

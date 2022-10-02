@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Context from '../../utils/Context';
 import WalletModal from '../wallet/WalletModal';
+import ProfileImg from '../common/ProfileImg';
 
 function Profile(props) {
   const navigate = useNavigate();
@@ -10,14 +11,7 @@ function Profile(props) {
     <div>
       {userData ? (
         <div className={props.styles.profileBox}>
-          <img
-            src={
-              userData.profileImg
-                ? `/files/${userData.profileImg}`
-                : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'
-            }
-            className={props.styles.userImg}
-          ></img>
+          <ProfileImg src={userData.profileImg} size={'100px'} />
           <div className={props.styles.userName}>{userData.nickname} </div>
           <WalletModal buttonTitle={'내 지갑'}></WalletModal>
           {/* <button onClick={() => navigate(`/mypage/wallet`)} className={props.styles.myWallet}>

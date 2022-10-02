@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import UseAxios from '../../utils/UseAxios';
+import ProfileImg from '../common/ProfileImg';
+import { useNavigate } from 'react-router-dom';
+import Category from '../common/Category';
 
 function MyStar(props) {
   const [subs, setSubs] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     UseAxios.get(`/users/subscribes`).then((res) => {
@@ -12,7 +16,9 @@ function MyStar(props) {
 
   return (
     <div>
-      <div className={props.styles.myTitle}>나의 스타</div>
+      <Category title={'나의 스타'} />
+      <div style={{ height: 5 }}></div>
+      {/* <div className={props.styles.myTitle}>나의 스타</div> */}
       <div className={props.styles.hScroll}>
         <div className={props.styles.starList}>
           {subs.length === 0 ? (
@@ -22,7 +28,11 @@ function MyStar(props) {
           ) : (
             subs.map((sub) => (
               <div className={props.styles.profileImgName}>
-                <img src={`/files/${sub.profileImg}`} className={props.styles.starImg}></img>
+                <ProfileImg
+                  src={sub.profileImg}
+                  onClick={() => navigate(`/star/${sub.id}`)}
+                  size={'70px'}
+                />
                 <div className={props.styles.starName}>{sub.nickname}</div>
               </div>
             ))

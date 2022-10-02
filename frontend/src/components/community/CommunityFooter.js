@@ -4,6 +4,7 @@ import CommentInput from './CommentInput';
 import UseAxios from '../../utils/UseAxios';
 import { useLocation } from 'react-router-dom';
 import CommentList from './CommentList';
+
 function CoummnityFooter(props) {
   const location = useLocation();
   const [commentData, setCommentData] = useState(null);
@@ -11,6 +12,7 @@ function CoummnityFooter(props) {
   const [commentCnt, setCommentCnt] = useState(null);
   const [checkWrite, setCheckWrite] = useState(false);
   const [replyCheck, setReplyCheck] = useState(null);
+
   useEffect(() => {
     UseAxios.get(
       `/communities/stars/${location.state.starId}/boards/${location.state.boardId}/comments`
@@ -78,12 +80,18 @@ function CoummnityFooter(props) {
   return commentData ? (
     <>
       <div className={props.styles.footerWrapper}>
-        <RiMessage3Line></RiMessage3Line>
-        {commentCnt ? commentCnt : 0}
-        <span onClick={likeButtonClick}>
-          {like ? like.liked ? <RiHeart2Fill></RiHeart2Fill> : <RiHeart2Line></RiHeart2Line> : ''}
+        <span style={{ marginRight: 10 }}>
+          <span style={{ marginRight: 5 }}>
+            <RiMessage3Line></RiMessage3Line>
+          </span>
+          <span>{commentCnt ? commentCnt : 0}</span>
         </span>
-        {like ? like.likeCnt : 0}
+        <span>
+          <span onClick={likeButtonClick} style={{ marginRight: 5 }}>
+            {like ? like.liked ? <RiHeart2Fill></RiHeart2Fill> : <RiHeart2Line></RiHeart2Line> : ''}
+          </span>
+          <span>{like ? like.likeCnt : 0}</span>
+        </span>
       </div>
       <div>
         <CommentInput

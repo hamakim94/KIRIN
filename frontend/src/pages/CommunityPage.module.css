@@ -34,14 +34,6 @@
   flex-direction: column;
 }
 
-.starImg {
-  width: 50px;
-  height: 50px;
-  object-fit: cover;
-  border-radius: 100%;
-  margin-right: 10px;
-}
-
 .writeDate {
   color: #808080;
   font-size: 12px;
@@ -58,13 +50,19 @@
   border-width: 0px;
   background-color: #ffffff;
 }
+
 .inputBox:focus {
   outline: 0;
 }
 
-.commentImg {
+.footerWrapper {
+  font-size: larger;
+  display: flex;
+}
+
+/* .commentImg {
   width: 40px;
   height: 40px;
   object-fit: cover;
   border-radius: 100%;
-}
+} */
