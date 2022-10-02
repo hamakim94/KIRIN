@@ -62,13 +62,10 @@ public class NotificationServiceImpl implements NotificationService {
 
         notificationRepository.save(notification);
         System.out.println("Adding Notification");
-        for(Long id: sseEmitters.keySet()){
-            System.out.println(id);
-        }
         if(sseEmitters.containsKey(user.getId())){
             SseEmitter sseEmitter = sseEmitters.get(user.getId());
             try {
-                sseEmitter.send(notification);
+                sseEmitter.send(SseEmitter.event().data(notification+"\n").build());
             } catch (Exception e){
                 sseEmitters.remove(user.getId());
             }

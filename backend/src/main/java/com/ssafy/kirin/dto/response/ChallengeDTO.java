@@ -28,9 +28,9 @@ public class ChallengeDTO {
     LocalDateTime startDate;
     LocalDateTime endDate;
     Integer targetNum;
-    Integer targetAmount;
+    Long targetAmount;
     Integer currentNum;
-    Integer currentAmount;
+    Long currentAmount;
     Boolean liked;
     String donationOrganizationName;
 }
