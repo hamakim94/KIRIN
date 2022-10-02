@@ -8,6 +8,7 @@ import UseAxios from '../../utils/UseAxios';
 import ABI from '../../TokenABI.json';
 import CA from '../../TokenCA.json';
 import Context from '../../utils/Context';
+import Loading from '../common/Loading';
 
 const theme = createTheme({
   palette: {
@@ -56,13 +57,7 @@ function WalletModal(props) {
         });
     }
   }, [userData]);
-  // 로딩 관련
-  const loadingClose = () => {
-    setLoading(false);
-  };
-  const loadingToggle = () => {
-    setLoading(!loading);
-  };
+
   // 폼에 숫자만 입력해요
   const onChangeTokens = (e) => {
     const { value } = e.target;
@@ -89,12 +84,12 @@ function WalletModal(props) {
    * 준비물 : AdminuserData.walletAddress, Admin AdminPrivateKey, tokenContractCA
    */
   const getToken = () => {
-    loadingToggle();
+    setLoading(true);
     UseAxios.post(`/blockchain/charge`, null, { params: { amount: tokens } }).then((res) => {
       setTokens('');
       viewTokenBalance();
       alert('충전 완료!');
-      loadingClose();
+      setLoading(false);
     });
   };
 
@@ -109,6 +104,7 @@ function WalletModal(props) {
 
   return userData ? (
     <div>
+      <Loading loading={loading}></Loading>
       <button className={styles.myWallet} onClick={handleOpen}>
         {props.buttonTitle}
       </button>
