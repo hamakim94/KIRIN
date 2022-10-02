@@ -16,6 +16,7 @@ public class MyChallengeResponseDTO {
     String title; // 연예인이 올린 챌린지명
     Long starId;
     String starName;
+    String starNickname;
     String starProfile;
     Long starChallengeId; // 스타가 올린 챌린지 id
     Boolean isProceeding;

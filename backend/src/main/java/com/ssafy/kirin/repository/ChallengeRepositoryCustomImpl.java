@@ -51,6 +51,7 @@ public class ChallengeRepositoryCustomImpl implements ChallengeRepositoryCustom{
                     .title(t.get(c2.title))
                     .starId(t.get(u.id))
                     .starName(t.get(u.name))
+                    .starNickname(t.get(u.nickname))
                     .starProfile(t.get(u.profileImg))
                     .starChallengeId(t.get(c.challengeId))
                     .isProceeding(t.get(c.isProceeding))
