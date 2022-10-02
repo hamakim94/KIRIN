@@ -122,10 +122,16 @@ public class ChallengeController {
     @ApiOperation(value = "스타 챌린지 등록")
     public ResponseEntity<?> starChallengeUpload(@ApiIgnore @AuthenticationPrincipal UserDTO userDTO,
                                                  @RequestPart MultipartFile video,
-                                                 @RequestPart StarChallengeRequestDTO starChallengeRequestDTO){
+                                                 @RequestPart StarChallengeRequestDTO starChallengeRequestDTO) {
 
 
-        challengeService.createStarChallenge(userDTO, starChallengeRequestDTO, video);
+        String videoTmp;
+        try {
+            videoTmp = challengeService.sessionToDisk(video);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        challengeService.createStarChallenge(userDTO, starChallengeRequestDTO, videoTmp);
 
         return ResponseEntity.ok().build();
 

@@ -25,7 +25,7 @@ public interface ChallengeService {
 
     String sessionToDisk(MultipartFile video) throws IOException;
 
-    void createStarChallenge(UserDTO userDTO, StarChallengeRequestDTO starChallengeRequestDTO, MultipartFile video);
+    void createStarChallenge(UserDTO userDTO, StarChallengeRequestDTO starChallengeRequestDTO, String videoTmpDir);
     List<ChallengeCommentDTO> getChallengeComment(Long challengeId);
     List<ChallengeCommentDTO> getChallengeRecomment(Long userId, Long commentId);
     void writeChallengeComment(Long userId, Long challengeId,
