@@ -76,3 +76,20 @@
   background-color: #666666;
   transition: 0.5s;
 }
+
+.topContainer {
+  display: flex;
+  align-items: center;
+  padding-left: 15px;
+  padding-right: 15px;
+  justify-content: center;
+}
+
+.searchBox {
+  border-radius: 5px;
+  padding-left: 10px;
+  width: 90%;
+  height: 25px;
+  border-width: 0;
+  background-color: #d9d9d9;
+}
