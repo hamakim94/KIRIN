@@ -65,7 +65,7 @@ public class NotificationServiceImpl implements NotificationService {
         if(sseEmitters.containsKey(user.getId())){
             SseEmitter sseEmitter = sseEmitters.get(user.getId());
             try {
-                sseEmitter.send(SseEmitter.event().data(notification).build());
+                sseEmitter.send(SseEmitter.event().data(notification+"\n").build());
             } catch (Exception e){
                 sseEmitters.remove(user.getId());
             }
