@@ -37,6 +37,7 @@ import SelectPage from './pages/SelectPage';
 import WalletPage from './pages/WalletPage';
 import SuccessPage from './pages/SuccessPage';
 import FailPage from './pages/FailPage';
+import StarSignupPage from './pages/StarSignupPage';
 import CommunityCreatePage from './pages/CommunityCreatePage';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -176,6 +177,7 @@ function App() {
                 <Route path='/finishsignup' element={<FinishSignupPage></FinishSignupPage>}></Route>
                 <Route path='/findpassword' element={<FindPasswordPage></FindPasswordPage>}></Route>
                 <Route path='/signup' element={<SignupPage></SignupPage>}></Route>
+                <Route path='/starsignup' element={<StarSignupPage></StarSignupPage>}></Route>
                 <Route path='/success' element={<SuccessPage></SuccessPage>}></Route>
                 <Route path='/fail' element={<FailPage></FailPage>}></Route>
                 <Route path='*' element={<NotFoundPage></NotFoundPage>}></Route>
