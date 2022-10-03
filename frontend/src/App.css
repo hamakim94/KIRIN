@@ -1,7 +1,6 @@
 /* App.css에서 폰트도 관리 */
 
 .App {
-  font-family: 'SCD400';
   width: 100vw;
   height: 100vh;
   height: calc(var(--vh, 1vh) * 100);
@@ -16,18 +15,14 @@
   font-family: 'SCD400';
   height: 100vh;
 }
+
 * {
   font-family: 'SCD400';
   margin: 0;
   padding: 0;
 }
 
-* {
-  padding: 0;
-  margin: 0;
-}
 /* font */
-
 @font-face {
   font-family: 'SCD100';
   font-weight: 100;

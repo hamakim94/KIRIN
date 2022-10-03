@@ -1,11 +1,3 @@
-.myWallet {
-  border: none;
-  border-radius: 5px;
-  background-color: #ffc947;
-  height: 25px;
-  padding-left: 10px;
-  padding-right: 10px;
-}
 .style {
   display: flex;
   position: absolute;
@@ -57,7 +49,7 @@
   margin-top: 10px;
 }
 
-.myWallet {
+<<<<<<< HEAD ======= .myWallet {
   margin-top: 10px;
   border: none;
   border-radius: 5px;
@@ -67,7 +59,7 @@
   padding-right: 10px;
 }
 
-.myTitle {
+>>>>>>>9ff198c33c75351f53bcdd85364379f80bf40293 .myTitle {
   font-weight: bold;
   margin-top: 10px;
   margin-bottom: 10px;

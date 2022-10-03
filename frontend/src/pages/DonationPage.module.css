@@ -30,12 +30,13 @@
   align-items: center;
   justify-content: space-evenly;
   padding: 5px 0px;
+  margin: 5px 0px;
+  height: 80px;
 }
 
 .profileImgName {
   margin-left: 10px;
   margin-right: 20px;
-  margin-top: 5px;
 }
 
 .starName {
@@ -46,7 +47,6 @@
 .participateBox {
   display: flex;
   flex-direction: row;
-  margin-bottom: 5px;
 }
 
 .participateKind {
