@@ -14,6 +14,7 @@ const theme = createTheme({
 });
 function ProgressBar(props) {
   const [value, setValue] = useState(0);
+
   useEffect(() => {
     const newValue = props.width * props.percent;
     setValue(newValue);
@@ -26,18 +27,16 @@ function ProgressBar(props) {
 }
 
 function ShowDonationInfo(props) {
-  const [challenges, setChallenges] = useState([]);
-
+  const [realDonors, setRealDonors] = useState([]);
   useEffect(() => {
     UseAxios.get(`/challenges/star`, { params: { challengeId: props.data.challengeId } }).then(
       (res) => {
-        setChallenges(res.data);
-        console.log(props.data);
+        setRealDonors(res.data.donors.filter((donor) => donor.amount > 0));
       }
     );
-  }, []);
+  }, [props.data.challengeId]);
 
-  return (
+  return realDonors ? (
     <ThemeProvider theme={theme}>
       <div className={props.styles.infoTop}>
         <div className={props.styles.infoSet}>
@@ -47,7 +46,7 @@ function ShowDonationInfo(props) {
         <div className={props.styles.infoSet}>
           <div className={props.styles.donationInfo}>챌린지 기간</div>
           <div>
-            {props.data.startDate}~{props.data.endDate}
+            {props.data.startDate.split('T')[0]} {` ~ `} {props.data.endDate.split('T')[0]}
           </div>
         </div>
         <div className={props.styles.infoSet}>
@@ -62,15 +61,21 @@ function ShowDonationInfo(props) {
         </div>
         <div className={props.styles.infoSet}>
           <div className={props.styles.donationInfo}>기부 참여</div>
-          <div>{props.data.donors}명</div>
+          <div>{realDonors.length}명</div>
         </div>
         <div className={props.styles.infoSet}>
           <div className={props.styles.donationInfo}>기부 현황</div>
-          <div>{props.data.currentNum}KRT</div>
+          <div>
+            {props.data.currentNum}
+            {` `}KRT
+          </div>
         </div>
         <div className={props.styles.infoSet}>
           <div className={props.styles.donationInfo}>공약 금액</div>
-          <div>{props.data.targetAmount}KRT</div>
+          <div>
+            {props.data.currentAmount - props.data.targetAmount}
+            {` `}KRT
+          </div>
         </div>
         <div className={props.styles.progressBox}>
           <ProgressBar
@@ -88,6 +93,8 @@ function ShowDonationInfo(props) {
         </div>
       </div>
     </ThemeProvider>
+  ) : (
+    ''
   );
 }
 
