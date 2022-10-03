@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import ReactPlayer from 'react-player/lazy';
 import styles from './ChallengeCard.module.css';
+import { useNavigate } from 'react-router-dom';
 
 function ProgressBar(props) {
   const [value, setValue] = useState(0);
@@ -24,12 +24,27 @@ function ProgressBar(props) {
 }
 
 function ChallengeCard(props) {
-  const [hover, setHover] = useState(false);
+  // const [hover, setHover] = useState(false);
+  const navigate = useNavigate();
   return (
     <div
       className={styles.cardWrapper}
-      onMouseOver={() => setHover(true)}
-      onMouseOut={() => setHover(false)}
+      // onMouseOver={() => setHover(true)}
+      // onMouseOut={() => setHover(false)}
+      onClick={() =>
+        props.category !== 4
+          ? navigate(`/savana/${props.category}`, {
+              state: {
+                id: props.item.id,
+                challengeId: props.item.challengeId,
+              },
+            })
+          : navigate(`/challenge/${props.item.challengeId}`, {
+              state: {
+                data: props.item,
+              },
+            })
+      }
     >
       <div className={styles.coverBox}>
         <div className={styles.blankBox}></div>
@@ -64,7 +79,7 @@ function ChallengeCard(props) {
         </div>
       </div>
       <img
-        src={`files/${props.item.thumbnail}`}
+        src={`/files/${props.item.thumbnail}`}
         width={144}
         height={256}
         style={{ objectFit: 'contain' }}

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import UseAxios from '../../utils/UseAxios';
+import ProfileImg from '../common/ProfileImg';
 
 function ChallengeStarProfile(props) {
   const [challenges, setChallenges] = useState([]);
@@ -16,8 +17,7 @@ function ChallengeStarProfile(props) {
     <div>
       <div className={props.styles.profileBox}>
         <div className={props.styles.imgName}>
-          <img className={props.styles.starImg} src={`/files/${props.data.user.profileImg}`}></img>
-
+          <ProfileImg src={props.data.user.profileImg} size={'100px'}></ProfileImg>
           <div className={props.styles.starName}>{props.data.user.nickname}</div>
         </div>
 

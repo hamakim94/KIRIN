@@ -1,14 +1,17 @@
-import React, { useEffect, useState } from 'react';
-import ChallengeTop from '../components/challenge/ChallengeTop';
+import React, { useState, useContext } from 'react';
+import Header from '../components/common/Header';
 import ChallengeStarProfile from '../components/challenge/ChallengeStarProfile';
 import styles from './ChallengePage.module.css';
 import ShowChallenge from '../components/challenge/ShowChallenge';
 import ShowDonationNow from '../components/challenge/ShowDonationNow';
 import ShowDonationInfo from '../components/challenge/ShowDonationInfo';
 import { useLocation } from 'react-router-dom';
+import Context from '../utils/Context';
 function ChallengePage() {
+  const { selected, setSelected } = useContext(Context);
   const location = useLocation();
-  console.log(location);
+  const pathname = location.pathname.split('/');
+  setSelected(pathname[2]);
   const data = [
     {
       id: 0,
@@ -30,7 +33,7 @@ function ChallengePage() {
 
   return (
     <div>
-      <ChallengeTop styles={styles} data={location.state.data}></ChallengeTop>
+      <Header title={location.state.data.title}></Header>
       <ChallengeStarProfile data={location.state.data} styles={styles}></ChallengeStarProfile>
       <ul className={styles.tabMenu}>
         {data.map((item) => (
@@ -46,10 +49,10 @@ function ChallengePage() {
       {data
         .filter((item) => index === item.id)
         .map((item) => (
-          <div>
+          <>
             <hr></hr>
             {item.description}
-          </div>
+          </>
         ))}
     </div>
   );

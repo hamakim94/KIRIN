@@ -49,6 +49,7 @@ function StarPage() {
       }
     });
     UseAxios.get(`/communities/stars/${starId}`).then((res) => {
+      const latestArr = res.data.reverse();
       setCommunityData(res.data);
     });
     UseAxios.get(`/challenges?scope=stars&order=latest&userid=${starId}`)
@@ -108,7 +109,7 @@ function StarPage() {
       .catch((err) => console.log(err));
   };
 
-  return userData ? (
+  return userData && starInfo ? (
     <ThemeProvider theme={theme}>
       <div className='wrapper'>
         <div className={styles.topWrapper}>
@@ -158,22 +159,15 @@ function StarPage() {
               ></Avatar>
             </div>
           )}
-          <div
-            style={{
-              position: 'absolute',
-              left: '15px',
-              bottom: '0',
-              backgroundImage: `url(/files/${starInfo.profileImg})`,
-              backgroundRepeat: 'no-repeat',
-              backgroundPosition: 'center',
-              backgroundSize: 'cover',
-              borderRadius: '100%',
-              width: '100px',
-              height: '100px',
-              border: '1px solid rgba(0,0,0, 0.3)',
-            }}
-          ></div>{' '}
-          {/* 프로필사진 */}
+          <img
+            alt={'스타스타'}
+            src={
+              starInfo.profileImg
+                ? `/files/${starInfo.profileImg}`
+                : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'
+            }
+            className={styles.starImgMain}
+          ></img>
         </div>
         <div className={styles.topTitle}>
           <div className={styles.starName}>
@@ -230,9 +224,9 @@ function StarPage() {
           </div>
         </div>
         {isPopular ? (
-          <ChallengeList data={latestData}></ChallengeList>
+          <ChallengeList data={latestData} category={4}></ChallengeList>
         ) : (
-          <ChallengeList data={popularityData}></ChallengeList>
+          <ChallengeList data={popularityData} category={4}></ChallengeList>
         )}
         <div className={styles.titleBox}>
           <Category title={'커뮤니티'}></Category>
