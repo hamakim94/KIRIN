@@ -34,10 +34,10 @@ function SimpleBottomNavigation() {
       case 'register':
         setValue(2);
         break;
-      case '':
+      case 'donation':
         setValue(3);
         break;
-      case '':
+      case 'mypage':
         setValue(4);
         break;
     }
