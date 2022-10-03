@@ -43,7 +43,7 @@ function ShowDonationNow(props) {
 
   return (
     <div className={props.styles.nowTop}>
-      {realDoners ? (
+      {realDoners.length ? (
         filterDonor(realDoners).map((donor, index) => (
           <DonationBox donor={donor} key={index}></DonationBox>
         ))
