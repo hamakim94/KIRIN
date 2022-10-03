@@ -46,8 +46,9 @@ function SelectPage() {
               placeholder={'검색'}
             ></input>
           </div>
-
-          <SelectList styles={styles} data={filteredChallengeData}></SelectList>
+          <div style={{ marginTop: 15 }}>
+            <SelectList styles={styles} data={filteredChallengeData}></SelectList>
+          </div>
         </div>
       ) : (
         '로딩로딩'

@@ -8,6 +8,8 @@ import { Avatar } from '@mui/material';
 import StarPageModal from '../components/star/StarPageModal';
 import { useNavigate } from 'react-router-dom';
 import CommunityList from '../components/star/CommunityList';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { Button } from '@mui/material/';
 
 function StarPage() {
   const [starInfo, setStarInfo] = useState({});
@@ -23,6 +25,16 @@ function StarPage() {
   const navigate = useNavigate();
   const location = window.location.href.split('/');
   const starId = Number(location[location.length - 1]);
+  const theme = createTheme({
+    palette: {
+      primary: {
+        main: '#ffc947',
+      },
+    },
+    typography: {
+      fontFamily: 'SCD400',
+    },
+  });
 
   useEffect(() => {
     UseAxios.get(`/users/stars/${starId}`).then((res) => {
@@ -98,142 +110,141 @@ function StarPage() {
   };
 
   return userData && starInfo ? (
-    <div className='wrapper'>
-      <div className={styles.topWrapper}>
-        {/* 커버사진 */}
-        {userData.id === starInfo.id ? (
-          <div>
-            {' '}
-            <Avatar
-              src={coverImg}
-              style={{
-                height: '150px',
-                width: '100%',
-                backgroundRepeat: 'no-repeat',
-                backgroundPosition: 'center',
-                backgroundSize: 'cover',
-              }}
-              variant='square'
-              onClick={() => {
-                fileInput.current.click();
-              }}
-            ></Avatar>
-            <form>
-              <input
-                type='file'
-                style={{ display: 'none' }}
-                accept='image/jpg,image/png,image/jpeg'
-                name='coverImg'
-                onChange={onChange}
-                ref={fileInput}
-              ></input>
-            </form>
-          </div>
-        ) : (
-          <div>
-            {' '}
-            <Avatar
-              src={coverImg}
-              style={{
-                height: '150px',
-                width: '100%',
-                backgroundRepeat: 'no-repeat',
-                backgroundPosition: 'center',
-                backgroundSize: 'cover',
-              }}
-              variant='square'
-              alt='cover'
-            ></Avatar>
-          </div>
-        )}
-        <img
-          alt={'스타스타'}
-          src={
-            starInfo.profileImg
-              ? `/files/${starInfo.profileImg}`
-              : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'
-          }
-          className={styles.starImgMain}
-        ></img>
-        {/* <div
-          style={{
-            position: 'absolute',
-            left: '15px',
-            bottom: '0',
-            backgroundImage: `url(/files/${starInfo.profileImg})`,
-            backgroundRepeat: 'no-repeat',
-            backgroundPosition: 'center',
-            backgroundSize: 'cover',
-            borderRadius: '100%',
-            width: '100px',
-            height: '100px',
-            border: '1px solid rgba(0,0,0, 0.3)',
-          }}
-        ></div>{' '} */}
-        {/* 프로필사진 */}
-      </div>
-      <div className={styles.topTitle}>
-        <div className={styles.starName}>
-          <span>{starInfo.nickname}</span>
+    <ThemeProvider theme={theme}>
+      <div className='wrapper'>
+        <div className={styles.topWrapper}>
+          {/* 커버사진 */}
+          {userData.id === starInfo.id ? (
+            <div>
+              {' '}
+              <Avatar
+                src={coverImg}
+                style={{
+                  height: '150px',
+                  width: '100%',
+                  backgroundRepeat: 'no-repeat',
+                  backgroundPosition: 'center',
+                  backgroundSize: 'cover',
+                }}
+                variant='square'
+                onClick={() => {
+                  fileInput.current.click();
+                }}
+              ></Avatar>
+              <form>
+                <input
+                  type='file'
+                  style={{ display: 'none' }}
+                  accept='image/jpg,image/png,image/jpeg'
+                  name='coverImg'
+                  onChange={onChange}
+                  ref={fileInput}
+                ></input>
+              </form>
+            </div>
+          ) : (
+            <div>
+              {' '}
+              <Avatar
+                src={coverImg}
+                style={{
+                  height: '150px',
+                  width: '100%',
+                  backgroundRepeat: 'no-repeat',
+                  backgroundPosition: 'center',
+                  backgroundSize: 'cover',
+                }}
+                variant='square'
+                alt='cover'
+              ></Avatar>
+            </div>
+          )}
+          <img
+            alt={'스타스타'}
+            src={
+              starInfo.profileImg
+                ? `/files/${starInfo.profileImg}`
+                : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'
+            }
+            className={styles.starImgMain}
+          ></img>
         </div>
+        <div className={styles.topTitle}>
+          <div className={styles.starName}>
+            <span>{starInfo.nickname}</span>
+          </div>
+        </div>
+        {userData.id === starInfo.id ? (
+          <StarPageModal info={info} setInfo={setInfo} styles={styles}></StarPageModal>
+        ) : (
+          <div className={styles.contentBox}>{starInfo.info ? starInfo.info : ''}</div>
+        )}
         {userData.id === starInfo.id ? (
           <></>
         ) : subscribed ? (
           <div className={styles.btnWrapper}>
-            <button className={styles.unSubBtn} onClick={subscribe}>
-              구독취소
-            </button>
+            <Button
+              type='button'
+              fullWidth
+              variant='contained'
+              onClick={subscribe}
+              size='small'
+              style={{ backgroundColor: '#d2d2d2', width: '100%' }}
+            >
+              구독 취소
+            </Button>
           </div>
         ) : (
           <div className={styles.btnWrapper}>
-            <button className={styles.subBtn} onClick={subscribe}>
+            <Button
+              type='button'
+              fullWidth
+              variant='contained'
+              onClick={subscribe}
+              size='small'
+              style={{ width: '100%' }}
+            >
               구독
-            </button>
+            </Button>
           </div>
         )}
-      </div>
-      {userData.id === starInfo.id ? (
-        <StarPageModal info={info} setInfo={setInfo} styles={styles}></StarPageModal>
-      ) : (
-        <div className={styles.contentBox}>{starInfo.info ? starInfo.info : '없졍'}</div>
-      )}
-
-      <div className={styles.titleBox}>
-        <Category title={'챌린지'}></Category>
-        <div className={styles.sortTab}>
-          {isPopular ? (
-            <span style={{ color: '#ffc947' }}>최신순</span>
-          ) : (
-            <span onClick={() => setIsPopular(true)}>최신순</span>
-          )}
-          {isPopular ? (
-            <span onClick={() => setIsPopular(false)}>인기순</span>
-          ) : (
-            <span style={{ color: '#ffc947' }}>인기순</span>
-          )}
+        <div className={styles.titleBox}>
+          <Category title={'챌린지'}></Category>
+          <div className={styles.sortTab}>
+            {isPopular ? (
+              <span style={{ color: '#ffc947' }}>최신순</span>
+            ) : (
+              <span onClick={() => setIsPopular(true)}>최신순</span>
+            )}
+            {isPopular ? (
+              <span onClick={() => setIsPopular(false)}>인기순</span>
+            ) : (
+              <span style={{ color: '#ffc947' }}>인기순</span>
+            )}
+          </div>
         </div>
-      </div>
-      {isPopular ? (
-        <ChallengeList data={latestData} category={4}></ChallengeList>
-      ) : (
-        <ChallengeList data={popularityData} category={4}></ChallengeList>
-      )}
-      <div className={styles.titleBox}>
-        <Category title={'커뮤니티'}></Category>
-        {userData ? (
-          userData.id === starId ? (
-            <div style={{ marginRight: 20 }} onClick={() => navigate('community/create')}>
-              작성
-            </div>
+        {isPopular ? (
+          <ChallengeList data={latestData} category={4}></ChallengeList>
+        ) : (
+          <ChallengeList data={popularityData} category={4}></ChallengeList>
+        )}
+        <div className={styles.titleBox}>
+          <Category title={'커뮤니티'}></Category>
+          {userData ? (
+            userData.id === starId ? (
+              <div style={{ marginRight: 20 }} onClick={() => navigate('community/create')}>
+                작성
+              </div>
+            ) : (
+              ''
+            )
           ) : (
             ''
-          )
-        ) : (
-          ''
-        )}
+          )}
+        </div>
+        <CommunityList data={communityData} styles={styles}></CommunityList>
       </div>
-      <CommunityList data={communityData} styles={styles}></CommunityList>
-    </div>
+    </ThemeProvider>
   ) : (
     ''
   );
