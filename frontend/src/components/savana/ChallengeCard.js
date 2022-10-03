@@ -127,7 +127,16 @@ function ChallengeCard(props) {
             <div className={props.styles.iconCount}>{data.likeCnt}</div>
           </div>
           <div>
-            <a onClick={() => setOpen(true)} className='button' onMouseOut={() => setOpen(false)}>
+            <a
+              onClick={() => setOpen(true)}
+              className='button'
+              onMouseOut={() => setOpen(false)}
+              onKeyDown={(e) => {
+                if (e.key === 'Backspace') {
+                  setOpen(false);
+                }
+              }}
+            >
               <RiMessage3Line className={props.styles.clickIcon}></RiMessage3Line>
               <Sheet isOpen={isOpen} onClose={() => setOpen(false)}>
                 <Sheet.Container style={{ height: '500px', zIndex: 4, position: 'absolute' }}>
