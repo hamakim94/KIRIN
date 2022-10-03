@@ -29,11 +29,10 @@ function ProgressBar(props) {
 }
 
 function ChallengeCard(props) {
-  // 마우스 오버 상태
-  const [hover, setHover] = useState(false);
   const [copied, setCopied] = useState(false);
   const [isOpen, setOpen] = useState(false);
   const [data, setData] = useState(null);
+
   const navigate = useNavigate();
 
   function copy() {
@@ -91,12 +90,14 @@ function ChallengeCard(props) {
     }
   };
 
+  const onLoaded = () => {
+    if (props.setLoading) {
+      props.setLoading(true);
+    }
+  };
+
   return data ? (
-    <div
-      className={props.styles.cardWrapper}
-      onMouseOver={() => setHover(true)}
-      onMouseOut={() => setHover(false)}
-    >
+    <div className={props.styles.cardWrapper}>
       <div className={props.styles.coverBox}>
         <div className={props.styles.blankBox}></div>
 
@@ -123,16 +124,16 @@ function ChallengeCard(props) {
             <div className={props.styles.iconCount}>{data.likeCnt}</div>
           </div>
           <div>
-            <a onClick={() => setOpen(true)} className='button'>
+            <a onClick={() => setOpen(true)} className='button' onMouseOut={() => setOpen(false)}>
               <RiMessage3Line className={props.styles.clickIcon}></RiMessage3Line>
               <Sheet isOpen={isOpen} onClose={() => setOpen(false)}>
-                <Sheet.Container style={{ height: '500px' }}>
+                <Sheet.Container style={{ height: '500px', zIndex: 4, position: 'absolute' }}>
                   <Sheet.Header />
                   <Sheet.Content style={{ margin: '20px' }}>
-                    <SavanaComment></SavanaComment>
+                    <SavanaComment challengeId={data ? data.challengeId : ''}></SavanaComment>
                   </Sheet.Content>
                 </Sheet.Container>
-                <Sheet.Backdrop />
+                <Sheet.Backdrop style={{ zIndex: 3 }} />
               </Sheet>
             </a>
             <div className={props.styles.iconCount}>{data.commentCount}</div>
@@ -152,11 +153,13 @@ function ChallengeCard(props) {
           ></ProgressBar>
           <div className={props.styles.infoBot}>
             <span className={props.styles.infoText}>{data.currentNum}명</span>
-            <span className={props.styles.infoText}>{data.currentNum / data.targetNum}%</span>
+            <span className={props.styles.infoText}>
+              {Math.floor(data.currentNum / data.targetNum) * 100}%
+            </span>
           </div>
         </div>
       </div>
-      <ReactPlayer
+      {/* <ReactPlayer
         className={props.styles.reactPlayer}
         url={`/files/${data.video}`}
         width='100%'
@@ -164,6 +167,15 @@ function ChallengeCard(props) {
         playing={hover}
         controls={false}
         volume={0.1}
+        playsinline
+        ref={(el) => (props.check ? (props.check.current[props.index] = el) : '')}
+      /> */}
+      <video
+        src={`/files/${data.video}`}
+        ref={(el) => (props.check ? (props.check.current[props.index] = el) : '')}
+        playsInline
+        style={{ width: '100%', height: '100%' }}
+        onCanPlayThrough={props.index === 0 ? onLoaded : () => {}}
       />
     </div>
   ) : (

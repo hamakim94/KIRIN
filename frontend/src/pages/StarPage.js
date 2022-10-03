@@ -39,6 +39,7 @@ function StarPage() {
   useEffect(() => {
     UseAxios.get(`/users/stars/${starId}`).then((res) => {
       setStarInfo(res.data);
+      console.log(starInfo.profileImg);
       setCoverImg(`/files/${res.data.coverImg}`);
       setInfo(res.data.info);
     });

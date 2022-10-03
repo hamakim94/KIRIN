@@ -58,11 +58,19 @@ function ChallengeCard(props) {
           <div className={styles.infoBot}>
             <span className={styles.infoText}>{props.item.currentNum}명</span>
             <span className={styles.infoText}>
-              {Math.floor((props.item.currentNum / props.item.targetNum) * 100)}%
+              {((props.item.currentNum / props.item.targetNum) * 100).toFixed(1)}%
             </span>
           </div>
         </div>
       </div>
+      <img
+        src={`files/${props.item.thumbnail}`}
+        width={144}
+        height={256}
+        style={{ objectFit: 'contain' }}
+      ></img>
+      {/* <ReactPlayer
+        className={props.styles.reactPlayer}
       <ReactPlayer
         className={styles.reactPlayer}
         height={256}
@@ -73,7 +81,7 @@ function ChallengeCard(props) {
         controls={false}
         playsinline
         volume={0}
-      />
+      /> */}
     </div>
   );
 }

@@ -129,7 +129,7 @@ function DonationList(props) {
                         <div className={props.styles.infoBot}>
                           <span className={props.styles.donateNumber}>{donation.currentNum}명</span>
                           <span className={props.styles.donatePercent}>
-                            {(donation.currentNum / donation.targetNum).toFixed(1)}%
+                            {((donation.currentNum / donation.targetNum) * 100).toFixed(1)}%
                           </span>
                         </div>
                       </div>

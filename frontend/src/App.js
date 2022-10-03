@@ -37,7 +37,10 @@ import SelectPage from './pages/SelectPage';
 import WalletPage from './pages/WalletPage';
 import SuccessPage from './pages/SuccessPage';
 import FailPage from './pages/FailPage';
+import StarSignupPage from './pages/StarSignupPage';
 import CommunityCreatePage from './pages/CommunityCreatePage';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
   const [blob, setBlob] = useState(null);
@@ -46,6 +49,7 @@ function App() {
   const [userId, setuserId] = useState(null);
   const cookies = new Cookies();
   const value = cookies.get('accesstoken');
+
   useEffect(() => {
     if (value) {
       UseAxios.get(`/users/profiles`).then((res) => {
@@ -71,7 +75,20 @@ function App() {
       };
       sseEvents.onmessage = (event) => {
         // 메세지 받았을 때
+        console.log(event);
         console.log(event.data);
+        console.log(JSON.parse(event.data));
+        const notify = () =>
+          toast(JSON.parse(event.data).event, {
+            position: 'top-center',
+            autoClose: 5000,
+            hideProgressBar: true,
+            closeOnClick: false,
+            pauseOnHover: false,
+            draggable: true,
+            progress: undefined,
+          });
+        notify();
       };
     }
     return () => {
@@ -86,6 +103,7 @@ function App() {
       {isMobile ? (
         value ? (
           <div className='App'>
+            <ToastContainer onClick={() => console.log('알림버튼누르기')} />
             <Context.Provider
               value={{ blob, setBlob, userData, setUserData, selected, setSelected }}
             >
@@ -159,6 +177,7 @@ function App() {
                 <Route path='/finishsignup' element={<FinishSignupPage></FinishSignupPage>}></Route>
                 <Route path='/findpassword' element={<FindPasswordPage></FindPasswordPage>}></Route>
                 <Route path='/signup' element={<SignupPage></SignupPage>}></Route>
+                <Route path='/starsignup' element={<StarSignupPage></StarSignupPage>}></Route>
                 <Route path='/success' element={<SuccessPage></SuccessPage>}></Route>
                 <Route path='/fail' element={<FailPage></FailPage>}></Route>
                 <Route path='*' element={<NotFoundPage></NotFoundPage>}></Route>

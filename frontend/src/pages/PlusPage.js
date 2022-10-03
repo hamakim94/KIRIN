@@ -90,7 +90,7 @@ function PlusPage() {
       setStream(mediaStream);
       recorderRef.current = new RecordRTC(mediaStream, {
         type: 'video',
-        mimeType: 'video/mp4',
+        mimeType: 'video/webm;codecs=vp8',
       });
       recorderRef.current.startRecording();
       audioRef.current.currentTime = 0;
@@ -493,13 +493,7 @@ function PlusPage() {
         )}
       </div>
       {/* <video playsInline autoPlay muted ref={refVideo} style={{ width: '100%', height: '100%' }} /> */}
-      <video
-        playsInline
-        autoPlay
-        muted
-        ref={refVideo}
-        style={{ width: '100%', height: '100%', objectFit: 'contain' }}
-      />
+      <video playsInline autoPlay muted ref={refVideo} style={{ width: '100%', height: '100%' }} />
     </div>
   );
 }

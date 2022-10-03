@@ -3,11 +3,11 @@
 .App {
   width: 100vw;
   height: 100vh;
-  height: var(--vh, 1vh) * 100;
+  height: calc(var(--vh, 1vh) * 100);
 }
 
 .wrapper {
-  padding: 15px 0 55px 0;
+  padding: 0 0 55px 0;
 }
 
 .Pc {

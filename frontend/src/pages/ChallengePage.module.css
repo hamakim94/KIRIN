@@ -183,5 +183,31 @@ hr {
 }
 .reactPlayer > video {
   pointer-events: none;
+  object-fit: cover;
+}
+.showshow {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.coverBoxBox {
+  display: flex;
+  flex-direction: column-reverse;
+  margin-left: 5;
+}
+.coverBox {
+  color: white;
+  position: absolute;
+  opacity: 1;
+}
+
+.cardWrapper {
+  display: inline-block;
+  overflow: hidden;
+}
+
+.reactPlayer > video {
+  pointer-events: none;
   object-fit: fill;
 }

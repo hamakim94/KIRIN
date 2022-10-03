@@ -1,4 +1,17 @@
 .challengeContainer {
+  position: relative;
+  width: 100vw;
+  height: calc((var(--vh, 1vh) * 100) - 56px);
+  overflow: auto;
+  scroll-snap-type: y mandatory;
+  -ms-overflow-style: none;
+}
+
+.challengeContainer::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+#savana {
   padding-bottom: 56px;
 }
 
@@ -16,7 +29,9 @@
   height: 100vh;
   height: calc((var(--vh, 1vh) * 100) - 56px);
   opacity: 1;
+  z-index: 2;
 }
+
 .blankBox {
   flex: 3;
 }
@@ -33,6 +48,7 @@
   height: 100vh;
   height: calc((var(--vh, 1vh) * 100) - 56px);
   background-color: #000000;
+  scroll-snap-align: center;
 }
 .reactPlayer {
   pointer-events: none;
