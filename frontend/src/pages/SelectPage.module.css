@@ -1,6 +1,8 @@
 #listWrapper {
   display: flex;
-  margin-top: 15px;
+  padding: 10px 0px;
+  border-bottom: solid 1px #d2d2d2;
+  justify-content: space-evenly;
 }
 
 #coverWrapper {
@@ -29,31 +31,43 @@
 
 .leftWrapper {
   display: flex;
-  align-items: center;
-  flex: 1;
+  justify-content: flex-start;
+  flex: 11;
+}
+
+.leftWrapper:hover,
+.leftWrapper:focus,
+.leftWrapper:active {
+  -webkit-transform: scale(0.98);
+  transform: scale(0.98);
+}
+
+#listWrapper:hover,
+#listWrapper:focus,
+#listWrapper:active {
+  background-color: rgba(209, 209, 209, 0.108);
 }
 
 .midWrapper {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  flex: 8;
-  padding-left: 10px;
-}
-
-.topText {
-  font-size: 1em;
+  padding-left: 15px;
 }
 
 .botText {
-  font-size: 0.75em;
-}
-.rightWrapper {
-  display: flex;
-  align-items: center;
-  flex: 3;
+  margin-top: 5px;
+  font-size: smaller;
 }
 
+.rightWrapper {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  flex: 1;
+}
+
+/* 
 .play {
   width: 0px;
   height: 0px;
@@ -68,21 +82,23 @@
   height: 24px;
   background-color: #666666;
   transition: 0.5s;
-}
+} */
 
 .topContainer {
   display: flex;
   align-items: center;
-  padding-left: 15px;
-  padding-right: 15px;
   justify-content: center;
 }
 
 .searchBox {
   border-radius: 5px;
   padding-left: 10px;
-  width: 90%;
-  height: 25px;
+  width: 100%;
+  height: 30px;
   border-width: 0;
   background-color: #d9d9d9;
+}
+
+.playBtn {
+  font-size: 30px;
 }
