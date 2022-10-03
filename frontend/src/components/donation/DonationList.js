@@ -140,7 +140,7 @@ function DonationList(props) {
             })
           )}
         </Stack>
-        <hr style={{ width: '100%' }} />
+        <hr style={{ width: '100%', margin: 0 }} />
         <Pagination
           count={LAST_PAGE}
           defaultPage={1}
