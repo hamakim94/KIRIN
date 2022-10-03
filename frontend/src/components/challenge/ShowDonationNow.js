@@ -17,7 +17,15 @@ function ShowDonationNow(props) {
     return (
       <div className={props.styles.medalBox}>
         <div className={props.styles.medalmedal}>
-          <img className={props.styles.nowImg} alt='사진' src={`/files/${donor.profile}`}></img>
+          <img
+            className={props.styles.nowImg}
+            alt='사진'
+            src={
+              donor.profile
+                ? `/files/${donor.profile}`
+                : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'
+            }
+          ></img>
           <div className={props.styles.nameTocken}>
             <div>{donor.nickname}</div>
             <div>

@@ -66,14 +66,14 @@ function ShowDonationInfo(props) {
         <div className={props.styles.infoSet}>
           <div className={props.styles.donationInfo}>기부 현황</div>
           <div>
-            {props.data.currentNum}
+            {props.data.currentAmount - props.data.targetAmount}
             {` `}KRT
           </div>
         </div>
         <div className={props.styles.infoSet}>
           <div className={props.styles.donationInfo}>공약 금액</div>
           <div>
-            {props.data.currentAmount - props.data.targetAmount}
+            {props.data.targetAmount}
             {` `}KRT
           </div>
         </div>
