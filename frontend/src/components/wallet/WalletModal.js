@@ -103,21 +103,25 @@ function WalletModal(props) {
   };
 
   return userData ? (
-    <div>
-      <Loading loading={loading}></Loading>
-      <button className={styles.myWallet} onClick={handleOpen}>
-        {props.buttonTitle}
-      </button>
-
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby='modal-modal-title'
-        aria-describedby='modal-modal-description'
-        style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-      >
-        <div>
-          <ThemeProvider theme={theme}>
+    <ThemeProvider theme={theme}>
+      <div>
+        <Loading loading={loading}></Loading>
+        <Button
+          type='button'
+          variant='contained'
+          className={props.styles.myWallet}
+          onClick={handleOpen}
+        >
+          {props.buttonTitle}
+        </Button>
+        <Modal
+          open={open}
+          onClose={handleClose}
+          aria-labelledby='modal-modal-title'
+          aria-describedby='modal-modal-description'
+          style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+        >
+          <div>
             <div
               style={{
                 display: 'flex',
@@ -184,10 +188,10 @@ function WalletModal(props) {
                 </div>
               </div>
             </div>
-          </ThemeProvider>
-        </div>
-      </Modal>
-    </div>
+          </div>
+        </Modal>
+      </div>
+    </ThemeProvider>
   ) : (
     ''
   );

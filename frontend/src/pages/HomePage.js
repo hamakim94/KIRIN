@@ -25,7 +25,7 @@ function HomePage() {
     <div className='wrapper'>
       <img
         src={require('../assets/img/kirin_font_logo_.png')}
-        style={{ width: 70, marginTop: 5, marginLeft: 15, marginBottom: 15 }}
+        style={{ width: 67, marginTop: 5, marginLeft: 15, marginBottom: 15 }}
       ></img>
       <SubscribeList styles={styles}></SubscribeList>
       <hr style={{ border: 'solid 0.5px lightgray' }} />
