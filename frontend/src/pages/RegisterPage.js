@@ -51,7 +51,7 @@ function RegisterPage() {
         audioRef.current.pause();
         setWaitButton(false);
       } else {
-        audioRef.current.volume = 0.2;
+        audioRef.current.volume = 0.1;
         videoRef.current.play();
         audioRef.current.play();
         checkRef.current = true;
@@ -106,7 +106,7 @@ function RegisterPage() {
         muted
         ref={videoRef}
         src={blob ? URL.createObjectURL(blob) : ''}
-        style={{ width: '100%', height: '100%' }}
+        style={{ width: '100%', height: '50%' }}
         onClick={handleClick}
       ></video>
     );
@@ -131,8 +131,8 @@ function RegisterPage() {
     e.preventDefault();
     let body = {
       challengeId: location.state.id,
-      title: title.trim(),
-      amount,
+      title: location.state.title,
+      amount: amount === '' ? 0 : amount,
     };
     function uuidv4() {
       return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
@@ -160,7 +160,7 @@ function RegisterPage() {
         setCheck(false);
       });
   };
-  if (blob) console.log(URL.createObjectURL(blob));
+
   return (
     <div className='wrapper'>
       <Header title={'챌린지 등록'}></Header>
@@ -174,7 +174,7 @@ function RegisterPage() {
           }}
         >
           <MemoizedItem></MemoizedItem>
-          <audio ref={audioRef} src={location ? `${location.state.music}` : ''}></audio>
+          <audio ref={audioRef} src={location ? `/files/${location.state.music}` : ''}></audio>
           <span style={{ textAlign: 'center', fontSize: 12 }}>{tip}</span>
         </div>
       ) : (
@@ -190,15 +190,6 @@ function RegisterPage() {
         ></input>
       </div>
       <form onSubmit={handleSubmit}>
-        <div>나의 챌린지 제목</div>
-        <input
-          className={styles.inputBox}
-          type='text'
-          value={title || ''}
-          onChange={(e) => setTitle(e.target.value.replace(/^\s*/, ''))}
-          maxLength='45'
-          required
-        ></input>
         <div>기부 금액(선택)</div>
         <div>
           <input
@@ -212,7 +203,14 @@ function RegisterPage() {
           KRT
         </div>
         <div>보유 토큰</div>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginBottom: 15,
+          }}
+        >
           <div>{data} KRT</div>
           <WalletModal buttonTitle={'충전하기'} setData={setData}></WalletModal>
         </div>
@@ -224,7 +222,7 @@ function RegisterPage() {
             size='medium'
             className={styles.Btn}
             disabled={check}
-            style={{ height: 30, backgroundColor: title ? '#ffd046' : '#d2d2d2' }}
+            style={{ height: 30, backgroundColor: '#ffd046' }}
           >
             업로드
           </Button>

@@ -7,7 +7,9 @@ function ChallengeList(props) {
     <div className={`${styles.challengeContainer} ${styles.hScroll}`}>
       <div>
         {props.data
-          ? props.data.map((item, index) => <ChallengeCard item={item} index={index} key={index} />)
+          ? props.data.map((item, index) => (
+              <ChallengeCard item={item} index={index} key={item.id} category={props.category} />
+            ))
           : ''}
       </div>
     </div>

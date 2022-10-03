@@ -1,56 +1,39 @@
 import React, { useEffect, useState } from 'react';
 import UseAxios from '../../utils/UseAxios';
-import ReactPlayer from 'react-player';
+import { useNavigate } from 'react-router-dom';
 
 function ShowChallenge(props) {
   const [challenges, setChallenges] = useState([]);
-  const [hover, setHover] = useState(false);
+  const navigate = useNavigate();
   useEffect(() => {
     UseAxios.get(`/challenges?scope=all&order=latest`, {
       params: { challengeId: props.data.challengeId },
     }).then((res) => {
       setChallenges(res.data);
-      console.log(res.data);
-      console.log(props.data);
     });
   }, []);
 
   return (
     <div className={props.styles.showshow}>
-      <div
-        className={props.styles.cardWrapper}
-        onMouseOver={() => setHover(true)}
-        onMouseOut={() => setHover(false)}
-      >
-        <div className={props.styles.coverBox}>{props.data.currentNum}회</div>
-        <ReactPlayer
-          className={props.styles.reactPlayer}
-          width={'33.3333vw'}
-          height={200}
-          url={`/files/${props.data.video}`}
-          playing={hover}
-          controls={false}
-          playsinline
-          volume={0}
-        />
-      </div>
       {challenges
         ? challenges.map((challenge) => (
             <div
               className={props.styles.cardWrapper}
-              onMouseOver={() => setHover(true)}
-              onMouseOut={() => setHover(false)}
+              onClick={() =>
+                navigate(`/savana/4`, {
+                  state: {
+                    id: challenge.id,
+                    challengeId: challenge.challengeId,
+                  },
+                })
+              }
             >
-              <div className={props.styles.coverBox}>{props.data.currentNum}회</div>
-              <ReactPlayer
-                className={props.styles.reactPlayer}
-                url={`/files/${challenge.video}`}
-                width={'33.3333vw'}
-                height={200}
-                playing={hover}
-                controls={false}
-                volume={0.1}
-              />
+              <img
+                src={`/files/${challenge.thumbnail}`}
+                width={window.innerWidth / 3}
+                height={215}
+                style={{ objectFit: 'cover' }}
+              ></img>
             </div>
           ))
         : ''}

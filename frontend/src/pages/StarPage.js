@@ -37,6 +37,7 @@ function StarPage() {
       }
     });
     UseAxios.get(`/communities/stars/${starId}`).then((res) => {
+      const latestArr = res.data.reverse();
       setCommunityData(res.data);
     });
     UseAxios.get(`/challenges?scope=stars&order=latest&userid=${starId}`)
@@ -145,7 +146,15 @@ function StarPage() {
             ></Avatar>
           </div>
         )}
-        <img src={`/files/${starInfo.profileImg}`} className={styles.starImgMain}></img>
+        <img
+          alt={'스타스타'}
+          src={
+            starInfo.profileImg
+              ? `/files/${starInfo.profileImg}`
+              : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'
+          }
+          className={styles.starImgMain}
+        ></img>
         {/* <div
           style={{
             position: 'absolute',
@@ -205,9 +214,9 @@ function StarPage() {
         </div>
       </div>
       {isPopular ? (
-        <ChallengeList data={latestData}></ChallengeList>
+        <ChallengeList data={latestData} category={4}></ChallengeList>
       ) : (
-        <ChallengeList data={popularityData}></ChallengeList>
+        <ChallengeList data={popularityData} category={4}></ChallengeList>
       )}
       <div className={styles.titleBox}>
         <Category title={'커뮤니티'}></Category>

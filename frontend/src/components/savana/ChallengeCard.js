@@ -1,12 +1,10 @@
-import React, { useEffect, useState, useContext } from 'react';
-import ReactPlayer from 'react-player';
+import React, { useEffect, useState } from 'react';
 import {
   RiZoomInFill,
   RiMessage3Line,
   RiHeart2Fill,
   RiHeart2Line,
   RiShareFill,
-  RiBearSmileFill,
 } from 'react-icons/ri';
 import swal from 'sweetalert';
 import Sheet from 'react-modal-sheet';
@@ -16,16 +14,23 @@ import { useNavigate } from 'react-router-dom';
 
 function ProgressBar(props) {
   const [value, setValue] = useState(0);
-
   useEffect(() => {
     const newValue = props.width * props.percent;
     setValue(newValue);
   }, [props.width, props.percent]);
-  return (
-    <div className={props.styles.progressDiv} style={{ width: props.width }}>
-      <div style={{ width: `${value}px` }} className={props.styles.progress} />
-    </div>
-  );
+  if (props.isProceeding) {
+    return (
+      <div className={props.styles.progressDiv} style={{ width: props.width }}>
+        <div style={{ width: `${value}px` }} className={props.styles.progress} />
+      </div>
+    );
+  } else {
+    return (
+      <div className={props.styles.progressDiv} style={{ width: props.width }}>
+        <div style={{ width: `${value}px` }} className={props.styles.progressEnd} />
+      </div>
+    );
+  }
 }
 
 function ChallengeCard(props) {
@@ -34,7 +39,7 @@ function ChallengeCard(props) {
   const [data, setData] = useState(null);
 
   const navigate = useNavigate();
-
+  const progressWidth = window.innerWidth * 0.9;
   function copy() {
     const el = document.createElement('input');
     el.value = window.location.href;
@@ -51,7 +56,6 @@ function ChallengeCard(props) {
       setData(props.item);
     }
   }, [props.item]);
-
   const likeButtonClick = () => {
     if (!data.liked) {
       UseAxios.post(`/challenges/like?challengeId=${data.challengeId}`, {
@@ -100,7 +104,6 @@ function ChallengeCard(props) {
     <div className={props.styles.cardWrapper}>
       <div className={props.styles.coverBox}>
         <div className={props.styles.blankBox}></div>
-
         <div className={props.styles.iconBox}>
           <a
             onClick={() =>
@@ -148,13 +151,14 @@ function ChallengeCard(props) {
           </div>
           <ProgressBar
             styles={props.styles}
-            width={'90vw'}
+            width={progressWidth}
             percent={data.currentNum / data.targetNum}
+            isProceeding={props.item.isProceeding}
           ></ProgressBar>
           <div className={props.styles.infoBot}>
             <span className={props.styles.infoText}>{data.currentNum}명</span>
             <span className={props.styles.infoText}>
-              {Math.floor(data.currentNum / data.targetNum) * 100}%
+              {((data.currentNum / data.targetNum) * 100).toFixed(1)}%
             </span>
           </div>
         </div>
@@ -176,6 +180,7 @@ function ChallengeCard(props) {
         playsInline
         style={{ width: '100%', height: '100%' }}
         onCanPlayThrough={props.index === 0 ? onLoaded : () => {}}
+        onEnded={() => props.check.current[props.index].play()}
       />
     </div>
   ) : (

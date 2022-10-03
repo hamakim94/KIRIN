@@ -17,7 +17,8 @@ function CoummnityFooter(props) {
     UseAxios.get(
       `/communities/stars/${location.state.starId}/boards/${location.state.boardId}/comments`
     ).then((res) => {
-      setCommentData(res.data);
+      const latestArr = res.data.reverse();
+      setCommentData(latestArr);
     });
     if (props.data) {
       setLike({
@@ -29,11 +30,12 @@ function CoummnityFooter(props) {
   }, []);
 
   useEffect(() => {
-    if (checkWrite) {
+    if (!checkWrite) {
       UseAxios.get(
         `/communities/stars/${location.state.starId}/boards/${location.state.boardId}/comments`
       ).then((res) => {
-        setCommentData(res.data);
+        const latestArr = res.data.reverse();
+        setCommentData(latestArr);
       });
       if (props.data) {
         setLike({

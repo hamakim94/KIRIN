@@ -30,13 +30,13 @@ function HomePage() {
       <SubscribeList styles={styles}></SubscribeList>
       <hr style={{ border: 'solid 0.5px lightgray' }} />
       <Category title={'인기순'}></Category>
-      <ChallengeList styles={styles} data={popularityData}></ChallengeList>
+      <ChallengeList styles={styles} data={popularityData} category={1}></ChallengeList>
       <img className={styles.img} alt='함께' src={require('../assets/img/together.png')}></img>
       <Category title={'최신순'}></Category>
-      <ChallengeList styles={styles} data={latestData}></ChallengeList>
+      <ChallengeList styles={styles} data={latestData} category={2}></ChallengeList>
       <img className={styles.img} alt='함께' src={require('../assets/img/together.png')}></img>
       <Category title={'기린기린'}></Category>
-      <ChallengeList styles={styles} data={randomData}></ChallengeList>
+      <ChallengeList styles={styles} data={randomData} category={3}></ChallengeList>
     </div>
   );
 }

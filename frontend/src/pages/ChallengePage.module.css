@@ -97,8 +97,7 @@ hr {
   margin-left: 40px;
   margin-right: 40px;
 }
-.nowList {
-}
+
 .medalBox {
   display: flex;
   flex-direction: row;
@@ -181,10 +180,6 @@ hr {
   flex-direction: row;
   justify-content: space-between;
 }
-.reactPlayer > video {
-  pointer-events: none;
-  object-fit: cover;
-}
 .showshow {
   display: flex;
   flex-direction: row;
@@ -204,10 +199,6 @@ hr {
 
 .cardWrapper {
   display: inline-block;
-  overflow: hidden;
-}
-
-.reactPlayer > video {
-  pointer-events: none;
-  object-fit: fill;
+  margin: 0;
+  padding: 0;
 }

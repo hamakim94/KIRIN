@@ -14,13 +14,13 @@ function SelectItem(props) {
         props.audioRef.current.pause();
         setPlaying(false);
       } else {
-        props.audioRef.current.volume = 0.2;
+        props.audioRef.current.volume = 0.1;
         props.audioRef.current.play();
         setPlaying(true);
       }
     } else {
       props.audioRef.current = new Audio(`/files/${props.item.music}`);
-      props.audioRef.current.volume = 0.2;
+      props.audioRef.current.volume = 0.1;
       props.audioRef.current.play();
       setPlaying(true);
     }
@@ -46,9 +46,7 @@ function SelectItem(props) {
           onClick={handleClick}
           className={playing ? props.styles.pause : props.styles.play}
         ></div>
-        <div onClick={() => navigate('/plus', { state: { id: props.item.challengeId } })}>
-          보내기
-        </div>
+        <div onClick={() => navigate(`/plus/${props.item.challengeId}`)}>보내기</div>
       </div>
     </div>
   );

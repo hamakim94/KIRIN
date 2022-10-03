@@ -90,7 +90,7 @@
 }
 .progress {
   justify-self: center;
-  background-color: rgba(41, 47, 51, 0.68);
+  background-color: #ffd046;
   height: 30px;
   border-bottom-left-radius: 0.5rem;
   border-top-left-radius: 0.5rem;

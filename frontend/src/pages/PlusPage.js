@@ -5,6 +5,8 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import Context from '../utils/Context';
 import { MdOutlineFlipCameraAndroid, MdOutlineQueueMusic } from 'react-icons/md';
 import UseAxios from '../utils/UseAxios';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function ProgressBar(props) {
   const [value, setValue] = useState(0);
@@ -68,36 +70,50 @@ function PlusPage() {
 
       // 노래 새로 시작
       audioRef.current.currentTime = 0;
-      audioRef.current.volume = 0.2;
+      audioRef.current.volume = 0.1;
       audioRef.current.play();
 
       setToggleBtn(true);
       // 타이머 시작
       setWaitButton(true);
     } else {
-      mediaStream = await navigator.mediaDevices.getUserMedia({
-        video: {
-          width: { min: 361 },
-          aspectRatio: 16 / 9,
-          facingMode: changeCam,
-        },
-        audio: false,
-      });
+      if (challengeData) {
+        mediaStream = await navigator.mediaDevices.getUserMedia({
+          video: {
+            width: { min: 361 },
+            aspectRatio: 16 / 9,
+            facingMode: changeCam,
+          },
+          audio: false,
+        });
 
-      if (blob) {
-        setBlob(null);
+        if (blob) {
+          setBlob(null);
+        }
+        setStream(mediaStream);
+        recorderRef.current = new RecordRTC(mediaStream, {
+          type: 'video',
+          mimeType: 'video/webm;codecs=vp8',
+        });
+        recorderRef.current.startRecording();
+        audioRef.current.currentTime = 0;
+        audioRef.current.volume = 0.1;
+        audioRef.current.play();
+        setToggleBtn(true);
+        setWaitButton(true);
+      } else {
+        const notify = () =>
+          toast.warning('챌린지를 골라주세요', {
+            position: 'bottom-center',
+            autoClose: 5000,
+            hideProgressBar: true,
+            closeOnClick: false,
+            pauseOnHover: false,
+            draggable: true,
+            progress: undefined,
+          });
+        notify();
       }
-      setStream(mediaStream);
-      recorderRef.current = new RecordRTC(mediaStream, {
-        type: 'video',
-        mimeType: 'video/webm;codecs=vp8',
-      });
-      recorderRef.current.startRecording();
-      audioRef.current.currentTime = 0;
-      audioRef.current.volume = 0.2;
-      audioRef.current.play();
-      setToggleBtn(true);
-      setWaitButton(true);
     }
   };
 
@@ -239,13 +255,18 @@ function PlusPage() {
     };
     start();
 
-    UseAxios.get(`/challenges/select/${location.state.id}`).then((res) => {
-      setChallengeData(res.data);
-      setNumber(res.data.length);
-      setLength(res.data.length);
-      audioRef.current = new Audio(`/files/${res.data.music}`);
-      console.log(res.data);
-    });
+    if (location) {
+      const pathname = location.pathname.split('/');
+      if (pathname[2] !== 0) {
+        UseAxios.get(`/challenges/select/${pathname[2]}`).then((res) => {
+          setChallengeData(res.data);
+          setNumber(res.data.length);
+          setLength(res.data.length);
+          audioRef.current = new Audio(`/files/${res.data.music}`);
+          console.log(res.data);
+        });
+      }
+    }
 
     return () => {
       if (audioRef.current) {
@@ -270,7 +291,7 @@ function PlusPage() {
         return () => {
           setWaitButton(false);
           clearInterval(id);
-          if (recorderRef.current && audioRef) {
+          if (recorderRef.current && audioRef.current) {
             recorderRef.current.stopRecording(() => {
               setBlob(recorderRef.current.getBlob());
             });
