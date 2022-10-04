@@ -11,6 +11,7 @@ import Sheet from 'react-modal-sheet';
 import SavanaComment from './SavanaComment';
 import UseAxios from '../../utils/UseAxios';
 import { useNavigate } from 'react-router-dom';
+import ImgHeader from '../common/ImgHeader';
 
 function ProgressBar(props) {
   const [value, setValue] = useState(0);
@@ -92,6 +93,7 @@ function ChallengeCard(props) {
   return data ? (
     <div className={props.styles.cardWrapper}>
       <div className={props.styles.coverBox}>
+        <ImgHeader></ImgHeader>
         <div className={props.styles.blankBox}></div>
         <div className={props.styles.iconBox}>
           <a

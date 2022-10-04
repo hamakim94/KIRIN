@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import CommunityList from '../components/star/CommunityList';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Button } from '@mui/material/';
+import ImgHeader from '../components/common/ImgHeader';
 
 function StarPage() {
   const [starInfo, setStarInfo] = useState({});
@@ -49,15 +50,27 @@ function StarPage() {
       }
     });
     UseAxios.get(`/communities/stars/${starId}`).then((res) => {
-      const latestArr = res.data.reverse();
+      res.data.reverse();
       setCommunityData(res.data);
     });
-    UseAxios.get(`/challenges?scope=stars&order=latest&userid=${starId}`)
-      .then((res) => setLatestData(res.data))
-      .catch((err) => console.log(err));
-    UseAxios.get(`/challenges?scope=stars&order=popularity&userid=${starId}`)
+    UseAxios.get(`/challenges?scope=all&order=alphabet`)
       .then((res) => {
-        setPopularityData(res.data);
+        const arr = res.data;
+        const filterArr = arr.filter((i) => i.user.id === starId);
+        setLatestData(filterArr);
+      })
+      .catch((err) => console.log(err));
+    UseAxios.get(`/challenges?scope=all&order=alphabet`)
+      .then((res) => {
+        const arr = res.data;
+        const filterArr = arr.filter((i) => i.user.id === starId);
+        filterArr.sort(function (a, b) {
+          return b.likeCnt - a.likeCnt;
+        });
+        filterArr.sort(function (a, b) {
+          return b.isProceeding - a.isProceeding;
+        });
+        setPopularityData(filterArr);
       })
       .catch((err) => console.log(err));
   }, []);
@@ -82,16 +95,11 @@ function StarPage() {
   const changeImg = (obj) => {
     const data = new FormData();
     data.append('coverImg', obj);
-    console.log(obj);
     UseAxios.put(`/users/change-cover`, data, {
       headers: { 'Content-Type': 'multipart/form-data' },
     })
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+      .then((res) => {})
+      .catch((err) => {});
   };
 
   const subscribe = () => {
@@ -113,6 +121,7 @@ function StarPage() {
     <ThemeProvider theme={theme}>
       <div className='wrapper'>
         <div className={styles.topWrapper}>
+          <ImgHeader></ImgHeader>
           {/* 커버사진 */}
           {userData.id === starInfo.id ? (
             <div>

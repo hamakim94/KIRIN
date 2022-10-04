@@ -77,9 +77,10 @@ function SimpleBottomNavigation() {
           <BottomNavigationAction icon={<AiOutlineHome />} LinkComponent={Link} to='/' />
           <BottomNavigationAction icon={<MdGrass />} LinkComponent={Link} to='/savana/0' />
           <BottomNavigationAction
-            icon={<AiFillPlusCircle />}
+            icon={<AiFillPlusCircle size={28} />}
             LinkComponent={Link}
-            to={`/plus/${selected}`}
+            // to={`/plus/${selected}`}
+            onClick={() => navigate(`/plus/${selected}`)}
           />
           <BottomNavigationAction icon={<BiDonateHeart />} LinkComponent={Link} to='/donation' />
           <BottomNavigationAction

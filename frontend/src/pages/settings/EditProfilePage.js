@@ -34,7 +34,7 @@ function EditProfilePage({ parentCallback }) {
   useEffect(() => {
     UseAxios.get(`/users/profiles`).then((res) => {
       setUser(res.data);
-      setProfileImg(`${process.env.REACT_APP_BASEURL}/files/${res.data.profileImg}`);
+      setProfileImg(`/files/${res.data.profileImg}`);
       console.log(res.data);
     });
   }, []);

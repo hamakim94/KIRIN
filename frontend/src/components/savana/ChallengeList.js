@@ -18,7 +18,11 @@ function ChallengeList(props) {
       idxRef.current[props.idx].play();
       idxRef.current[props.idx].muted = false;
       idxRef.current[props.idx].volume = 0.1;
-      setSelected(props.data[props.idx].challengeId);
+      if (props.data[props.idx].isProceeding) {
+        setSelected(props.data[props.idx].challengeId);
+      } else {
+        setSelected(false);
+      }
       prevRef.current = props.idx;
     }
   }, [loading]);
@@ -27,7 +31,11 @@ function ChallengeList(props) {
     const scrollHeight = e.target.scrollTop;
     const idx = scrollHeight / height;
     if (Number.isInteger(scrollHeight / height)) {
-      setSelected(props.data[idx].challengeId);
+      if (props.data[idx].isProceeding) {
+        setSelected(props.data[idx].challengeId);
+      } else {
+        setSelected(0);
+      }
       if (distanceY > 0 && idx > 0) {
         if (idx === props.data.length - 1 && idx === prevRef.current) {
           idxRef.current[idx].play();
