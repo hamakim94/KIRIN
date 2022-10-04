@@ -11,7 +11,7 @@
 
 ---
 
-<img src="C:/Users/SSAFY/Desktop/S07P22A708/docs/img/기린_로고.png" width="200" height="200"/>
+<img src="docs/img/기린_로고.png" width="200" height="200"/>
 
 사랑하는 스타가 기부를 했을 때 뜻을 함께하고자 팬카페 회원들도 기부하는 경향이 늘고 있습니다. (임영웅 : 산불 피해 1억 기부 -> 팬카페 1300만원 기부). 스타 기부에 감명받아 기부에 참여하고 싶다면?
 
@@ -23,11 +23,11 @@ KIRIN은 연예인의 기부를 챌린지의 형태로 참여하고, 스타와 �
 
 ---
 
-2022.08.22~ 2022.10.07(금) 약 39일간 진행<br/>
+2022.08.29~ 2022.10.07(금) 약 39일간 진행<br/>
 SSAFY 7기 2학기 특화프로젝트 - KIRIN
 <br/>
 
-## :heart: 주요 기능 <a name="background"></a>
+## :heart: 주요 기능 
 
 ---
 
@@ -36,7 +36,7 @@ SSAFY 7기 2학기 특화프로젝트 - KIRIN
   - **기부 챌린지 등록**
     - 원하는 기간, 목표 금액, 기부기관 선택을 하고 동영상을 올려서 챌린지를 등록할 수 있어요!
     - 챌린지 등록을 하면 자신을 구독하고 있는 팬들에게 알림이 갑니다!
-    - 챌린지 목표 달성이 안됐으면, 참여자 비율만큼 목표 금액에서 환불이 됩니다!
+    - 챌린지 목표달성이 안 됐으면, 참여자 비율만큼 목표 금액에서 환불이 됩니다!
   - **커뮤니티 작성**
     - 커뮤니티 기능을 통해 팬들과 소통할 수 있어요!
     - 챌린지를 등록할 예정이면 커뮤니티를 통해 미리 소통을!<br/>
@@ -45,16 +45,16 @@ SSAFY 7기 2학기 특화프로젝트 - KIRIN
 
   - **기부 챌린지 참여**
     - 스타가 등록한 챌린지에 영상을 올려 기부에 참여할 수 있습니다!
-    - 챌린지 참여만으로 스타의 기부에 기여할 수 있고, 필요시 토큰을 충전하여 따로 기부도 가능합니다!
+    - 챌린지 참여만으로 스타의 기부에 기여할 수 있고, 필요하면 토큰을 충전하여 따로 기부도 가능합니다!
     - 만약 토큰을 많이 기부했을 시 명예의 전당에 등록!
   - **커뮤니티 및 스타 구독**
     - 좋아하는 스타를 구독할 수 있어요!
-    - 구독한 스타가 커뮤니티  게시글을 작성 하거나 챌린지 등록시 알림이 옵니다!
+    - 구독한 스타가 커뮤니티  게시글을 작성 하거나 챌린지 등록 시 알림이 옵니다!
     - 커뮤니티에서 스타가 등록한 게시글에 좋아요, 댓글을 달아보세요!
   - **나의 기부 & 마이페이지**
-    - 본인이 참여한 기부 장부를 한 눈에 볼 수 있습니다!
+    - 본인이 참여한 기부 장부를 한눈에 볼 수 있습니다!
     - 지갑을 클릭해서 블록체인에 활용되는 토큰을 충전할 수 있습니다!
-    - 본인이 구독한 스타들을 볼 수 있고, 참여한 챌린지와 좋아요한 챌린지를 볼 수 있습니다!
+    - 본인이 구독한 스타들을 볼 수 있고, 참여한 챌린지와 좋아요 한 챌린지를 볼 수 있습니다!
       <br/>
 
 - ### 수혜자
@@ -66,13 +66,13 @@ SSAFY 7기 2학기 특화프로젝트 - KIRIN
 - ### 공통
 
   - **사바나**
-    - 원하는 챌린지를 보는게 번거롭다고 하시는 분 들을 위한 Savana 페이지!
-    - 한 화면에 랜덤으로 진행중인 챌린지들을 볼 수 있습니다!
+    - 원하는 챌린지를 보는게 번거롭다고 하시는 분들을 위한 Savana 페이지!
+    - 한 화면에 무작위로 진행 중인 챌린지들을 볼 수 있습니다!
     - 챌린지 상세 버튼을 클릭하면 스타 챌린지에 참여한 일반인들의 챌린지들, 기부 현황, 기부 정보를 볼 수 있습니다!
     - 댓글을 클릭하면 해당 챌린지 관련 댓글을 볼 수 있고
     - 공유 버튼을 통해 친구들에게 선한 영향력을 행사해봐요!
   - **블록체인 **
-    - 블록체인 장부를 통해 모든 챌린지, 송금 내역을 확인 가능합니다!<br/>
+    - 블록체인 장부를 통해 모든 사용자들의 토큰 충전 내역, 송금 내용을 확인 가능합니다!<br/>
 
   
 
@@ -175,7 +175,7 @@ SSAFY 7기 2학기 특화프로젝트 - KIRIN
 ---
 
 - [중간발표자료](docs/중간발표자료.pptx)
-- [최종발표자료](doc/최종발표자료.pptx)
+- [최종발표자료](docs/최종발표자료.pptx)
   <br/>
 
 ## :heavy_check_mark: 폴더 구조 - Frontend
@@ -183,33 +183,27 @@ SSAFY 7기 2학기 특화프로젝트 - KIRIN
 ```
 src
 ├─assets
+│  ├─fonts
+│  ├─img
+│  └─sound
 ├─components
-│  ├─animations
-│  ├─board
-│  ├─boardDetail
+│  ├─challenge
+│  │  └─select
 │  ├─common
-│  ├─flow
-│  ├─follow
+│  ├─community
+│  ├─donation
 │  ├─home
-│  ├─live
-│  │  ├─chat
-│  │  └─chatInfo
-│  ├─loginScreen
+│  ├─my
+│  ├─savana
 │  ├─search
 │  ├─setting
-│  ├─signUp
-│  └─userpage
-├─data
-├─navigations
-├─screens
-│  ├─board
-│  ├─bottomTab
-│  ├─live
-│  ├─login
-│  ├─search
-│  ├─signUp
-│  └─userEdit
-└─util
+│  ├─sign
+│  ├─star
+│  └─wallet
+├─pages
+│  └─settings
+├─smartcontract
+└─utils
 ```
 
 <br/>
@@ -221,46 +215,32 @@ src
 ├─main
 │  ├─java
 │  │  └─com
-│  │      └─fivenonjangi
-│  │          └─noning
+│  │      └─ssafy
+│  │          └─kirin
 │  │              ├─config
 │  │              │  └─security
+│  │              ├─contracts
 │  │              ├─controller
-│  │              ├─data
-│  │              │  ├─dto
-│  │              │  │  ├─board
-│  │              │  │  ├─chat
-│  │              │  │  ├─comment
-│  │              │  │  ├─live
-│  │              │  │  └─user
-│  │              │  ├─entity
-│  │              │  │  ├─board
-│  │              │  │  ├─chat
-│  │              │  │  ├─comment
-│  │              │  │  ├─etc
-│  │              │  │  └─user
-│  │              │  └─repository
-│  │              │      ├─board
-│  │              │      ├─chat
-│  │              │      ├─comment
-│  │              │      ├─etc
-│  │              │      ├─live
-│  │              │      └─user
+│  │              ├─dto
+│  │              │  ├─request
+│  │              │  └─response
+│  │              ├─entity
+│  │              ├─repository
 │  │              ├─service
-│  │              │  ├─board
-│  │              │  ├─chat
-│  │              │  ├─comment
-│  │              │  ├─etc
-│  │              │  ├─live
-│  │              │  └─user
-│  │              ├─Utils
+│  │              ├─util
 │  │              └─webhook
-│  └─resources
+│  ├─resources
+│  └─solidity
+│      ├─build
+│      │  └─contracts
+│      ├─contracts
+│      ├─migrations
+│      └─test
 └─test
-     └─java
-            └─com
-                └─fivenonjangi
-                    └─noning
+    └─java
+        └─com
+            └─ssafy
+                └─kirin
 ```
 
 <br/>
