@@ -116,6 +116,9 @@ SSAFY 7기 2학기 특화프로젝트 - KIRIN
 - JRE : build 17-ea+14
 - JVM : build 17-ea+14, mixed mode, sharing
 - DB : 8.0.30-MySQL
+- Springboot : 2.7.3
+- Gradle : 7.5
+- ffmpeg : 4.4.1
 
 **Frontend**
 
