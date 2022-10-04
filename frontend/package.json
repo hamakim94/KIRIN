@@ -31,6 +31,7 @@
     "recordrtc": "^5.6.2",
     "solc": "^0.8.17",
     "sweetalert": "^2.1.2",
+    "sweetalert2": "^11.4.37",
     "web-vitals": "^2.1.4",
     "web3": "^1.8.0"
   },
