@@ -267,6 +267,20 @@ src
 
 <br/>
 
+## :heavy_check_mark: CI/CD
+
+```
+Ubuntu
+├─Docker
+│  ├─kirin-front
+│  ├─kirin-back
+│  ├─redis-container
+│  └─mysql-container
+└─Docker volume
+   └─kirin_vol
+```
+
+<br/>
 
 ## :heavy_check_mark: 페이지 기능 소개 
 
