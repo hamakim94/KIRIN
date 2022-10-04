@@ -118,7 +118,7 @@ function WalletModal(props) {
         <Button
           type='button'
           variant='contained'
-          className={props.styles.myWallet}
+          className='myWallet'
           onClick={() => setOpen(true)}
         >
           {props.buttonTitle}
