@@ -28,7 +28,7 @@ function EditProfilePage({ parentCallback }) {
   const [nicknameChecked, setNicknameChecked] = useState(false);
   const [canSubmit, setCanSubmit] = useState(false);
   const [file, setFile] = useState(null);
-  const [user, setUser] = useState([]);
+  const [user, setUser] = useState(null);
   const [profileImg, setProfileImg] = useState(null);
 
   useEffect(() => {
@@ -109,7 +109,7 @@ function EditProfilePage({ parentCallback }) {
       })
         .then((res) => {
           swal('프로필 편집이 완료되었습니다.');
-          navigate('');
+          navigate('/mypage');
           console.log('완료');
         })
         .catch((err) => {

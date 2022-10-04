@@ -12,13 +12,13 @@ function ChallengeList(props) {
   const [isOpen, setIsOpen] = useState(false);
   const { setSelected } = useContext(Context);
   const height = window.innerHeight - 56;
+
   useEffect(() => {
     if (idxRef.current[props.idx] && loading) {
       conRef.current.scrollTo(0, props.idx * height);
-      idxRef.current[props.idx].muted = false;
-      // idxRef.current[props.idx].play();
-      idxRef.current[props.idx].click();
       idxRef.current[props.idx].volume = 0.1;
+      idxRef.current[props.idx].play();
+      idxRef.current[props.idx].click();
       if (props.data[props.idx].isProceeding) {
         setSelected(props.data[props.idx].challengeId);
       } else {
@@ -39,24 +39,24 @@ function ChallengeList(props) {
       }
       if (distanceY > 0 && idx > 0) {
         if (idx === props.data.length - 1 && idx === prevRef.current) {
-          idxRef.current[idx].muted = false;
-          // idxRef.current[idx].play();
-          idxRef.current[idx].click();
           idxRef.current[idx].volume = 0.1;
+          idxRef.current[idx].play();
+          idxRef.current[idx].click();
+          // idxRef.current[idx].muted = false;
         } else {
-          idxRef.current[idx].muted = false;
-          // idxRef.current[idx].play();
-          idxRef.current[idx].click();
           idxRef.current[idx].volume = 0.1;
+          idxRef.current[idx].play();
+          idxRef.current[idx].click();
+          // idxRef.current[idx].muted = false;
           idxRef.current[prevRef.current].currentTime = 0;
           idxRef.current[prevRef.current].pause();
           prevRef.current = idx;
         }
       } else if (distanceY < 0) {
-        // idxRef.current[idx].play();
-        idxRef.current[idx].muted = false;
-        idxRef.current[idx].click();
         idxRef.current[idx].volume = 0.1;
+        idxRef.current[idx].play();
+        idxRef.current[idx].click();
+        // idxRef.current[idx].muted = false;
         idxRef.current[prevRef.current].currentTime = 0;
         idxRef.current[prevRef.current].pause();
         prevRef.current = idx;

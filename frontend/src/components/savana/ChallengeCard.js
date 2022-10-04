@@ -173,7 +173,7 @@ function ChallengeCard(props) {
         style={{ width: '100%', height: '100%' }}
         onCanPlayThrough={props.index === 0 ? onLoaded : () => {}}
         onEnded={() => props.check.current[props.index].play()}
-        onClick={(e) => e.target.play()}
+        onClick={(e) => (e.target.muted = false)}
       />
     </div>
   ) : (
