@@ -272,10 +272,11 @@ src
 ```
 Ubuntu
 ├─Docker
-│  ├─kirin-front
-│  ├─kirin-back
-│  ├─redis-container
-│  └─mysql-container
+│  ├─kirin-front : 0.0.0.0:443 -> 443/tcp, 0.0.0.0:80 -> 80/tcp
+│  ├─kirin-back : 0.0.0.0:8999 -> 8999/tcp
+│  ├─redis-container : 0.0.0.0:8379 -> 8379/tcp
+│  └─mysql-container : 0.0.0.0:3306 -> 3306/tcp
+│ 
 └─Docker volume
    └─kirin_vol
 ```
