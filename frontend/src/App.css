@@ -5,6 +5,19 @@
   height: 100vh;
   height: calc(var(--vh, 1vh) * 100);
   overflow-x: hidden;
+  -ms-overflow-style: none;
+}
+
+.App::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+.react-modal-sheet-content {
+  -ms-overflow-style: none;
+}
+
+.react-modal-sheet-content::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
 }
 
 .wrapper {

@@ -7,6 +7,7 @@ import { MdOutlineFlipCameraAndroid, MdOutlineQueueMusic } from 'react-icons/md'
 import UseAxios from '../utils/UseAxios';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import SelectPage from './SelectPage';
 
 function ProgressBar(props) {
   const [value, setValue] = useState(0);
@@ -31,6 +32,8 @@ function PlusPage() {
   const [changeCam, setChangeCam] = useState('user');
   const [challengeData, setChallengeData] = useState(null);
   const [length, setLength] = useState(null);
+  const [isOpen, setIsOpen] = useState(false);
+  const [challengeId, setChallengeId] = useState(0);
   const refVideo = useRef(null);
   const recorderRef = useRef(null);
   const audioRef = useRef(null);
@@ -255,6 +258,15 @@ function PlusPage() {
     };
     start();
 
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.currentTime = 0;
+      }
+    };
+  }, []);
+
+  useEffect(() => {
     if (location) {
       const pathname = location.pathname.split('/');
       if (pathname[2] !== 0) {
@@ -267,14 +279,7 @@ function PlusPage() {
         });
       }
     }
-
-    return () => {
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current.currentTime = 0;
-      }
-    };
-  }, []);
+  }, [location]);
 
   const useInterval = (callback, delay) => {
     const savedCallback = useRef();
@@ -338,7 +343,7 @@ function PlusPage() {
             }}
           >
             <div style={{ flex: 1, color: '#FFFFFF' }}>
-              <span style={{ marginLeft: 10 }} onClick={() => navigate(-1)}>
+              <span style={{ marginLeft: 10 }} onClick={() => navigate('/')}>
                 X
               </span>
             </div>
@@ -352,10 +357,7 @@ function PlusPage() {
                 color: '#FFFFFF',
               }}
             >
-              <div
-                style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-                onClick={() => navigate('/select')}
-              >
+              <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                 <div
                   style={{
                     display: 'flex',
@@ -364,11 +366,13 @@ function PlusPage() {
                     paddingRight: 25,
                   }}
                 >
-                  <div>
+                  <div style={{ paddingTop: 5 }}>
                     <MdOutlineQueueMusic style={{ marginRight: 2 }} size={30}></MdOutlineQueueMusic>
                   </div>
                   <div>
-                    <div>{challengeData ? challengeData.title : '챌린지선택'}</div>
+                    <div onClick={() => setIsOpen(true)}>
+                      {challengeData ? challengeData.title : '챌린지선택'}
+                    </div>
                     <div style={{ fontSize: '0.75em' }}>
                       {challengeData ? challengeData.star + '-' + challengeData.musicTitle : ''}
                     </div>
@@ -376,6 +380,7 @@ function PlusPage() {
                 </div>
               </div>
             </div>
+            <SelectPage isOpen={isOpen} setIsOpen={setIsOpen}></SelectPage>
             <div
               style={{
                 display: 'flex',

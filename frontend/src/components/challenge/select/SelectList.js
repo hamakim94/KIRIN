@@ -28,6 +28,7 @@ function SelectList(props) {
               checkRef={checkRef}
               prevRef={prevRef}
               key={index}
+              setIsOpen={props.setIsOpen}
             />
           ))
         : ''}

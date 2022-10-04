@@ -58,17 +58,6 @@ function CommentItem(props) {
           <span className={props.styles.writeDate} style={{ marginRight: 15 }}>
             {TimeForToday(newDate)}
           </span>
-          <span className={props.styles.writeDate} style={{ marginRight: 8 }}>
-            답글 달기
-          </span>
-          <span
-            className={props.styles.writeDate}
-            onClick={() => {
-              setToggle(!toggle);
-            }}
-          >
-            {toggle ? '답글 숨기기' : '답글 보기'}
-          </span>
         </div>
       </div>
       <div style={{ textAlign: 'center' }}>

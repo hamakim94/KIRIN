@@ -18,7 +18,6 @@ function HomePage() {
     });
     UseAxios.get('/challenges?scope=general&order=random').then((res) => {
       setRandomData(res.data);
-      console.log(res.data);
     });
   }, []);
   return (

@@ -10,7 +10,6 @@ function SavanaComment(props) {
   const { userData } = useContext(Context);
   const [commentData, setCommentData] = useState(null);
   const [checkWrite, setCheckWrite] = useState(false);
-  const [replyCheck, setReplyCheck] = useState(null);
 
   useEffect(() => {
     UseAxios.get(`/challenges/comments`, {
@@ -18,9 +17,22 @@ function SavanaComment(props) {
         challengeId: props.challengeId,
       },
     }).then((res) => {
-      setCommentData(res.data);
+      const latestArr = res.data.reverse();
+      setCommentData(latestArr);
     });
   }, []);
+  useEffect(() => {
+    if (!checkWrite) {
+      UseAxios.get(`/challenges/comments`, {
+        params: {
+          challengeId: props.challengeId,
+        },
+      }).then((res) => {
+        const latestArr = res.data.reverse();
+        setCommentData(latestArr);
+      });
+    }
+  }, [checkWrite]);
 
   const onCreate = () => {
     if (newComment.length === 0) {

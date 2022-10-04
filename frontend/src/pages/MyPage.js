@@ -52,7 +52,7 @@ function MyPage() {
       {isParticipated ? (
         <ChallengeList data={participatedData} category={5}></ChallengeList>
       ) : (
-        <ChallengeList data={likedData} category={5}></ChallengeList>
+        <ChallengeList data={likedData} category={6}></ChallengeList>
       )}
       <hr></hr>
       <button onClick={() => navigate(`/create/deploy`)} className={styles.myWallet}>
