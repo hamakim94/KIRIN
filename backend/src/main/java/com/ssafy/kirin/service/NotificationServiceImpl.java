@@ -98,11 +98,4 @@ public class NotificationServiceImpl implements NotificationService {
         for(Notification notification : list)
             notification.setIsRead(true);
     }
-    private void randomDelay() {
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
-    }
 }

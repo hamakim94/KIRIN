@@ -155,11 +155,6 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
         user.setProfileImgAndNickname(getFilePath(profileImg), nickname);
 
-//        if(user.getIsCeleb()){ // 스타인 경우, celebInfo update
-//            user.getCelebInfo().setInfo(userDTO.getInfo());
-//            celebInfoRepository.save(user.getCelebInfo());
-//        }
-
         userRepository.save(user); // user update
 
         return userToUserDto(user);

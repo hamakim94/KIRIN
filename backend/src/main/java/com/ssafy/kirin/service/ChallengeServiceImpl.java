@@ -331,16 +331,10 @@ public class ChallengeServiceImpl implements ChallengeService {
             Challenge forChallenge = challengeRepository.getReferenceById(challengeRequestDTO.challengeId());
             CelebChallengeInfo celebChallengeInfo = celebChallengeInfoRepository.findByChallengeId(forChallenge.getId());
             String musicPath = celebChallengeInfo.getMusic();
-            //copy video file
-//            String videoExt = video.getOriginalFilename().substring(video.getOriginalFilename().lastIndexOf("."));
-//            String videoTmpDir = challengeDir+UUID.randomUUID()+videoExt;
-//            Path videoTmp = Paths.get(videoTmpDir);
-//            Files.copy(video.getInputStream(), videoTmp);
             //make thumbnail
             String thumbDir = UUID.randomUUID()+".gif";
             String commandExtractThumbnail = String.format("ffmpeg -y -ss 2 -t 2 -i %s -r 10 -loop 0 %s", (challengeDir+videoTmpDir),(challengeDir+thumbDir));
             Process p = Runtime.getRuntime().exec(commandExtractThumbnail);
-//            System.out.println(5);
             System.out.println("thunbnail extracted!!!!!!!!!!\n"+LocalDateTime.now());
             p.waitFor();
             // wegM to MP4
@@ -348,20 +342,6 @@ public class ChallengeServiceImpl implements ChallengeService {
             p=Runtime.getRuntime().exec(String.format("ffmpeg -y -i %s %s",(challengeDir+videoTmpDir),(challengeDir+mp4File)));
             p.waitFor();
             System.out.println("video converted!!!!!!!!!!!!!!!!!!!!!\n"+LocalDateTime.now());
-            // insert Watermark
-//            String watermarkedVideo = UUID.randomUUID() + ".mp4";
-//            String commandWatermark = String.format("ffmpeg -y -i %s -i %s -filter_complex [1][0]scale2ref=w=oh*mdar:h=ih*0.08[logo][video];[logo]format=argb,geq=r='r(X,Y)':a='0.8*alpha(X,Y)'[soo];[video][soo]overlay=30:30 %s",
-//                    challengeDir+mp4File, kirinStamp, challengeDir+watermarkedVideo);
-//            sb.append("command for watermarking video : \n" + commandWatermark+"\n");
-//            sb.append(LocalDateTime.now()+"\n");
-//            p= Runtime.getRuntime().exec(commandWatermark);
-//            BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
-//            while ((line=br.readLine())!=null) sb.append(line+"\n");
-//            br = new BufferedReader(new InputStreamReader(p.getErrorStream()));
-//            while ((line=br.readLine())!=null) sb.append(line+"\n");
-//            sb.append("watermark inserted~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
-//            sb.append(LocalDateTime.now()+"\n");
-//            p.waitFor();
             // insert music
             String outputPath = UUID.randomUUID() + ".mp4";
             String commandInsertMusic = String.format("ffmpeg -y -i %s -i %s -map 0:v -map 1:a -c:v copy -shortest %s",
@@ -369,6 +349,7 @@ public class ChallengeServiceImpl implements ChallengeService {
             p = Runtime.getRuntime().exec(commandInsertMusic);
             p.waitFor();
             System.out.println("music inserted!!!!!!!!!!!!!!!!!!!!!\n"+LocalDateTime.now());
+            // insert watermark
             String realOutput = UUID.randomUUID() + ".mp4";
             String commandInsertWatermark = String.format("ffmpeg -y -i %s -i %s -filter_complex [1][0]scale2ref=w=oh*mdar:h=ih*0.08[logo][video];[logo]format=argb,geq=r='r(X,Y)':a='0.7*alpha(X,Y)'[soo];[video][soo]overlay=30:30 -map v -map 0:a -c:v libx264 -preset ultrafast -r 17 %s"
                     , (challengeDir+outputPath), kirinStamp, (challengeDir+realOutput));
@@ -378,8 +359,6 @@ public class ChallengeServiceImpl implements ChallengeService {
             while((line=br.readLine())!=null) System.out.println(line);
             p.waitFor();
             System.out.println("Created Challenge!!!!!!!!!!!!!!!!!!\n"+LocalDateTime.now());
-//            p= Runtime.getRuntime().exec(commandInsertWatermark);
-//
             ChallengeContract challengeContract = celebChallengeInfo.getChallengeContract();
             String transactionHash = ethereumService.fundToken(user, challengeContract.getContractHash(), challengeRequestDTO.amount());
             Challenge challenge = challengeRepository.save(
@@ -425,15 +404,8 @@ public class ChallengeServiceImpl implements ChallengeService {
             String line;
             StringBuilder sb = new StringBuilder();
             BufferedReader br;
-//            System.out.println(5);
-//            while ((line=br.readLine())!=null) {
-//                System.out.println(line);
-//                sb.append(line+"\n");
-//            }
             br = new BufferedReader(new InputStreamReader(p.getErrorStream()));
             while ((line=br.readLine())!=null) sb.append(line+"\n");
-//            System.out.println(sb.toString());
-//            System.out.println(9);
             p.waitFor();
 
             //extract music
@@ -448,14 +420,12 @@ public class ChallengeServiceImpl implements ChallengeService {
             p = Runtime.getRuntime().exec(commandWatermark);
             sb = new StringBuilder();
             br = new BufferedReader(new InputStreamReader(p.getInputStream()));
-//            String line;
             while((line =br.readLine())!=null) sb.append(line+"\n");
             br = new BufferedReader(new InputStreamReader(p.getErrorStream()));
             while ((line=br.readLine())!=null) sb.append(line+"\n");
             br.close();
             System.out.println(sb);
             p.waitFor();
-            //delete original videoFile
 
 
             //Contract 생성 및 토큰 전송, 트랜잭션 저장

@@ -190,7 +190,7 @@ public class CommunityServiceImpl implements CommunityService {
             Community community = communityRepository.getReferenceById(communityId);
             CommunityComment communityComment1 = communityCommentRepository.getReferenceById(dto.parentId());
             // 댓글 게시자에게 알림
-            if(userId != community.getUser().getId())
+            if(userId != communityComment1.getUser().getId())
                     notificationService.addNotification(Notification.builder().image(user.getProfileImg()).userId(community.getUser().getId()).isRead(false)
                     .event(String.format(NotificationEnum.CommentReplied.getContent(), user.getNickname())).link(String.format("/star/%s/community/%s", community.getUser().getId(), communityId))
                     .build());
