@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { RiMessage3Line, RiHeart2Fill, RiHeart2Line } from 'react-icons/ri';
 import { useNavigate } from 'react-router-dom';
-import CommunityWriter from '../community/CommunityWriter';
+import TimeForToday from '../common/TimeForToday';
+import ProfileImg from '../common/ProfileImg';
 
 function CommunityItem(props) {
+  const newDate = new Date(props.item.reg);
   const [itemData, setItemData] = useState(null);
   const navigate = useNavigate();
   useEffect(() => {
@@ -26,7 +28,27 @@ function CommunityItem(props) {
       }
     >
       <div style={{ margin: 15 }}>
-        <CommunityWriter styles={props.styles} data={props.item}></CommunityWriter>
+        <div className={props.styles.writerWrapper}>
+          <div style={{ marginRight: 10 }}>
+            <ProfileImg src={props.item.user.profileImg} size={'45px'} />
+          </div>
+          <div style={{ width: '100%' }}>
+            <div style={{ fontWeight: 'bold' }}>{props.item.user.nickname}</div>
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <div className={props.styles.writeDate}>{TimeForToday(newDate)}</div>
+              <div>
+                <span style={{ marginRight: '5px' }}>
+                  <RiMessage3Line></RiMessage3Line>
+                  {itemData.commentCnt}
+                </span>
+                <span>
+                  {itemData.liked ? <RiHeart2Fill></RiHeart2Fill> : <RiHeart2Line></RiHeart2Line>}
+                  {itemData.likeCnt}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
         <div
           style={{
             display: 'flex',
@@ -57,12 +79,6 @@ function CommunityItem(props) {
             className={props.styles.communityImg}
             src={`/files/${itemData.img}`}
           ></img>
-        </div>
-        <div>
-          <RiMessage3Line></RiMessage3Line>
-          {itemData.commentCnt}
-          {itemData.liked ? <RiHeart2Fill></RiHeart2Fill> : <RiHeart2Line></RiHeart2Line>}
-          {itemData.likeCnt}
         </div>
       </div>
     </div>
