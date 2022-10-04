@@ -119,7 +119,7 @@ SSAFY 7기 2학기 특화프로젝트 - KIRIN
 ---
 
 - GitLab
-  - Git-Flow. develop, FE_develop, BE_develop, CHAT_develop 브랜치를 나누고
+  - Git-Flow. develop, FE_develop, BE_develop 브랜치를 나누고
   - 각 feature별 브랜치를 따서 작업 진행
   - MR시 Front/Back Maintainer가 확인 후 합병
 - Notion
