@@ -171,6 +171,7 @@ function ChallengeCard(props) {
         ref={(el) => (props.check ? (props.check.current[props.index] = el) : '')}
         playsInline
         muted
+        controls
         style={{ width: '100%', height: '100%' }}
         onCanPlayThrough={props.index === 0 ? onLoaded : () => {}}
         onEnded={() => props.check.current[props.index].play()}

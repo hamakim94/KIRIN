@@ -11,6 +11,7 @@ import Context from '../../utils/Context';
 import Loading from '../common/Loading';
 import Sheet from 'react-modal-sheet';
 import Swal2 from 'sweetalert2';
+import zIndex from '@mui/material/styles/zIndex';
 
 const theme = createTheme({
   palette: {
@@ -93,6 +94,7 @@ function WalletModal(props) {
       setTokens('');
       viewTokenBalance();
       Swal2.fire({
+        width: 100,
         icon: 'success',
         title: 'KRT 충전 완료',
         position: 'top',
@@ -124,7 +126,7 @@ function WalletModal(props) {
           {props.buttonTitle}
         </Button>
         <Sheet isOpen={isOpen} onClose={() => setOpen(false)}>
-          <Sheet.Container style={{ height: '450px', margin: 0 }}>
+          <Sheet.Container style={{ height: '450px', margin: 0, zIndex: 4 }}>
             <Sheet.Header />
             <Sheet.Content style={{ margin: '0px 20px' }} disableDrag={true}>
               {/* <div className={styles.pageTitle}>내 지갑</div> */}
@@ -183,8 +185,7 @@ function WalletModal(props) {
               </div>
             </Sheet.Content>
           </Sheet.Container>
-
-          <Sheet.Backdrop />
+          <Sheet.Backdrop style={{ zIndex: 3, borderWidth: 0 }} onTap={() => setOpen(false)} />
         </Sheet>
         {/* <Modal
           open={open}
