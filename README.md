@@ -92,10 +92,11 @@ SSAFY 7기 2학기 특화프로젝트 - KIRIN
 **Frontend**
 
 - Visual Studio Code IDE 1.69.0
-- React
-- Mui
-- React-Tostify
-- Node 16.15.0
+- React : ^18.2.0
+- React-Toastify : ^9.0.8
+- Solc : ^0.8.17
+- Web3 : ^1.8.0
+- Node : 16.17.0
 
 **CI/CD**
 
