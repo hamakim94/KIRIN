@@ -100,9 +100,9 @@ SSAFY 7기 2학기 특화프로젝트 - KIRIN
 **CI/CD**
 
 - Server : AWS EC2 Ubuntu 20.04 LTS
-- Docker : 20.10.18
+- Docker : 20.10.12
 - nginx : 1.18.0
-- Jenkins : 2.361.1
+- Jenkins : 2.346.2
 
 **BlockChain**
 
