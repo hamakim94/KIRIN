@@ -193,7 +193,7 @@ SSAFY 7기 2학기 특화프로젝트 - KIRIN
 - [컨벤션&git](doc/컨벤션&Git.md)
 - [API명세서](docs/API명세서.xlsx)
 - [ERD](docs/ERD.jpg)
-- [테스트케이스](doc/noning_테스트케이스.xlsx)
+- [테스트케이스](docs/테스트케이스.xlsx)
 
 ## :heavy_check_mark: 프로젝트 결과물
 
