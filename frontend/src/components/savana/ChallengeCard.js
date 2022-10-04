@@ -160,7 +160,6 @@ function ChallengeCard(props) {
         url={`/files/${data.video}`}
         width='100%'
         height='100%'
-        playing={hover}
         controls={false}
         volume={0.1}
         playsinline
@@ -169,9 +168,9 @@ function ChallengeCard(props) {
       <video
         src={`/files/${data.video}`}
         ref={(el) => (props.check ? (props.check.current[props.index] = el) : '')}
+        autoPlay
         playsInline
         muted
-        controls
         style={{ width: '100%', height: '100%' }}
         onCanPlayThrough={props.index === 0 ? onLoaded : () => {}}
         onEnded={() => props.check.current[props.index].play()}

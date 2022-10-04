@@ -11,7 +11,6 @@ import Context from '../../utils/Context';
 import Loading from '../common/Loading';
 import Sheet from 'react-modal-sheet';
 import Swal2 from 'sweetalert2';
-import zIndex from '@mui/material/styles/zIndex';
 
 const theme = createTheme({
   palette: {
