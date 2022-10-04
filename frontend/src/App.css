@@ -76,3 +76,7 @@
   font-weight: 900;
   src: url('./assets/fonts/SCDream9.otf') format('opentype');
 }
+
+.swal2-container {
+  z-index: 10000000 !important;
+}
