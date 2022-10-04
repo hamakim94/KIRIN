@@ -34,63 +34,52 @@ function ProgressBar(props) {
 }
 
 function ChallengeCard(props) {
-  const [copied, setCopied] = useState(false);
-  const [isOpen, setOpen] = useState(false);
+  // const [copied, setCopied] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const [data, setData] = useState(null);
 
   const navigate = useNavigate();
   const progressWidth = window.innerWidth * 0.9;
-  function copy() {
-    const el = document.createElement('input');
-    el.value = window.location.href;
-    document.body.appendChild(el);
-    el.select();
-    document.execCommand('copy');
-    document.body.removeChild(el);
-    setCopied(true);
-    swal('링크 복사가 완료되었습니다');
-  }
+  // function copy() {
+  //   const el = document.createElement('input');
+  //   el.value = window.location.href;
+  //   document.body.appendChild(el);
+  //   el.select();
+  //   document.execCommand('copy');
+  //   document.body.removeChild(el);
+  //   setCopied(true);
+  //   swal('링크 복사가 완료되었습니다');
+  // }
 
   useEffect(() => {
     if (props.item) {
       setData(props.item);
+      console.log(props.item);
     }
   }, [props.item]);
   const likeButtonClick = () => {
     if (!data.liked) {
+      setData((data) => ({
+        ...data,
+        liked: !data.liked,
+        likeCnt: data.likeCnt + 1,
+      }));
       UseAxios.post(`/challenges/like?challengeId=${data.challengeId}`, {
         params: {
           challengeId: data.challengeId,
         },
-      })
-        .then((res) => {
-          setData((data) => ({
-            ...data,
-            liked: !data.liked,
-            likeCnt: data.likeCnt + 1,
-          }));
-          console.log('좋아용');
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      });
     } else if (data.liked) {
       UseAxios.delete(`/challenges/like?challengeId=${data.challengeId}`, {
         params: {
           challengeId: data.challengeId,
         },
-      })
-        .then((res) => {
-          setData((data) => ({
-            ...data,
-            liked: !data.liked,
-            likeCnt: data.likeCnt - 1,
-          }));
-          console.log('싫어용');
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      });
+      setData((data) => ({
+        ...data,
+        liked: !data.liked,
+        likeCnt: data.likeCnt - 1,
+      }));
     }
   };
 
@@ -127,31 +116,23 @@ function ChallengeCard(props) {
             <div className={props.styles.iconCount}>{data.likeCnt}</div>
           </div>
           <div>
-            <a
-              onClick={() => setOpen(true)}
-              className='button'
-              onMouseOut={() => setOpen(false)}
-              onKeyDown={(e) => {
-                if (e.key === 'Backspace') {
-                  setOpen(false);
-                }
-              }}
-            >
-              <RiMessage3Line className={props.styles.clickIcon}></RiMessage3Line>
-              <Sheet isOpen={isOpen} onClose={() => setOpen(false)}>
-                <Sheet.Container style={{ height: '500px', zIndex: 4, position: 'absolute' }}>
-                  <Sheet.Header />
-                  <Sheet.Content style={{ margin: '20px' }}>
-                    <SavanaComment challengeId={data ? data.challengeId : ''}></SavanaComment>
-                  </Sheet.Content>
-                </Sheet.Container>
-                <Sheet.Backdrop style={{ zIndex: 3 }} />
-              </Sheet>
-            </a>
+            <RiMessage3Line
+              className={props.styles.clickIcon}
+              onClick={() => setIsOpen(true)}
+            ></RiMessage3Line>
+            <Sheet isOpen={isOpen} onClose={() => setIsOpen(false)}>
+              <Sheet.Container style={{ height: '50%', zIndex: 4, position: 'absolute' }}>
+                <Sheet.Header />
+                <Sheet.Content style={{ margin: '20px' }} disableDrag={true}>
+                  <SavanaComment challengeId={data ? data.challengeId : ''}></SavanaComment>
+                </Sheet.Content>
+              </Sheet.Container>
+              <Sheet.Backdrop style={{ zIndex: 3 }} onTap={() => setIsOpen(false)} />
+            </Sheet>
             <div className={props.styles.iconCount}>{data.commentCount}</div>
           </div>
           <a>
-            <RiShareFill className={props.styles.clickIcon} onClick={copy}></RiShareFill>
+            {/* <RiShareFill className={props.styles.clickIcon} onClick={copy}></RiShareFill> */}
           </a>
         </div>
         <div className={props.styles.infoBox}>
@@ -187,6 +168,7 @@ function ChallengeCard(props) {
         src={`/files/${data.video}`}
         ref={(el) => (props.check ? (props.check.current[props.index] = el) : '')}
         playsInline
+        muted
         style={{ width: '100%', height: '100%' }}
         onCanPlayThrough={props.index === 0 ? onLoaded : () => {}}
         onEnded={() => props.check.current[props.index].play()}

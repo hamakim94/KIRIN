@@ -52,7 +52,10 @@ function SelectItem(props) {
       <div id={props.styles.listWrapper}>
         <div
           className={props.styles.leftWrapper}
-          onClick={() => navigate(`/plus/${props.item.challengeId}`)}
+          onClick={() => {
+            navigate(`/plus/${props.item.challengeId}`);
+            props.setIsOpen(false);
+          }}
         >
           <ProfileImg src={props.item.profile} size={'50px'} />
           <div className={props.styles.midWrapper}>
