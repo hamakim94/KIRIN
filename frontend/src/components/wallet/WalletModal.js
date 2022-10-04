@@ -9,6 +9,8 @@ import ABI from '../../TokenABI.json';
 import CA from '../../TokenCA.json';
 import Context from '../../utils/Context';
 import Loading from '../common/Loading';
+import Sheet from 'react-modal-sheet';
+import Swal2 from 'sweetalert2';
 
 const theme = createTheme({
   palette: {
@@ -25,15 +27,17 @@ const isLetters = (str) => /^[0-9]*$/.test(str);
 // 사용법 :
 function WalletModal(props) {
   const { userData } = useContext(Context);
-  const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  // const [open, setOpen] = useState(false);
+  // const handleOpen = () => setOpen(true);
+  // const handleClose = () => setOpen(false);
   const [web3, setWeb3] = useState(''); // web3 연결하는 부분, useEffect를 통해 초반에 생성된다.
   const [tokenBalance, setTokenBalance] = useState(''); // 토큰 잔액
   const [tokenContract, setTokenContract] = useState('');
   const [tokens, setTokens] = useState('');
   const [balance, setBalance] = useState(''); // 잔액
   const [loading, setLoading] = React.useState(false);
+  const [isOpen, setOpen] = React.useState(false);
+
   // 페이지가 실행되면, web3  이용 네트워크 연결)
   useEffect(() => {
     if (userData) {
@@ -88,7 +92,12 @@ function WalletModal(props) {
     UseAxios.post(`/blockchain/charge`, null, { params: { amount: tokens } }).then((res) => {
       setTokens('');
       viewTokenBalance();
-      alert('충전 완료!');
+      Swal2.fire({
+        icon: 'success',
+        title: 'KRT 충전 완료',
+        position: 'top',
+        heightAuto: false,
+      });
       setLoading(false);
     });
   };
@@ -110,11 +119,74 @@ function WalletModal(props) {
           type='button'
           variant='contained'
           className={props.styles.myWallet}
-          onClick={handleOpen}
+          onClick={() => setOpen(true)}
         >
           {props.buttonTitle}
         </Button>
-        <Modal
+        <Sheet isOpen={isOpen} onClose={() => setOpen(false)}>
+          <Sheet.Container style={{ height: '450px', margin: 0 }}>
+            <Sheet.Header />
+            <Sheet.Content style={{ margin: '0px 20px' }} disableDrag={true}>
+              {/* <div className={styles.pageTitle}>내 지갑</div> */}
+              <div className={styles.groupBox}>
+                <div className={styles.group}>
+                  <div className={styles.title}>지갑 주소</div>
+                  <div style={{ display: 'flex', justifyContent: 'space-evenly' }}>
+                    <div className={`${styles.ellipsis} ${styles.content}`}>
+                      {userData.walletAddress}
+                    </div>
+                    <button
+                      className={styles.btn}
+                      onClick={() => handleCopyClipBoard(userData.walletAddress)}
+                    >
+                      <AiOutlineCopy size={25}></AiOutlineCopy>
+                    </button>
+                  </div>
+                </div>
+                <div className={styles.group}>
+                  <div className={styles.title}>KIRIN 토큰양</div>
+                  <div className={styles.content}>
+                    {tokenBalance ? tokenBalance + ' KRT' : '0 KRT'}
+                  </div>
+                </div>
+                <div className={styles.group}>
+                  <div className={styles.title}>KIRIN 토큰 충전하기*</div>
+                  <div style={{ display: 'flex', justifyContent: 'center' }}>
+                    <div style={{ flexShrink: 0, width: '70%', maxWidth: 500, marginRight: 10 }}>
+                      <TextField
+                        variant='outlined'
+                        required
+                        fullWidth
+                        id='tokens'
+                        onChange={onChangeTokens}
+                        value={tokens}
+                        label='숫자만 입력 가능합니다'
+                        size='small'
+                        style={{ color: '#d2d2d2' }}
+                      />
+                    </div>
+                    <div style={{ flexGrow: 1, maxWidth: 100, minWidth: 40 }}>
+                      <Button
+                        type='button'
+                        fullWidth
+                        variant='contained'
+                        onClick={getToken}
+                        disabled={!tokens}
+                        size='medium'
+                        style={{ height: 40, backgroundColor: '#ffc947' }}
+                      >
+                        충전
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </Sheet.Content>
+          </Sheet.Container>
+
+          <Sheet.Backdrop />
+        </Sheet>
+        {/* <Modal
           open={open}
           onClose={handleClose}
           aria-labelledby='modal-modal-title'
@@ -131,9 +203,8 @@ function WalletModal(props) {
                 bottom: 0,
               }}
             >
-              <div className={styles.topBox}>
-                <div className={styles.pageTitle}>내 지갑</div>
-              </div>
+              <div className={styles.pageTitle}>내 지갑</div>
+
               <div className={styles.groupBox}>
                 <div className={styles.group}>
                   <div className={styles.title}>지갑 주소</div>
@@ -189,7 +260,7 @@ function WalletModal(props) {
               </div>
             </div>
           </div>
-        </Modal>
+        </Modal> */}
       </div>
     </ThemeProvider>
   ) : (

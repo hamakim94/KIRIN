@@ -56,7 +56,6 @@ function CoummnityFooter(props) {
             liked: !like.liked,
             likeCnt: like.likeCnt + 1,
           }));
-          console.log('좋아용');
         })
         .catch((err) => {
           console.log(err);
@@ -71,7 +70,6 @@ function CoummnityFooter(props) {
             liked: !like.liked,
             likeCnt: like.likeCnt - 1,
           }));
-          console.log('싫어용');
         })
         .catch((err) => {
           console.log(err);

@@ -5,13 +5,7 @@ function CommunityContent(props) {
   return (
     <div className={props.styles.midWrapper}>
       <div>{props.data.content}</div>
-      <div>
-        <img
-          alt='star'
-          className={props.styles.communityImg}
-          src={`/files/${props.data.img}`}
-        ></img>
-      </div>
+      <img alt='star' className={props.styles.communityImg} src={`/files/${props.data.img}`}></img>
     </div>
   );
 }

@@ -7,6 +7,7 @@ import CommunityWriter from '../components/community/CommunityWriter';
 import CommunityFooter from '../components/community/CommunityFooter';
 import UseAxios from '../utils/UseAxios';
 import styles from './CommunityPage.module.css';
+
 function CommunityPage() {
   const [data, setData] = useState(null);
   const location = useLocation();
@@ -25,7 +26,7 @@ function CommunityPage() {
       <CommunityFooter data={data} styles={styles}></CommunityFooter>
     </div>
   ) : (
-    '로딩로딩'
+    ''
   );
 }
 

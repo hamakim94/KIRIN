@@ -10,13 +10,13 @@
   margin: 5;
 }
 
-.topBox {
+/* .topBox {
   display: flex;
   flex-direction: row;
   margin-top: 20px;
   margin-bottom: 30px;
   justify-content: 'center';
-}
+} */
 
 .back {
   height: 25px;
@@ -25,9 +25,10 @@
 }
 
 .pageTitle {
-  font-size: 30px;
+  font-size: x-large;
   font-weight: bold;
   text-align: center;
+  margin-top: 20px;
 }
 
 .profileBox {
@@ -49,7 +50,7 @@
   margin-top: 10px;
 }
 
-<<<<<<< HEAD ======= .myWallet {
+.myWallet {
   margin-top: 10px;
   border: none;
   border-radius: 5px;
@@ -57,13 +58,6 @@
   height: 25px;
   padding-left: 10px;
   padding-right: 10px;
-}
-
->>>>>>>9ff198c33c75351f53bcdd85364379f80bf40293 .myTitle {
-  font-weight: bold;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  margin-left: 10px;
 }
 
 .hScroll {
@@ -238,23 +232,23 @@
 }
 
 .title {
-  margin-bottom: 10px;
-  background-color: #ffffff;
+  margin-bottom: 20px;
   font-weight: bold;
-  font-size: larger;
-  border-radius: 10px;
+  font-size: 18px;
 }
 
 .groupBox {
-  margin-top: 50px;
+  margin-top: 30px;
 }
 
 .group {
-  margin-bottom: 20px;
+  margin-bottom: 40px;
 }
 
 .content {
   font-weight: bold;
+  font-size: 18px;
+  text-align: center;
 }
 
 .btn {
