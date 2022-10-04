@@ -1,17 +1,17 @@
 import React from 'react';
-import { AiFillSetting } from 'react-icons/ai';
-import { BiArrowBack } from 'react-icons/bi';
+import { BsChevronLeft, BsGearFill } from 'react-icons/bs';
 import { useNavigate } from 'react-router-dom';
+
 function MyTop(props) {
   const navigate = useNavigate();
   return (
     <div className={props.styles.topBox}>
-      <BiArrowBack className={props.styles.back} onClick={() => navigate(-1)}></BiArrowBack>
+      <BsChevronLeft className={props.styles.back} onClick={() => navigate(-1)}></BsChevronLeft>
       <div className={props.styles.pageTitle}>마이페이지</div>
-      <AiFillSetting
+      <BsGearFill
         className={props.styles.setting}
         onClick={() => navigate('./setting')}
-      ></AiFillSetting>
+      ></BsGearFill>
     </div>
   );
 }

@@ -7,6 +7,7 @@ import Context from '../../utils/Context';
 import { AiOutlineHome, AiFillPlusCircle } from 'react-icons/ai';
 import { MdGrass } from 'react-icons/md';
 import { BiBookHeart, BiDonateHeart } from 'react-icons/bi';
+import { BsHouseDoor, BsPlusCircleFill, BsPerson, BsBookmarkHeart } from 'react-icons/bs';
 import { IoPersonCircleOutline } from 'react-icons/io5';
 
 function SimpleBottomNavigation() {
@@ -71,22 +72,18 @@ function SimpleBottomNavigation() {
             '& .Mui-selected, .Mui-selected > svg': {
               color: '#FFC947',
             },
-            fontSize: 28,
+            fontSize: 25,
           }}
         >
-          <BottomNavigationAction icon={<AiOutlineHome />} LinkComponent={Link} to='/' />
+          <BottomNavigationAction icon={<BsHouseDoor />} LinkComponent={Link} to='/' />
           <BottomNavigationAction icon={<MdGrass />} LinkComponent={Link} to='/savana/0' />
           <BottomNavigationAction
-            icon={<AiFillPlusCircle />}
+            icon={<BsPlusCircleFill size='36' />}
             LinkComponent={Link}
             to={`/plus/${selected}`}
           />
-          <BottomNavigationAction icon={<BiDonateHeart />} LinkComponent={Link} to='/donation' />
-          <BottomNavigationAction
-            icon={<IoPersonCircleOutline />}
-            LinkComponent={Link}
-            to='/mypage'
-          />
+          <BottomNavigationAction icon={<BsBookmarkHeart />} LinkComponent={Link} to='/donation' />
+          <BottomNavigationAction icon={<BsPerson />} LinkComponent={Link} to='/mypage' />
         </BottomNavigation>
       </Box>
     );
