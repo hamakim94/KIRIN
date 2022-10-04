@@ -57,6 +57,10 @@ function StarPage() {
       .then((res) => {
         const arr = res.data;
         const filterArr = arr.filter((i) => i.user.id === starId);
+        filterArr.reverse();
+        filterArr.sort(function (a, b) {
+          return b.isProceeding - a.isProceeding;
+        });
         setLatestData(filterArr);
       })
       .catch((err) => console.log(err));
