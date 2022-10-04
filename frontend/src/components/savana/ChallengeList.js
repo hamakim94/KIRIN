@@ -15,8 +15,8 @@ function ChallengeList(props) {
   useEffect(() => {
     if (idxRef.current[props.idx] && loading) {
       conRef.current.scrollTo(0, props.idx * height);
-      idxRef.current[props.idx].play();
       idxRef.current[props.idx].muted = false;
+      idxRef.current[props.idx].play();
       idxRef.current[props.idx].volume = 0.1;
       if (props.data[props.idx].isProceeding) {
         setSelected(props.data[props.idx].challengeId);
@@ -38,12 +38,12 @@ function ChallengeList(props) {
       }
       if (distanceY > 0 && idx > 0) {
         if (idx === props.data.length - 1 && idx === prevRef.current) {
-          idxRef.current[idx].play();
           idxRef.current[idx].muted = false;
+          idxRef.current[idx].play();
           idxRef.current[idx].volume = 0.1;
         } else {
-          idxRef.current[idx].play();
           idxRef.current[idx].muted = false;
+          idxRef.current[idx].play();
           idxRef.current[idx].volume = 0.1;
           idxRef.current[prevRef.current].currentTime = 0;
           idxRef.current[prevRef.current].pause();
