@@ -47,7 +47,7 @@ function ChallengeList(props) {
 
   const check = (e) => {
     const scrollHeight = e.target.scrollTop;
-    const height = e.target.clientHeight;
+    const height = Math.floor(e.target.clientHeight);
     const idx = scrollHeight / height;
     if (Number.isInteger(scrollHeight / height)) {
       if (props.data[idx].isProceeding) {
