@@ -66,7 +66,7 @@ public class EthereumServiceImpl implements EthereumService {
         ContractGasProvider gasProvider = new DefaultGasProvider();
         IERC20 ierc20 = IERC20.load(TOKENCONTRACTADDRESS, web3j, transactionManager, gasProvider);
         BigInteger tokenBalance = ierc20.balanceOf(credentials.getAddress()).send();
-        if (tokenBalance.intValue()>amount){
+        if (tokenBalance.intValue()>=amount){
             gasCheck(credentials);
             log.info("FundRaising deploy start");
             FundRaising fundRaising = FundRaising.deploy(
