@@ -3,6 +3,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { ko } from 'date-fns/esm/locale';
 import UseAxios from '../utils/UseAxios';
+import styles from './StarCreatePage.module.css';
 import WalletModal from '../components/wallet/WalletModal';
 
 function StarCreatePage() {
@@ -179,7 +180,7 @@ function StarCreatePage() {
           업로드
         </button>
       </form>
-      <WalletModal setData={setToken} buttonTitle={'내 지갑'}></WalletModal>
+      <WalletModal setData={setToken} styles={styles} buttonTitle={'내 지갑'}></WalletModal>
       {video ? (
         <video
           ref={videoRef}

@@ -107,10 +107,7 @@ function WalletModal(props) {
   const handleCopyClipBoard = async (obj) => {
     try {
       await navigator.clipboard.writeText(obj.userData.walletAddress);
-      console.log('복사 성공');
-    } catch (error) {
-      console.log('복사 실패 ' + error);
-    }
+    } catch (error) {}
   };
 
   return userData ? (
@@ -120,7 +117,7 @@ function WalletModal(props) {
         <Button
           type='button'
           variant='contained'
-          className='myWallet'
+          className={props.styles.myWallet}
           onClick={() => setOpen(true)}
         >
           {props.buttonTitle}

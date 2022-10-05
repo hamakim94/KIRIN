@@ -140,6 +140,9 @@
   background-color: rgba(0, 0, 0, 0.05) !important;
 }
 
+.MuiPaginationItem-page {
+  color: #000000 !important;
+}
 /* .swal-button--confirm {
   background-color: #ffc947 !important;
   border: 0;
