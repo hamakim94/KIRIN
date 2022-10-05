@@ -43,6 +43,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
   const urlRef = useRef(null);
+  const idRef = useRef(null);
   const [blob, setBlob] = useState(null);
   const [userData, setUserData] = useState(null);
   const [selected, setSelected] = useState(null);
@@ -80,7 +81,7 @@ function App() {
         const notify = () =>
           toast(data.event, {
             position: 'top-center',
-            autoClose: 5000,
+            // autoClose: 5000,
             hideProgressBar: true,
             closeOnClick: false,
             pauseOnHover: false,
@@ -90,13 +91,9 @@ function App() {
         if (data.length > 1) {
           console.log(JSON.parse(event.data));
         } else {
-          if (data && data.id) {
-            notify();
-            urlRef.current = data.link;
-            UseAxios.post('/notify/read', null, { params: { notificationId: data.id } }).then(
-              (res) => console.log(res)
-            );
-          }
+          notify();
+          urlRef.current = data.link;
+          idRef.current = data.id;
         }
       };
     }
@@ -112,7 +109,14 @@ function App() {
       {isMobile ? (
         value ? (
           <div className='App'>
-            <ToastContainer onClick={() => navigate(`${urlRef.current}`)} />
+            <ToastContainer
+              onClick={() => {
+                navigate(`${urlRef.current}`);
+                UseAxios.post('/notify/read', null, {
+                  params: { notificationId: idRef.current },
+                });
+              }}
+            />
             <Context.Provider
               value={{ blob, setBlob, userData, setUserData, selected, setSelected }}
             >
