@@ -248,7 +248,7 @@ function RegisterPage() {
           }}
         >
           <div>{data} KRT</div>
-          <WalletModal buttonTitle={'충전하기'} setData={setData}></WalletModal>
+          <WalletModal buttonTitle={'충전하기'} styles={styles} setData={setData}></WalletModal>
         </div>
         <div>
           <Button
@@ -258,7 +258,7 @@ function RegisterPage() {
             size='medium'
             className={styles.Btn}
             disabled={check}
-            style={{ height: 30, backgroundColor: '#ffd046' }}
+            style={{ height: 30, backgroundColor: '#ffd046', color: '#000000' }}
           >
             업로드
           </Button>

@@ -140,6 +140,9 @@
   background-color: rgba(0, 0, 0, 0.05) !important;
 }
 
+.MuiPaginationItem-page {
+  color: #000000 !important;
+}
 /* .swal-button--confirm {
   background-color: #ffc947 !important;
   border: 0;
@@ -210,4 +213,8 @@
   font-family: 'SCD900';
   font-weight: 900;
   src: url('./assets/fonts/SCDream9.otf') format('opentype');
+}
+
+.swal2-container {
+  z-index: 10000000 !important;
 }

@@ -4,6 +4,7 @@ import CommentInput from './CommentInput';
 import UseAxios from '../../utils/UseAxios';
 import { useLocation } from 'react-router-dom';
 import CommentList from './CommentList';
+import { FaRegHeart, FaHeart, FaRegCommentAlt } from 'react-icons/fa';
 
 function CoummnityFooter(props) {
   const location = useLocation();
@@ -80,18 +81,26 @@ function CoummnityFooter(props) {
   return commentData ? (
     <>
       <div className={props.styles.footerWrapper}>
-        <span style={{ marginRight: 10 }}>
-          <span style={{ marginRight: 5 }}>
-            <RiMessage3Line></RiMessage3Line>
-          </span>
-          <span>{commentCnt ? commentCnt : 0}</span>
-        </span>
-        <span>
+        <div style={{ display: 'flex', marginRight: 10 }}>
           <span onClick={likeButtonClick} style={{ marginRight: 5 }}>
-            {like ? like.liked ? <RiHeart2Fill></RiHeart2Fill> : <RiHeart2Line></RiHeart2Line> : ''}
+            {like ? (
+              like.liked ? (
+                <FaHeart size='20' color='black'></FaHeart>
+              ) : (
+                <FaRegHeart size='20'></FaRegHeart>
+              )
+            ) : (
+              ''
+            )}
           </span>
           <span>{like ? like.likeCnt : 0}</span>
-        </span>
+        </div>
+        <div style={{ display: 'flex' }}>
+          <span style={{ marginRight: 5 }}>
+            <FaRegCommentAlt size='20'></FaRegCommentAlt>
+          </span>
+          <span>{commentCnt ? commentCnt : 0}</span>
+        </div>
       </div>
       <div>
         <CommentInput

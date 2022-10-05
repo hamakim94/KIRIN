@@ -16,8 +16,8 @@ function ProgressBar(props) {
     );
   } else {
     return (
-      <div className={styles.progressDiv} style={{ width: props.width }}>
-        <div style={{ width: `${value}px` }} className={styles.progressEnd} />
+      <div className={styles.progressEnd} style={{ width: props.width }}>
+        {/* <div style={{ width: `${value}px` }} className={styles.progressEnd} /> */}
       </div>
     );
   }
@@ -60,7 +60,7 @@ function ChallengeCard(props) {
                   </div>
                 );
               } else {
-                return <div className={styles.infoText}>{'끝'}</div>;
+                return <div className={styles.infoText}>{'종료'}</div>;
               }
             })()}
           </div>

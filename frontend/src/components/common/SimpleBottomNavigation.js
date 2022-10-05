@@ -4,10 +4,8 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import BottomNavigation from '@mui/material/BottomNavigation';
 import BottomNavigationAction from '@mui/material/BottomNavigationAction';
 import Context from '../../utils/Context';
-import { AiOutlineHome, AiFillPlusCircle } from 'react-icons/ai';
 import { MdGrass } from 'react-icons/md';
-import { BiBookHeart, BiDonateHeart } from 'react-icons/bi';
-import { IoPersonCircleOutline } from 'react-icons/io5';
+import { BsHouseDoor, BsPlusCircleFill, BsPerson, BsBookmarkHeart } from 'react-icons/bs';
 
 function SimpleBottomNavigation() {
   const [value, setValue] = useState(0);
@@ -77,20 +75,16 @@ function SimpleBottomNavigation() {
             fontSize: 28,
           }}
         >
-          <BottomNavigationAction icon={<AiOutlineHome />} LinkComponent={Link} to='/' />
+          <BottomNavigationAction icon={<BsHouseDoor />} LinkComponent={Link} to='/' />
           <BottomNavigationAction icon={<MdGrass />} LinkComponent={Link} to='/savana/0' />
           <BottomNavigationAction
-            icon={<AiFillPlusCircle size={28} />}
+            icon={<BsPlusCircleFill size='36' />}
             LinkComponent={Link}
             // to={`/plus/${selected}`}
             onClick={() => navigate(`/plus/${selected}`)}
           />
-          <BottomNavigationAction icon={<BiDonateHeart />} LinkComponent={Link} to='/donation' />
-          <BottomNavigationAction
-            icon={<IoPersonCircleOutline />}
-            LinkComponent={Link}
-            to='/mypage'
-          />
+          <BottomNavigationAction icon={<BsBookmarkHeart />} LinkComponent={Link} to='/donation' />
+          <BottomNavigationAction icon={<BsPerson />} LinkComponent={Link} to='/mypage' />
         </BottomNavigation>
       </Box>
     );

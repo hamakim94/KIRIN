@@ -73,7 +73,6 @@
 }
 
 .progress {
-  /* background-color: rgba(41, 47, 51, 0.68); */
   background-color: #ffd046;
   height: 8px;
   border-right: solid 1px #808080;
@@ -84,12 +83,9 @@
 }
 
 .progressEnd {
-  /* background-color: rgba(41, 47, 51, 0.68); */
-  background-color: #808080;
+  background-color: #8c8c8c;
   height: 8px;
-  border-right: solid 1px #808080;
-  border-bottom-left-radius: 0.5rem;
-  border-top-left-radius: 0.5rem;
+  border-radius: 0.5rem;
   transition: 1s ease;
   transition-delay: 0.5s;
 }

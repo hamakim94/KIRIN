@@ -1,0 +1,10 @@
+.myWallet {
+  margin-top: 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: #ffc947;
+  padding-left: 10px;
+  padding-right: 10px;
+  height: 30px;
+  width: 200px;
+}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { BiArrowBack } from 'react-icons/bi';
+import { BsChevronLeft } from 'react-icons/bs';
 import { useNavigate } from 'react-router-dom';
 import styles from './Header.module.css';
 
@@ -8,11 +8,11 @@ function Header(props) {
   return (
     <div className={styles.topBox}>
       <div className={styles.sideBox}>
-        <BiArrowBack
+        <BsChevronLeft
           size={25}
           color={props.white ? '#FFFFFF' : '#000000'}
           onClick={() => navigate(-1)}
-        ></BiArrowBack>
+        ></BsChevronLeft>
       </div>
       <div className={props.white ? styles.pageWhiteTitle : styles.pageTitle}>{props.title}</div>
       <div className={styles.sideBox}></div>

@@ -3,6 +3,7 @@ import { RiMessage3Line, RiHeart2Fill, RiHeart2Line } from 'react-icons/ri';
 import { useNavigate } from 'react-router-dom';
 import TimeForToday from '../common/TimeForToday';
 import ProfileImg from '../common/ProfileImg';
+import { FaRegHeart, FaHeart, FaRegCommentAlt } from 'react-icons/fa';
 
 function CommunityItem(props) {
   const newDate = new Date(props.item.reg);
@@ -35,15 +36,23 @@ function CommunityItem(props) {
             <div style={{ fontWeight: 'bold' }}>{props.item.user.nickname}</div>
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
               <div className={props.styles.writeDate}>{TimeForToday(newDate)}</div>
-              <div>
-                <span style={{ marginRight: '5px' }}>
-                  <RiMessage3Line></RiMessage3Line>
-                  {itemData.commentCnt}
-                </span>
-                <span>
-                  {itemData.liked ? <RiHeart2Fill></RiHeart2Fill> : <RiHeart2Line></RiHeart2Line>}
-                  {itemData.likeCnt}
-                </span>
+              <div style={{ display: 'flex' }}>
+                <div style={{ display: 'flex', marginRight: 10 }}>
+                  <span style={{ marginRight: 3 }}>
+                    {itemData.liked ? (
+                      <FaHeart size='18' color='black'></FaHeart>
+                    ) : (
+                      <FaRegHeart size='18'></FaRegHeart>
+                    )}
+                  </span>
+                  <span>{itemData.likeCnt}</span>
+                </div>
+                <div style={{ display: 'flex' }}>
+                  <span style={{ marginRight: 3 }}>
+                    <FaRegCommentAlt size='18'></FaRegCommentAlt>
+                  </span>
+                  <span>{itemData.commentCnt}</span>
+                </div>
               </div>
             </div>
           </div>
