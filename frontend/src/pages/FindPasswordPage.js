@@ -33,8 +33,6 @@ function FindPasswordPage() {
 
   const onSubmit = (event) => {
     event.preventDefault();
-    console.log(email);
-    console.log(name);
     UseAxios.get(`/users/find-password`, {
       params: {
         email: email,
@@ -55,7 +53,7 @@ function FindPasswordPage() {
   };
   return (
     <ThemeProvider theme={theme}>
-      <div>
+      <div style={{ marginLeft: 10, marginRight: 10 }}>
         <Header title='비밀번호 찾기'></Header>
         <img
           src={require('../assets/img/lock.png')}
