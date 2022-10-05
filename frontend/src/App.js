@@ -1,13 +1,13 @@
 import './App.css';
+import React, { useEffect, useRef, useState } from 'react';
+import { Routes, Route, useNavigate } from 'react-router-dom';
 import { isMobile } from 'react-device-detect';
 import HomePage from './pages/HomePage';
-import { Routes, Route, useNavigate } from 'react-router-dom';
 import SearchPage from './pages/SearchPage';
 import SavanaPage from './pages/SavanaPage';
 import DonationPage from './pages/DonationPage';
 import StarPage from './pages/StarPage';
 import PlusPage from './pages/PlusPage';
-import PcPage from './pages/PcPage';
 import MyPage from './pages/MyPage';
 import SettingPage from './pages/SettingPage';
 import EditProfilePage from './pages/settings/EditProfilePage';
@@ -15,29 +15,29 @@ import AskPage from './pages/settings/AskPage';
 import ChangePasswordPage from './pages/settings/ChangePasswordPage';
 import TermsOfServicePage from './pages/settings/TermsOfServicePage';
 import PrivacyPolicyPage from './pages/settings/PrivacyPolicyPage';
-import NotFoundPage from './pages/NotFoundPage';
 import ChallengePage from './pages/ChallengePage';
-import SimpleBottomNavigation from './components/common/SimpleBottomNavigation';
 import CommunityPage from './pages/CommunityPage';
 import BlockchainPage from './pages/BlockchainPage';
 import TransactionPage from './pages/TransactionPage';
 import DashboardPage from './pages/DashboardPage';
+import RegisterPage from './pages/RegisterPage';
+import StarCreatePage from './pages/StarCreatePage';
+import WalletPage from './pages/WalletPage';
+import CommunityCreatePage from './pages/CommunityCreatePage';
+import NotFoundPage from './pages/NotFoundPage';
+import SimpleBottomNavigation from './components/common/SimpleBottomNavigation';
+import PcPage from './pages/PcPage';
 import FindPasswordPage from './pages/FindPasswordPage';
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
 import FinishSignupPage from './pages/FinishSignupPage';
 import ContractDeploy from './pages/ContractDeploy';
-import RegisterPage from './pages/RegisterPage';
-import React, { useEffect, useRef, useState } from 'react';
 import Context from './utils/Context';
 import UseAxios from './utils/UseAxios';
 import { Cookies } from 'react-cookie';
-import StarCreatePage from './pages/StarCreatePage';
-import WalletPage from './pages/WalletPage';
 import SuccessPage from './pages/SuccessPage';
 import FailPage from './pages/FailPage';
 import StarSignupPage from './pages/StarSignupPage';
-import CommunityCreatePage from './pages/CommunityCreatePage';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -92,8 +92,10 @@ function App() {
         } else {
           notify();
           urlRef.current = data.link;
+          UseAxios.post('/notify/read', null, { params: { notificationId: data.id } }).then((res) =>
+            console.log(res)
+          );
         }
-        console.log(data);
       };
     }
     return () => {

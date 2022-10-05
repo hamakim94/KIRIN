@@ -11,11 +11,12 @@
 
 .midWrapper {
   box-sizing: border-box;
-  width: 100%;
   border: solid 1px #808080;
   border-radius: 10px;
   padding: 15px;
-  margin-bottom: 10px;
+  margin-bottom: 5px;
+  margin-left: 10px;
+  margin-right: 10px;
   /* max-height: 50vh; */
   /* max-height: calc(var(--vh, 1vh) * 50); */
   /* overflow: scroll; */
@@ -25,7 +26,7 @@
   display: flex;
   align-items: center;
   margin-bottom: 10px;
-  padding-left: 10px;
+  margin-left: 10px;
 }
 
 .nameWrapper {
@@ -35,7 +36,7 @@
 
 .writeDate {
   color: #808080;
-  font-size: 12px;
+  font-size: 10px;
 }
 
 .communityImg {
@@ -59,6 +60,7 @@
 .footerWrapper {
   font-size: larger;
   display: flex;
+  margin-left: 10px;
 }
 
 /* .commentImg {

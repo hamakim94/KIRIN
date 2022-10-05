@@ -4,11 +4,13 @@ import RecordRTC, { invokeSaveAsDialog } from 'recordrtc';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Context from '../utils/Context';
 import { MdOutlineFlipCameraAndroid, MdOutlineQueueMusic } from 'react-icons/md';
+import { BsX, BsArrowCounterclockwise, BsCheck2 } from 'react-icons/bs';
 import UseAxios from '../utils/UseAxios';
 // import { toast } from 'react-toastify';
 import swal2 from 'sweetalert2';
 import 'react-toastify/dist/ReactToastify.css';
 import SelectPage from './SelectPage';
+import NewLoading from '../components/common/NewLoading';
 
 function ProgressBar(props) {
   const [value, setValue] = useState(0);
@@ -34,6 +36,7 @@ function PlusPage() {
   const [challengeData, setChallengeData] = useState(null);
   const [length, setLength] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
+  const [loading, setLoading] = useState(null);
   const refVideo = useRef(null);
   const recorderRef = useRef(null);
   const audioRef = useRef(null);
@@ -269,6 +272,7 @@ function PlusPage() {
         audio: false,
       });
       setStream(mediaStream);
+      setLoading(true);
     };
     start();
     (() => {
@@ -292,7 +296,6 @@ function PlusPage() {
           setNumber(res.data.length);
           setLength(res.data.length);
           audioRef.current = new Audio(`/files/${res.data.music}`);
-          console.log(res.data);
         });
       }
     }
@@ -338,7 +341,7 @@ function PlusPage() {
     },
     number < 0 ? null : 100
   );
-  return (
+  return loading ? (
     <div className={styles.wrapper}>
       <div className={styles.coverBox}>
         <div style={{ flex: 1, flexDirection: 'row' }}>
@@ -361,7 +364,7 @@ function PlusPage() {
           >
             <div style={{ flex: 1, color: '#FFFFFF' }}>
               <span style={{ marginLeft: 10 }} onClick={() => navigate('/')}>
-                X
+                <BsX size={30}></BsX>
               </span>
             </div>
             <div
@@ -397,7 +400,7 @@ function PlusPage() {
                 </div>
               </div>
             </div>
-            <SelectPage isOpen={isOpen} setIsOpen={setIsOpen}></SelectPage>
+
             <div
               style={{
                 display: 'flex',
@@ -485,7 +488,13 @@ function PlusPage() {
                   paddingTop: 20,
                 }}
               >
-                {blob || number < length ? <span onClick={handleRetry}>다시찍기</span> : ''}
+                {blob || number < length ? (
+                  <span onClick={handleRetry}>
+                    <BsArrowCounterclockwise size={40}></BsArrowCounterclockwise>
+                  </span>
+                ) : (
+                  ''
+                )}
               </div>
               <div
                 style={{
@@ -523,7 +532,13 @@ function PlusPage() {
                 }}
               >
                 {/* 영상이 있거나 시간 초를 썼다면 보내기 */}
-                {blob || number < length ? <span onClick={handleStop}>보내기</span> : ''}
+                {blob || number < length ? (
+                  <span onClick={handleStop}>
+                    <BsCheck2 size={40}></BsCheck2>
+                  </span>
+                ) : (
+                  ''
+                )}
               </div>
             </div>
             <div
@@ -537,7 +552,10 @@ function PlusPage() {
       </div>
       {/* <video playsInline autoPlay muted ref={refVideo} style={{ width: '100%', height: '100%' }} /> */}
       <video playsInline autoPlay muted ref={refVideo} style={{ width: '100%', height: '100%' }} />
+      <SelectPage isOpen={isOpen} setIsOpen={setIsOpen}></SelectPage>
     </div>
+  ) : (
+    <NewLoading></NewLoading>
   );
 }
 

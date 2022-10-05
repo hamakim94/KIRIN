@@ -31,7 +31,16 @@ function CommentInput(props) {
     }
   };
   return (
-    <div style={{ display: 'flex', alignItems: 'center', marginBottom: 15, marginTop: 15 }}>
+    <div
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        marginLeft: 10,
+        marginRight: 10,
+        marginBottom: 15,
+        marginTop: 15,
+      }}
+    >
       <div
         style={{
           height: 50,

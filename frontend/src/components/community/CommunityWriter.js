@@ -6,7 +6,7 @@ function CommunityWriter(props) {
   const newDate = new Date(props.data.reg);
   return (
     <div className={props.styles.writerWrapper}>
-      <div style={{ marginRight: 10 }}>
+      <div style={{ marginRight: 10, alignItems: 'center', display: 'flex' }}>
         <ProfileImg src={props.data.user.profileImg} size={'45px'} />
       </div>
       <div className={props.styles.nameWrapper}>

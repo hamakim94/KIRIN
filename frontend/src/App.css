@@ -129,7 +129,9 @@
   background: initial;
   font-size: 0.9em !important;
 }
-
+.MuiBackdrop-root {
+  background-color: rgba(0, 0, 0, 0.2) !important;
+}
 .Mui-selected {
   color: #ffc947 !important;
 }

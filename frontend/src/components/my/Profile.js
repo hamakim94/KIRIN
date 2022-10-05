@@ -19,24 +19,23 @@ const theme = createTheme({
 });
 
 function Profile(props) {
-  const [userData, setUserData] = useState(null);
   const navigate = useNavigate();
-  // const { userData } = useContext(Context);
-  useEffect(() => {
-    UseAxios.get(`/users/profiles`).then((res) => {
-      setUserData(res.data);
-      // console.log(res.data);
-    });
-  }, []);
+  // // const { userData } = useContext(Context);
+  // useEffect(() => {
+  //   UseAxios.get(`/users/profiles`).then((res) => {
+  //     setUserData(res.data);
+  //     // console.log(res.data);
+  //   });
+  // }, []);
 
   return (
     <ThemeProvider theme={theme}>
       <div>
-        {userData ? (
+        {props.userData ? (
           <div className={props.styles.profileBox}>
-            <ProfileImg src={userData.profileImg} size={'100px'} />
-            <div className={props.styles.userName}>{userData.nickname} </div>
-            <div style={{ marginTop: 30, marginBottom: 10 }}>
+            <ProfileImg src={props.userData.profileImg} size={'100px'} />
+            <div className={props.styles.userName}>{props.userData.nickname} </div>
+            <div style={{ marginTop: 15, marginBottom: 10 }}>
               <WalletModal styles={props.styles} buttonTitle={'내 지갑'}></WalletModal>
             </div>
             <Button

@@ -4,11 +4,13 @@ import styles from './SavanaPage.module.css';
 import ChallengeList from '../components/savana/ChallengeList';
 import { useLocation } from 'react-router-dom';
 import Context from '../utils/Context';
+import NewLoading from '../components/common/NewLoading';
 
 function SavanaPage() {
   //랜덤으로 바꾸기
   const [savanaData, setSavanaData] = useState(null);
   const { userData } = useContext(Context);
+  const [loading, setLoading] = useState(null);
   const location = useLocation();
   const pathname = location.pathname.split('/');
   const [idx, setIdx] = useState(null);
@@ -19,6 +21,7 @@ function SavanaPage() {
           UseAxios.get(`/challenges?scope=stars&order=random`).then((res) => {
             setSavanaData(res.data);
             setIdx(0);
+            setLoading(true);
           });
           break;
         case '1':
@@ -26,6 +29,7 @@ function SavanaPage() {
             setSavanaData(res.data);
             let idx = res.data.findIndex((el) => el.id === location.state.id);
             setIdx(idx);
+            setLoading(true);
           });
           break;
         case '2':
@@ -33,6 +37,7 @@ function SavanaPage() {
             setSavanaData(res.data);
             let idx = res.data.findIndex((el) => el.id === location.state.id);
             setIdx(idx);
+            setLoading(true);
           });
           break;
         case '3':
@@ -43,6 +48,7 @@ function SavanaPage() {
             newArr.unshift(firstObj[0]);
             setSavanaData(newArr);
             setIdx(0);
+            setLoading(true);
           });
           break;
         case '4':
@@ -52,6 +58,7 @@ function SavanaPage() {
             setSavanaData(res.data);
             let idx = res.data.findIndex((el) => el.id === location.state.id);
             setIdx(idx);
+            setLoading(true);
           });
           break;
         case '5':
@@ -59,6 +66,7 @@ function SavanaPage() {
             setSavanaData(res.data);
             let idx = res.data.findIndex((el) => el.id === location.state.id);
             setIdx(idx);
+            setLoading(true);
           });
           break;
         case '6':
@@ -66,6 +74,7 @@ function SavanaPage() {
             setSavanaData(res.data);
             let idx = res.data.findIndex((el) => el.id === location.state.id);
             setIdx(idx);
+            setLoading(true);
           });
           break;
         case 'challenge':
@@ -74,20 +83,25 @@ function SavanaPage() {
             arr.push(res.data);
             setSavanaData(arr);
             setIdx(0);
+            setLoading(true);
           });
           break;
       }
   }, [location]);
-  return userData ? (
-    <div id={styles.savana}>
-      {savanaData && savanaData.length > 0 ? (
-        <ChallengeList styles={styles} data={savanaData} idx={idx}></ChallengeList>
-      ) : (
-        '기린이 존재하지 않아요 힝힝'
-      )}
-    </div>
+  return loading ? (
+    userData ? (
+      <div id={styles.savana}>
+        {savanaData && savanaData.length > 0 ? (
+          <ChallengeList styles={styles} data={savanaData} idx={idx}></ChallengeList>
+        ) : (
+          '기린이 존재하지 않아요 힝힝'
+        )}
+      </div>
+    ) : (
+      ''
+    )
   ) : (
-    ''
+    <NewLoading></NewLoading>
   );
 }
 

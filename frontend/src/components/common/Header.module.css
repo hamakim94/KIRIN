@@ -2,11 +2,17 @@
   display: flex;
   flex-direction: row;
   margin-bottom: 30px;
+  margin-top: 15px;
   justify-content: space-between;
 }
 
 .sideBox {
   flex: 1;
+  padding-left: 10px;
+}
+.rightBox {
+  flex: 1;
+  padding-right: 10px;
 }
 .pageTitle {
   display: flex;

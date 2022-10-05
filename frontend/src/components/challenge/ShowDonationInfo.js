@@ -41,38 +41,41 @@ function ShowDonationInfo(props) {
       <div className={props.styles.infoTop}>
         <div className={props.styles.infoSet}>
           <div className={props.styles.donationInfo}>기부 기관</div>
-          <div>{props.data.donationOrganizationName}</div>
+          <div className={props.styles.content}>{props.data.donationOrganizationName}</div>
         </div>
         <div className={props.styles.infoSet}>
           <div className={props.styles.donationInfo}>챌린지 기간</div>
-          <div>
-            {props.data.startDate.split('T')[0]} {` ~ `} {props.data.endDate.split('T')[0]}
+          <div className={props.styles.content}>
+            {props.data.startDate.split('T')[0]}
+            <div className={props.styles.content}>{props.data.endDate.split('T')[0]}</div>
           </div>
         </div>
         <div className={props.styles.infoSet}>
           <div className={props.styles.donationInfo}>챌린지 목표</div>
-          <div>{props.data.targetNum}명</div>
+          <div className={props.styles.content}>{props.data.targetNum}명</div>
         </div>
         <div className={props.styles.infoSet}>
           <div className={props.styles.donationInfo}>챌린지 참여</div>
-          {props.data.currentNum}명(
-          {((props.data.currentNum / props.data.targetNum) * 100).toFixed(1)}
-          %)
+          <div className={props.styles.content}>
+            {props.data.currentNum}명(
+            {((props.data.currentNum / props.data.targetNum) * 100).toFixed(1)}
+            %)
+          </div>
         </div>
         <div className={props.styles.infoSet}>
           <div className={props.styles.donationInfo}>기부 참여</div>
-          <div>{realDonors.length}명</div>
+          <div className={props.styles.content}>{realDonors.length}명</div>
         </div>
         <div className={props.styles.infoSet}>
           <div className={props.styles.donationInfo}>기부 현황</div>
-          <div>
+          <div className={props.styles.content}>
             {props.data.currentAmount - props.data.targetAmount}
             {` `}KRT
           </div>
         </div>
         <div className={props.styles.infoSet}>
           <div className={props.styles.donationInfo}>공약 금액</div>
-          <div>
+          <div className={props.styles.content}>
             {props.data.targetAmount}
             {` `}KRT
           </div>
@@ -81,7 +84,7 @@ function ShowDonationInfo(props) {
           <ProgressBar
             styles={props.styles}
             height
-            width={'80vw'}
+            width={'90vw'}
             percent={props.data.currentNum / props.data.targetNum}
           ></ProgressBar>
         </div>

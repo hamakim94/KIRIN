@@ -110,6 +110,7 @@
   height: 33px;
   width: 33px;
   margin-top: 10px;
+  margin-right: 2px;
   color: black;
 }
 
@@ -117,7 +118,8 @@
   height: 33px;
   width: 33px;
   margin-top: 10px;
-  color: red;
+  margin-right: 2px;
+  color: rgb(255, 0, 0);
 }
 
 .iconCount {

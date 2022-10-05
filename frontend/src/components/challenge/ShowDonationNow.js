@@ -56,7 +56,22 @@ function ShowDonationNow(props) {
           <DonationBox donor={donor} key={index}></DonationBox>
         ))
       ) : (
-        <div>아직 기부한 사람이 아무도 없습니다</div>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          <img
+            src={require('../../assets/img/kirin_logo_nobackground.png')}
+            width={'60%'}
+            height={'60%'}
+            style={{ marginBottom: 15 }}
+          ></img>
+          <div>아직 기부한 사람이 아무도 없습니다</div>
+        </div>
       )}
     </div>
   );

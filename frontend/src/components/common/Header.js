@@ -15,7 +15,7 @@ function Header(props) {
         ></BsChevronLeft>
       </div>
       <div className={props.white ? styles.pageWhiteTitle : styles.pageTitle}>{props.title}</div>
-      <div className={styles.sideBox}></div>
+      <div className={styles.rightBox}></div>
     </div>
   );
 }

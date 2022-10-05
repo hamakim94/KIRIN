@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { RiHeart2Fill, RiHeart2Line } from 'react-icons/ri';
+import { FaRegHeart, FaHeart } from 'react-icons/fa';
 import UseAxios from '../../utils/UseAxios';
 import TimeForToday from '../common/TimeForToday';
 import { useLocation } from 'react-router-dom';
@@ -54,23 +54,23 @@ function CommentItem(props) {
         borderBottom: 'solid 1px #c2c2c2',
       }}
     >
-      <div>
+      <div style={{ marginLeft: 10 }}>
         <ProfileImg src={item.user.profileImg} size={'40px'} />
       </div>
-      <div style={{ flex: 10, alignItems: 'center', marginLeft: 10, fontSize: 'smaller' }}>
-        <div style={{ marginBottom: 5, fontWeight: 'bold' }}>{item.user.nickname}</div>
-        <div style={{ marginBottom: 5 }}>{item.content}</div>
+      <div style={{ flex: 10, alignItems: 'center', marginLeft: 15, fontSize: 'smaller' }}>
+        <div style={{ marginBottom: 3, fontWeight: 'bold' }}>{item.user.nickname}</div>
+        <div style={{ marginBottom: 4 }}>{item.content}</div>
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <span className={props.styles.writeDate} style={{ marginRight: 15 }}>
             {TimeForToday(newDate)}
           </span>
         </div>
       </div>
-      <div style={{ textAlign: 'center' }}>
+      <div style={{ textAlign: 'center', marginRight: 15 }}>
         <div onClick={likeButtonClick}>
-          {like ? like.liked ? <RiHeart2Fill></RiHeart2Fill> : <RiHeart2Line></RiHeart2Line> : ''}
+          {like ? like.liked ? <FaHeart color='#FF5F5F'></FaHeart> : <FaRegHeart></FaRegHeart> : ''}
         </div>
-        <div>{like ? like.likeCnt : 0}</div>
+        <div style={{ fontSize: 12 }}>{like ? like.likeCnt : 0}</div>
       </div>
     </div>
   ) : (

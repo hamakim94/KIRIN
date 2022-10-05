@@ -11,7 +11,7 @@ function ImgHeader(props) {
         <BsChevronLeft size={25} color={'#FFFFFF'} onClick={() => navigate(-1)}></BsChevronLeft>
       </div>
       <div className={props.white ? styles.pageWhiteTitle : styles.pageTitle}>{props.title}</div>
-      <div className={styles.sideBox}></div>
+      <div className={styles.rightBox}></div>
     </div>
   );
 }

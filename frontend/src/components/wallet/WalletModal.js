@@ -89,19 +89,23 @@ function WalletModal(props) {
    */
   const getToken = () => {
     setLoading(true);
-    UseAxios.post(`/blockchain/charge`, null, { params: { amount: tokens } }).then((res) => {
-      setTokens('');
-      viewTokenBalance();
-      Swal2.fire({
-        width: 100,
-        icon: 'success',
-        text: 'KRT 충전 완료',
-        position: 'top',
-        confirmButtonColor: '#ffc947',
-        confirmButtonText: '확인',
+    UseAxios.post(`/blockchain/charge`, null, { params: { amount: tokens } })
+      .then((res) => {
+        setTokens('');
+        viewTokenBalance();
+        Swal2.fire({
+          width: 100,
+          icon: 'success',
+          text: 'KRT 충전 완료',
+          position: 'top',
+          confirmButtonColor: '#ffc947',
+          confirmButtonText: '확인',
+        });
+        setLoading(false);
+      })
+      .catch((err) => {
+        setLoading(false);
       });
-      setLoading(false);
-    });
   };
 
   const handleCopyClipBoard = async (obj) => {

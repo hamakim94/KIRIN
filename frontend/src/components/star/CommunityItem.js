@@ -40,16 +40,16 @@ function CommunityItem(props) {
                 <div style={{ display: 'flex', marginRight: 10 }}>
                   <span style={{ marginRight: 3 }}>
                     {itemData.liked ? (
-                      <FaHeart size='18' color='black'></FaHeart>
+                      <FaHeart size='16' color='#FF5F5F'></FaHeart>
                     ) : (
-                      <FaRegHeart size='18'></FaRegHeart>
+                      <FaRegHeart size='16'></FaRegHeart>
                     )}
                   </span>
                   <span>{itemData.likeCnt}</span>
                 </div>
                 <div style={{ display: 'flex' }}>
                   <span style={{ marginRight: 3 }}>
-                    <FaRegCommentAlt size='18'></FaRegCommentAlt>
+                    <FaRegCommentAlt size='16'></FaRegCommentAlt>
                   </span>
                   <span>{itemData.commentCnt}</span>
                 </div>
@@ -71,6 +71,7 @@ function CommunityItem(props) {
               width: '70%',
               overflow: 'hidden',
               textOverflow: 'ellipsis',
+              fontSize: 13,
             }}
           >
             {itemData.content}

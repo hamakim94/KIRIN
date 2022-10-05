@@ -80,8 +80,15 @@ function DonationList(props) {
           ) : (
             data.map((donation) => {
               return (
-                <Stack key={donation.id} style={{ width: '100%' }}>
-                  <hr style={{ margin: 0 }} />
+                <Stack
+                  key={donation.id}
+                  style={{
+                    width: '100%',
+                    borderTopWidth: 1,
+                    borderTopColor: '#C9C9C9',
+                    borderTopStyle: 'solid',
+                  }}
+                >
                   <div className={props.styles.donationBox}>
                     <div className={props.styles.profileImgName}>
                       <ProfileImg
@@ -96,14 +103,14 @@ function DonationList(props) {
                         {donation.myDonation === 0 ? (
                           <div
                             className={props.styles.participateKind}
-                            style={{ backgroundColor: '#ffffcc' }}
+                            style={{ backgroundColor: '#ffffcc', marginBottom: 2 }}
                           >
                             <span>챌린지 참여</span>
                           </div>
                         ) : (
                           <div
                             className={props.styles.participateKind}
-                            style={{ backgroundColor: '#ffe5cc' }}
+                            style={{ backgroundColor: '#ffe5cc', marginBottom: 2 }}
                           >
                             {donation.myDonation}KRT
                           </div>

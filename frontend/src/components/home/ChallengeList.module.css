@@ -14,4 +14,5 @@
 .challengeContainer {
   overflow: auto;
   white-space: nowrap;
+  margin-top: 10px;
 }

@@ -21,12 +21,12 @@ function ChallengePage() {
     },
     {
       id: 1,
-      title: '기부현황',
+      title: '기린천사',
       description: <ShowDonationNow styles={styles} data={location.state.data}></ShowDonationNow>,
     },
     {
       id: 2,
-      title: '기부정보',
+      title: '기부현황',
       description: <ShowDonationInfo styles={styles} data={location.state.data}></ShowDonationInfo>,
     },
   ];
@@ -41,6 +41,10 @@ function ChallengePage() {
           <li
             key={item.id}
             className={index === item.id ? styles.active : null}
+            style={{
+              color: index === item.id ? '#000000' : '#808080',
+              fontWeight: index === item.id ? 'bold' : 'lighter',
+            }}
             onClick={() => setIndex(item.id)}
           >
             {item.title}

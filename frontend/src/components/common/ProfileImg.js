@@ -5,7 +5,7 @@ function ProfileImg(props) {
   return (
     <img
       alt='profileImg'
-      style={{ width: `${props.size}`, height: `${props.size}` }}
+      style={{ width: `${props.size}`, height: `${props.size}`, marginLeft: `${props.left}` }}
       className={styles.img}
       src={
         props.src

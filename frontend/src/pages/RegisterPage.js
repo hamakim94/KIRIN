@@ -105,7 +105,7 @@ function RegisterPage() {
         muted
         ref={videoRef}
         src={blob ? URL.createObjectURL(blob) : ''}
-        style={{ width: '100%', height: '50%' }}
+        style={{ height: 400, objectFit: 'contain' }}
         onClick={handleClick}
       ></video>
     );
@@ -145,7 +145,7 @@ function RegisterPage() {
         function uuidv4() {
           return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
             var r = (Math.random() * 16) | 0,
-              v = c == 'x' ? r : (r & 0x3) | 0x8;
+              v = c === 'x' ? r : (r & 0x3) | 0x8;
             return v.toString(16);
           });
         }
@@ -172,7 +172,7 @@ function RegisterPage() {
       function uuidv4() {
         return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
           var r = (Math.random() * 16) | 0,
-            v = c == 'x' ? r : (r & 0x3) | 0x8;
+            v = c === 'x' ? r : (r & 0x3) | 0x8;
           return v.toString(16);
         });
       }
@@ -216,7 +216,7 @@ function RegisterPage() {
       ) : (
         ''
       )}
-      <div>참여 챌린지 제목</div>
+      <div style={{ marginLeft: 10 }}>참여 챌린지 제목</div>
       <div>
         <input
           className={styles.inputBox}
@@ -226,7 +226,7 @@ function RegisterPage() {
         ></input>
       </div>
       <form onSubmit={handleSubmit}>
-        <div>기부 금액(선택)</div>
+        <div style={{ marginLeft: 10 }}>기부 금액(선택)</div>
         <div>
           <input
             id={styles.tokenBox}
@@ -238,17 +238,20 @@ function RegisterPage() {
           ></input>
           KRT
         </div>
-        <div>보유 토큰</div>
+        <div style={{ marginLeft: 10 }}>보유 토큰</div>
         <div
           style={{
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
             marginBottom: 15,
+            marginLeft: 10,
           }}
         >
           <div>{data} KRT</div>
-          <WalletModal buttonTitle={'충전하기'} styles={styles} setData={setData}></WalletModal>
+          <div style={{ marginRight: 10 }}>
+            <WalletModal buttonTitle={'충전하기'} styles={styles} setData={setData}></WalletModal>
+          </div>
         </div>
         <div>
           <Button
@@ -258,7 +261,14 @@ function RegisterPage() {
             size='medium'
             className={styles.Btn}
             disabled={check}
-            style={{ height: 30, backgroundColor: '#ffd046', color: '#000000' }}
+            style={{
+              width: window.innerWidth - 20,
+              height: 30,
+              backgroundColor: '#ffd046',
+              color: '#000000',
+              marginLeft: 10,
+              marginRight: 10,
+            }}
           >
             업로드
           </Button>

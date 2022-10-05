@@ -93,25 +93,27 @@ function TransactionPage() {
   return (
     <div className='wrapper'>
       <Header title={'트랜잭션 정보'}></Header>
-      <table className={styles.table}>
-        <colgroup>
-          <col width='30%' />
-          <col width='20%' />
-          <col width='50%' />
-        </colgroup>
-        <thead>
-          <tr>
-            <th className={styles.table_header}>HASH</th>
-            <th className={styles.table_header}>AGE</th>
-            <th className={styles.table_header}>FROM -&gt; TO</th>
-          </tr>
-        </thead>
-        <tbody>
-          {transactions.map((tx, index) => (
-            <Transaction tx={tx} key={index}></Transaction>
-          ))}
-        </tbody>
-      </table>
+      <div style={{ marginLeft: 10, marginRight: 10 }}>
+        <table className={styles.table}>
+          <colgroup>
+            <col width='30%' />
+            <col width='20%' />
+            <col width='50%' />
+          </colgroup>
+          <thead>
+            <tr>
+              <th className={styles.table_header}>HASH</th>
+              <th className={styles.table_header}>AGE</th>
+              <th className={styles.table_header}>FROM -&gt; TO</th>
+            </tr>
+          </thead>
+          <tbody>
+            {transactions.map((tx, index) => (
+              <Transaction tx={tx} key={index}></Transaction>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

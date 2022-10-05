@@ -120,43 +120,45 @@ function BlockchainPage() {
   return (
     <div className='wrapper'>
       <Header title={'블록 정보'}></Header>
-      <table className={styles.table}>
-        <colgroup>
-          <col width='18%' />
-          <col width='22%' />
-          <col width='50%' />
-          <col width='10%' />
-        </colgroup>
-        <thead>
-          <tr>
-            <th className={styles.table_header}>BLOCK HEIGHT</th>
-            <th className={styles.table_header}>AGE</th>
-            <th className={styles.table_header}>BLOCK HASH</th>
-            <th className={styles.table_header}>TX</th>
-          </tr>
-        </thead>
-        <tbody>
-          {blocks.map((block, index) => (
-            <Block block={block} key={index}></Block>
-          ))}
-        </tbody>
-      </table>
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'center',
-          marginTop: 20,
-          marginBottom: 10,
-        }}
-      >
-        <Pagination
-          count={lastPage}
-          defaultPage={1}
-          boundaryCount={2}
-          onChange={(e) => handlePage(e)}
-          hideNextButton={true}
-          hidePrevButton={true}
-        />
+      <div style={{ marginLeft: 10, marginRight: 10 }}>
+        <table className={styles.table}>
+          <colgroup>
+            <col width='18%' />
+            <col width='22%' />
+            <col width='50%' />
+            <col width='10%' />
+          </colgroup>
+          <thead>
+            <tr>
+              <th className={styles.table_header}>BLOCK HEIGHT</th>
+              <th className={styles.table_header}>AGE</th>
+              <th className={styles.table_header}>BLOCK HASH</th>
+              <th className={styles.table_header}>TX</th>
+            </tr>
+          </thead>
+          <tbody>
+            {blocks.map((block, index) => (
+              <Block block={block} key={index}></Block>
+            ))}
+          </tbody>
+        </table>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            marginTop: 20,
+            marginBottom: 10,
+          }}
+        >
+          <Pagination
+            count={lastPage}
+            defaultPage={1}
+            boundaryCount={2}
+            onChange={(e) => handlePage(e)}
+            hideNextButton={true}
+            hidePrevButton={true}
+          />
+        </div>
       </div>
     </div>
   );

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { RiMessage3Line, RiHeart2Fill, RiHeart2Line } from 'react-icons/ri';
 import CommentInput from './CommentInput';
 import UseAxios from '../../utils/UseAxios';
 import { useLocation } from 'react-router-dom';
@@ -85,21 +84,21 @@ function CoummnityFooter(props) {
           <span onClick={likeButtonClick} style={{ marginRight: 5 }}>
             {like ? (
               like.liked ? (
-                <FaHeart size='20' color='black'></FaHeart>
+                <FaHeart size='16' color='#FF5F5F'></FaHeart>
               ) : (
-                <FaRegHeart size='20'></FaRegHeart>
+                <FaRegHeart size='16'></FaRegHeart>
               )
             ) : (
               ''
             )}
           </span>
-          <span>{like ? like.likeCnt : 0}</span>
+          <span style={{ fontSize: 16 }}>{like ? like.likeCnt : 0}</span>
         </div>
         <div style={{ display: 'flex' }}>
           <span style={{ marginRight: 5 }}>
-            <FaRegCommentAlt size='20'></FaRegCommentAlt>
+            <FaRegCommentAlt size='16'></FaRegCommentAlt>
           </span>
-          <span>{commentCnt ? commentCnt : 0}</span>
+          <span style={{ fontSize: 16 }}>{commentCnt ? commentCnt : 0}</span>
         </div>
       </div>
       <div>

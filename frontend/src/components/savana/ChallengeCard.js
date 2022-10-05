@@ -116,7 +116,7 @@ function ChallengeCard(props) {
             <Sheet isOpen={isOpen} onClose={() => setIsOpen(false)}>
               <Sheet.Container style={{ height: '50%', zIndex: 4, position: 'absolute' }}>
                 <Sheet.Header />
-                <Sheet.Content style={{ margin: '20px' }} disableDrag={true}>
+                <Sheet.Content disableDrag={true}>
                   <SavanaComment challengeId={data ? data.challengeId : ''}></SavanaComment>
                 </Sheet.Content>
               </Sheet.Container>
