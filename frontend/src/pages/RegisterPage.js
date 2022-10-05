@@ -6,6 +6,7 @@ import getBlobDuration from 'get-blob-duration';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '@mui/material/';
 import UseAxios from '../utils/UseAxios';
+import swal2 from 'sweetalert2';
 import WalletModal from '../components/wallet/WalletModal';
 import ABI from '../TokenABI.json';
 import CA from '../TokenCA.json';
@@ -18,7 +19,6 @@ function RegisterPage() {
   const [waitButton, setWaitButton] = useState(false);
   const [length, setLength] = useState(null);
   const [tip, setTip] = useState('비디오를 누를 시 영상이 재생됩니다.');
-  const [title, setTitle] = useState(null);
   const [amount, setAmount] = useState(0);
   const { blob, setBlob } = useContext(Context);
   const [check, setCheck] = useState(false);
@@ -26,7 +26,6 @@ function RegisterPage() {
   const navigate = useNavigate();
   const [data, setData] = useState(''); // 토큰 잔액
   const { userData } = useContext(Context);
-  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     if (userData) {
@@ -132,33 +131,70 @@ function RegisterPage() {
     let body = {
       challengeId: location.state.id,
       title: location.state.title,
-      amount: amount === '' ? 0 : amount,
+      amount: amount,
     };
-    function uuidv4() {
-      return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-        var r = (Math.random() * 16) | 0,
-          v = c == 'x' ? r : (r & 0x3) | 0x8;
-        return v.toString(16);
-      });
-    }
-    let filename = uuidv4() + '.webm';
-    const file = new File([blob], filename);
-    const data = new FormData();
-    data.append('video', file);
-    const json = JSON.stringify(body);
-    const fixData = new Blob([json], { type: 'application/json' });
-    data.append('challengeRequestDTO', fixData);
-    UseAxios.post(`/challenges`, data, {
-      headers: { 'Content-Type': 'multipart/form-data' },
-    })
-      .then((res) => {
-        setBlob(null);
-        navigate('/');
-      })
-      .catch((err) => {
-        console.log(err);
+    if (body.amount !== 0) {
+      if (body.amount > data) {
+        swal2.fire({
+          title: '보유 토큰이 부족합니다. 충전 후 다시 시도해주세요.',
+          confirmButtonColor: '#ffc947',
+          confirmButtonText: '확인',
+        });
         setCheck(false);
-      });
+      } else {
+        function uuidv4() {
+          return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+            var r = (Math.random() * 16) | 0,
+              v = c == 'x' ? r : (r & 0x3) | 0x8;
+            return v.toString(16);
+          });
+        }
+        let filename = uuidv4() + '.webm';
+        const file = new File([blob], filename);
+        const data = new FormData();
+        data.append('video', file);
+        const json = JSON.stringify(body);
+        const fixData = new Blob([json], { type: 'application/json' });
+        data.append('challengeRequestDTO', fixData);
+        UseAxios.post(`/challenges`, data, {
+          headers: { 'Content-Type': 'multipart/form-data' },
+        })
+          .then((res) => {
+            setBlob(null);
+            navigate('/');
+          })
+          .catch((err) => {
+            console.log(err);
+            setCheck(false);
+          });
+      }
+    } else {
+      function uuidv4() {
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+          var r = (Math.random() * 16) | 0,
+            v = c == 'x' ? r : (r & 0x3) | 0x8;
+          return v.toString(16);
+        });
+      }
+      let filename = uuidv4() + '.webm';
+      const file = new File([blob], filename);
+      const data = new FormData();
+      data.append('video', file);
+      const json = JSON.stringify(body);
+      const fixData = new Blob([json], { type: 'application/json' });
+      data.append('challengeRequestDTO', fixData);
+      UseAxios.post(`/challenges`, data, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      })
+        .then((res) => {
+          setBlob(null);
+          navigate('/');
+        })
+        .catch((err) => {
+          console.log(err);
+          setCheck(false);
+        });
+    }
   };
 
   return (

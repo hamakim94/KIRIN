@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { Cookies } from 'react-cookie';
+import swal2 from 'sweetalert2';
 
 const cookies = new Cookies();
 
@@ -63,8 +64,15 @@ UseAxios.interceptors.response.use(
       if (err.response.status === 400) {
         cookies.remove('accesstoken', { path: '/' });
         cookies.remove('refreshtoken', { path: '/' });
-        alert('세션이 만료되었습니다. 다시 로그인 해주세요.');
-        window.location.href = '/';
+        swal2
+          .fire({
+            title: '세션이 만료되었습니다. 다시 로그인해주세요.',
+            confirmButtonColor: '#ffc947',
+            confirmButtonText: '확인',
+          })
+          .then((result) => {
+            if (result.isConfirmed) window.location.href = '/login';
+          });
       }
     }
     return Promise.reject(error);

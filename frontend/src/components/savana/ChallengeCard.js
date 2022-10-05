@@ -1,27 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import {
-  RiZoomInFill,
-  RiMessage3Line,
-  RiHeart2Fill,
-  RiHeart2Line,
-  RiShareFill,
-} from 'react-icons/ri';
-import { IoMdHeartEmpty } from 'react-icons/io';
-import { AiOutlineHeart } from 'react-icons/ai';
-import {
-  FaRegHeart,
-  FaHeart,
-  FaRegComment,
-  FaRegCommentDots,
-  FaRegCommentAlt,
-  FaInfoCircle,
-} from 'react-icons/fa';
-import swal from 'sweetalert';
+import { FaRegHeart, FaHeart, FaRegCommentAlt, FaInfoCircle } from 'react-icons/fa';
 import Sheet from 'react-modal-sheet';
 import SavanaComment from './SavanaComment';
 import UseAxios from '../../utils/UseAxios';
 import { useNavigate } from 'react-router-dom';
 import ProfileImg from '../common/ProfileImg';
+import ImgHeader from '../common/ImgHeader';
 
 function ProgressBar(props) {
   const [value, setValue] = useState(0);
@@ -47,14 +31,13 @@ function ProgressBar(props) {
 function ChallengeCard(props) {
   const [isOpen, setIsOpen] = useState(false);
   const [data, setData] = useState(null);
-
+  // const [music, setMusic] = useState(null);
   const navigate = useNavigate();
   const progressWidth = window.innerWidth * 0.9;
 
   useEffect(() => {
     if (props.item) {
       setData(props.item);
-      console.log(props.item);
     }
   }, [props.item]);
   const likeButtonClick = () => {
@@ -92,6 +75,7 @@ function ChallengeCard(props) {
   return data ? (
     <div className={props.styles.cardWrapper}>
       <div className={props.styles.coverBox}>
+        <ImgHeader></ImgHeader>
         <div className={props.styles.blankBox}></div>
         <div className={props.styles.iconBox}>
           <div style={{ textAlign: 'center', marginBottom: 15 }}>
@@ -164,7 +148,6 @@ function ChallengeCard(props) {
         url={`/files/${data.video}`}
         width='100%'
         height='100%'
-        playing={hover}
         controls={false}
         volume={0.1}
         playsinline
@@ -179,6 +162,14 @@ function ChallengeCard(props) {
         onCanPlayThrough={props.index === 0 ? onLoaded : () => {}}
         onEnded={() => props.check.current[props.index].play()}
       />
+      {/* {props.isIOS
+        ?  <audio
+             src={`/files/${music}`}
+             ref={(el) => (props.audio ? (props.audio.current[props.index] = el) : '')}
+              onCanPlayThrough={props.index === 0 ? onLoaded : () => {}}
+           ></audio>
+          
+        : ''} */}
     </div>
   ) : (
     ''

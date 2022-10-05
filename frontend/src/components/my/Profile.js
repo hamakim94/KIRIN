@@ -1,8 +1,9 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Context from '../../utils/Context';
 import WalletModal from '../wallet/WalletModal';
 import ProfileImg from '../common/ProfileImg';
+import UseAxios from '../../utils/UseAxios';
 import { Button } from '@mui/material/';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
@@ -18,8 +19,16 @@ const theme = createTheme({
 });
 
 function Profile(props) {
+  const [userData, setUserData] = useState(null);
   const navigate = useNavigate();
-  const { userData } = useContext(Context);
+  // const { userData } = useContext(Context);
+  useEffect(() => {
+    UseAxios.get(`/users/profiles`).then((res) => {
+      setUserData(res.data);
+      // console.log(res.data);
+    });
+  }, []);
+
   return (
     <ThemeProvider theme={theme}>
       <div>

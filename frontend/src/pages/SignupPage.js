@@ -1,23 +1,19 @@
 import React, { useState, useRef } from 'react';
-import { Link } from 'react-router-dom';
 import {
   Avatar,
   Button,
-  CssBaseline,
   TextField,
-  FormControl,
   FormControlLabel,
   Checkbox,
-  FormHelperText,
   Grid,
   Box,
-  Typography,
   Container,
 } from '@mui/material/';
-import swal from 'sweetalert';
+// import swal from 'sweetalert';
+import swal2 from 'sweetalert2';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import SignupTop from '../components/sign/SignupTop';
-import styles from './SignupPage.module.css';
+// import styles from './SignupPage.module.css';
+import Header from '../components/common/Header';
 import UseAxios from '../utils/UseAxios';
 import { useNavigate } from 'react-router-dom';
 
@@ -104,16 +100,31 @@ function SignupPage({ parentCallback }) {
     if (email.length > 0) {
       UseAxios.get(`/users/check-duplicate/email`, { params: { email: e.target.value } })
         .then((res) => {
-          swal('', '확인되었습니다.');
+          swal2.fire({
+            title: '확인되었습니다.',
+            confirmButtonColor: '#ffc947',
+            confirmButtonText: '확인',
+          });
+          // swal('', '확인되었습니다.');
           setEmailChecked(true);
           if (nicknameChecked && agreement) setCanSubmit(true);
         })
         .catch((err) => {
-          swal('', '사용 중인 이메일입니다.');
+          // swal('', '사용 중인 이메일입니다.');
+          swal2.fire({
+            title: '사용 중인 이메일입니다.',
+            confirmButtonColor: '#ffc947',
+            confirmButtonText: '확인',
+          });
           setEmailChecked(false);
         });
     } else {
-      swal('', '이메일을 입력해 주세요.');
+      // swal('', '이메일을 입력해 주세요.');
+      swal2.fire({
+        title: '이메일을 입력해주세요.',
+        confirmButtonColor: '#ffc947',
+        confirmButtonText: '확인',
+      });
       setEmailChecked(false);
     }
   };
@@ -123,16 +134,31 @@ function SignupPage({ parentCallback }) {
     if (nickname.length > 0) {
       UseAxios.get(`/users/check-duplicate/nickname`, { params: { nickname: e.target.value } })
         .then((res) => {
-          swal('', '확인되었습니다.');
+          // swal('', '확인되었습니다.');
+          swal2.fire({
+            title: '확인되었습니다.',
+            confirmButtonColor: '#ffc947',
+            confirmButtonText: '확인',
+          });
           setNicknameChecked(true);
           if (emailChecked && agreement) setCanSubmit(true);
         })
         .catch((err) => {
-          swal('', '사용 중인 닉네임입니다.');
+          // swal('', '사용 중인 닉네임입니다.');
+          swal2.fire({
+            title: '사용 중인 닉네임입니다.',
+            confirmButtonColor: '#ffc947',
+            confirmButtonText: '확인',
+          });
           setNicknameChecked(false);
         });
     } else {
-      swal('', '닉네임을 입력해 주세요.');
+      // swal('', '닉네임을 입력해 주세요.');
+      swal2.fire({
+        title: '닉네임을 입력해주세요.',
+        confirmButtonColor: '#ffc947',
+        confirmButtonText: '확인',
+      });
       setNicknameChecked(false);
     }
   };
@@ -174,32 +200,66 @@ function SignupPage({ parentCallback }) {
   const onSubmit = () => {
     const check = () => {
       if (!email.includes('@')) {
-        swal('이메일을 확인해주세요');
+        // swal('이메일을 확인해주세요');
+        swal2.fire({
+          title: '이메일형식으로 입력해주세요.',
+          confirmButtonColor: '#ffc947',
+          confirmButtonText: '확인',
+        });
         setCanSubmit(false);
       } else if (nickname.length < 2) {
-        swal('닉네임을 확인해주세요');
+        // swal('닉네임을 확인해주세요');
+        swal2.fire({
+          title: '닉네임은 2글자 이상이어야 합니다.',
+          confirmButtonColor: '#ffc947',
+          confirmButtonText: '확인',
+        });
         setCanSubmit(false);
       } else if (agreement === false) {
-        swal('개인정보 약관에 동의해주세요');
+        // swal('개인정보 약관에 동의해주세요');
+        swal2.fire({
+          title: '개인정보 약관에 동의해주세요.',
+          confirmButtonColor: '#ffc947',
+          confirmButtonText: '확인',
+        });
         setCanSubmit(false);
       } else if (password.length < 8) {
-        swal('비밀번호는 8글자 이상이어야 합니다.');
+        // swal('비밀번호는 8글자 이상이어야 합니다.');
+        swal2.fire({
+          title: '비밀번호는 8글자 이상이어야 합니다.',
+          confirmButtonColor: '#ffc947',
+          confirmButtonText: '확인',
+        });
         setCanSubmit(false);
       } else if (password !== passwordCheck) {
-        swal('비밀번호 확인이 일치하지 않습니다');
+        // swal('비밀번호 확인이 일치하지 않습니다');
+        swal2.fire({
+          title: '비밀번호 확인이 일치하지 않습니다.',
+          confirmButtonColor: '#ffc947',
+          confirmButtonText: '확인',
+        });
         setCanSubmit(false);
       } else if (emailChecked === false) {
-        swal('이메일 중복 확인을 진행해주세요.');
+        // swal('이메일 중복 확인을 진행해주세요.');
+        swal2.fire({
+          title: '이메일 중복확인을 진행해주세요.',
+          confirmButtonColor: '#ffc947',
+          confirmButtonText: '확인',
+        });
         setCanSubmit(false);
       } else if (nicknameChecked === false) {
-        swal('닉네임 중복 확인을 진행해주세요.');
+        // swal('닉네임 중복 확인을 진행해주세요.');
+        swal2.fire({
+          title: '닉네임 중복 확인을 진행해주세요.',
+          confirmButtonColor: '#ffc947',
+          confirmButtonText: '확인',
+        });
         setCanSubmit(false);
       }
     };
     check();
     const data = new FormData();
     data.append('profileImg', file);
-    // data.append('userDTO', new Blob([JSON.stringify(body)]), { type: 'application/json' });
     const json = JSON.stringify(body);
     const blob = new Blob([json], { type: 'application/json' });
     data.append('userDTO', blob);
@@ -210,19 +270,16 @@ function SignupPage({ parentCallback }) {
         headers: { 'Content-Type': 'multipart/form-data' },
       })
         .then((res) => {
-          console.log(res.data);
           navigate('/finishsignup');
         })
-        .catch((err) => {
-          console.log(err);
-        });
+        .catch((err) => {});
     }
   };
 
   /*랜더링 */
   return (
     <ThemeProvider theme={theme}>
-      <SignupTop styles={styles}></SignupTop>
+      <Header title='회원가입'></Header>
       <Container component='main' maxWidth='sm'>
         <Box
           sx={{
@@ -269,7 +326,8 @@ function SignupPage({ parentCallback }) {
                     value={email}
                     error={emailValidation()}
                     helperText={emailValidation() ? '올바른 이메일형식이 아닙니다' : ''}
-                    label='이메일 주소 입력'
+                    label='이메일'
+                    placeholder='이메일을 입력해주세요'
                     name='email'
                     autoFocus
                     size='small'
@@ -299,7 +357,8 @@ function SignupPage({ parentCallback }) {
                     value={nickname}
                     error={nicknameValidation()}
                     helperText={nicknameValidation() ? '닉네임은 한글자 이상이여야 합니다' : ''}
-                    label='닉네임 입력'
+                    label='닉네임'
+                    placeholder='닉네임을 입력해주세요'
                     size='small'
                   />
                 </Grid>
@@ -326,7 +385,8 @@ function SignupPage({ parentCallback }) {
                     fullWidth
                     id='name'
                     value={name}
-                    label='이름 입력'
+                    label='이름'
+                    placeholder='이름을 입력해주세요'
                     size='small'
                   />
                 </Grid>
@@ -345,7 +405,8 @@ function SignupPage({ parentCallback }) {
                         : ''
                     }
                     name='password'
-                    label='비밀번호 입력'
+                    label='비밀번호'
+                    placeholder='비밀번호를 입력해주세요'
                     type='password'
                     id='password'
                     autoComplete='current-password'
@@ -363,6 +424,7 @@ function SignupPage({ parentCallback }) {
                     helperText={passwordCheckValidation() ? '비밀번호가 일치하지 않습니다' : ''}
                     name='passwordCheck'
                     label='비밀번호 확인'
+                    placeholder='비밀번호를 한번 더 입력해주세요'
                     type='password'
                     id='passwordCheck'
                     size='small'

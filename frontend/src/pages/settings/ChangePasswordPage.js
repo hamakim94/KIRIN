@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Button, TextField, Grid, Typography, Container } from '@mui/material/';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import UseAxios from '../../utils/UseAxios';
-import swal from 'sweetalert';
+// import swal from 'sweetalert';
+import swal2 from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
 import Header from '../../components/common/Header';
 
@@ -60,33 +61,55 @@ function ChangePasswordPage() {
 
   const onSubmit = (event) => {
     event.preventDefault();
-    const check = () => {
+    let valid = canSubmit;
+    (async () => {
       if (newPassword.length < 8) {
-        swal('비밀번호는 8글자 이상이어야 합니다.');
+        // swal('비밀번호는 8글자 이상이어야 합니다.');
+        swal2.fire({
+          title: '비밀번호는 8글자 이상이어야 합니다.',
+          confirmButtonColor: '#ffc947',
+          confirmButtonText: '확인',
+        });
         setCanSubmit(false);
       } else if (newPassword !== newPasswordCheck) {
-        swal('비밀번호 확인이 일치하지 않습니다');
+        // swal('비밀번호 확인이 일치하지 않습니다');
+        swal2.fire({
+          title: '비밀번호 확인이 일치하지 않습니다',
+          confirmButtonColor: '#ffc947',
+          confirmButtonText: '확인',
+        });
         setCanSubmit(false);
-      } else setCanSubmit(true);
+      } else {
+        setCanSubmit(true);
+        valid = true;
+      }
+    })();
 
-      // 현재 비밀번호가 틀렸을 경우 없음
-    };
-    check();
-    console.log(password);
-    console.log(newPassword);
-    if (canSubmit) {
+    if (valid) {
       UseAxios.put(`/users/change-password`, {
         password: password,
         newPassword: newPassword,
         userId: userData.id,
       })
         .then((res) => {
-          swal('비밀번호 변경이 완료되었습니다.');
           console.log(res);
-          navigate('/mypage/setting');
+          // swal('비밀번호 변경이 완료되었습니다.');
+          swal2
+            .fire({
+              title: '비밀번호 변경이 완료되었습니다.',
+              confirmButtonColor: '#ffc947',
+              confirmButtonText: '확인',
+            })
+            .then((result) => {
+              if (result.isConfirmed) navigate('/mypage', { state: true });
+            });
         })
         .catch((err) => {
-          console.log(err);
+          swal2.fire({
+            title: '현재 비밀번호가 일치하지 않습니다.',
+            confirmButtonColor: '#ffc947',
+            confirmButtonText: '확인',
+          });
         });
     }
   };

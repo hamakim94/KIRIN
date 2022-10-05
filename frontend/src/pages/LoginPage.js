@@ -1,13 +1,13 @@
 import React, { useContext, useState } from 'react';
-import { Avatar, Button, TextField, Box, Grid, Link, Typography, Container } from '@mui/material/';
+import { Button, TextField, Typography } from '@mui/material/';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import LoginTop from '../components/sign/LoginTop';
 import styles from './LoginPage.module.css';
 import UseAxios from '../utils/UseAxios';
 import { useNavigate } from 'react-router-dom';
 import { Cookies } from 'react-cookie';
 import Context from '../utils/Context';
 import Jello from 'react-reveal/Jello';
+import swal2 from 'sweetalert2';
 
 const theme = createTheme({
   palette: {
@@ -35,26 +35,36 @@ function LoginPage() {
   };
 
   const onSubmit = () => {
-    UseAxios.post(`/users/login`, body).then((res) => {
-      const exDate = new Date();
-      exDate.setDate(exDate.getDate() + 60);
-      cookies.set('accesstoken', res.headers.accesstoken, {
-        path: '/',
-        secure: true,
-        sameSite: 'none',
-        expires: exDate,
+    UseAxios.post(`/users/login`, body)
+      .then((res) => {
+        const exDate = new Date();
+        exDate.setDate(exDate.getDate() + 60);
+        cookies.set('accesstoken', res.headers.accesstoken, {
+          path: '/',
+          secure: true,
+          sameSite: 'none',
+          expires: exDate,
+        });
+        cookies.set('refreshtoken', res.headers.refreshtoken, {
+          path: '/',
+          secure: true,
+          sameSite: 'none',
+          expires: exDate,
+        });
+        UseAxios.get(`/users/profiles`).then((res) => {
+          setUserData(res.data);
+          navigate('/');
+        });
+      })
+      .catch((err) => {
+        if (err.response.status === 401) {
+          swal2.fire({
+            title: '이메일 혹은 비밀번호가 일치하지 않습니다.',
+            confirmButtonColor: '#ffc947',
+            confirmButtonText: '확인',
+          });
+        }
       });
-      cookies.set('refreshtoken', res.headers.refreshtoken, {
-        path: '/',
-        secure: true,
-        sameSite: 'none',
-        expires: exDate,
-      });
-      UseAxios.get(`/users/profiles`).then((res) => {
-        setUserData(res.data);
-        navigate('/');
-      });
-    });
   };
 
   return (
@@ -92,6 +102,11 @@ function LoginPage() {
           id='password'
           autoComplete='current-password'
           size='small'
+          onKeyUp={(e) => {
+            if (e.key === 'Enter') {
+              onSubmit();
+            }
+          }}
         />
         <Button
           type='submit'
@@ -103,9 +118,9 @@ function LoginPage() {
           로그인
         </Button>
         <div>
-          <a href='/findpassword'>비밀번호 찾기</a>
+          <a onClick={() => navigate('/findpassword')}>비밀번호 찾기</a>
           <span> / </span>
-          <a href='/signup'>회원가입</a>
+          <a onClick={() => navigate('/signup')}>회원가입</a>
         </div>
       </div>
     </ThemeProvider>

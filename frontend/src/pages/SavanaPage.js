@@ -4,6 +4,7 @@ import styles from './SavanaPage.module.css';
 import ChallengeList from '../components/savana/ChallengeList';
 import { useLocation } from 'react-router-dom';
 import Context from '../utils/Context';
+
 function SavanaPage() {
   //랜덤으로 바꾸기
   const [savanaData, setSavanaData] = useState(null);
@@ -67,9 +68,17 @@ function SavanaPage() {
             setIdx(idx);
           });
           break;
+        case 'challenge':
+          UseAxios.get(`/challenges/savana/challenge/${pathname[3]}`).then((res) => {
+            const arr = [];
+            arr.push(res.data);
+            setSavanaData(arr);
+            setIdx(0);
+          });
+          break;
       }
-  }, []);
-  return (
+  }, [location]);
+  return userData ? (
     <div id={styles.savana}>
       {savanaData && savanaData.length > 0 ? (
         <ChallengeList styles={styles} data={savanaData} idx={idx}></ChallengeList>
@@ -77,6 +86,8 @@ function SavanaPage() {
         '기린이 존재하지 않아요 힝힝'
       )}
     </div>
+  ) : (
+    ''
   );
 }
 

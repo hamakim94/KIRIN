@@ -11,7 +11,8 @@ function ChallengePage() {
   const { selected, setSelected } = useContext(Context);
   const location = useLocation();
   const pathname = location.pathname.split('/');
-  setSelected(pathname[2]);
+  if (location.state.data.isProceeding) setSelected(pathname[2]);
+  else setSelected(0);
   const data = [
     {
       id: 0,

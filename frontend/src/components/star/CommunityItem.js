@@ -12,7 +12,6 @@ function CommunityItem(props) {
   useEffect(() => {
     if (props.item) {
       setItemData(props.item);
-      console.log(props.item);
     }
   }, [props.item]);
 

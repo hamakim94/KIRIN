@@ -1,11 +1,12 @@
-import React, { useEffect, useState, useRef } from 'react';
-
+import React, { useEffect, useState, useRef, useContext } from 'react';
 import { Avatar, Button, TextField, Grid, Box, Typography, Container } from '@mui/material/';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import UseAxios from '../../utils/UseAxios';
-import swal from 'sweetalert';
+// import swal from 'sweetalert';
+import swal2 from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
 import Header from '../../components/common/Header';
+import Context from '../../utils/Context';
 
 const theme = createTheme({
   palette: {
@@ -20,29 +21,49 @@ const theme = createTheme({
     fontFamily: 'SCD400',
   },
 });
+const convertURLtoFile = async (url) => {
+  const response = await fetch(url);
+  const data = await response.blob();
+  const ext = url.split('.').pop(); // url 구조에 맞게 수정할 것
+  const filename = url.split('files/').pop(); // url 구조에 맞게 수정할 것
+  const metadata = { type: `image/${ext}` };
+  return new File([data], filename, metadata);
+};
 
-function EditProfilePage({ parentCallback }) {
+function EditProfilePage() {
   const navigate = useNavigate();
+  const { setUserData } = useContext(Context);
   const [width] = useState(window.innerWidth);
   const [nickname, setNickname] = useState('');
   const [nicknameChecked, setNicknameChecked] = useState(false);
   const [canSubmit, setCanSubmit] = useState(false);
   const [file, setFile] = useState(null);
-  const [user, setUser] = useState([]);
+  const [user, setUser] = useState({});
   const [profileImg, setProfileImg] = useState(null);
 
   useEffect(() => {
     UseAxios.get(`/users/profiles`).then((res) => {
       setUser(res.data);
-      setProfileImg(`${process.env.REACT_APP_BASEURL}/files/${res.data.profileImg}`);
-      console.log(res.data);
+      setProfileImg(`/files/${res.data.profileImg}`);
+      let curFile;
+      (async () => {
+        curFile = await convertURLtoFile(`/files/${res.data.profileImg}`);
+        setFile(curFile);
+      })();
+      setNickname(res.data.nickname);
     });
   }, []);
-
-  const sendData = (e) => {
-    e.preventDefault();
-    if (canSubmit) parentCallback(nickname); // 전달
-  };
+  useEffect(() => {
+    if (user) {
+      if (nickname === user.nickname) {
+        setCanSubmit(true);
+        setNicknameChecked(true);
+      } else {
+        setCanSubmit(false);
+        setNicknameChecked(false);
+      }
+    }
+  }, [nickname]);
 
   const onChangeNickname = (e) => {
     setNickname(e.target.value);
@@ -55,16 +76,59 @@ function EditProfilePage({ parentCallback }) {
     if (nickname.length > 0) {
       UseAxios.get(`/users/check-duplicate/nickname`, { params: { nickname: e.target.value } })
         .then((res) => {
-          swal('', '확인되었습니다.');
+          // swal('확인되었습니다.', {
+          //   button: {
+          //     text: '확인',
+          //   },
+          // });
+          swal2.fire({
+            title: '확인되었습니다.',
+            confirmButtonColor: '#ffc947',
+            confirmButtonText: '확인',
+          });
           setNicknameChecked(true);
           setCanSubmit(true);
         })
         .catch((err) => {
-          swal('', '사용 중인 닉네임입니다.');
-          setNicknameChecked(false);
+          if (nickname !== user.nickname) {
+            // swal('사용 중인 닉네임입니다.', {
+            //   button: {
+            //     text: '확인',
+            //   },
+            // });
+            swal2.fire({
+              title: '사용 중인 닉네임입니다.',
+              confirmButtonColor: '#ffc947',
+              confirmButtonText: '확인',
+            });
+            setNicknameChecked(false);
+            setCanSubmit(false);
+          } else {
+            // swal('확인되었습니다.', {
+            //   button: {
+            //     text: '확인',
+            //   },
+            // });
+            swal2.fire({
+              title: '확인되었습니다.',
+              confirmButtonColor: '#ffc947',
+              confirmButtonText: '확인',
+            });
+            setNicknameChecked(true);
+            setCanSubmit(true);
+          }
         });
     } else {
-      swal('', '닉네임을 입력해 주세요.');
+      // swal('닉네임을 입력해 주세요.', {
+      //   button: {
+      //     text: '확인',
+      //   },
+      // });
+      swal2.fire({
+        title: '닉네임 입력해주세요.',
+        confirmButtonColor: '#ffc947',
+        confirmButtonText: '확인',
+      });
       setNicknameChecked(false);
     }
   };
@@ -93,7 +157,16 @@ function EditProfilePage({ parentCallback }) {
   const onSubmit = () => {
     const check = () => {
       if (nicknameChecked === false) {
-        swal('닉네임 중복 확인을 진행해주세요.');
+        // swal('닉네임 중복 확인을 진행해주세요.', {
+        //   button: {
+        //     text: '확인',
+        //   },
+        // });
+        swal2.fire({
+          title: '닉네임 중복 확인을 진행해주세요.',
+          confirmButtonColor: '#ffc947',
+          confirmButtonText: '확인',
+        });
         setCanSubmit(false);
       }
     };
@@ -108,13 +181,25 @@ function EditProfilePage({ parentCallback }) {
         headers: { 'Content-Type': 'multipart/form-data' },
       })
         .then((res) => {
-          swal('프로필 편집이 완료되었습니다.');
-          navigate('');
-          console.log('완료');
+          UseAxios.get(`/users/profiles`).then((res) => {
+            // setUserData(res.data);
+            // swal('프로필 편집이 완료되었습니다.').then(() => {
+            //   navigate('/mypage', { state: true });
+            // });
+            swal2
+              .fire({
+                title: '프로필 편집이 완료되었습니다.',
+                confirmButtonColor: '#ffc947',
+                confirmButtonText: '확인',
+              })
+              .then((result) => {
+                if (result.isConfirmed) {
+                  navigate('/mypage', { state: true });
+                }
+              });
+          });
         })
-        .catch((err) => {
-          console.log(err);
-        });
+        .catch((err) => {});
     }
   };
 
@@ -148,13 +233,13 @@ function EditProfilePage({ parentCallback }) {
               <input
                 type='file'
                 style={{ display: 'none' }}
-                accept='image/jpg,impge/png,image/jpeg'
+                accept='image/*'
                 name='profile_img'
                 onChange={onChange}
                 ref={fileInput}
               ></input>
             </form>
-            <form onSubmit={sendData}>
+            <form>
               <Grid container spacing={2}>
                 <Grid item xs={12}>
                   <Typography sx={{ ml: 1, mb: 0.5 }}>이메일*</Typography>
@@ -164,7 +249,7 @@ function EditProfilePage({ parentCallback }) {
                     type='email'
                     id='email'
                     name='email'
-                    placeholder={user.email}
+                    value={user.email || ''}
                     size='small'
                     disabled
                   ></TextField>
@@ -177,7 +262,7 @@ function EditProfilePage({ parentCallback }) {
                     fullWidth
                     id='name'
                     name='name'
-                    placeholder={user.name}
+                    value={user.name || ''}
                     size='small'
                     disabled
                   />
@@ -190,7 +275,7 @@ function EditProfilePage({ parentCallback }) {
                     fullWidth
                     id='nickname'
                     onChange={onChangeNickname}
-                    value={nickname}
+                    value={nickname || ''}
                     error={nicknameValidation()}
                     helperText={nicknameValidation() ? '닉네임은 두글자 이상이여야 합니다' : ''}
                     placeholder={user.nickname}
@@ -207,7 +292,6 @@ function EditProfilePage({ parentCallback }) {
                     variant='contained'
                     color='primary'
                     onClick={nicknameDup}
-                    value={nickname}
                     size={width < 600 ? 'small' : 'large'}
                     sx={{ py: 1, mb: 1 }}
                   >
@@ -216,7 +300,6 @@ function EditProfilePage({ parentCallback }) {
                 </Grid>
               </Grid>
               <Button
-                type='submit'
                 fullWidth
                 variant='contained'
                 color='primary'

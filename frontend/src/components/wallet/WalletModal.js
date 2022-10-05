@@ -93,10 +93,12 @@ function WalletModal(props) {
       setTokens('');
       viewTokenBalance();
       Swal2.fire({
+        width: 100,
         icon: 'success',
-        title: 'KRT 충전 완료',
+        text: 'KRT 충전 완료',
         position: 'top',
-        heightAuto: false,
+        confirmButtonColor: '#ffc947',
+        confirmButtonText: '확인',
       });
       setLoading(false);
     });
@@ -124,7 +126,7 @@ function WalletModal(props) {
           {props.buttonTitle}
         </Button>
         <Sheet isOpen={isOpen} onClose={() => setOpen(false)}>
-          <Sheet.Container style={{ height: '450px', margin: 0 }}>
+          <Sheet.Container style={{ height: '450px', margin: 0, zIndex: 4 }}>
             <Sheet.Header />
             <Sheet.Content style={{ margin: '0px 20px' }} disableDrag={true}>
               {/* <div className={styles.pageTitle}>내 지갑</div> */}
@@ -183,8 +185,7 @@ function WalletModal(props) {
               </div>
             </Sheet.Content>
           </Sheet.Container>
-
-          <Sheet.Backdrop />
+          <Sheet.Backdrop style={{ zIndex: 3, borderWidth: 0 }} onTap={() => setOpen(false)} />
         </Sheet>
         {/* <Modal
           open={open}
