@@ -55,40 +55,40 @@ public class Web3jUtil {
         return Credentials.create(privateKey);
     }
 
-    public String signTransaction(Credentials credentials, String fromAddress, String toAddress, String valueString ) throws Exception{
-        EthGetTransactionCount ethGetTransactionCount = web3j.ethGetTransactionCount(fromAddress, DefaultBlockParameterName.LATEST).send();
-        BigInteger nonce = ethGetTransactionCount.getTransactionCount();
-        BigInteger value = Convert.toWei(valueString, Unit.ETHER).toBigInteger();
-        BigInteger gasLimit = BigInteger.valueOf(3000000);
-        BigInteger gasPrice = Convert.toWei("1", Unit.GWEI).toBigInteger();
-        TransactionManager transactionManager = new RawTransactionManager(web3j, credentials, 97889218, 400, 500L);
-        RawTransaction rawTransaction = RawTransaction.createEtherTransaction(
-                nonce,
-                gasPrice,
-                gasLimit,
-                toAddress,
-                value
-        );
-        return Numeric.toHexString(TransactionEncoder.signMessage(rawTransaction, 97889218, credentials));
-    }
-
-    public String signTransaction(Credentials credentials, String fromAddress, String toAddress, String valueString, String data ) throws Exception{
-        EthGetTransactionCount ethGetTransactionCount = web3j.ethGetTransactionCount(fromAddress, DefaultBlockParameterName.LATEST).send();
-        BigInteger nonce = ethGetTransactionCount.getTransactionCount();
-        BigInteger value = Convert.toWei(valueString, Unit.ETHER).toBigInteger();
-        BigInteger gasLimit = BigInteger.valueOf(3000000);
-        BigInteger gasPrice = Convert.toWei("1", Unit.GWEI).toBigInteger();
-
-        RawTransaction rawTransaction = RawTransaction.createTransaction(
-                nonce,
-                gasPrice,
-                gasLimit,
-                toAddress,
-                value,
-                data
-        );
-        return Numeric.toHexString(TransactionEncoder.signMessage(rawTransaction, credentials));
-    }
+//    public String signTransaction(Credentials credentials, String fromAddress, String toAddress, String valueString ) throws Exception{
+//        EthGetTransactionCount ethGetTransactionCount = web3j.ethGetTransactionCount(fromAddress, DefaultBlockParameterName.LATEST).send();
+//        BigInteger nonce = ethGetTransactionCount.getTransactionCount();
+//        BigInteger value = Convert.toWei(valueString, Unit.ETHER).toBigInteger();
+//        BigInteger gasLimit = BigInteger.valueOf(3000000);
+//        BigInteger gasPrice = Convert.toWei("1", Unit.GWEI).toBigInteger();
+//        TransactionManager transactionManager = new RawTransactionManager(web3j, credentials, 97889218, 400, 500L);
+//        RawTransaction rawTransaction = RawTransaction.createEtherTransaction(
+//                nonce,
+//                gasPrice,
+//                gasLimit,
+//                toAddress,
+//                value
+//        );
+//        return Numeric.toHexString(TransactionEncoder.signMessage(rawTransaction, 97889218, credentials));
+//    }
+//
+//    public String signTransaction(Credentials credentials, String fromAddress, String toAddress, String valueString, String data ) throws Exception{
+//        EthGetTransactionCount ethGetTransactionCount = web3j.ethGetTransactionCount(fromAddress, DefaultBlockParameterName.LATEST).send();
+//        BigInteger nonce = ethGetTransactionCount.getTransactionCount();
+//        BigInteger value = Convert.toWei(valueString, Unit.ETHER).toBigInteger();
+//        BigInteger gasLimit = BigInteger.valueOf(3000000);
+//        BigInteger gasPrice = Convert.toWei("1", Unit.GWEI).toBigInteger();
+//
+//        RawTransaction rawTransaction = RawTransaction.createTransaction(
+//                nonce,
+//                gasPrice,
+//                gasLimit,
+//                toAddress,
+//                value,
+//                data
+//        );
+//        return Numeric.toHexString(TransactionEncoder.signMessage(rawTransaction, credentials));
+//    }
 
     public String deployContract() {
         return null;
@@ -99,7 +99,7 @@ public class Web3jUtil {
         BigInteger balance = web3j.ethGetBalance(credentials.getAddress(), DefaultBlockParameterName.LATEST).send().getBalance();
         System.out.println("balance : "+ balance);
         Transaction newTransaction = null;
-        if (balance.compareTo(Convert.toWei("1", Convert.Unit.GWEI).toBigInteger())<=0 ){
+        if (balance.compareTo(Convert.toWei("1", Unit.ETHER).toBigInteger())<=0 ){
             System.out.println(ADMIN_PRIVATE_KEY);
             TransactionManager transactionManager = new RawTransactionManager(web3j, Credentials.create(ADMIN_PRIVATE_KEY), 97889218, 400, 500L);
             Transfer transfer = new Transfer(web3j, transactionManager);
