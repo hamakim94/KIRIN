@@ -26,6 +26,7 @@ function RegisterPage() {
   const navigate = useNavigate();
   const [data, setData] = useState(''); // 토큰 잔액
   const { userData } = useContext(Context);
+  const [video, setVideo] = useState(null);
 
   useEffect(() => {
     if (userData) {
@@ -111,7 +112,14 @@ function RegisterPage() {
     );
   });
   const MemoizedItem = useMemo(() => videoItem, [blob]);
-
+  const onChangeVideo = (e) => {
+    if (e.target.files[0]) {
+      setVideo(e.target.files[0]);
+    } else {
+      setVideo(null);
+      return;
+    }
+  };
   useEffect(() => {
     if (!videoRef.current) {
       return;
@@ -152,7 +160,11 @@ function RegisterPage() {
         let filename = uuidv4() + '.webm';
         const file = new File([blob], filename);
         const data = new FormData();
-        data.append('video', file);
+        if (video) {
+          data.append('video', video);
+        } else {
+          data.append('video', file);
+        }
         const json = JSON.stringify(body);
         const fixData = new Blob([json], { type: 'application/json' });
         data.append('challengeRequestDTO', fixData);
@@ -199,7 +211,17 @@ function RegisterPage() {
 
   return (
     <div className='wrapper'>
-      <Header title={'챌린지 등록'}></Header>
+      <Header title={'챌린지 등록'} video={true}></Header>
+      <label htmlFor='ex_video' style={{ color: '#FFFFFF' }}>
+        동영상업로드
+      </label>
+      <input
+        type='file'
+        accept='video/*'
+        id='ex_video'
+        onChange={onChangeVideo}
+        style={{ display: 'none' }}
+      />
       {blob ? (
         <div
           style={{
