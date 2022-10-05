@@ -2,6 +2,7 @@ import React from 'react';
 import { BsChevronLeft } from 'react-icons/bs';
 import { useNavigate } from 'react-router-dom';
 import styles from './Header.module.css';
+import Marquee from './Marquee.js';
 
 function Header(props) {
   const navigate = useNavigate();
@@ -14,7 +15,12 @@ function Header(props) {
           onClick={() => navigate(-1)}
         ></BsChevronLeft>
       </div>
-      <div className={props.white ? styles.pageWhiteTitle : styles.pageTitle}>{props.title}</div>
+
+      {/* <div className={props.white ? styles.pageWhiteTitle : styles.pageTitle}>{props.title}</div> */}
+      <div className={props.white ? styles.pageWhiteTitle : styles.pageTitle}>
+        <Marquee text={props.title}></Marquee>
+      </div>
+
       <div className={styles.rightBox}></div>
     </div>
   );
