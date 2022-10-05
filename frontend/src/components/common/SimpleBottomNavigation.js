@@ -72,7 +72,7 @@ function SimpleBottomNavigation() {
             '& .Mui-selected, .Mui-selected > svg': {
               color: '#FFC947',
             },
-            fontSize: 25,
+            fontSize: 28,
           }}
         >
           <BottomNavigationAction icon={<BsHouseDoor />} LinkComponent={Link} to='/' />

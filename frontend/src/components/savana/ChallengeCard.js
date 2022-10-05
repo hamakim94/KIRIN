@@ -6,11 +6,22 @@ import {
   RiHeart2Line,
   RiShareFill,
 } from 'react-icons/ri';
+import { IoMdHeartEmpty } from 'react-icons/io';
+import { AiOutlineHeart } from 'react-icons/ai';
+import {
+  FaRegHeart,
+  FaHeart,
+  FaRegComment,
+  FaRegCommentDots,
+  FaRegCommentAlt,
+  FaInfoCircle,
+} from 'react-icons/fa';
 import swal from 'sweetalert';
 import Sheet from 'react-modal-sheet';
 import SavanaComment from './SavanaComment';
 import UseAxios from '../../utils/UseAxios';
 import { useNavigate } from 'react-router-dom';
+import ProfileImg from '../common/ProfileImg';
 
 function ProgressBar(props) {
   const [value, setValue] = useState(0);
@@ -34,22 +45,11 @@ function ProgressBar(props) {
 }
 
 function ChallengeCard(props) {
-  // const [copied, setCopied] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [data, setData] = useState(null);
 
   const navigate = useNavigate();
   const progressWidth = window.innerWidth * 0.9;
-  // function copy() {
-  //   const el = document.createElement('input');
-  //   el.value = window.location.href;
-  //   document.body.appendChild(el);
-  //   el.select();
-  //   document.execCommand('copy');
-  //   document.body.removeChild(el);
-  //   setCopied(true);
-  //   swal('링크 복사가 완료되었습니다');
-  // }
 
   useEffect(() => {
     if (props.item) {
@@ -94,32 +94,41 @@ function ChallengeCard(props) {
       <div className={props.styles.coverBox}>
         <div className={props.styles.blankBox}></div>
         <div className={props.styles.iconBox}>
-          <a
-            onClick={() =>
-              navigate(`/challenge/${data.challengeId}`, {
-                state: {
-                  data,
-                },
-              })
-            }
-          >
-            <RiZoomInFill className={props.styles.clickIcon}></RiZoomInFill>
-          </a>
-          <div>
+          <div style={{ textAlign: 'center', marginBottom: 15 }}>
+            <ProfileImg
+              size={'35px'}
+              src={data.user.profileImg}
+              onClick={() => navigate(`/star/${data.user.id}`)}
+            />
+          </div>
+          <div style={{ textAlign: 'center', marginBottom: 15 }}>
+            <a
+              onClick={() =>
+                navigate(`/challenge/${data.challengeId}`, {
+                  state: {
+                    data,
+                  },
+                })
+              }
+            >
+              <FaInfoCircle className={props.styles.clickIcon}></FaInfoCircle>
+            </a>
+          </div>
+          <div style={{ textAlign: 'center' }}>
             <a onClick={likeButtonClick}>
               {!data.liked ? (
-                <RiHeart2Line className={props.styles.clickIcon}></RiHeart2Line>
+                <FaRegHeart className={props.styles.clickIcon}></FaRegHeart>
               ) : (
-                <RiHeart2Fill className={props.styles.likeIcon}></RiHeart2Fill>
+                <FaHeart className={props.styles.likeIcon}></FaHeart>
               )}
             </a>
             <div className={props.styles.iconCount}>{data.likeCnt}</div>
           </div>
-          <div>
-            <RiMessage3Line
+          <div style={{ textAlign: 'center' }}>
+            <FaRegCommentAlt
               className={props.styles.clickIcon}
               onClick={() => setIsOpen(true)}
-            ></RiMessage3Line>
+            ></FaRegCommentAlt>
             <Sheet isOpen={isOpen} onClose={() => setIsOpen(false)}>
               <Sheet.Container style={{ height: '50%', zIndex: 4, position: 'absolute' }}>
                 <Sheet.Header />
@@ -129,11 +138,8 @@ function ChallengeCard(props) {
               </Sheet.Container>
               <Sheet.Backdrop style={{ zIndex: 3 }} onTap={() => setIsOpen(false)} />
             </Sheet>
-            <div className={props.styles.iconCount}>{data.commentCount}</div>
+            <div className={props.styles.iconCount}>{data.commentCnt}</div>
           </div>
-          <a>
-            {/* <RiShareFill className={props.styles.clickIcon} onClick={copy}></RiShareFill> */}
-          </a>
         </div>
         <div className={props.styles.infoBox}>
           <div className={props.styles.infoTop}>
