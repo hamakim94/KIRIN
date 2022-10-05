@@ -31,7 +31,7 @@ const theme = createTheme({
   },
 });
 
-function StarSignupPage({ parentCallback }) {
+function StarSignupPage() {
   const navigate = useNavigate();
   const [width] = useState(window.innerWidth);
   const [password, setPassword] = useState('');
@@ -90,10 +90,10 @@ function StarSignupPage({ parentCallback }) {
   };
 
   //e: React.FormEvent<HTMLFormElement>
-  const sendData = (e) => {
-    e.preventDefault();
-    if (canSubmit) parentCallback(nickname, email, password, name); // 전달
-  };
+  // const sendData = (e) => {
+  //   e.preventDefault();
+  //   if (canSubmit) parentCallback(nickname, email, password, name); // 전달
+  // };
 
   /* 이메일 중복 확인 */
   const emailDup = (e) => {

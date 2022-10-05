@@ -90,11 +90,13 @@ function App() {
         if (data.length > 1) {
           console.log(JSON.parse(event.data));
         } else {
-          notify();
-          urlRef.current = data.link;
-          UseAxios.post('/notify/read', null, { params: { notificationId: data.id } }).then((res) =>
-            console.log(res)
-          );
+          if (data && data.id) {
+            notify();
+            urlRef.current = data.link;
+            UseAxios.post('/notify/read', null, { params: { notificationId: data.id } }).then(
+              (res) => console.log(res)
+            );
+          }
         }
       };
     }
