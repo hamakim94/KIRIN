@@ -32,7 +32,7 @@ function StarPageModal(props) {
 
   return (
     <div style={{ minWidth: 50, minHeight: 20 }} onClick={handleOpen}>
-      <span className={props.styles.contentBox}>{props.info}</span>
+      <div className={props.styles.contentBox}>{props.info}</div>
       <Modal
         open={open}
         onClose={handleClose}

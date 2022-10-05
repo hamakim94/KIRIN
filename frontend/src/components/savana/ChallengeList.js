@@ -2,6 +2,8 @@ import React, { useContext, useEffect, useRef, useState } from 'react';
 import Context from '../../utils/Context';
 import ChallengeCard from './ChallengeCard';
 // import { isIOS } from 'react-device-detect';
+
+// const height = window.innerHeight - 56;
 function ChallengeList(props) {
   const idxRef = useRef([]);
   // const audioRef = useRef([]);
@@ -12,8 +14,6 @@ function ChallengeList(props) {
   const [loading, setLoading] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
   const { setSelected } = useContext(Context);
-
-  const height = window.innerHeight - 56;
   useEffect(() => {
     // if (isIOS) {
     //   if (idxRef.current[props.idx] && audioRef.current[props.idx] && loading) {
@@ -30,7 +30,7 @@ function ChallengeList(props) {
     //   }
     // } else {
     if (idxRef.current[props.idx] && loading) {
-      conRef.current.scrollTo(0, props.idx * height);
+      conRef.current.scrollTo(0, props.idx * (window.innerHeight - 56));
       idxRef.current[props.idx].volume = 0.1;
       idxRef.current[props.idx].play();
       idxRef.current[props.idx].muted = false;
@@ -43,9 +43,11 @@ function ChallengeList(props) {
     }
     // }
   }, [loading]);
+  // let scrollHeight;
 
   const check = (e) => {
     const scrollHeight = e.target.scrollTop;
+    const height = e.target.clientHeight;
     const idx = scrollHeight / height;
     if (Number.isInteger(scrollHeight / height)) {
       if (props.data[idx].isProceeding) {
