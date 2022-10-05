@@ -34,7 +34,6 @@
 }
 
 .hScroll {
-  padding-left: 15px;
   overflow: auto;
   white-space: nowrap;
   -ms-overflow-style: none; /* IE, Edge */
