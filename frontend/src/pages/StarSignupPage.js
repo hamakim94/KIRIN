@@ -317,7 +317,7 @@ function StarSignupPage() {
             ></input>
           </form>
           <div>
-            <form onSubmit={sendData}>
+            <form>
               <Grid container spacing={2}>
                 <Grid item xs={9} sm={9}>
                   <TextField
