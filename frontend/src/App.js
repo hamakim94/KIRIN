@@ -1,7 +1,7 @@
 import './App.css';
 import { isMobile } from 'react-device-detect';
 import HomePage from './pages/HomePage';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useNavigate } from 'react-router-dom';
 import SearchPage from './pages/SearchPage';
 import SavanaPage from './pages/SavanaPage';
 import DonationPage from './pages/DonationPage';
@@ -28,12 +28,11 @@ import SignupPage from './pages/SignupPage';
 import FinishSignupPage from './pages/FinishSignupPage';
 import ContractDeploy from './pages/ContractDeploy';
 import RegisterPage from './pages/RegisterPage';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Context from './utils/Context';
 import UseAxios from './utils/UseAxios';
 import { Cookies } from 'react-cookie';
 import StarCreatePage from './pages/StarCreatePage';
-import SelectPage from './pages/SelectPage';
 import WalletPage from './pages/WalletPage';
 import SuccessPage from './pages/SuccessPage';
 import FailPage from './pages/FailPage';
@@ -43,10 +42,12 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
+  const urlRef = useRef(null);
   const [blob, setBlob] = useState(null);
   const [userData, setUserData] = useState(null);
   const [selected, setSelected] = useState(null);
   const [userId, setuserId] = useState(null);
+  const navigate = useNavigate();
   const cookies = new Cookies();
   const value = cookies.get('accesstoken');
 
@@ -75,11 +76,9 @@ function App() {
       };
       sseEvents.onmessage = (event) => {
         // 메세지 받았을 때
-        console.log(event);
-        console.log(event.data);
-        console.log(JSON.parse(event.data));
+        const data = JSON.parse(event.data);
         const notify = () =>
-          toast(JSON.parse(event.data).event, {
+          toast(data.event, {
             position: 'top-center',
             autoClose: 5000,
             hideProgressBar: true,
@@ -88,7 +87,13 @@ function App() {
             draggable: true,
             progress: undefined,
           });
-        notify();
+        if (data.length > 1) {
+          console.log(JSON.parse(event.data));
+        } else {
+          notify();
+          urlRef.current = data.link;
+        }
+        console.log(data);
       };
     }
     return () => {
@@ -103,7 +108,7 @@ function App() {
       {isMobile ? (
         value ? (
           <div className='App'>
-            <ToastContainer onClick={() => console.log('알림버튼누르기')} />
+            <ToastContainer onClick={() => navigate(`${urlRef.current}`)} />
             <Context.Provider
               value={{ blob, setBlob, userData, setUserData, selected, setSelected }}
             >
@@ -111,6 +116,10 @@ function App() {
                 <Route path='/' element={<HomePage></HomePage>}></Route>
                 <Route path='/search' element={<SearchPage></SearchPage>}></Route>
                 <Route path='/savana/:category' element={<SavanaPage></SavanaPage>}></Route>
+                <Route
+                  path='/savana/challenge/:challengeId'
+                  element={<SavanaPage></SavanaPage>}
+                ></Route>
                 <Route path='/donation' element={<DonationPage></DonationPage>}></Route>
                 <Route path='/plus/:challengeId' element={<PlusPage></PlusPage>}></Route>
                 <Route path='/register' element={<RegisterPage></RegisterPage>}></Route>

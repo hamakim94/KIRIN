@@ -34,7 +34,6 @@ function PlusPage() {
   const [challengeData, setChallengeData] = useState(null);
   const [length, setLength] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
-  const [challengeId, setChallengeId] = useState(0);
   const refVideo = useRef(null);
   const recorderRef = useRef(null);
   const audioRef = useRef(null);
@@ -208,7 +207,6 @@ function PlusPage() {
       });
     }
     if (changeCam === 'user') {
-      console.log('유저유저');
       setChangeCam({ exact: 'environment' });
       const start = async () => {
         mediaStream = await navigator.mediaDevices.getUserMedia({
@@ -221,11 +219,9 @@ function PlusPage() {
         });
         setStream(mediaStream);
         refVideo.current.srcObject = mediaStream;
-        console.log('망했다');
       };
       start();
     } else {
-      console.log('후면후면');
       setChangeCam('user');
       const start = async () => {
         mediaStream = await navigator.mediaDevices.getUserMedia({
@@ -257,6 +253,10 @@ function PlusPage() {
     };
   }, [stream, refVideo]);
 
+  const preventClose = (e) => {
+    e.preventDefault();
+    e.returnValue = ''; // chrome에서는 설정이 필요해서 넣은 코드
+  };
   useEffect(() => {
     const start = async () => {
       mediaStream = await navigator.mediaDevices.getUserMedia({
@@ -271,12 +271,15 @@ function PlusPage() {
       setStream(mediaStream);
     };
     start();
-
+    (() => {
+      window.addEventListener('beforeunload', preventClose);
+    })();
     return () => {
       if (audioRef.current) {
         audioRef.current.pause();
         audioRef.current.currentTime = 0;
       }
+      window.removeEventListener('beforeunload', preventClose);
     };
   }, []);
 

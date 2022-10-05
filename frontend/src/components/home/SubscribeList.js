@@ -12,7 +12,6 @@ function SubscribeList(props) {
   // }
   useEffect(() => {
     UseAxios.get(`/users/subscribes`).then((res) => {
-      console.log(res);
       setStarData(res.data);
     });
   }, []);
@@ -30,6 +29,7 @@ function SubscribeList(props) {
               src={item.profileImg}
               onClick={() => navigate(`/star/${item.id}`)}
               size={'75px'}
+              key={item.id}
             />
             // <MyStar styles={props.styles} item={item} index={index} key={item.id} />
           ))

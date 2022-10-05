@@ -15,7 +15,6 @@ function SelectPage(props) {
       setFilteredChallengeData(res.data);
       setChallengeData(res.data);
       setLoading(true);
-      console.log(res.data);
     });
   }, []);
 

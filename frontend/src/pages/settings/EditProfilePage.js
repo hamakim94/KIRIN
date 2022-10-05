@@ -182,7 +182,7 @@ function EditProfilePage() {
       })
         .then((res) => {
           UseAxios.get(`/users/profiles`).then((res) => {
-            setUserData(res.data);
+            // setUserData(res.data);
             // swal('프로필 편집이 완료되었습니다.').then(() => {
             //   navigate('/mypage', { state: true });
             // });

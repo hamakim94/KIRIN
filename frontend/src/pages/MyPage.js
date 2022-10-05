@@ -56,12 +56,12 @@ function MyPage() {
         <ChallengeList data={likedData} category={6}></ChallengeList>
       )}
       <hr></hr>
-      <button onClick={() => navigate(`/create/deploy`)} className={styles.myWallet}>
+      {/* <button onClick={() => navigate(`/create/deploy`)} className={styles.myWallet}>
         컨트랙트 배포하기
-      </button>
-      <button onClick={() => navigate(`/create`)} className={styles.myWallet}>
+      </button> */}
+      {/* <button onClick={() => navigate(`/create`)} className={styles.myWallet}>
         등록하기
-      </button>
+      </button> */}
     </div>
   ) : (
     ''
