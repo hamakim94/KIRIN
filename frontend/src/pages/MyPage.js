@@ -3,7 +3,7 @@ import styles from './MyPage.module.css';
 import MyTop from '../components/my/MyTop';
 import Profile from '../components/my/Profile';
 import MyStar from '../components/my/MyStar';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import Category from '../components/common/Category';
 import UseAxios from '../utils/UseAxios';
 import Context from '../utils/Context';
@@ -15,6 +15,7 @@ function MyPage() {
   const [likedData, setLikedData] = useState(null);
   const { userData } = useContext(Context);
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     if (userData) {
@@ -29,7 +30,7 @@ function MyPage() {
 
   return userData ? (
     <div className='wrapper'>
-      <MyTop styles={styles}></MyTop>
+      <MyTop styles={styles} state={location.state}></MyTop>
       <Profile styles={styles}></Profile>
       <hr></hr>
       <MyStar styles={styles}></MyStar>

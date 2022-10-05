@@ -5,7 +5,8 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import Context from '../utils/Context';
 import { MdOutlineFlipCameraAndroid, MdOutlineQueueMusic } from 'react-icons/md';
 import UseAxios from '../utils/UseAxios';
-import { toast } from 'react-toastify';
+// import { toast } from 'react-toastify';
+import swal2 from 'sweetalert2';
 import 'react-toastify/dist/ReactToastify.css';
 import SelectPage from './SelectPage';
 
@@ -49,36 +50,44 @@ function PlusPage() {
   const handleRecording = async () => {
     // 시작하려고 했을 떄 이미 진행 다했으면 시간초 늘려놓기
     if (number === 0) {
-      setNumber((prev) => (prev = length));
-      mediaStream = await navigator.mediaDevices.getUserMedia({
-        video: {
-          width: { min: 361 },
-          aspectRatio: 16 / 9,
-          facingMode: changeCam,
-        },
-        audio: false,
-      });
-      // 기존에 있던 영상파일 날리고 시작
-      if (blob) {
-        setBlob(null);
+      if (challengeData) {
+        setNumber((prev) => (prev = length));
+        mediaStream = await navigator.mediaDevices.getUserMedia({
+          video: {
+            width: { min: 361 },
+            aspectRatio: 16 / 9,
+            facingMode: changeCam,
+          },
+          audio: false,
+        });
+        // 기존에 있던 영상파일 날리고 시작
+        if (blob) {
+          setBlob(null);
+        }
+
+        // 새녹화
+        setStream(mediaStream);
+        recorderRef.current = new RecordRTC(mediaStream, {
+          type: 'video',
+          mimeType: 'video/webm;codecs=vp8',
+        });
+        recorderRef.current.startRecording();
+
+        // 노래 새로 시작
+        audioRef.current.currentTime = 0;
+        audioRef.current.volume = 0.1;
+        audioRef.current.play();
+
+        setToggleBtn(true);
+        // 타이머 시작
+        setWaitButton(true);
+      } else {
+        swal2.fire({
+          title: '상단탭에서 챌린지를 선택해주세요.',
+          confirmButtonColor: '#ffc947',
+          confirmButtonText: '확인',
+        });
       }
-
-      // 새녹화
-      setStream(mediaStream);
-      recorderRef.current = new RecordRTC(mediaStream, {
-        type: 'video',
-        mimeType: 'video/webm;codecs=vp8',
-      });
-      recorderRef.current.startRecording();
-
-      // 노래 새로 시작
-      audioRef.current.currentTime = 0;
-      audioRef.current.volume = 0.1;
-      audioRef.current.play();
-
-      setToggleBtn(true);
-      // 타이머 시작
-      setWaitButton(true);
     } else {
       if (challengeData) {
         mediaStream = await navigator.mediaDevices.getUserMedia({
@@ -105,17 +114,22 @@ function PlusPage() {
         setToggleBtn(true);
         setWaitButton(true);
       } else {
-        const notify = () =>
-          toast.warning('챌린지를 골라주세요', {
-            position: 'bottom-center',
-            autoClose: 5000,
-            hideProgressBar: true,
-            closeOnClick: false,
-            pauseOnHover: false,
-            draggable: true,
-            progress: undefined,
-          });
-        notify();
+        // const notify = () =>
+        //   toast.warning('챌린지를 골라주세요', {
+        //     position: 'bottom-center',
+        //     autoClose: 5000,
+        //     hideProgressBar: true,
+        //     closeOnClick: false,
+        //     pauseOnHover: false,
+        //     draggable: true,
+        //     progress: undefined,
+        //   });
+        // notify();
+        swal2.fire({
+          title: '상단탭에서 챌린지를 선택해주세요.',
+          confirmButtonColor: '#ffc947',
+          confirmButtonText: '확인',
+        });
       }
     }
   };

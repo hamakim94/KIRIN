@@ -12,7 +12,7 @@ import { IoPersonCircleOutline } from 'react-icons/io5';
 function SimpleBottomNavigation() {
   const [value, setValue] = useState(0);
   const [path, setPath] = useState(null);
-  const { selected, setSelected } = useContext(Context);
+  const { setBlob, selected, setSelected } = useContext(Context);
   const location = useLocation();
   const navigate = useNavigate();
   useEffect(() => {
@@ -43,6 +43,9 @@ function SimpleBottomNavigation() {
     }
     if (!(pathname[1] === 'savana' || pathname[1] === 'challenge')) {
       setSelected(0);
+    }
+    if (!(pathname[1] === 'plus' || pathname[1] === 'register')) {
+      setBlob(null);
     }
   }, [location]);
   if (path && path === 'plus') {

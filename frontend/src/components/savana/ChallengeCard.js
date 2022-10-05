@@ -6,7 +6,7 @@ import {
   RiHeart2Line,
   RiShareFill,
 } from 'react-icons/ri';
-import swal from 'sweetalert';
+// import swal from 'sweetalert';
 import Sheet from 'react-modal-sheet';
 import SavanaComment from './SavanaComment';
 import UseAxios from '../../utils/UseAxios';
@@ -38,7 +38,7 @@ function ChallengeCard(props) {
   // const [copied, setCopied] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [data, setData] = useState(null);
-
+  // const [music, setMusic] = useState(null);
   const navigate = useNavigate();
   const progressWidth = window.innerWidth * 0.9;
   // function copy() {
@@ -55,7 +55,6 @@ function ChallengeCard(props) {
   useEffect(() => {
     if (props.item) {
       setData(props.item);
-      console.log(props.item);
     }
   }, [props.item]);
   const likeButtonClick = () => {
@@ -173,8 +172,15 @@ function ChallengeCard(props) {
         style={{ width: '100%', height: '100%' }}
         onCanPlayThrough={props.index === 0 ? onLoaded : () => {}}
         onEnded={() => props.check.current[props.index].play()}
-        onClick={(e) => (e.target.muted = false)}
       />
+      {/* {props.isIOS
+        ?  <audio
+             src={`/files/${music}`}
+             ref={(el) => (props.audio ? (props.audio.current[props.index] = el) : '')}
+              onCanPlayThrough={props.index === 0 ? onLoaded : () => {}}
+           ></audio>
+          
+        : ''} */}
     </div>
   ) : (
     ''

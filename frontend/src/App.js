@@ -113,7 +113,6 @@ function App() {
                 <Route path='/savana/:category' element={<SavanaPage></SavanaPage>}></Route>
                 <Route path='/donation' element={<DonationPage></DonationPage>}></Route>
                 <Route path='/plus/:challengeId' element={<PlusPage></PlusPage>}></Route>
-                <Route path='/select' element={<SelectPage></SelectPage>}></Route>
                 <Route path='/register' element={<RegisterPage></RegisterPage>}></Route>
                 <Route path='/star/:starId' element={<StarPage></StarPage>}></Route>
                 <Route

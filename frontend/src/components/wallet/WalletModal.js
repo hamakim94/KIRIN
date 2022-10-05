@@ -95,9 +95,10 @@ function WalletModal(props) {
       Swal2.fire({
         width: 100,
         icon: 'success',
-        title: 'KRT 충전 완료',
+        text: 'KRT 충전 완료',
         position: 'top',
-        heightAuto: false,
+        confirmButtonColor: '#ffc947',
+        confirmButtonText: '확인',
       });
       setLoading(false);
     });

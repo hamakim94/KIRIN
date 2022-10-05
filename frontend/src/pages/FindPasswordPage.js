@@ -1,23 +1,10 @@
-import React, { useEffect, useState, useRef, useContext } from 'react';
-import {
-  Avatar,
-  Button,
-  CssBaseline,
-  TextField,
-  FormControl,
-  FormControlLabel,
-  Checkbox,
-  FormHelperText,
-  Grid,
-  Box,
-  Typography,
-  Container,
-} from '@mui/material/';
+import React, { useState } from 'react';
+import { Button, TextField, Grid, Typography } from '@mui/material/';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import FindPasswordTop from '../components/sign/FindPasswordTop';
-import styles from './settings/SettingsPage.module.css';
+import Header from '../components/common/Header';
 import UseAxios from '../utils/UseAxios';
-import swal from 'sweetalert';
+// import swal from 'sweetalert';
+import swal2 from 'sweetalert2';
 
 const theme = createTheme({
   palette: {
@@ -55,7 +42,12 @@ function FindPasswordPage() {
       },
     })
       .then((res) => {
-        swal('이메일주소로 임시 비밀번호를 보냈습니다.');
+        // swal('이메일주소로 임시 비밀번호를 보냈습니다.');
+        swal2.fire({
+          title: '이메일주소로 임시 비밀번호를 보냈습니다.',
+          confirmButtonColor: '#ffc947',
+          confirmButtonText: '확인',
+        });
       })
       .catch((err) => {
         console.log(err);
@@ -64,7 +56,7 @@ function FindPasswordPage() {
   return (
     <ThemeProvider theme={theme}>
       <div>
-        <FindPasswordTop styles={styles}></FindPasswordTop>
+        <Header title='비밀번호 찾기'></Header>
         <img
           src={require('../assets/img/lock.png')}
           alt=''

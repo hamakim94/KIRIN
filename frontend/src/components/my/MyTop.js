@@ -6,7 +6,10 @@ function MyTop(props) {
   const navigate = useNavigate();
   return (
     <div className={props.styles.topBox}>
-      <BiArrowBack className={props.styles.back} onClick={() => navigate(-1)}></BiArrowBack>
+      <BiArrowBack
+        className={props.styles.back}
+        onClick={() => (props.state ? navigate('/') : navigate(-1))}
+      ></BiArrowBack>
       <div className={props.styles.pageTitle}>마이페이지</div>
       <AiFillSetting
         className={props.styles.setting}

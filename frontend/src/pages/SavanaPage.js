@@ -4,6 +4,7 @@ import styles from './SavanaPage.module.css';
 import ChallengeList from '../components/savana/ChallengeList';
 import { useLocation } from 'react-router-dom';
 import Context from '../utils/Context';
+
 function SavanaPage() {
   //랜덤으로 바꾸기
   const [savanaData, setSavanaData] = useState(null);
