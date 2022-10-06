@@ -122,6 +122,11 @@ function ChallengeCard(props) {
   const onLoaded = () => {
     if (props.setLoading) {
       props.setLoading(true);
+      if (props.index === 0 && videoRef.current.paused) {
+        videoRef.current.muted = false;
+        videoRef.current.volume = 0.1;
+        videoRef.current.play();
+      }
     }
   };
 

@@ -34,6 +34,7 @@ function MyPage() {
         .catch(() => setLoading1(true));
       UseAxios.get(`/challenges?scope=all&order=latest&userId=${userData.id}`)
         .then((res) => {
+          res.data.reverse();
           setParticipatedData(res.data);
           setLoading2(true);
         })
