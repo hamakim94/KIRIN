@@ -258,8 +258,8 @@ public class ChallengeServiceImpl implements ChallengeService {
 
         boolean existsChallenge = challengeRepository.existsById(challengeId);
         if(existsChallenge){
-
-            CelebChallengeInfo celebChallengeInfo = celebChallengeInfoRepository.findByChallengeId(challengeId);
+            Challenge challenge = challengeRepository.getReferenceById(challengeId);
+            CelebChallengeInfo celebChallengeInfo = celebChallengeInfoRepository.findByChallengeId(challenge.getChallengeId());
             List<DonationDTO> donationList = donationRepository.findByChallenge_challengeId(challengeId)
                     .stream().filter(o->!(o.getChallenge().getId().equals(celebChallengeInfo.getChallenge().getId()))).sorted((o1, o2) -> (int) (o2.getAmount()-o1.getAmount()))
                     .map(d->new DonationDTO(d.getAmount(),d.getChallenge().getUser().getNickname(),d.getChallenge().getUser().getProfileImg())).collect(Collectors.toList());
@@ -487,7 +487,7 @@ public class ChallengeServiceImpl implements ChallengeService {
 
     public ChallengeDTO mapChallengeDTO(Challenge challenge) {
 
-        CelebChallengeInfo celebChallengeInfo = celebChallengeInfoRepository.findByChallengeId(challenge.getId());
+        CelebChallengeInfo celebChallengeInfo = celebChallengeInfoRepository.findByChallengeId(challenge.getChallengeId());
         ChallengeDTO dto = ChallengeMapStruct.INSTANCE.mapToChallengeDTO(challenge,celebChallengeInfo);
         dto.setUser(UserMapStruct.INSTANCE.mapToUserDTO(challenge.getUser()));
         return dto;
@@ -518,6 +518,7 @@ public class ChallengeServiceImpl implements ChallengeService {
                         dto.setCurrentNum(celebChallengeInfo.getCurrentNum());
                         dto.setTargetAmount(celebChallengeInfo.getTargetAmount());
                         dto.setTargetNum(celebChallengeInfo.getTargetNum());
+                        dto.setStartDate(celebChallengeInfo.getStartDate());
                         dto.setEndDate(celebChallengeInfo.getEndDate());
                         return dto;
                     })
