@@ -5,8 +5,6 @@ import Category from '../components/common/Category';
 import ChallengeList from '../components/home/ChallengeList';
 import UseAxios from '../utils/UseAxios';
 import NewLoading from '../components/common/NewLoading';
-import 'react-responsive-carousel/lib/styles/carousel.min.css'; // requires a loader
-import { Carousel } from 'react-responsive-carousel';
 
 function HomePage() {
   const [popularityData, setPopularityData] = useState(null);
@@ -58,17 +56,6 @@ function HomePage() {
       {/* <hr style={{ border: 'solid 0.1px #C9C9C9' }} /> */}
       <Category title={'인기순'}></Category>
       <ChallengeList styles={styles} data={popularityData} category={1}></ChallengeList>
-      {/* <Carousel autoPlay infiniteLoop showArrows={false} showThumbs={false} showStatus={false}>
-        <div>
-          <img width='100%' src={require('../assets/img/ssafmygirl2.png')} />
-        </div>
-        <div>
-          <img width='100%' src={require('../assets/img/ssafmygirl2.png')} />
-        </div>
-        <div>
-          <img width='100%' src={require('../assets/img/ssafmygirl2.png')} />
-        </div>
-      </Carousel> */}
       <img className={styles.img} alt='함께' src={require('../assets/img/ssafmygirl2.png')}></img>
       <Category title={'최신순'}></Category>
       <ChallengeList styles={styles} data={latestData} category={2}></ChallengeList>
