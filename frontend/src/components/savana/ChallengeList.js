@@ -145,6 +145,7 @@ function ChallengeList(props) {
               key={index}
               setLoading={index === 0 ? setLoading : false}
               isOpen={isOpen}
+              loading={loading}
               setIsOpen={setIsOpen}
               conRef={conRef}
               // isIOS={isIOS}

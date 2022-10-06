@@ -86,7 +86,7 @@ function ChallengeCard(props) {
         }
       }
     }
-  }, [videoRef.current]);
+  }, [videoRef.current, props.loading]);
 
   useEffect(() => {
     if (!props.conRef.current) return;
@@ -122,11 +122,6 @@ function ChallengeCard(props) {
   const onLoaded = () => {
     if (props.setLoading) {
       props.setLoading(true);
-      if (props.index === 0 && videoRef.current.paused) {
-        videoRef.current.muted = false;
-        videoRef.current.volume = 0.1;
-        videoRef.current.play();
-      }
     }
   };
 
