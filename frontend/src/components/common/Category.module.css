@@ -1,0 +1,9 @@
+.category {
+  font-weight: bold;
+  /* font-family: 'SCD500'; */
+  font-size: 16px;
+  margin-top: 10px;
+  margin-left: 10px;
+  display: flex;
+  align-items: center;
+}

@@ -1,0 +1,18 @@
+.hScroll {
+  padding-left: 15px;
+  overflow: auto;
+  white-space: nowrap;
+  -ms-overflow-style: none; /* IE, Edge */
+  scrollbar-width: none; /* Firefox */
+  margin-bottom: 10px;
+}
+
+.hScroll::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+.challengeContainer {
+  overflow: auto;
+  white-space: nowrap;
+  margin-top: 10px;
+}

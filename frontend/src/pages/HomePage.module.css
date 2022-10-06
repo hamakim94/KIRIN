@@ -1,0 +1,46 @@
+.logo {
+  margin-left: 15px;
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.plusStar {
+  position: relative;
+  background-color: #d9d9d9;
+  display: inline-block;
+  width: 75px;
+  height: 75px;
+  border-radius: 100%;
+  margin-left: 10px;
+}
+
+.plusStarBox {
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.plusStarText {
+  position: absolute;
+  color: #ffffff;
+  font-size: 30px;
+}
+
+.img {
+  width: 100%;
+  object-fit: cover;
+}
+
+.hScroll {
+  overflow: auto;
+  white-space: nowrap;
+  -ms-overflow-style: none; /* IE, Edge */
+  scrollbar-width: none; /* Firefox */
+  margin-bottom: 10px;
+}
+
+.hScroll::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
