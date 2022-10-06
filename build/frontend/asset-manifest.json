@@ -1,0 +1,28 @@
+{
+  "files": {
+    "main.css": "/static/css/main.f8219219.css",
+    "main.js": "/static/js/main.c8fe30f3.js",
+    "static/js/787.cda612ba.chunk.js": "/static/js/787.cda612ba.chunk.js",
+    "static/media/ssafmygirl2.png": "/static/media/ssafmygirl2.dfd836b54bfdaba4af10.png",
+    "static/media/SCDream8.otf": "/static/media/SCDream8.64217e4da7638066e57a.otf",
+    "static/media/SCDream7.otf": "/static/media/SCDream7.a8d826f4cafb0e728051.otf",
+    "static/media/SCDream6.otf": "/static/media/SCDream6.4df12ee03e70b6326c25.otf",
+    "static/media/SCDream9.otf": "/static/media/SCDream9.c8e7afd869e076d5055d.otf",
+    "static/media/SCDream1.otf": "/static/media/SCDream1.3f28bc17ecb809862c69.otf",
+    "static/media/SCDream2.otf": "/static/media/SCDream2.f44c037d461a68f92e1e.otf",
+    "static/media/SCDream3.otf": "/static/media/SCDream3.1e55b77199a0afd0ed9a.otf",
+    "static/media/SCDream5.otf": "/static/media/SCDream5.ae5ee4933db75a3ccb04.otf",
+    "static/media/SCDream4.otf": "/static/media/SCDream4.64c9dc7c860af7a004ad.otf",
+    "static/media/blockchain3.png": "/static/media/blockchain3.63633983f9cf1ad9453c.png",
+    "static/media/kirin_logo_nobackground.png": "/static/media/kirin_logo_nobackground.85a363d6c9f52c91d4ab.png",
+    "static/media/lock.png": "/static/media/lock.d009ed9134b79956722d.png",
+    "index.html": "/index.html",
+    "main.f8219219.css.map": "/static/css/main.f8219219.css.map",
+    "main.c8fe30f3.js.map": "/static/js/main.c8fe30f3.js.map",
+    "787.cda612ba.chunk.js.map": "/static/js/787.cda612ba.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.f8219219.css",
+    "static/js/main.c8fe30f3.js"
+  ]
+}
