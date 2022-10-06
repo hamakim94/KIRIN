@@ -20,7 +20,7 @@ function HomePage() {
       .then((res) => {
         const arr = res.data;
         arr.sort(function (a, b) {
-          return b.likeCnt - a.likeCnt;
+          return b.currentNum - a.currentNum;
         });
         setPopularityData(arr);
         setLoading1(true);
@@ -35,7 +35,11 @@ function HomePage() {
       .catch(() => setLoading2(true));
     UseAxios.get('/challenges?scope=general&order=random')
       .then((res) => {
-        setRandomData(res.data);
+        const arr = res.data;
+        arr.sort(function (a, b) {
+          return b.currentNum - a.currentNum;
+        });
+        setRandomData(arr);
         setLoading3(true);
       })
       .catch(() => setLoading3(true));
