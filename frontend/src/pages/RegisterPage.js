@@ -174,6 +174,18 @@ function RegisterPage() {
         })
           .then((res) => {
             setBlob(null);
+            (() => {
+              toast('업로드 요청이 완료되었습니다.', {
+                position: 'top-center',
+                autoClose: 3000,
+                hideProgressBar: true,
+                closeOnClick: true,
+                pauseOnHover: false,
+                draggable: true,
+                progress: undefined,
+                containerId: 'A',
+              });
+            })();
             navigate('/');
           })
           .catch((err) => {
@@ -204,24 +216,24 @@ function RegisterPage() {
       })
         .then((res) => {
           setBlob(null);
+          (() => {
+            toast('업로드 요청이 완료되었습니다.', {
+              position: 'top-center',
+              autoClose: 3000,
+              hideProgressBar: true,
+              closeOnClick: true,
+              pauseOnHover: false,
+              draggable: true,
+              progress: undefined,
+              containerId: 'A',
+            });
+          })();
           navigate('/');
         })
         .catch((err) => {
           setCheck(false);
         });
       {
-        (() => {
-          toast('업로드까지 잠시 시간이 소요됩니다.', {
-            position: 'top-center',
-            autoClose: 60000,
-            hideProgressBar: true,
-            closeOnClick: true,
-            pauseOnHover: false,
-            draggable: true,
-            progress: undefined,
-            containerId: 'A',
-          });
-        })();
       }
     }
   };
