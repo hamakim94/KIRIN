@@ -65,7 +65,7 @@ public class ChallengeServiceImpl implements ChallengeService {
 
     @Override
     public List<ChallengeDTO> listStarsByLatest() {
-        return this.challegeListToChallengDTOList(challengeRepository.findByIsOriginalAndIsProceeding(true, true, Sort.by(Sort.Direction.DESC, "id")));
+        return this.challegeListToChallengDTOList(challengeRepository.findByIsOriginalAndIsProceeding(true, true, Sort.by(Sort.Direction.DESC, "reg")));
     }
 
     @Override
