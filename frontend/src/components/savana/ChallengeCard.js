@@ -15,14 +15,18 @@ function ProgressBar(props) {
   }, [props.width, props.percent]);
   if (props.isProceeding) {
     return (
-      <div className={props.styles.progressDiv} style={{ width: props.width }}>
-        <div style={{ width: `${value}px` }} className={props.styles.progress} />
+      <div style={{ display: 'flex', justifyContent: 'center' }}>
+        <div className={props.styles.progressDiv} style={{ width: props.width }}>
+          <div style={{ width: `${value}px` }} className={props.styles.progress} />
+        </div>
       </div>
     );
   } else {
     return (
-      <div className={props.styles.progressDiv} style={{ width: props.width }}>
-        <div style={{ width: `${value}px` }} className={props.styles.progressEnd} />
+      <div style={{ display: 'flex', justifyContent: 'center' }}>
+        <div className={props.styles.progressDiv} style={{ width: props.width }}>
+          <div style={{ width: `${value}px` }} className={props.styles.progressEnd} />
+        </div>
       </div>
     );
   }
@@ -32,6 +36,7 @@ function ChallengeCard(props) {
   const [isOpen, setIsOpen] = useState(false);
   const [data, setData] = useState(null);
   const videoRef = useRef(null);
+  const btnRef = useRef(null);
   const navigate = useNavigate();
   const progressWidth = window.innerWidth * 0.9;
 
@@ -93,9 +98,9 @@ function ChallengeCard(props) {
     const scroll = videoRef.current.getBoundingClientRect().y;
     if (scroll > -100 && scroll < 100) {
       if (videoRef.current.paused) {
-        videoRef.current.muted = false;
         videoRef.current.volume = 0.1;
-        videoRef.current.click();
+        videoRef.current.play();
+        btnRef.current.click();
       }
     } else {
       if (!videoRef.current.paused) {
@@ -104,9 +109,9 @@ function ChallengeCard(props) {
       }
     }
   };
-  const videoPlay = () => {
-    if (videoRef.current.paused) {
-      videoRef.current.play();
+  const videoUnmute = () => {
+    if (!videoRef.current.paused) {
+      videoRef.current.muted = false;
     }
   };
 
@@ -117,7 +122,7 @@ function ChallengeCard(props) {
   };
 
   return data ? (
-    <div className={props.styles.cardWrapper}>
+    <div className={props.styles.cardWrapper} ref={btnRef} onClick={videoUnmute}>
       <div className={props.styles.coverBox}>
         <ImgHeader></ImgHeader>
         <div className={props.styles.blankBox}></div>
@@ -205,7 +210,6 @@ function ChallengeCard(props) {
         style={{ width: '100%', height: '100%' }}
         onCanPlayThrough={props.index === 0 ? onLoaded : () => {}}
         onEnded={() => videoRef.current.play()}
-        onClick={videoPlay}
         ref={videoRef}
       />
       {/* {props.isIOS

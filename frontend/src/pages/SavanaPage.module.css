@@ -82,14 +82,12 @@
 }
 
 .progressDiv {
-  justify-self: center;
   background-color: #ffffff;
   margin-left: 10px;
   margin-right: 10px;
   border-radius: 0.5rem;
 }
 .progress {
-  justify-self: center;
   background-color: #ffd046;
   height: 30px;
   border-bottom-left-radius: 0.5rem;
@@ -111,7 +109,7 @@
   width: 33px;
   margin-top: 10px;
   margin-right: 2px;
-  color: black;
+  color: rgb(255, 255, 255);
 }
 
 .likeIcon {
@@ -124,6 +122,7 @@
 
 .iconCount {
   font-weight: bold;
+  color: rgb(255, 255, 255);
 }
 
 .toast_container {
