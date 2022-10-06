@@ -1,0 +1,213 @@
+.topBox {
+  display: flex;
+  flex-direction: row;
+  margin-top: 20px;
+  margin-bottom: 40px;
+  justify-content: space-between;
+}
+
+.back {
+  height: 25px;
+  width: 25px;
+  color: black;
+}
+.pageTitle {
+  font-size: 20px;
+  font-weight: bold;
+  justify-content: center;
+}
+
+.setting {
+  height: 25px;
+  width: 25px;
+  color: white;
+}
+
+.profileBox {
+  display: flex;
+  flex-direction: row;
+}
+
+.imgName {
+  margin-left: 20px;
+}
+
+.starImg {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 100%;
+  justify-items: center;
+}
+
+.starName {
+  text-align: center;
+  margin-top: 5px;
+}
+
+.starInfo {
+  display: flex;
+  margin-left: 30px;
+  padding-right: 10px;
+  align-items: center;
+}
+
+.tabMenu {
+  margin-top: 50px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+ul {
+  list-style: none;
+  font-size: medium;
+  justify-content: center;
+}
+
+hr {
+  margin-top: 10px;
+}
+
+.styles.active {
+  color: aqua;
+}
+
+.infoTop {
+  margin-top: 40px;
+  margin-left: 30px;
+  margin-right: 30px;
+}
+.infoSet {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-self: center;
+  margin-bottom: 20px;
+}
+
+.content {
+  color: #808080;
+}
+
+.donationInfo {
+  align-self: center;
+}
+.nowImg {
+  width: 55px;
+  height: 55px;
+  object-fit: cover;
+  border-radius: 100%;
+  justify-items: center;
+}
+
+.nowTop {
+  margin-top: 40px;
+  margin-left: 40px;
+  margin-right: 40px;
+}
+
+.medalBox {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-top: 25px;
+}
+
+.medalmedal {
+  display: flex;
+  flex-direction: row;
+}
+
+.number {
+  align-self: center;
+}
+.cmcm {
+  justify-content: space-around;
+}
+.nameTocken {
+  margin-left: 20px;
+  align-self: center;
+}
+
+.progressDiv {
+  height: 25px;
+  background-color: white;
+  border-bottom-left-radius: 0.1rem;
+  border-top-left-radius: 0.1rem;
+  border-bottom-right-radius: 0.1rem;
+  border-top-right-radius: 0.1rem;
+  border-width: 1px;
+  border-color: black;
+  border-style: solid;
+}
+
+.progressBox {
+  display: flex;
+  flex-direction: row;
+  margin-top: 5px;
+}
+
+.progress {
+  background-color: #ffc947;
+  height: 25px;
+  border-bottom-left-radius: 0.1rem;
+  border-top-left-radius: 0.1rem;
+  border-bottom-right-radius: 0.1rem;
+  border-top-right-radius: 0.1rem;
+  transition: 1s ease;
+  transition-delay: 0.5s;
+  margin-right: 5px;
+  border-right-width: 1px;
+  border-right-color: black;
+  border-right-style: solid;
+}
+.donateIng {
+  display: flex;
+  align-items: center;
+  font-size: x-small;
+  margin-left: 5px;
+  margin-right: 7.5px;
+  width: 30px;
+}
+
+.donateEnd {
+  display: flex;
+  align-items: center;
+  font-size: x-small;
+  margin-left: 10px;
+  margin-right: 7.5px;
+  width: 30px;
+}
+.infoText {
+  font-size: 15px;
+  margin-right: 0px;
+  margin-top: 5px;
+}
+.infoBot {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.showshow {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.coverBoxBox {
+  display: flex;
+  flex-direction: column-reverse;
+  margin-left: 5;
+}
+.coverBox {
+  color: white;
+  position: absolute;
+  opacity: 1;
+}
+
+.cardWrapper {
+  display: inline-block;
+  margin: 0;
+  padding: 0;
+}

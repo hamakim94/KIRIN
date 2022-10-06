@@ -1,0 +1,227 @@
+/* App.css에서 폰트도 관리 */
+
+.App {
+  width: 100vw;
+  height: 100vh;
+  height: calc(var(--vh, 1vh) * 100);
+  overflow-x: hidden;
+  -ms-overflow-style: none;
+}
+
+.App::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+.react-modal-sheet-content {
+  -ms-overflow-style: none;
+}
+
+.react-modal-sheet-content::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+.wrapper {
+  padding: 0 0 55px 0;
+}
+
+.Pc {
+  font-family: 'SCD400';
+  height: 100vh;
+}
+
+* {
+  font-family: 'SCD400';
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  overscroll-behavior-y: none;
+}
+
+.swal2-top {
+  display: grid;
+  position: fixed;
+  z-index: 10000000 !important;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  box-sizing: border-box;
+  grid-template-areas: 'top-start     top            top-end' 'center-start  center         center-end' 'bottom-start  bottom-center  bottom-end';
+  grid-template-rows: minmax(min-content, auto) minmax(min-content, auto) minmax(min-content, auto);
+  height: 100%;
+  padding: 4em 1em 0em !important;
+  overflow-x: hidden;
+  transition: background-color 0.1s;
+  -webkit-overflow-scrolling: touch;
+}
+
+.swal2-html-container {
+  z-index: 1;
+  justify-content: center;
+  margin: 1em 1.6em 0.3em;
+  padding: 0;
+  overflow: auto;
+  color: inherit;
+  font-size: 1.1em !important;
+  font-weight: 600 !important;
+  line-height: normal;
+  text-align: center;
+  word-wrap: break-word;
+  word-break: break-word;
+}
+
+.swal2-icon {
+  position: relative;
+  box-sizing: content-box;
+  justify-content: center;
+  width: 5em;
+  height: 5em;
+  margin: 1em auto 0em !important;
+  border: 0.25em solid transparent;
+  border-radius: 50%;
+  border-color: #000;
+  font-family: inherit;
+  line-height: 5em;
+  cursor: default;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+}
+
+.swal2-title {
+  font-size: 0.95em !important;
+  padding: 0.8em 0em 0.8em !important;
+}
+
+.swal2-styled.swal2-default-outline:focus {
+  box-shadow: none !important;
+}
+.swal2-styled.swal2-confirm:focus {
+  box-shadow: none !important;
+}
+
+.swal2-actions {
+  margin: 0.6em auto 0 !important;
+}
+
+.swal2-popup {
+  padding: 0.8em 0 1.3em !important;
+  width: 32em !important;
+}
+
+.swal2-styled {
+  /* margin: .3125em; */
+  padding: 0.4em 1.1em !important;
+  transition: box-shadow 0.1s;
+  box-shadow: 0 0 0 3px transparent;
+  font-weight: 500 !important;
+}
+
+.swal2-styled.swal2-confirm {
+  border: 0;
+  border-radius: 0.25em;
+  background: initial;
+  color: #000000 !important;
+  font-size: 0.9em !important;
+}
+
+.swal2-styled.swal2-cancel {
+  border: 0;
+  border-radius: 0.25em;
+  background: initial;
+  font-size: 0.9em !important;
+}
+.MuiBackdrop-root {
+  background-color: rgba(0, 0, 0, 0.2) !important;
+  z-index: 10000000 !important;
+}
+.Mui-selected {
+  color: #ffc947 !important;
+}
+
+.Mui-disabled {
+  opacity: 1;
+  -webkit-text-fill-color: rgba(0, 0, 0, 0.5) !important;
+  background-color: rgba(0, 0, 0, 0.05) !important;
+}
+
+.MuiPaginationItem-page {
+  color: #000000 !important;
+}
+/* .swal-button--confirm {
+  background-color: #ffc947 !important;
+  border: 0;
+}
+
+.swal-button--confirm:not([disabled]):hover,
+.swal-button--confirm:not([disabled]):focus,
+.swal-button--confirm:not([disabled]):active {
+  background-color: #ffc947 !important;
+}
+.swal-button--confirm:hover,
+.swal-button--confirm:focus,
+.swal-button--confirm:active {
+  background-color: #ffc947 !important;
+  border: 0;
+  box-shadow: none;
+} */
+/* font */
+@font-face {
+  font-family: 'SCD100';
+  font-weight: 100;
+  src: url('./assets/fonts/SCDream1.otf') format('opentype');
+}
+
+@font-face {
+  font-family: 'SCD200';
+  font-weight: 200;
+  src: url('./assets/fonts/SCDream2.otf') format('opentype');
+}
+
+@font-face {
+  font-family: 'SCD300';
+  font-weight: 300;
+  src: url('./assets/fonts/SCDream3.otf') format('opentype');
+}
+
+@font-face {
+  font-family: 'SCD400';
+  font-weight: 400;
+  src: url('./assets/fonts/SCDream4.otf') format('opentype');
+}
+
+@font-face {
+  font-family: 'SCD500';
+  font-weight: 500;
+  src: url('./assets/fonts/SCDream5.otf') format('opentype');
+}
+
+@font-face {
+  font-family: 'SCD600';
+  font-weight: 600;
+  src: url('./assets/fonts/SCDream6.otf') format('opentype');
+}
+
+@font-face {
+  font-family: 'SCD700';
+  font-weight: 700;
+  src: url('./assets/fonts/SCDream7.otf') format('opentype');
+}
+
+@font-face {
+  font-family: 'SCD800';
+  font-weight: 800;
+  src: url('./assets/fonts/SCDream8.otf') format('opentype');
+}
+
+@font-face {
+  font-family: 'SCD900';
+  font-weight: 900;
+  src: url('./assets/fonts/SCDream9.otf') format('opentype');
+}
+
+.swal2-container {
+  z-index: 10000000 !important;
+}

@@ -1,0 +1,31 @@
+.inputBox {
+  box-sizing: border-box;
+  width: calc(100vw - 20px);
+  height: 30px;
+  border-width: 0 0 1px 0;
+  padding-left: 10px;
+  margin-bottom: 15px;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+#tokenBox {
+  box-sizing: border-box;
+  width: 50%;
+  height: 30px;
+  border-width: 0 0 1px 0;
+  padding-left: 10px;
+  margin-bottom: 15px;
+  margin-left: 10px;
+}
+
+.myWallet {
+  margin-top: 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: #ffc947;
+  padding-left: 10px;
+  padding-right: 10px;
+  height: 30px;
+  width: 100px;
+}

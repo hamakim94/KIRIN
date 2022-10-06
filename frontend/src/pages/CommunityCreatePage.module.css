@@ -1,0 +1,56 @@
+.midWrapper {
+  box-sizing: border-box;
+  width: 100%;
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 10px;
+  padding: 15px;
+  margin-bottom: 10px;
+}
+
+.writerWrapper {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  padding-left: 10px;
+}
+
+.nameWrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.starImg {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 100%;
+  margin-right: 10px;
+}
+
+.writeDate {
+  color: #808080;
+  font-size: 12px;
+}
+
+.communityImg {
+  width: 100%;
+  object-fit: cover;
+  margin-top: 10px;
+}
+
+.subBtn {
+  width: 100%;
+  background-color: #ffc947;
+  padding: 2px;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 4.5px;
+  border: 0;
+  font-family: 'SCD800';
+  border-radius: 10%;
+}
+.subBtn:active {
+  background-color: #cd9105;
+  transition: 0.3s;
+}

@@ -1,0 +1,20 @@
+.box {
+  text-align: center;
+  margin-top: 15%;
+  margin-left: 10;
+  margin-right: 10;
+}
+
+.title {
+  font-size: x-large;
+  font-weight: bold;
+  margin-top: 10%;
+  margin-bottom: 100px;
+}
+
+.btn {
+  width: 80%;
+  max-width: 450px;
+  font-size: larger;
+  font-weight: bold;
+}

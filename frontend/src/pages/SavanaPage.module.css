@@ -1,0 +1,145 @@
+.challengeContainer {
+  position: relative;
+  width: 100vw;
+  height: calc((var(--vh, 1vh) * 100) - 56px);
+  overflow: auto;
+  scroll-snap-type: y mandatory;
+  -ms-overflow-style: none;
+}
+
+.challengeContainer::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+#savana {
+  padding-bottom: 56px;
+}
+
+.img {
+  width: 100%;
+  object-fit: cover;
+}
+
+.coverBox {
+  display: flex;
+  flex-direction: column;
+  background-color: rgba(0, 0, 0, 0);
+  position: absolute;
+  width: 100vw;
+  /* height: 100vh; */
+  height: calc((var(--vh, 1vh) * 100) - 56px);
+  opacity: 1;
+  z-index: 2;
+}
+
+.blankBox {
+  flex: 3;
+}
+.infoBox {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding-left: 5px;
+  padding-right: 5px;
+  padding-bottom: 25px;
+}
+.cardWrapper {
+  width: 100vw;
+  /* height: 100vh; */
+  height: calc((var(--vh, 1vh) * 100) - 56px);
+  background-color: #000000;
+  scroll-snap-align: center;
+}
+.reactPlayer {
+  pointer-events: none;
+}
+
+.infoTop {
+  display: flex;
+  flex-direction: column;
+}
+.infoBot {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.infoTitle {
+  color: #ffffff;
+  justify-content: start;
+  margin-bottom: 5px;
+  margin-left: 20px;
+  margin-right: 20px;
+  font-size: 18px;
+}
+.infoText {
+  color: #ffffff;
+  font-size: 15px;
+  justify-content: space-around;
+  margin-top: 5px;
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+.progressDiv {
+  background-color: #ffffff;
+  margin-left: 10px;
+  margin-right: 10px;
+  border-radius: 0.5rem;
+}
+.progress {
+  background-color: #ffd046;
+  height: 30px;
+  border-bottom-left-radius: 0.5rem;
+  border-top-left-radius: 0.5rem;
+  transition: 1s ease;
+  transition-delay: 0.5s;
+}
+
+.iconBox {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  margin-right: 15px;
+  margin-bottom: 30px;
+}
+
+.clickIcon {
+  height: 33px;
+  width: 33px;
+  margin-top: 10px;
+  margin-right: 2px;
+  color: rgb(255, 255, 255);
+}
+
+.likeIcon {
+  height: 33px;
+  width: 33px;
+  margin-top: 10px;
+  margin-right: 2px;
+  color: rgb(255, 0, 0);
+}
+
+.iconCount {
+  font-weight: bold;
+  color: rgb(255, 255, 255);
+}
+
+.toast_container {
+  position: relative;
+  z-index: 99;
+
+  transform: translate(-50%, -50%);
+  width: 24rem;
+  height: 2.625rem;
+  border-radius: 10px;
+  box-shadow: 0 0 15px 0 var(--black-40);
+  background-color: #323232;
+}
+
+.toast_text {
+  font-weight: bold;
+  letter-spacing: 0.29px;
+  text-align: center;
+  margin-top: 0.6rem;
+}

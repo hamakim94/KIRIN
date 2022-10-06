@@ -1,0 +1,29 @@
+.topBox {
+  display: flex;
+  flex-direction: row;
+  margin-top: 20px;
+  margin-bottom: 40px;
+  justify-content: space-between;
+}
+
+.back {
+  height: 25px;
+  width: 25px;
+  color: black;
+}
+
+.pageTitle {
+  font-size: 20px;
+  font-weight: bold;
+  justify-content: center;
+}
+
+.fakeSetting {
+  height: 25px;
+  width: 25px;
+  color: white;
+}
+
+.contentBox {
+  border-style: solid;
+}
