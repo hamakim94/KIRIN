@@ -35,6 +35,10 @@
   padding: 0;
 }
 
+body {
+  overscroll-behavior-y: none;
+}
+
 .swal2-top {
   display: grid;
   position: fixed;
