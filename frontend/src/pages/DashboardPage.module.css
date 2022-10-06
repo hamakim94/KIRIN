@@ -1,0 +1,39 @@
+.wrapper {
+  padding-bottom: 55px;
+}
+.topBox {
+  display: flex;
+  flex-direction: row;
+  margin-top: 20px;
+  margin-bottom: 40px;
+  justify-content: center;
+}
+.infoBox {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  justify-content: center;
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-bottom: 20px;
+}
+.infoName {
+  font-weight: bold;
+  margin-top: 10px;
+  border-radius: 5ch;
+  border-left-width: 3;
+}
+.pageTitle {
+  font-size: 20px;
+  font-weight: bold;
+  justify-content: center;
+}
+.myWallet {
+  margin-top: 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: #ffc947;
+  height: 25px;
+  padding-left: 10px;
+  padding-right: 10px;
+}

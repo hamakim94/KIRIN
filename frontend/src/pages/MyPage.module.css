@@ -1,0 +1,135 @@
+.topBox {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 30px;
+  margin-top: 15px;
+  justify-content: space-between;
+}
+
+.back {
+  height: 25px;
+  width: 25px;
+  color: black;
+  margin-left: 10px;
+}
+
+.pageTitle {
+  font-size: 20px;
+  font-weight: bold;
+  justify-content: center;
+}
+
+.setting {
+  height: 25px;
+  width: 25px;
+  color: grey;
+  margin-right: 10px;
+}
+
+.profileBox {
+  text-align: center;
+  justify-content: center;
+  padding-bottom: 20px;
+  border-bottom: 0.3px solid #c9c9c9;
+}
+
+.userName {
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.myWallet {
+  margin-top: 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: #ffc947;
+  padding-left: 10px;
+  padding-right: 10px;
+  height: 30px;
+  width: 200px;
+}
+
+.myTitle {
+  font-weight: bold;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  margin-left: 10px;
+}
+
+.starList {
+  display: flex;
+  flex-direction: row;
+  margin-top: 10px;
+  padding-bottom: 10px;
+}
+
+.profileImgName {
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.starName {
+  text-align: center;
+  font-size: small;
+}
+
+.logo {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.plusStar {
+  position: relative;
+  background-color: #d9d9d9;
+  display: inline-block;
+  width: 75px;
+  height: 75px;
+  border-radius: 100%;
+  margin-right: 10px;
+}
+
+.plusStarBox {
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.plusStarText {
+  position: absolute;
+  color: #ffffff;
+  font-size: 30px;
+}
+
+.titleBox {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+
+.sortTab {
+  display: flex;
+  align-items: flex-end;
+  font-size: 12px;
+  margin-right: 15px;
+  gap: 8px;
+}
+
+.img {
+  width: 100%;
+  object-fit: cover;
+}
+
+.hScroll {
+  overflow: auto;
+  white-space: nowrap;
+  -ms-overflow-style: none; /* IE, Edge */
+  scrollbar-width: none; /* Firefox */
+  border-bottom: 0.3px solid #c9c9c9;
+  margin-bottom: 10px;
+}
+
+.hScroll::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
