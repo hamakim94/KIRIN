@@ -48,6 +48,11 @@ function FindPasswordPage() {
         });
       })
       .catch((err) => {
+        swal2.fire({
+          title: '입력한 정보가 올바르지 않습니다.',
+          confirmButtonColor: '#ffc947',
+          confirmButtonText: '확인',
+        });
         console.log(err);
       });
   };

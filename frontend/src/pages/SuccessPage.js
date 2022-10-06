@@ -25,7 +25,7 @@ function SuccessPage() {
           src={require('../assets/img/kirin_logo_nobackground.png')}
           style={{ width: 120 }}
         ></img>
-        <div className={styles.title}>로그인에 성공하였습니다:)</div>
+        <div className={styles.title}>인증에 성공하였습니다:)</div>
         <div>
           <div style={{ marginTop: 30, textAlign: 'center' }}>
             <Button

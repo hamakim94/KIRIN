@@ -141,8 +141,8 @@ function RegisterPage() {
       title: location.state.title,
       amount: amount,
     };
-    if (body.amount !== 0) {
-      if (body.amount > data) {
+    if (amount !== 0) {
+      if (amount > parseInt(data)) {
         swal2.fire({
           title: '보유 토큰이 부족합니다. 충전 후 다시 시도해주세요.',
           confirmButtonColor: '#ffc947',
@@ -282,7 +282,7 @@ function RegisterPage() {
             variant='contained'
             size='medium'
             className={styles.Btn}
-            disabled={check}
+            // disabled={check}
             style={{
               width: window.innerWidth - 20,
               height: 30,
