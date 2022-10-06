@@ -290,19 +290,19 @@ Ubuntu
 ## :heavy_check_mark: 페이지 기능 소개 
 
 - 홈
-  <img src="/uploads/d0325e30954f080af03072ce5f735f40/홈.gif" width='220' height="450" />
+<img src="/uploads/d0325e30954f080af03072ce5f735f40/홈.gif" width='220' height="450" />
 
 - 스타페이지
-  <img src="/uploads/d5923ac85515ff24402dcc42bb7ea100/스타페이지.gif" width="220" height="450">
+<img src="/uploads/d5923ac85515ff24402dcc42bb7ea100/스타페이지.gif" width="220" height="450">
 
 - 사바나 - 상세페이지
-  <img src="/uploads/c9782d6ebb85fb90c3bb96fb51e96a3a/사바나상세.gif"  width="220" height="450" >
+<img src="/uploads/c9782d6ebb85fb90c3bb96fb51e96a3a/사바나상세.gif"  width="220" height="450" >
 
 - 챌린지 참여 - 기부
-  <img src="/uploads/a6428f3a12ad57690a4f1cb26c50b008/기부충전.gif" width='220' height="450"/>
+<img src="/uploads/a6428f3a12ad57690a4f1cb26c50b008/기부충전.gif" width='220' height="450"/>
 
 - 마이페이지
-  <img src="/uploads/34c70a0e76e134cf20f6341f63b30ad4/마이페이지.gif" width="220" height="450"/>
+<img src="/uploads/34c70a0e76e134cf20f6341f63b30ad4/마이페이지.gif" width="220" height="450"/>
 
 - 블록-트랜잭션
-  <img src="/uploads/26430d46a2e4ffdaa48a291c9d31c86c/블록체인.gif" width="220" height="450"/>
+<img src="/uploads/26430d46a2e4ffdaa48a291c9d31c86c/블록체인.gif" width="220" height="450"/>
