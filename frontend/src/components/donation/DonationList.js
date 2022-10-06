@@ -42,7 +42,6 @@ function DonationList(props) {
   useEffect(() => {
     UseAxios.get(`/challenges/participate`, {}).then((res) => {
       setDonations(res.data);
-      console.log(res);
     });
   }, []);
 

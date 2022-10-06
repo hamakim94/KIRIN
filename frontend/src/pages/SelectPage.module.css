@@ -56,7 +56,14 @@
   padding-left: 15px;
 }
 
+.topText {
+  max-width: 250px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 .botText {
+  display: flex;
   margin-top: 5px;
   font-size: smaller;
 }

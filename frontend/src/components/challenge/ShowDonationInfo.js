@@ -14,7 +14,6 @@ const theme = createTheme({
 });
 function ProgressBar(props) {
   const [value, setValue] = useState(0);
-
   useEffect(() => {
     const newValue = props.width * props.percent;
     setValue(newValue);
@@ -35,7 +34,7 @@ function ShowDonationInfo(props) {
       }
     );
   }, [props.data.challengeId]);
-
+  const progressWidth = window.innerWidth * 0.9;
   return realDonors ? (
     <ThemeProvider theme={theme}>
       <div className={props.styles.infoTop}>
@@ -84,7 +83,7 @@ function ShowDonationInfo(props) {
           <ProgressBar
             styles={props.styles}
             height
-            width={'90vw'}
+            width={progressWidth}
             percent={props.data.currentNum / props.data.targetNum}
           ></ProgressBar>
         </div>

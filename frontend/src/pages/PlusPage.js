@@ -387,7 +387,7 @@ function PlusPage() {
                     <MdOutlineQueueMusic style={{ marginRight: 2 }} size={30}></MdOutlineQueueMusic>
                   </div>
                   <div>
-                    <div onClick={() => setIsOpen(true)}>
+                    <div className={styles.topBox} onClick={() => setIsOpen(true)}>
                       {challengeData ? challengeData.title : '챌린지선택'}
                     </div>
                     <div style={{ fontSize: '0.75em' }}>

@@ -54,15 +54,15 @@ function ChallengeCard(props) {
         liked: !data.liked,
         likeCnt: data.likeCnt + 1,
       }));
-      UseAxios.post(`/challenges/like?challengeId=${data.challengeId}`, {
+      UseAxios.post(`/challenges/like?challengeId=${data.id}`, {
         params: {
-          challengeId: data.challengeId,
+          challengeId: data.id,
         },
-      });
+      }).then((res) => console.log(res));
     } else if (data.liked) {
-      UseAxios.delete(`/challenges/like?challengeId=${data.challengeId}`, {
+      UseAxios.delete(`/challenges/like?challengeId=${data.id}`, {
         params: {
-          challengeId: data.challengeId,
+          challengeId: data.id,
         },
       });
       setData((data) => ({

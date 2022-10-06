@@ -31,7 +31,7 @@ function SavanaPage() {
             .then((res) => {
               const arr = res.data;
               arr.sort(function (a, b) {
-                return b.likeCnt - a.likeCnt;
+                return b.currentNum - a.currentNum;
               });
               setSavanaData(arr);
               let idx = arr.findIndex((el) => el.id === location.state.id);
@@ -51,14 +51,15 @@ function SavanaPage() {
             .catch(() => setLoading(true));
           break;
         case '3':
-          UseAxios.get(`/challenges?scope=general&order=random`)
+          UseAxios.get(`/challenges?scope=general&order=popularity`)
             .then((res) => {
               const newArr = res.data;
+              newArr.sort(function (a, b) {
+                return b.likeCnt - a.likeCnt;
+              });
               let idx = newArr.findIndex((el) => el.id === location.state.id);
-              let firstObj = newArr.splice(idx, 1);
-              newArr.unshift(firstObj[0]);
               setSavanaData(newArr);
-              setIdx(0);
+              setIdx(idx);
               setLoading(true);
             })
             .catch(() => setLoading(true));

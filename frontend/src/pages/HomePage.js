@@ -33,7 +33,7 @@ function HomePage() {
         setLoading2(true);
       })
       .catch(() => setLoading2(true));
-    UseAxios.get('/challenges?scope=general&order=random')
+    UseAxios.get('/challenges?scope=general&order=popularity')
       .then((res) => {
         const arr = res.data;
         arr.sort(function (a, b) {

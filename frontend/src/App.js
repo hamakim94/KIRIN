@@ -68,11 +68,9 @@ function App() {
       });
 
       sseEvents.onopen = () => {
-        console.log('연결');
         // 연결 됐을 때
       };
       sseEvents.onerror = (event) => {
-        console.log(event);
         // 에러 났을 때
       };
       sseEvents.onmessage = (event) => {
@@ -81,15 +79,15 @@ function App() {
         const notify = () =>
           toast(data.event, {
             position: 'top-center',
-            // autoClose: 5000,
+            autoClose: 60000,
             hideProgressBar: true,
-            closeOnClick: false,
+            closeOnClick: true,
             pauseOnHover: false,
             draggable: true,
             progress: undefined,
+            containerId: 'B',
           });
         if (data.length > 1) {
-          console.log(JSON.parse(event.data));
         } else {
           notify();
           urlRef.current = data.link;
@@ -100,7 +98,6 @@ function App() {
     return () => {
       if (sseEvents) {
         sseEvents.close();
-        console.log('eventsource closed');
       }
     };
   }, [userId]);
@@ -110,13 +107,19 @@ function App() {
         value ? (
           <div className='App'>
             <ToastContainer
+              enableMultiContainer
+              containerId={'B'}
               onClick={() => {
-                navigate(`${urlRef.current}`);
+                const pathname = urlRef.current.split('/');
+                navigate(`${urlRef.current}`, {
+                  state: { starId: pathname[2], boardId: pathname[4] },
+                });
                 UseAxios.post('/notify/read', null, {
                   params: { notificationId: idRef.current },
                 });
               }}
             />
+            <ToastContainer enableMultiContainer containerId={'A'} />
             <Context.Provider
               value={{ blob, setBlob, userData, setUserData, selected, setSelected }}
             >

@@ -59,3 +59,9 @@
   height: 10px;
   transition: 0.1s ease;
 }
+.topBox {
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

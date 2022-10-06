@@ -131,6 +131,7 @@
 }
 .MuiBackdrop-root {
   background-color: rgba(0, 0, 0, 0.2) !important;
+  z-index: 10000000 !important;
 }
 .Mui-selected {
   color: #ffc947 !important;

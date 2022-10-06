@@ -46,8 +46,10 @@
 }
 
 .starInfo {
+  display: flex;
   margin-left: 30px;
   padding-right: 10px;
+  align-items: center;
 }
 
 .tabMenu {
