@@ -15,12 +15,7 @@ function Header(props) {
           onClick={() => navigate(-1)}
         ></BsChevronLeft>
       </div>
-
-      {/* <div className={props.white ? styles.pageWhiteTitle : styles.pageTitle}>{props.title}</div> */}
-      <div className={props.white ? styles.pageWhiteTitle : styles.pageTitle}>
-        <Marquee text={props.title}></Marquee>
-      </div>
-
+      <div className={props.white ? styles.pageWhiteTitle : styles.pageTitle}>{props.title}</div>
       <div className={styles.rightBox}></div>
     </div>
   );
