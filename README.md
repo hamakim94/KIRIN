@@ -100,6 +100,7 @@ SSAFY 7기 2학기 특화프로젝트 - KIRIN
   - **블록체인**
     - 블록체인 장부를 통해 모든 사용자들의 토큰 기부 등록, 충전 내역, 송금 내용을 확인 가능합니다!
     
+
 <br/>
 
 <img src="docs/img/kirin_donation_process.png" width="1000"/>
