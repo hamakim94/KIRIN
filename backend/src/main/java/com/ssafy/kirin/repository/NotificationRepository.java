@@ -1,0 +1,11 @@
+package com.ssafy.kirin.repository;
+
+import com.ssafy.kirin.entity.Notification;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.List;
+
+public interface NotificationRepository extends JpaRepository<Notification, Long> {
+
+    List<Notification> findByUserIdAndIsRead(Long userId, Boolean isRead);
+}

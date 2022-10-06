@@ -1,0 +1,116 @@
+buildscript {
+	ext {
+		queryDslVersion = "5.0.0" // queryDsl version 정보 추가
+	}
+}
+
+plugins {
+	id 'org.springframework.boot' version '2.7.3'
+	id 'io.spring.dependency-management' version '1.0.13.RELEASE'
+	id 'org.asciidoctor.convert' version '1.5.8'
+	id 'java'
+	// querydsl 플러그인 추가
+	id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
+}
+
+group = 'com.ssafy.kirin'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '17'
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+	// querydsl이 compileClassPath를 상속하도록 설정
+	querydsl.extendsFrom compileClasspath
+}
+
+// queryDSL 설정 추가
+// querydsl에서 사용할 경로 설정
+def querydslDir = "$buildDir/generated/querydsl"
+// JPA 사용 여부와 사용할 경로를 설정
+querydsl {
+	jpa = true
+	querydslSourcesDir = querydslDir
+}
+// build 시 사용할 sourceSet 추가
+sourceSets {
+	main.java.srcDir querydslDir
+}
+// querydsl 컴파일시 사용할 옵션 설정
+compileQuerydsl{
+	options.annotationProcessorPath = configurations.querydsl
+}
+
+repositories {
+	mavenCentral()
+}
+
+ext {
+	set('snippetsDir', file("build/generated-snippets"))
+	set('springShellVersion', "2.1.1")
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-batch'
+	implementation 'org.springframework.boot:spring-boot-starter-cache'
+//	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+	implementation 'org.springframework.boot:spring-boot-starter-hateoas'
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-websocket'
+	compileOnly 'org.projectlombok:lombok'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.springframework.batch:spring-batch-test'
+	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+
+	// swagger
+	implementation 'io.springfox:springfox-boot-starter:3.0.0'
+	// mysql
+	runtimeOnly 'mysql:mysql-connector-java'
+	// jpa
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	// spring security
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	testImplementation 'org.springframework.security:spring-security-test'
+	// jwt (jjwt: JWT 토큰 생성 및 JWT 토큰 파싱, 검증을 해주는 라이브러리)
+	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+	implementation 'io.jsonwebtoken:jjwt-impl:0.11.5'
+	implementation 'io.jsonwebtoken:jjwt-jackson:0.11.5'
+	// redis
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+	// 회원가입 유효성 검사
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	// email 인증
+	implementation 'org.springframework.boot:spring-boot-starter-mail'
+	// queryDsl
+	implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
+	implementation "com.querydsl:querydsl-apt:${queryDslVersion}"
+	// gson (for mm webhook)
+	implementation 'com.google.code.gson:gson:2.9.0'
+	// Entity to DTO Mapper
+	implementation 'org.mapstruct:mapstruct:1.5.2.Final'
+	annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.2.Final'
+	// web3j
+	implementation "org.web3j:core:5.0.0"
+}
+
+dependencyManagement {
+	imports {
+		mavenBom "org.springframework.shell:spring-shell-dependencies:${springShellVersion}"
+	}
+}
+
+tasks.named('test') {
+	outputs.dir snippetsDir
+	useJUnitPlatform()
+}
+
+tasks.named('asciidoctor') {
+	inputs.dir snippetsDir
+	dependsOn test
+}
