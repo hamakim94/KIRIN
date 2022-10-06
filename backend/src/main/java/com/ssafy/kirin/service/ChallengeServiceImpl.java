@@ -381,8 +381,12 @@ public class ChallengeServiceImpl implements ChallengeService {
                     .event(String.format(NotificationEnum.ChallengeUploadCompleted.getContent(), challenge.getTitle())).build());
 
         } catch (InterruptedException e) {
+            notificationService.addNotification(Notification.builder().isRead(false).event(String.format(NotificationEnum.ChallengeUploadFailed.getContent(), challengeRequestDTO.title()))
+                    .link("/plus/0").userId(userDTO.getId()).image(userDTO.getProfileImg()).build());
             throw new RuntimeException(e);
         } catch (Exception e){
+            notificationService.addNotification(Notification.builder().isRead(false).event(String.format(NotificationEnum.ChallengeUploadFailed.getContent(), challengeRequestDTO.title()))
+                    .link("/plus/0").userId(userDTO.getId()).image(userDTO.getProfileImg()).build());
             throw new RuntimeException(e);
         }
     }

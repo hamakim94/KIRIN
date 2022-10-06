@@ -94,7 +94,7 @@ public class NotificationServiceImpl implements NotificationService {
     @Transactional
     @Override
     public void readAllNotification(Long userID) {
-        List<Notification> list = notificationRepository.findByUserIdAndIsRead(userID, true);
+        List<Notification> list = notificationRepository.findByUserIdAndIsRead(userID, false);
         for(Notification notification : list)
             notification.setIsRead(true);
     }
