@@ -55,7 +55,8 @@ public class ChallengeServiceImpl implements ChallengeService {
     private final SubscribeRepository subscribeRepository;
     @Value("${property.app.upload-path}")
     private String challengeDir;
-    private final String kirinStamp = "/files/6f5e60c2-8d44-43c8-91e4-2aeff4d5682cgirin.png";
+    @Value("${logo.image}")
+    private String kirinStamp;
 
     @Override
     public List<ChallengeDTO> listStarsByPopularity() {
