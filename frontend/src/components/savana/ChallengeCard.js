@@ -35,6 +35,7 @@ function ProgressBar(props) {
 function ChallengeCard(props) {
   const [isOpen, setIsOpen] = useState(false);
   const [data, setData] = useState(null);
+  const [id, setId] = useState(null);
   const videoRef = useRef(null);
   const btnRef = useRef(null);
   const navigate = useNavigate();
@@ -43,7 +44,9 @@ function ChallengeCard(props) {
   useEffect(() => {
     if (props.item) {
       setData(props.item);
-      console.log(props.item);
+      UseAxios.get(`/challenges/savana/challenge/${props.item.challengeId}`).then((res) =>
+        setId(res.data.user.id)
+      );
     }
   }, [props.item]);
 
@@ -58,7 +61,7 @@ function ChallengeCard(props) {
         params: {
           challengeId: data.id,
         },
-      }).then((res) => console.log(res));
+      });
     } else if (data.liked) {
       UseAxios.delete(`/challenges/like?challengeId=${data.id}`, {
         params: {
@@ -129,11 +132,15 @@ function ChallengeCard(props) {
         <div className={props.styles.blankBox}></div>
         <div className={props.styles.iconBox}>
           <div style={{ textAlign: 'center', marginBottom: 15 }}>
-            <ProfileImg
-              size={'35px'}
-              src={data.user.profileImg}
-              onClick={() => navigate(`/star/${data.user.id}`)}
-            />
+            {data.user.id === id ? (
+              <ProfileImg
+                size={'35px'}
+                src={data.user.profileImg}
+                onClick={() => navigate(`/star/${data.user.id}`)}
+              />
+            ) : (
+              ''
+            )}
           </div>
           <div style={{ textAlign: 'center', marginBottom: 15 }}>
             <a

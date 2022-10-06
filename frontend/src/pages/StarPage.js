@@ -40,7 +40,7 @@ function StarPage() {
   useEffect(() => {
     UseAxios.get(`/users/stars/${starId}`).then((res) => {
       setStarInfo(res.data);
-      console.log(starInfo.profileImg);
+      // console.log(starInfo.profileImg);
       setCoverImg(`/files/${res.data.coverImg}`);
       setInfo(res.data.info);
     });
@@ -53,30 +53,28 @@ function StarPage() {
       res.data.reverse();
       setCommunityData(res.data);
     });
-    UseAxios.get(`/challenges?scope=all&order=alphabet`)
-      .then((res) => {
-        const arr = res.data;
-        const filterArr = arr.filter((i) => i.user.id === starId);
-        filterArr.reverse();
-        filterArr.sort(function (a, b) {
-          return b.isProceeding - a.isProceeding;
-        });
-        setLatestData(filterArr);
-      })
-      .catch((err) => console.log(err));
-    UseAxios.get(`/challenges?scope=all&order=alphabet`)
-      .then((res) => {
-        const arr = res.data;
-        const filterArr = arr.filter((i) => i.user.id === starId);
-        filterArr.sort(function (a, b) {
-          return b.likeCnt - a.likeCnt;
-        });
-        filterArr.sort(function (a, b) {
-          return b.isProceeding - a.isProceeding;
-        });
-        setPopularityData(filterArr);
-      })
-      .catch((err) => console.log(err));
+    UseAxios.get(`/challenges?scope=all&order=alphabet`).then((res) => {
+      const arr = res.data;
+      const filterArr = arr.filter((i) => i.user.id === starId);
+      filterArr.reverse();
+      filterArr.sort(function (a, b) {
+        return b.isProceeding - a.isProceeding;
+      });
+      setLatestData(filterArr);
+    });
+    // .catch((err) => console.log(err));
+    UseAxios.get(`/challenges?scope=all&order=alphabet`).then((res) => {
+      const arr = res.data;
+      const filterArr = arr.filter((i) => i.user.id === starId);
+      filterArr.sort(function (a, b) {
+        return b.likeCnt - a.likeCnt;
+      });
+      filterArr.sort(function (a, b) {
+        return b.isProceeding - a.isProceeding;
+      });
+      setPopularityData(filterArr);
+    });
+    // .catch((err) => console.log(err));
   }, []);
 
   const onChange = (e) => {
@@ -113,12 +111,11 @@ function StarPage() {
       {
         params: { celebId: starInfo.id },
       }
-    )
-      .then((res) => {
-        console.log(res);
-        setSubscribed(!subscribed);
-      })
-      .catch((err) => console.log(err));
+    ).then((res) => {
+      // console.log(res);
+      setSubscribed(!subscribed);
+    });
+    // .catch((err) => console.log(err));
   };
 
   return userData && starInfo ? (

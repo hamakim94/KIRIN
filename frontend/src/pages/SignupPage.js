@@ -263,8 +263,8 @@ function SignupPage({ parentCallback }) {
     const json = JSON.stringify(body);
     const blob = new Blob([json], { type: 'application/json' });
     data.append('userDTO', blob);
-    console.log(body);
-    console.log(blob);
+    // console.log(body);
+    // console.log(blob);
     if (canSubmit) {
       UseAxios.post(`/users/signup`, data, {
         headers: { 'Content-Type': 'multipart/form-data' },

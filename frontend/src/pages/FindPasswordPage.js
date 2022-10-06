@@ -53,7 +53,7 @@ function FindPasswordPage() {
           confirmButtonColor: '#ffc947',
           confirmButtonText: '확인',
         });
-        console.log(err);
+        // console.log(err);
       });
   };
   return (

@@ -58,7 +58,7 @@ function CoummnityFooter(props) {
           }));
         })
         .catch((err) => {
-          console.log(err);
+          // console.log(err);
         });
     } else if (like.liked) {
       UseAxios.delete(
@@ -72,7 +72,7 @@ function CoummnityFooter(props) {
           }));
         })
         .catch((err) => {
-          console.log(err);
+          // console.log(err);
         });
     }
   };

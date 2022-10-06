@@ -45,13 +45,12 @@ function SavanaComment(props) {
       setCheckWrite(true);
       UseAxios.post(`/challenges/comments`, ChallengeCommentRequestDTO, {
         params: { challengeId: props.challengeId },
-      })
-        .then((res) => {
-          console.log(res);
-          setNewComment('');
-          setCheckWrite(false);
-        })
-        .catch((err) => console.log(err));
+      }).then((res) => {
+        // console.log(res);
+        setNewComment('');
+        setCheckWrite(false);
+      });
+      // .catch((err) => console.log(err));
     }
   };
   return (

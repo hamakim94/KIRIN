@@ -22,6 +22,7 @@ function SuccessPage() {
     <ThemeProvider theme={theme}>
       <div className={styles.box}>
         <img
+          alt='성공'
           src={require('../assets/img/kirin_logo_nobackground.png')}
           style={{ width: 120 }}
         ></img>

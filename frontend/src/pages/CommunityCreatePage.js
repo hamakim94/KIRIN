@@ -53,10 +53,10 @@ function CommunityCreatePage() {
     })
       .then((res) => {
         navigate(-1);
-        console.log(res);
+        // console.log(res);
       })
       .catch((err) => {
-        console.log(err);
+        // console.log(err);
         setCheck(false);
       });
   };

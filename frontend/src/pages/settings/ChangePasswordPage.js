@@ -92,7 +92,7 @@ function ChangePasswordPage() {
         userId: userData.id,
       })
         .then((res) => {
-          console.log(res);
+          // console.log(res);
           // swal('비밀번호 변경이 완료되었습니다.');
           swal2
             .fire({

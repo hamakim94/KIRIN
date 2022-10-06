@@ -9,7 +9,7 @@ import {
   Box,
   Container,
 } from '@mui/material/';
-import swal from 'sweetalert';
+// import swal from 'sweetalert';
 import swal2 from 'sweetalert2';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Header from '../components/common/Header';
@@ -264,18 +264,18 @@ function StarSignupPage() {
     const json = JSON.stringify(body);
     const blob = new Blob([json], { type: 'application/json' });
     data.append('userDTO', blob);
-    console.log(body);
-    console.log(blob);
+    // console.log(body);
+    // console.log(blob);
     if (canSubmit) {
       UseAxios.post(`/users/signup`, data, {
         headers: { 'Content-Type': 'multipart/form-data' },
       })
         .then((res) => {
-          console.log(res.data);
+          // console.log(res.data);
           navigate('/finishsignup');
         })
         .catch((err) => {
-          console.log(err);
+          // console.log(err);
         });
     }
   };

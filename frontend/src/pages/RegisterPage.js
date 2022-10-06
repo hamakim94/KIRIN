@@ -10,7 +10,7 @@ import swal2 from 'sweetalert2';
 import WalletModal from '../components/wallet/WalletModal';
 import ABI from '../TokenABI.json';
 import CA from '../TokenCA.json';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 
 function RegisterPage() {
   const videoRef = useRef(null);
@@ -169,16 +169,16 @@ function RegisterPage() {
         const json = JSON.stringify(body);
         const fixData = new Blob([json], { type: 'application/json' });
         data.append('challengeRequestDTO', fixData);
-        // UseAxios.post(`/challenges`, data, {
-        //   headers: { 'Content-Type': 'multipart/form-data' },
-        // })
-        //   .then((res) => {
-        //     setBlob(null);
-        //     navigate('/');
-        //   })
-        //   .catch((err) => {
-        //     setCheck(false);
-        //   });
+        UseAxios.post(`/challenges`, data, {
+          headers: { 'Content-Type': 'multipart/form-data' },
+        })
+          .then((res) => {
+            setBlob(null);
+            navigate('/');
+          })
+          .catch((err) => {
+            setCheck(false);
+          });
       }
     } else {
       function uuidv4() {
@@ -199,21 +199,21 @@ function RegisterPage() {
       const json = JSON.stringify(body);
       const fixData = new Blob([json], { type: 'application/json' });
       data.append('challengeRequestDTO', fixData);
-      //   UseAxios.post(`/challenges`, data, {
-      //     headers: { 'Content-Type': 'multipart/form-data' },
-      //   })
-      //     .then((res) => {
-      //       setBlob(null);
-      //       navigate('/');
-      //     })
-      //     .catch((err) => {
-      //       setCheck(false);
-      //     });
+      UseAxios.post(`/challenges`, data, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      })
+        .then((res) => {
+          setBlob(null);
+          navigate('/');
+        })
+        .catch((err) => {
+          setCheck(false);
+        });
       {
         (() => {
           toast('업로드까지 잠시 시간이 소요됩니다.', {
             position: 'top-center',
-            // autoClose: 5000,
+            autoClose: 60000,
             hideProgressBar: true,
             closeOnClick: true,
             pauseOnHover: false,

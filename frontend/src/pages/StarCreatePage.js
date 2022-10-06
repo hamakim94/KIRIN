@@ -20,7 +20,7 @@ function StarCreatePage() {
   const [buttonDisable, setButtonDisable] = useState(false);
   const [token, setToken] = useState(null);
   //state 하나 만들어 : disalble
-  console.log(token);
+  // console.log(token);
   const onChangeVideo = (e) => {
     if (e.target.files[0]) {
       setVideo(e.target.files[0]);
@@ -42,7 +42,7 @@ function StarCreatePage() {
       targetAmount,
       donationOrganizationId,
     };
-    console.log(body.length);
+    // console.log(body.length);
     const data = new FormData();
     data.append('video', video);
     const json = JSON.stringify(body);
@@ -52,7 +52,7 @@ function StarCreatePage() {
       headers: { 'Content-Type': 'multipart/form-data' },
     })
       .then((res) => {
-        console.log(res);
+        // console.log(res);
         setButtonDisable(false);
         alert('성공');
       })
@@ -60,7 +60,7 @@ function StarCreatePage() {
         // disalble 풀려, alert
         setButtonDisable(false);
         alert('실패');
-        console.log(err);
+        // console.log(err);
       });
   };
   useEffect(() => {

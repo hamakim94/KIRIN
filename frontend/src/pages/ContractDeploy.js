@@ -1,26 +1,26 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 // const fs = require("fs");
 
 function ContractDeploy() {
-  const [tokenABI, setTokenABI] = useState("");
-  const [tokenCA, setTokenCa] = useState("");
-  const [abi, setAbi] = useState("");
-  const [bytecode, setByteCode] = useState("");
-  const [web3, setWeb3] = useState("");
-  const [money, setMoney] = useState("");
-  const [endTime, setEndTime] = useState("");
-  const [participatedNum, setParticipatedNum] = useState("");
-  const [targetNum, setTargetNum] = useState("");
+  const [tokenABI, setTokenABI] = useState('');
+  const [tokenCA, setTokenCa] = useState('');
+  const [abi, setAbi] = useState('');
+  const [bytecode, setByteCode] = useState('');
+  const [web3, setWeb3] = useState('');
+  const [money, setMoney] = useState('');
+  const [endTime, setEndTime] = useState('');
+  const [participatedNum, setParticipatedNum] = useState('');
+  const [targetNum, setTargetNum] = useState('');
 
   useEffect(() => {
-    const Web3 = require("web3");
+    const Web3 = require('web3');
     var web3 = new Web3(new Web3.providers.HttpProvider(`${process.env.REACT_APP_BASEURL}/bc/`));
     // const web3 = new Web3(new Web3.providers.HttpProvider(process.env.REACT_APP_TESTURL));
     setWeb3(web3);
-    setAbi(require("../FundRaisingABI.json"));
-    setTokenCa(require("../TokenCA.json"));
-    setByteCode(require("../FundRaisingByteCode.json"));
-    setTokenABI(require("../TokenABI.json"));
+    setAbi(require('../FundRaisingABI.json'));
+    setTokenCa(require('../TokenCA.json'));
+    setByteCode(require('../FundRaisingByteCode.json'));
+    setTokenABI(require('../TokenABI.json'));
   }, []);
 
   /**
@@ -47,12 +47,12 @@ function ContractDeploy() {
     // 여기서 유저 privateKey가 들어가고
     web3.eth.accounts.signTransaction(tx, process.env.REACT_APP_USERKEY, (err, done) => {
       if (err) {
-        console.log(err);
+        // console.log(err);
       } else {
         web3.eth.sendSignedTransaction(done.rawTransaction).then((receipt) => {
           const CA = JSON.stringify(receipt.contractAddress);
-          console.log(receipt);
-          console.log(CA); // 이거 가지고 놀자
+          // console.log(receipt);
+          // console.log(CA); // 이거 가지고 놀자
         });
       }
     });
@@ -67,7 +67,7 @@ function ContractDeploy() {
   const increaseAllowance = async () => {
     var tokenContract = await new web3.eth.Contract(tokenABI, tokenCA);
     var increaseAllowance = await tokenContract.methods
-      .increaseAllowance("0x8A1A6eB1f73aA04294bC5c7B87e6E713Fbf7DF50", 500)
+      .increaseAllowance('0x8A1A6eB1f73aA04294bC5c7B87e6E713Fbf7DF50', 500)
       .encodeABI();
     var tx = {
       data: increaseAllowance,
@@ -79,18 +79,18 @@ function ContractDeploy() {
     };
     web3.eth.accounts.signTransaction(tx, process.env.REACT_APP_USERKEY, (err, done) => {
       if (err) {
-        console.log(err);
+        // console.log(err);
       } else {
         web3.eth
           .sendSignedTransaction(done.rawTransaction, (err, transactionHash) => {
             if (!err) {
-              console.log(transactionHash + " success");
+              // console.log(transactionHash + ' success');
             } else {
-              console.log(err);
+              // console.log(err);
             }
           })
           .then(() => {
-            alert("allowance 증가 완료");
+            alert('allowance 증가 완료');
           });
       }
     });
@@ -105,7 +105,7 @@ function ContractDeploy() {
     // await increaseAllowance();
     var sendContract = await new web3.eth.Contract(
       abi,
-      "0x8A1A6eB1f73aA04294bC5c7B87e6E713Fbf7DF50"
+      '0x8A1A6eB1f73aA04294bC5c7B87e6E713Fbf7DF50'
     );
     var test = sendContract.methods.fundToken(500).encodeABI();
     // 트랜잭션 객체 생성
@@ -120,18 +120,18 @@ function ContractDeploy() {
     // 인증을 위해 signTransaction 사용
     web3.eth.accounts.signTransaction(tx, process.env.REACT_APP_USERKEY, (err, b) => {
       if (err) {
-        console.log(err);
+        // console.log(err);
       } else {
         web3.eth
           .sendSignedTransaction(b.rawTransaction, (err, transactionHash) => {
             if (!err) {
-              console.log(transactionHash + " success");
+              // console.log(transactionHash + ' success');
             } else {
-              console.log("에러" + err);
+              // console.log('에러' + err);
             }
           })
           .then(() => {
-            alert("모금 잔액 다시 보기 클릭하세용");
+            alert('모금 잔액 다시 보기 클릭하세용');
           });
       }
     });
@@ -144,14 +144,14 @@ function ContractDeploy() {
     event.preventDefault();
     var fundRaisingContract = await new web3.eth.Contract(
       abi,
-      "0x8A1A6eB1f73aA04294bC5c7B87e6E713Fbf7DF50"
+      '0x8A1A6eB1f73aA04294bC5c7B87e6E713Fbf7DF50'
     );
 
     fundRaisingContract.methods // ABI, CA를 이용해 함수 접근
       .currentCollection()
       .call()
       .then((balance) => {
-        console.log(balance);
+        // console.log(balance);
         setMoney(balance);
       });
   };
@@ -165,7 +165,7 @@ function ContractDeploy() {
     event.preventDefault();
     var fundRaisingContract = await new web3.eth.Contract(
       abi,
-      "0x8A1A6eB1f73aA04294bC5c7B87e6E713Fbf7DF50"
+      '0x8A1A6eB1f73aA04294bC5c7B87e6E713Fbf7DF50'
     );
 
     var data = fundRaisingContract.methods // ABI, CA를 이용해 함수 접근
@@ -181,18 +181,18 @@ function ContractDeploy() {
     };
     web3.eth.accounts.signTransaction(tx, process.env.REACT_APP_BENEFITKEY, (err, b) => {
       if (err) {
-        alert("아직 제한시간 안 끝남!");
+        alert('아직 제한시간 안 끝남!');
       } else {
         web3.eth
           .sendSignedTransaction(b.rawTransaction, (err, transactionHash) => {
             if (!err) {
-              console.log(transactionHash + " success");
+              // console.log(transactionHash + ' success');
             } else {
-              console.log("에러" + err);
+              // console.log('에러' + err);
             }
           })
           .then(() => {
-            alert("인출 완료!!");
+            alert('인출 완료!!');
           });
       }
     });
@@ -202,39 +202,39 @@ function ContractDeploy() {
   function timeSince(date) {
     var seconds = Math.floor((date * 1000 - new Date()) / 1000);
     if (seconds < 0) {
-      return "over";
+      return 'over';
     }
     var interval = Math.floor(seconds / 31536000);
     if (interval > 1) {
-      return interval + " years left";
+      return interval + ' years left';
     }
     interval = Math.floor(seconds / 2592000);
     if (interval > 1) {
-      return interval + " months left";
+      return interval + ' months left';
     }
     interval = Math.floor(seconds / 86400);
     if (interval > 1) {
-      return interval + " days left";
+      return interval + ' days left';
     }
     interval = Math.floor(seconds / 3600);
     if (interval > 1) {
-      return interval + " hours left";
+      return interval + ' hours left';
     }
     interval = Math.floor(seconds / 60);
     if (interval > 1) {
-      return interval + " minutes left";
+      return interval + ' minutes left';
     }
-    return Math.floor(seconds) + " seconds left";
+    return Math.floor(seconds) + ' seconds left';
   }
 
   const whenEnds = async (event) => {
     event.preventDefault();
     var fundRaisingContract = await new web3.eth.Contract(
       abi,
-      "0x8A1A6eB1f73aA04294bC5c7B87e6E713Fbf7DF50"
+      '0x8A1A6eB1f73aA04294bC5c7B87e6E713Fbf7DF50'
     );
     var data = await fundRaisingContract.methods.fundRaisingCloses().call();
-    console.log(data);
+    // console.log(data);
     setEndTime(timeSince(data));
   };
 
@@ -242,7 +242,7 @@ function ContractDeploy() {
     event.preventDefault();
     var fundRaisingContract = await new web3.eth.Contract(
       abi,
-      "0x8A1A6eB1f73aA04294bC5c7B87e6E713Fbf7DF50"
+      '0x8A1A6eB1f73aA04294bC5c7B87e6E713Fbf7DF50'
     );
 
     var data = await fundRaisingContract.methods.participate().encodeABI();
@@ -256,18 +256,18 @@ function ContractDeploy() {
     };
     web3.eth.accounts.signTransaction(tx, process.env.REACT_APP_OTHERUSERKEY, (err, b) => {
       if (err) {
-        console.log(err);
+        // console.log(err);
       } else {
         web3.eth
           .sendSignedTransaction(b.rawTransaction, (err, transactionHash) => {
             if (!err) {
-              console.log(transactionHash + " success");
+              // console.log(transactionHash + ' success');
             } else {
-              console.log("에러" + err);
+              // console.log('에러' + err);
             }
           })
           .then(() => {
-            alert("참가 완료 완료!!");
+            alert('참가 완료 완료!!');
           });
       }
     });
@@ -277,7 +277,7 @@ function ContractDeploy() {
     event.preventDefault();
     var fundRaisingContract = await new web3.eth.Contract(
       abi,
-      "0x8A1A6eB1f73aA04294bC5c7B87e6E713Fbf7DF50"
+      '0x8A1A6eB1f73aA04294bC5c7B87e6E713Fbf7DF50'
     );
     var data = await fundRaisingContract.methods.participatedNum().call();
     setParticipatedNum(data);
@@ -287,7 +287,7 @@ function ContractDeploy() {
     event.preventDefault();
     var fundRaisingContract = await new web3.eth.Contract(
       abi,
-      "0x8A1A6eB1f73aA04294bC5c7B87e6E713Fbf7DF50"
+      '0x8A1A6eB1f73aA04294bC5c7B87e6E713Fbf7DF50'
     );
     var data = await fundRaisingContract.methods.targetNum().call();
     setTargetNum(data);

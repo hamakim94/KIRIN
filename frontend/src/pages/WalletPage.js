@@ -86,14 +86,14 @@ function WalletPage() {
     };
     web3.eth.accounts.signTransaction(tx, process.env.REACT_APP_ADMINKEY, (err, b) => {
       if (err) {
-        console.log(err);
+        // console.log(err);
       } else {
         web3.eth
           .sendSignedTransaction(b.rawTransaction, (err, transactionHash) => {
             if (!err) {
-              console.log(transactionHash + ' success');
+              // console.log(transactionHash + ' success');
             } else {
-              console.log(err);
+              // console.log(err);
             }
           })
           .then(() => {
@@ -139,14 +139,14 @@ function WalletPage() {
     // 인증을 위해 signTransaction 사용
     web3.eth.accounts.signTransaction(tx, process.env.REACT_APP_ADMINKEY, (err, b) => {
       if (err) {
-        console.log(err);
+        // console.log(err);
       } else {
         web3.eth
           .sendSignedTransaction(b.rawTransaction, (err, transactionHash) => {
             if (!err) {
-              console.log(transactionHash + ' success');
+              // console.log(transactionHash + ' success');
             } else {
-              console.log(err);
+              // console.log(err);
             }
           })
           .then(() => {
@@ -162,9 +162,9 @@ function WalletPage() {
   const handleCopyClipBoard = async (obj) => {
     try {
       await navigator.clipboard.writeText(obj.address);
-      console.log('복사 성공');
+      // console.log('복사 성공');
     } catch (error) {
-      console.log('복사 실패 ' + error);
+      // console.log('복사 실패 ' + error);
     }
   };
 

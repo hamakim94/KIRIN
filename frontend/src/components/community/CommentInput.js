@@ -21,13 +21,11 @@ function CommentInput(props) {
       UseAxios.post(
         `/communities/stars/${location.state.starId}/boards/${location.state.boardId}/comments`,
         communityCommentRequestDTO
-      )
-        .then((res) => {
-          console.log(res);
-          setNewComment('');
-          props.setCheckWrite(false);
-        })
-        .catch((err) => console.log(err));
+      ).then((res) => {
+        // console.log(res);
+        setNewComment('');
+        props.setCheckWrite(false);
+      });
     }
   };
   return (

@@ -24,7 +24,7 @@ function StarPageModal(props) {
     await UseAxios.put(`/users/change-star`, { info: info }, {})
       .catch((err) => console.log(err))
       .then((res) => {
-        console.log(res);
+        // console.log(res);
         handleClose();
         props.setInfo(info);
       });

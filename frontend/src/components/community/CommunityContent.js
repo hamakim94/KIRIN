@@ -1,7 +1,7 @@
 import React from 'react';
 
 function CommunityContent(props) {
-  console.log(props.data);
+  // console.log(props.data);
   return (
     <div className={props.styles.midWrapper}>
       <div style={{ fontSize: 13 }}>{props.data.content}</div>

@@ -1,10 +1,8 @@
-import Donation from './Donation.json';
-import { Stack, Pagination, Divider } from '@mui/material';
+import { Stack, Pagination } from '@mui/material';
 import { useLocation } from 'react-router-dom';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import UseAxios from '../../utils/UseAxios';
-import Context from '../../utils/Context';
 import ProfileImg from '../common/ProfileImg';
 import { useNavigate } from 'react-router-dom';
 
