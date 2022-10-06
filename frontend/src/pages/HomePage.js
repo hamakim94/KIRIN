@@ -37,7 +37,7 @@ function HomePage() {
       .then((res) => {
         const arr = res.data;
         arr.sort(function (a, b) {
-          return b.currentNum - a.currentNum;
+          return b.likeCnt - a.likeCnt;
         });
         setRandomData(arr);
         setLoading3(true);

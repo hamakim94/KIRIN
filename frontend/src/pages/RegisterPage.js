@@ -168,17 +168,17 @@ function RegisterPage() {
         const json = JSON.stringify(body);
         const fixData = new Blob([json], { type: 'application/json' });
         data.append('challengeRequestDTO', fixData);
-        // UseAxios.post(`/challenges`, data, {
-        //   headers: { 'Content-Type': 'multipart/form-data' },
-        // })
-        //   .then((res) => {
-        //     setBlob(null);
-        //     navigate('/');
-        //   })
-        //   .catch((err) => {
-        //     console.log(err);
-        //     setCheck(false);
-        //   });
+        UseAxios.post(`/challenges`, data, {
+          headers: { 'Content-Type': 'multipart/form-data' },
+        })
+          .then((res) => {
+            setBlob(null);
+            navigate('/');
+          })
+          .catch((err) => {
+            console.log(err);
+            setCheck(false);
+          });
       }
     } else {
       function uuidv4() {

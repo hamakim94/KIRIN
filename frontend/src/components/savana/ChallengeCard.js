@@ -38,6 +38,7 @@ function ChallengeCard(props) {
   useEffect(() => {
     if (props.item) {
       setData(props.item);
+      console.log(props.item);
     }
   }, [props.item]);
 
