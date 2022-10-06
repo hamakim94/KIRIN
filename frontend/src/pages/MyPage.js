@@ -26,26 +26,34 @@ function MyPage() {
 
   useEffect(() => {
     if (userData) {
-      UseAxios.get(`/challenges/user/${userData.id}`).then((res) => {
-        setLikedData(res.data);
-        setLoading1(true);
-      });
-      UseAxios.get(`/challenges?scope=all&order=latest&userId=${userData.id}`).then((res) => {
-        setParticipatedData(res.data);
-        setLoading2(true);
-      });
-      UseAxios.get(`/users/subscribes`).then((res) => {
-        setSubs(res.data);
-        setLoading3(true);
-      });
-      UseAxios.get(`/users/profiles`).then((res) => {
-        setUser(res.data);
-        setLoading4(true);
-      });
+      UseAxios.get(`/challenges/user/${userData.id}`)
+        .then((res) => {
+          setLikedData(res.data);
+          setLoading1(true);
+        })
+        .catch(() => setLoading1(true));
+      UseAxios.get(`/challenges?scope=all&order=latest&userId=${userData.id}`)
+        .then((res) => {
+          setParticipatedData(res.data);
+          setLoading2(true);
+        })
+        .catch(() => setLoading2(true));
+      UseAxios.get(`/users/subscribes`)
+        .then((res) => {
+          setSubs(res.data);
+          setLoading3(true);
+        })
+        .catch(() => setLoading3(true));
+      UseAxios.get(`/users/profiles`)
+        .then((res) => {
+          setUser(res.data);
+          setLoading4(true);
+        })
+        .catch(() => setLoading4(true));
     }
   }, [userData]);
 
-  return loading1 && loading2 && loading3 ? (
+  return loading1 && loading2 && loading3 && loading4 ? (
     userData ? (
       <div className='wrapper'>
         <MyTop styles={styles} state={location.state}></MyTop>

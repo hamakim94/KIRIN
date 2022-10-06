@@ -10,7 +10,6 @@ import UseAxios from '../utils/UseAxios';
 import swal2 from 'sweetalert2';
 import 'react-toastify/dist/ReactToastify.css';
 import SelectPage from './SelectPage';
-import NewLoading from '../components/common/NewLoading';
 
 function ProgressBar(props) {
   const [value, setValue] = useState(0);
@@ -36,7 +35,6 @@ function PlusPage() {
   const [challengeData, setChallengeData] = useState(null);
   const [length, setLength] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
-  const [loading, setLoading] = useState(null);
   const refVideo = useRef(null);
   const recorderRef = useRef(null);
   const audioRef = useRef(null);
@@ -272,7 +270,6 @@ function PlusPage() {
         audio: false,
       });
       setStream(mediaStream);
-      setLoading(true);
     };
     start();
     (() => {
@@ -341,7 +338,7 @@ function PlusPage() {
     },
     number < 0 ? null : 100
   );
-  return loading ? (
+  return (
     <div className={styles.wrapper}>
       <div className={styles.coverBox}>
         <div style={{ flex: 1, flexDirection: 'row' }}>
@@ -554,8 +551,6 @@ function PlusPage() {
       <video playsInline autoPlay muted ref={refVideo} style={{ width: '100%', height: '100%' }} />
       <SelectPage isOpen={isOpen} setIsOpen={setIsOpen}></SelectPage>
     </div>
-  ) : (
-    <NewLoading></NewLoading>
   );
 }
 

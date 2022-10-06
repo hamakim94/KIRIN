@@ -16,22 +16,35 @@ function HomePage() {
   const [loading3, setLoading3] = useState(null);
   const [loading4, setLoading4] = useState(null);
   useEffect(() => {
-    UseAxios.get('/challenges?scope=stars&order=popularity').then((res) => {
-      setPopularityData(res.data);
-      setLoading1(true);
-    });
-    UseAxios.get('/challenges?scope=stars&order=latest').then((res) => {
-      setLatestData(res.data);
-      setLoading2(true);
-    });
-    UseAxios.get('/challenges?scope=general&order=random').then((res) => {
-      setRandomData(res.data);
-      setLoading3(true);
-    });
-    UseAxios.get(`/users/subscribes`).then((res) => {
-      setStarData(res.data);
-      setLoading4(true);
-    });
+    UseAxios.get('/challenges?scope=stars&order=popularity')
+      .then((res) => {
+        const arr = res.data;
+        arr.sort(function (a, b) {
+          return b.likeCnt - a.likeCnt;
+        });
+        setPopularityData(arr);
+        setLoading1(true);
+        // console.log(arr);
+      })
+      .catch(() => setLoading1(true));
+    UseAxios.get('/challenges?scope=stars&order=latest')
+      .then((res) => {
+        setLatestData(res.data);
+        setLoading2(true);
+      })
+      .catch(() => setLoading2(true));
+    UseAxios.get('/challenges?scope=general&order=random')
+      .then((res) => {
+        setRandomData(res.data);
+        setLoading3(true);
+      })
+      .catch(() => setLoading3(true));
+    UseAxios.get(`/users/subscribes`)
+      .then((res) => {
+        setStarData(res.data);
+        setLoading4(true);
+      })
+      .catch(() => setLoading4(true));
   }, []);
   return loading1 && loading2 && loading3 && loading4 ? (
     <div className='wrapper'>

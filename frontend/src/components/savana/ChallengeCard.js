@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { FaRegHeart, FaHeart, FaRegCommentAlt, FaInfoCircle } from 'react-icons/fa';
 import Sheet from 'react-modal-sheet';
 import SavanaComment from './SavanaComment';
@@ -31,7 +31,7 @@ function ProgressBar(props) {
 function ChallengeCard(props) {
   const [isOpen, setIsOpen] = useState(false);
   const [data, setData] = useState(null);
-  // const [music, setMusic] = useState(null);
+  const videoRef = useRef(null);
   const navigate = useNavigate();
   const progressWidth = window.innerWidth * 0.9;
 
@@ -40,6 +40,7 @@ function ChallengeCard(props) {
       setData(props.item);
     }
   }, [props.item]);
+
   const likeButtonClick = () => {
     if (!data.liked) {
       setData((data) => ({
@@ -63,6 +64,49 @@ function ChallengeCard(props) {
         liked: !data.liked,
         likeCnt: data.likeCnt - 1,
       }));
+    }
+  };
+  useEffect(() => {
+    if (videoRef.current) {
+      const scroll = videoRef.current.getBoundingClientRect().y;
+      if (scroll === 0) {
+        if (videoRef.current.paused) {
+          videoRef.current.muted = false;
+          videoRef.current.volume = 0.1;
+          videoRef.current.play();
+        }
+      }
+    }
+  }, [videoRef.current]);
+
+  useEffect(() => {
+    if (!props.conRef.current) return;
+    props.conRef.current.addEventListener('scroll', yScrollEvent);
+    return () => {
+      if (props.conRef.current) {
+        props.conRef.current.removeEventListener('scroll', yScrollEvent);
+      }
+    };
+  }, [props.conRef.current]);
+
+  const yScrollEvent = () => {
+    const scroll = videoRef.current.getBoundingClientRect().y;
+    if (scroll > -100 && scroll < 100) {
+      if (videoRef.current.paused) {
+        videoRef.current.muted = false;
+        videoRef.current.volume = 0.1;
+        videoRef.current.click();
+      }
+    } else {
+      if (!videoRef.current.paused) {
+        videoRef.current.currentTime = 0;
+        videoRef.current.pause();
+      }
+    }
+  };
+  const videoPlay = () => {
+    if (videoRef.current.paused) {
+      videoRef.current.play();
     }
   };
 
@@ -155,12 +199,14 @@ function ChallengeCard(props) {
       /> */}
       <video
         src={`/files/${data.video}`}
-        ref={(el) => (props.check ? (props.check.current[props.index] = el) : '')}
+        // ref={(el) => (props.check ? (props.check.current[props.index] = el) : '')}
         playsInline
         muted
         style={{ width: '100%', height: '100%' }}
         onCanPlayThrough={props.index === 0 ? onLoaded : () => {}}
-        onEnded={() => props.check.current[props.index].play()}
+        onEnded={() => videoRef.current.play()}
+        onClick={videoPlay}
+        ref={videoRef}
       />
       {/* {props.isIOS
         ?  <audio

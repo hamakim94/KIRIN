@@ -79,6 +79,9 @@ function WalletModal(props) {
       .call()
       .then((balance) => {
         setTokenBalance(balance);
+        if (props.setData) {
+          props.setData(balance);
+        }
       });
   };
   /**
