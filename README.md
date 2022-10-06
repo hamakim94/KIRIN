@@ -290,40 +290,19 @@ Ubuntu
 ## :heavy_check_mark: 페이지 기능 소개 
 
 - 홈
-  <img src="/uploads/9c9428071e3bbedfc1e2fd0c179886e7/홈.gif" width='220' height="450" />
+  <img src="docs/img/홈.gif" width='220' height="450" />
 
-- 논쟁 등록
-  <img src="/uploads/b7823910c82f576601c48219656385a0/논쟁등록.gif" width="220" height="450">
+- 스타페이지
+  <img src="docs/img/스타페이지.gif" width="220" height="450">
 
-- 상세페이지
-  <img src="/uploads/3b811237d548a029ab806955d2c3610c/상세페이지.gif"  width="220" height="450" >
+- 사바나 - 상세페이지
+  <img src="docs/img/사바나상세.gif"  width="220" height="450" >
 
-- 플로우
-  <img src="/uploads/ccde1d00717024fcaa68c1b1166fbcf5/플로우.gif" width='220' height="450"/>
+- 챌린지 참여 - 기부
+  <img src="docs/img/기부충전.gif" width='220' height="450"/>
 
-- 실시간 채팅
-  <img src="/uploads/977ce654d295584bf9cafc1b25af6cc4/채팅방생성.gif" width="220" height="450"/>
+- 마이페이지
+  <img src="docs/img/마이페이지.gif" width="220" height="450"/>
 
-- 라이브
-  <img src="/uploads/ee7d653c8fe2d31acc8b675cf34274d8/라이브.gif" width="220" height="450"/>
-
-- 검색
-  <img src="/uploads/72f70b443cd862d11c0b288c6945ab11/검색.gif"  width="220" height="450"/>
-
-- 사용자 페이지 / 팔로우 / 팔로잉
-  <img src="/uploads/7f597475a2a926fd6856ea4f9c52b76c/마이페이지.gif" width="220" height="450">
-
-- 설정(프로필 편집)
-  <img src="/uploads/2c0a09c2261e872629532b7f72b8ca67/프로필편집.gif" width="220" height="450">
-
-- 설정(비밀번호 변경)
-  <img src="/uploads/313b7aef4fb5189b0d16b0c04344a82e/비밀번호변경.gif" width="220" height="450">
-
-- 설정(약관)
-  <img src="/uploads/3d40e56a20e16fdb4d7b7a6a41c2cc74/이용약관개인정보.gif" width="220" height="450">
-
-- 설정(로그아웃)
-  <img src="/uploads/f0e8b4af2a58a12cd62ced4790fb9572/로그아웃.gif" width="220" height="450">
-
-- 설정(회원탈퇴)
-  <img src="/uploads/4805c4a62c083e324b648e561f5ebc08/회원탈퇴.gif" width="220" height="450">
+- 블록-트랜잭션
+  <img src="docs/img/블록체인.gif" width="220" height="450"/>
